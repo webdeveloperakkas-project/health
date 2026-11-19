@@ -350,4 +350,40 @@
   ========================================================= */
   $("#year").textContent = new Date().getFullYear();
   applyLanguage($("#languageSelect").value || "en");
+
+  /* =========================================================
+     16. FOOTER POLICY MODAL
+     Purpose: Open, navigate and close the site's information panel.
+     Section complete.
+  ========================================================= */
+  const policyOverlay = $("#policyOverlay");
+  const policyClose = $("#policyClose");
+  let previousPolicyFocus = null;
+  function closePolicyModal() {
+    if (!policyOverlay) return;
+    policyOverlay.classList.remove("open");
+    policyOverlay.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("policy-open");
+    if (previousPolicyFocus) previousPolicyFocus.focus();
+  }
+  Array.from(document.querySelectorAll("[data-policy]")).forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+      const targetId = link.dataset.policy;
+      const target = document.getElementById(targetId);
+      previousPolicyFocus = link;
+      policyOverlay.classList.add("open");
+      policyOverlay.setAttribute("aria-hidden", "false");
+      document.body.classList.add("policy-open");
+      if (target) target.scrollIntoView({behavior:"auto", block:"start"});
+      policyClose.focus();
+    });
+  });
+  if (policyClose) policyClose.addEventListener("click", closePolicyModal);
+  if (policyOverlay) policyOverlay.addEventListener("click", event => {
+    if (event.target === policyOverlay) closePolicyModal();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && policyOverlay && policyOverlay.classList.contains("open")) closePolicyModal();
+  });
 })();
