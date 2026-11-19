@@ -211,7 +211,7 @@
     const visiblePosts = categoryPosts.slice(start, start + pageSize);
 
     const t = languageCopy[activeLanguage];
-    $("#activeCategoryTitle").textContent = activeCategory === "home" ? (t.categories.home || "Home") : (t.categories[activeCategory] || "Articles") + " " + t.articles;
+    $("#activeCategoryTitle").textContent = t.categories[activeCategory] || "Home";
     $("#feedDescription").textContent = searchTerm
       ? "Search results in " + (t.categories[activeCategory] || "this category") + "."
       : t.description;
