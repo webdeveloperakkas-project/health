@@ -1487,3 +1487,29 @@ body.policy-open { overflow:hidden; }
     font-size:40px;
   }
 }
+
+/* =========================================================
+   22. REFINE FOOTER HEIGHT AND ENLARGE CLOSE MARK
+   Purpose: Reduce the dark footer's vertical space while
+   increasing only the × glyph, not its yellow button.
+   Section complete.
+========================================================= */
+.site-footer {
+  padding:40px 0 34px;
+}
+.policy-close-icon {
+  font-size:60px;
+}
+@media(max-width:800px) {
+  .site-footer {
+    padding:34px 0 30px;
+  }
+}
+@media(max-width:600px) {
+  .site-footer {
+    padding:28px 0 24px;
+  }
+  .policy-close-icon {
+    font-size:48px;
+  }
+}
