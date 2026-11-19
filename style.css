@@ -1726,3 +1726,40 @@ body.policy-open { overflow:hidden; }
     filter:saturate(1.12);
   }
 }
+
+/* Visible, colorful category emoji badges in the mobile dropdown */
+@media (max-width:800px) {
+  .main-nav .sidebar-category {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    min-width:0;
+    text-align:left;
+  }
+  .main-nav .sidebar-category .category-emoji {
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 34px;
+    width:34px;
+    height:34px;
+    margin-left:auto;
+    border-radius:11px;
+    font-size:20px;
+    line-height:1;
+    opacity:1;
+    visibility:visible;
+    filter:none;
+  }
+  .main-nav .sidebar-category:nth-child(1) .category-emoji { background:#fff1d8; }
+  .main-nav .sidebar-category:nth-child(2) .category-emoji { background:#dff3ff; }
+  .main-nav .sidebar-category:nth-child(3) .category-emoji { background:#fff5c9; }
+  .main-nav .sidebar-category:nth-child(4) .category-emoji { background:#e8e5ff; }
+  .main-nav .sidebar-category:nth-child(5) .category-emoji { background:#ffe5e8; }
+  .main-nav .sidebar-category:nth-child(6) .category-emoji { background:#dff6ed; }
+  .main-nav .sidebar-category:nth-child(7) .category-emoji { background:#ffe6f2; }
+  .main-nav .sidebar-category:nth-child(8) .category-emoji { background:#e1f2ff; }
+  .main-nav .sidebar-category:nth-child(9) .category-emoji { background:#e9e6ff; }
+  .main-nav .sidebar-category:nth-child(10) .category-emoji { background:#e5f3df; }
+}
