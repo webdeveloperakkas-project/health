@@ -1196,3 +1196,36 @@ body.policy-open { overflow:hidden; }
     font-size:9px;
   }
 }
+
+
+/* =========================================================
+   19. CENTER AND ENLARGE THE YELLOW CLOSE ICON
+   Purpose: Make the cross clearly visible and center the
+   yellow rounded square within the soft-green close rail.
+   Section complete.
+========================================================= */
+.policy-close {
+  justify-content:center;
+  gap:10px;
+}
+.policy-close-icon {
+  width:50px;
+  height:50px;
+  flex:0 0 50px;
+  font-family:Arial, sans-serif;
+  font-size:36px;
+  font-weight:700;
+  line-height:1;
+}
+@media(max-width:600px) {
+  .policy-close {
+    justify-content:center;
+    gap:8px;
+  }
+  .policy-close-icon {
+    width:42px;
+    height:42px;
+    flex-basis:42px;
+    font-size:31px;
+  }
+}
