@@ -145,14 +145,14 @@
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
       $(".category-tab, .sidebar-category").forEach(card => {
-        const selected = card === button;
+        const selected = card.dataset.category === activeCategory;
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
       });
       const menu = $("#mainNav");
       const toggle = $("#menuToggle");
       if (menu) menu.classList.remove("open");
-      if (toggle) toggle.setAttribute("aria-expanded","false");
+      if (toggle) { toggle.setAttribute("aria-expanded","false"); toggle.setAttribute("aria-label","Open categories"); }
       render();
       $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
     });
@@ -160,8 +160,26 @@
 
   $("#menuToggle").addEventListener("click", () => {
     const menu = $("#mainNav");
+    const toggle = $("#menuToggle");
     const open = menu.classList.toggle("open");
-    $("#menuToggle").setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close categories" : "Open categories");
+  });
+  document.addEventListener("click", event => {
+    const menu = $("#mainNav");
+    const toggle = $("#menuToggle");
+    if (menu.classList.contains("open") && !menu.contains(event.target) && !toggle.contains(event.target)) {
+      menu.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open categories");
+    }
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      $("#mainNav").classList.remove("open");
+      $("#menuToggle").setAttribute("aria-expanded", "false");
+      $("#menuToggle").setAttribute("aria-label", "Open categories");
+    }
   });
 
   previousButton.addEventListener("click", () => {
