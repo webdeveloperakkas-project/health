@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="style.css?v=24">
 <script src="script.js?v=14" defer>
 </script>
 </head>
@@ -54,8 +54,9 @@
 </select>
 </label>
 <form class="search-form" id="searchForm" role="search">
+<button class="search-toggle" id="searchToggle" type="button" aria-label="Open search"><span class="search-glass" aria-hidden="true"></span></button>
 <input id="siteSearch" type="search" placeholder="Search articles..." aria-label="Search articles">
-<button type="submit" aria-label="Search">⌕</button>
+<button class="search-submit" id="searchSubmit" type="submit">Search</button>
 </form>
 </div>
 </div>
