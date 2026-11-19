@@ -69,6 +69,7 @@
   const categoryButtons = Object.entries(categoryNames).map(([id, label]) => `<button type="button" data-category="${id}">${label}</button>`).join("");
   $("#sidebarCategories").innerHTML = categoryButtons;
   $("#desktopCategories").innerHTML = categoryButtons;
+  $(".sidebar-categories button").forEach(button => button.classList.toggle("active", button.dataset.category === "health"));
   let activeCategory = "health";
   let currentPage = 1;
   const pageSize = 2;
@@ -111,7 +112,7 @@
     nextButton.disabled = currentPage >= totalPages;
   }
 
-  $$(".category-card").forEach(button => {
+  $$(".category-tab").forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
       currentPage = 1;
@@ -163,18 +164,6 @@
     const savedLanguage = localStorage.getItem("ea-language");
     if (savedLanguage && $("#languageSelect").querySelector('option[value="' + savedLanguage + '"]')) $("#languageSelect").value = savedLanguage;
   } catch (_) {}
-
-  $("#menuToggle").addEventListener("click", () => {
-    const nav = $("#mainNav");
-    const open = nav.classList.toggle("open");
-    $("#menuToggle").setAttribute("aria-expanded", String(open));
-    $("#menuToggle").textContent = open ? "×" : "☰";
-  });
-  $$("#mainNav a").forEach(link => link.addEventListener("click", () => {
-    $("#mainNav").classList.remove("open");
-    $("#menuToggle").setAttribute("aria-expanded", "false");
-    $("#menuToggle").textContent = "☰";
-  }));
 
   $("#menuToggle").addEventListener("click", () => { const nav = $("#mainNav"); const open = nav.classList.toggle("open"); $("#menuToggle").setAttribute("aria-expanded", String(open)); $("#menuToggle").textContent = open ? "×" : "☰"; });
   document.addEventListener("click", event => { if (!event.target.closest(".header-left")) { $("#mainNav").classList.remove("open"); $("#menuToggle").setAttribute("aria-expanded", "false"); $("#menuToggle").textContent = "☰"; } });
