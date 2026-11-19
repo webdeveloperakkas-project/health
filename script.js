@@ -334,12 +334,34 @@
      Purpose: Search article titles and body text in the active view.
      Section complete.
   ========================================================= */
+  const searchForm = $("#searchForm");
+  const searchToggle = $("#searchToggle");
+  const searchInput = $("#siteSearch");
+  searchToggle.addEventListener("click", () => {
+    searchForm.classList.add("search-open");
+    searchToggle.setAttribute("aria-expanded", "true");
+    searchInput.focus();
+  });
+  document.addEventListener("click", event => {
+    if (searchForm.classList.contains("search-open") && !searchForm.contains(event.target)) {
+      searchForm.classList.remove("search-open");
+      searchToggle.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && searchForm.classList.contains("search-open")) {
+      searchForm.classList.remove("search-open");
+      searchToggle.setAttribute("aria-expanded", "false");
+    }
+  });
   $("#searchForm").addEventListener("submit", event => {
     event.preventDefault();
     searchTerm = ($("#siteSearch").value || "").trim().toLowerCase();
     currentPage = 1;
     render();
     $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+    searchForm.classList.remove("search-open");
+    searchToggle.setAttribute("aria-expanded", "false");
   });
 
   /* =========================================================
