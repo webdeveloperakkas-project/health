@@ -81,7 +81,7 @@
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     document.documentElement.lang = activeLanguage;
-    $(".category-tab, .sidebar-category").forEach(button => button.textContent = t.categories[button.dataset.category]);
+    $$(".category-tab, .sidebar-category").forEach(button => button.textContent = t.categories[button.dataset.category]);
     $("#siteSearch").placeholder = t.search;
     $(".eyebrow").textContent = t.stories;
     $(".sort-label").textContent = t.sort;
@@ -137,14 +137,14 @@
     nextButton.disabled = currentPage >= totalPages;
   }
 
-  $(".category-tab, .sidebar-category").forEach(button => {
+  $$(".category-tab, .sidebar-category").forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
       currentPage = 1;
       searchTerm = "";
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
-      $(".category-tab, .sidebar-category").forEach(card => {
+      $$(".category-tab, .sidebar-category").forEach(card => {
         const selected = card.dataset.category === activeCategory;
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
