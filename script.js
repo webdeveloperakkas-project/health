@@ -279,28 +279,30 @@
      when the user taps outside the menu or presses Escape.
      Section complete.
   ========================================================= */
-  $("#menuToggle").addEventListener("click", () => {
-    const menu = $("#mainNav");
-    const toggle = $("#menuToggle");
-    const open = menu.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Close categories" : "Open categories");
+  const menu = $("#mainNav");
+  const menuToggle = $("#menuToggle");
+  const menuClose = $("#menuClose");
+  const closeCategoryMenu = () => {
+    menu.classList.remove("open");
+    document.body.classList.remove("menu-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open categories");
+  };
+  menuToggle.addEventListener("click", () => {
+    const open = !menu.classList.contains("open");
+    menu.classList.toggle("open", open);
+    document.body.classList.toggle("menu-open", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Close categories" : "Open categories");
   });
+  menuClose.addEventListener("click", closeCategoryMenu);
   document.addEventListener("click", event => {
-    const menu = $("#mainNav");
-    const toggle = $("#menuToggle");
-    if (menu.classList.contains("open") && !menu.contains(event.target) && !toggle.contains(event.target)) {
-      menu.classList.remove("open");
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "Open categories");
+    if (menu.classList.contains("open") && !menu.contains(event.target) && !menuToggle.contains(event.target)) {
+      closeCategoryMenu();
     }
   });
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape") {
-      $("#mainNav").classList.remove("open");
-      $("#menuToggle").setAttribute("aria-expanded", "false");
-      $("#menuToggle").setAttribute("aria-label", "Open categories");
-    }
+    if (event.key === "Escape") closeCategoryMenu();
   });
 
   /* =========================================================
