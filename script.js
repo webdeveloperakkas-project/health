@@ -137,21 +137,31 @@
     nextButton.disabled = currentPage >= totalPages;
   }
 
-  $$(".category-tab").forEach(button => {
+  $(".category-tab, .sidebar-category").forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
       currentPage = 1;
       searchTerm = "";
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
-      $$(".category-tab").forEach(card => {
+      $(".category-tab, .sidebar-category").forEach(card => {
         const selected = card === button;
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
       });
+      const menu = $("#mainNav");
+      const toggle = $("#menuToggle");
+      if (menu) menu.classList.remove("open");
+      if (toggle) toggle.setAttribute("aria-expanded","false");
       render();
       $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
     });
+  });
+
+  $("#menuToggle").addEventListener("click", () => {
+    const menu = $("#mainNav");
+    const open = menu.classList.toggle("open");
+    $("#menuToggle").setAttribute("aria-expanded", String(open));
   });
 
   previousButton.addEventListener("click", () => {
