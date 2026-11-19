@@ -154,7 +154,7 @@
       if (menu) menu.classList.remove("open");
       if (toggle) { toggle.setAttribute("aria-expanded","false"); toggle.setAttribute("aria-label","Open categories"); }
       render();
-      $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+      // Keep the reader at the exact same scroll position when switching categories.
     });
   });
 
