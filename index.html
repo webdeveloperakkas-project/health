@@ -1,1 +1,140 @@
-hh
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b3f">
+  <meta name="description" content="Discover practical, trustworthy information for healthier living, technology, beauty, travel, money and everyday life.">
+  <title>Everyday Atlas — Discover a Better Everyday</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=1">
+  <script src="script.js?v=1" defer></script>
+</head>
+<body>
+  <div class="announcement"><span class="announcement-dot"></span> Useful knowledge for a better everyday <span class="announcement-separator">•</span> Independent guides for curious minds</div>
+  <header class="site-header" id="top">
+    <div class="header-main container">
+      <a class="brand" href="#top" aria-label="Everyday Atlas home"><span class="brand-mark">ea</span><span class="brand-copy"><strong>everyday<span>atlas</span></strong><small>YOUR WORLD, MADE CLEARER</small></span></a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#discover">Discover</a><a href="#health">Health</a><a href="#technology">Technology</a><a href="#beauty">Beauty</a><a href="#travel">Travel</a><a href="#latest">Latest</a>
+      </nav>
+      <div class="header-tools">
+        <label class="select-wrap"><span class="sr-only">Choose language</span><span aria-hidden="true">◎</span><select id="languageSelect" aria-label="Choose language"><option value="en">EN · English</option><option value="bn">বাংলা</option><option value="hi">हिन्दी</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="es">Español</option></select></label>
+        <label class="select-wrap country-select"><span aria-hidden="true">⌖</span><select id="countrySelect" aria-label="Choose country"><option value="">Global</option><option>Bangladesh</option><option>India</option><option>United Kingdom</option><option>Germany</option><option>France</option><option>Netherlands</option><option>Spain</option><option>Italy</option><option>United States</option><option>Canada</option><option>Australia</option></select></label>
+        <button class="icon-button mobile-menu-button" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation"><a href="#discover">Discover</a><a href="#health">Health & Wellness</a><a href="#technology">Technology & AI</a><a href="#beauty">Beauty & Care</a><a href="#travel">Travel</a><a href="#latest">Latest Updates</a></nav>
+    <div class="header-bottom"><div class="container header-bottom-inner"><span class="eyebrow-light">EXPLORE WHAT MATTERS</span><div class="quick-links"><a href="#money">Smart Money</a><a href="#hospitals">Hospitals & Care</a><a href="#guides">Everyday Guides</a><a href="#news">World Briefing</a></div><form class="header-search" id="searchForm"><span>⌕</span><input id="siteSearch" type="search" placeholder="Search helpful guides..." aria-label="Search articles"><button type="submit" aria-label="Search">→</button></form></div></div>
+  </header>
+
+  <main>
+    <section class="hero-section">
+      <div class="hero-orb hero-orb-one"></div><div class="hero-orb hero-orb-two"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="hero-kicker"><span class="kicker-line"></span> THE EVERYDAY KNOWLEDGE JOURNAL</div>
+          <h1>Make your everyday<br><em>extraordinary.</em></h1>
+          <p class="hero-lead">Clear answers, thoughtful guides and useful discoveries to help you live smarter, feel better and explore more.</p>
+          <div class="hero-actions"><a class="button button-primary" href="#discover">Explore the journal <span>↗</span></a><a class="text-link" href="#latest">See what's new <span>→</span></a></div>
+          <div class="hero-trust"><span class="trust-icon">✳</span><span>Practical ideas</span><i></i><span>Global perspective</span><i></i><span>Made for real life</span></div>
+        </div>
+        <div class="hero-feature">
+          <div class="feature-topline"><span class="live-dot"></span> YOUR DAILY INSPIRATION <span class="feature-number">01 / 04</span></div>
+          <div class="feature-art" aria-hidden="true"><div class="art-sun"></div><div class="art-ring art-ring-one"></div><div class="art-ring art-ring-two"></div><div class="art-leaf">✳</div><span class="art-caption">A LITTLE KNOWLEDGE<br>GOES A LONG WAY</span></div>
+          <div class="feature-bottom"><div><span class="category-label">THE BIG PICTURE</span><h2>Small changes.<br>Meaningful impact.</h2></div><a class="round-arrow" href="#guides" aria-label="Explore everyday guides">↗</a></div>
+        </div>
+      </div>
+      <div class="hero-bottom container"><span>GOOD INFORMATION. BETTER DECISIONS.</span><span>SCROLL TO DISCOVER <b>↓</b></span></div>
+    </section>
+
+    <section class="search-strip" id="discover"><div class="container search-strip-inner"><div><span class="section-kicker">A WORLD OF USEFUL IDEAS</span><h2>What are you curious about?</h2></div><div class="topic-pills"><a href="#health">Health</a><a href="#technology">Technology</a><a href="#beauty">Beauty</a><a href="#travel">Travel</a><a href="#money">Money</a></div></div></section>
+
+    <section class="section container category-section">
+      <div class="section-heading"><div><span class="section-kicker">FIND YOUR NEXT READ</span><h2>Explore by interest<span class="heading-period">.</span></h2><p>Good ideas for every part of your life.</p></div><a class="subtle-link" href="#latest">Browse all topics <span>↗</span></a></div>
+      <div class="category-grid">
+        <a class="category-card cat-health" href="#health"><span class="category-index">01 / WELLBEING</span><span class="category-symbol">✳</span><h3>Health &<br>Wellness</h3><span class="category-desc">Feel good, live well.</span><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-beauty" href="#beauty"><span class="category-index">02 / SELF CARE</span><span class="category-symbol">✺</span><h3>Beauty &<br>Personal Care</h3><span class="category-desc">Care that feels like you.</span><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-tech" href="#technology"><span class="category-index">03 / INNOVATION</span><span class="category-symbol">⌘</span><h3>Technology<br>& AI</h3><span class="category-desc">Make life work smarter.</span><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-travel" href="#travel"><span class="category-index">04 / DISCOVERY</span><span class="category-symbol">⌁</span><h3>Travel &<br>Hotels</h3><span class="category-desc">Find your place in the world.</span><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-money" href="#money"><span class="category-index">05 / SMART LIVING</span><span class="category-symbol">↗</span><h3>Money &<br>Finance</h3><span class="category-desc">Make informed choices.</span><span class="card-arrow">↗</span></a>
+        <a class="category-card cat-world" href="#news"><span class="category-index">06 / PERSPECTIVE</span><span class="category-symbol">◎</span><h3>World &<br>Lifestyle</h3><span class="category-desc">Understand what's changing.</span><span class="card-arrow">↗</span></a>
+      </div>
+    </section>
+
+    <div class="ad-wrap container"><div class="ad-slot ad-leaderboard" aria-label="Advertisement space"><span class="ad-label">ADVERTISEMENT</span><span class="ad-note">Reserved advertising space · responsive display placement</span></div></div>
+
+    <section class="section container editor-section" id="featured">
+      <div class="section-heading"><div><span class="section-kicker">A GOOD PLACE TO START</span><h2>Editor's selection<span class="heading-period">.</span></h2></div><span class="edition-tag">THE EVERYDAY EDIT · NO. 01</span></div>
+      <div class="editor-grid">
+        <article class="editor-main article-card" data-search="daily habits health wellness lifestyle routine"><div class="editor-art"><span class="art-chip">WELLNESS NOTES</span><span class="editor-art-mark">01</span><div class="editor-art-shape"></div><div class="editor-art-text">MAKE<br>ROOM FOR<br><em>BETTER.</em></div></div><div class="article-meta"><span>HEALTH & WELLNESS</span><span>8 MIN READ</span></div><h3><a href="#health">The power of small daily habits: a practical guide to feeling your best</a></h3><p>Simple, sustainable routines can make everyday life feel more balanced. Start with small steps you can actually keep.</p><a class="read-link" href="#health">Explore the guide <span>→</span></a></article>
+        <div class="editor-side">
+          <article class="side-story article-card" data-search="ai technology productivity tools"><div class="side-art side-art-tech"><span>THINK<br>SMARTER<span class="side-art-symbol">⌘</span></span></div><div><div class="article-meta"><span>TECHNOLOGY</span><span>6 MIN READ</span></div><h3><a href="#technology">Everyday AI tools that can make your day easier</a></h3><a class="read-link" href="#technology">Read story <span>→</span></a></div></article>
+          <article class="side-story article-card" data-search="beauty skincare personal care routine"><div class="side-art side-art-beauty"><span>THE<br>CARE EDIT<span class="side-art-symbol">✺</span></span></div><div><div class="article-meta"><span>BEAUTY & CARE</span><span>5 MIN READ</span></div><h3><a href="#beauty">A thoughtful approach to building a simple skincare routine</a></h3><a class="read-link" href="#beauty">Read story <span>→</span></a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft-section" id="trending"><div class="container"><div class="section-heading"><div><span class="section-kicker">WHAT PEOPLE ARE EXPLORING</span><h2>Trending right now<span class="heading-period">.</span></h2><p>Fresh perspectives on everyday questions.</p></div><span class="trending-badge"><span></span> POPULAR READS</span></div><div class="trending-grid">
+      <a class="trend-item" href="#health"><span class="trend-no">01</span><span><small>WELLNESS</small><strong>Building a healthier morning routine</strong></span><span class="trend-arrow">↗</span></a>
+      <a class="trend-item" href="#technology"><span class="trend-no">02</span><span><small>TECH & AI</small><strong>Useful digital tools worth knowing</strong></span><span class="trend-arrow">↗</span></a>
+      <a class="trend-item" href="#beauty"><span class="trend-no">03</span><span><small>PERSONAL CARE</small><strong>Understanding the basics of skin health</strong></span><span class="trend-arrow">↗</span></a>
+      <a class="trend-item" href="#travel"><span class="trend-no">04</span><span><small>TRAVEL</small><strong>Planning a smoother trip abroad</strong></span><span class="trend-arrow">↗</span></a>
+    </div></div></section>
+
+    <section class="section container content-section" id="health"><div class="section-heading"><div><span class="section-kicker">01 — FEEL BETTER, EVERY DAY</span><h2>Health & Wellness<span class="heading-period">.</span></h2><p>Clear, careful information for healthier everyday choices.</p></div><a class="subtle-link" href="#latest">Explore health <span>↗</span></a></div><div class="story-grid three">
+      <article class="story-card article-card" data-search="sleep habits rest health"><div class="story-visual visual-health"><span class="visual-symbol">☾</span><span class="visual-caption">REST / RESET</span></div><div class="article-meta"><span>DAILY WELLNESS</span><span>6 MIN</span></div><h3><a href="#latest">Everyday habits that may support better sleep</a></h3><p>Understand the routines and environment that can help create a more restful night.</p></article>
+      <article class="story-card article-card" data-search="nutrition hydration food health"><div class="story-visual visual-nutrition"><span class="visual-symbol">◌</span><span class="visual-caption">NOURISH WELL</span></div><div class="article-meta"><span>NUTRITION</span><span>7 MIN</span></div><h3><a href="#latest">Simple ways to build balanced everyday meals</a></h3><p>A practical introduction to variety, portions and making informed food choices.</p></article>
+      <article class="story-card article-card" data-search="exercise movement fitness health"><div class="story-visual visual-move"><span class="visual-symbol">↗</span><span class="visual-caption">MOVE MORE</span></div><div class="article-meta"><span>ACTIVE LIVING</span><span>5 MIN</span></div><h3><a href="#latest">Making more movement part of your day</a></h3><p>Small, realistic ways to add activity to an ordinary daily routine.</p></article>
+    </div><p class="disclaimer-note">Health information is for general education only and is not a substitute for advice from a qualified healthcare professional.</p></section>
+
+    <div class="ad-wrap container"><div class="ad-slot ad-in-article" aria-label="Advertisement space"><span class="ad-label">ADVERTISEMENT</span><span class="ad-note">In-content ad position · after the first editorial topic</span></div></div>
+
+    <section class="section tech-section" id="technology"><div class="container"><div class="section-heading"><div><span class="section-kicker">02 — MAKE TECHNOLOGY WORK FOR YOU</span><h2>Technology & AI<span class="heading-period">.</span></h2><p>Friendly explainers for the tools shaping modern life.</p></div><a class="subtle-link" href="#latest">Explore technology <span>↗</span></a></div><div class="tech-feature-grid"><div class="tech-intro-panel"><span class="panel-overline">THE DIGITAL LIFE EDIT</span><div class="tech-glyph">⌘</div><h3>Less complexity.<br><em>More possibility.</em></h3><p>Understand apps, software, online safety and AI without the jargon.</p><a class="button button-dark" href="#latest">Discover digital guides <span>↗</span></a></div><div class="tech-story-list">
+      <article class="tech-row article-card" data-search="artificial intelligence ai beginner guide"><span class="tech-row-icon">✳</span><div><small>AI EXPLAINED</small><h3><a href="#latest">A beginner-friendly guide to using AI assistants</a></h3><p>What they can do, where they help and what to check.</p></div><span class="trend-arrow">↗</span></article>
+      <article class="tech-row article-card" data-search="password internet security privacy"><span class="tech-row-icon">⌑</span><div><small>ONLINE SAFETY</small><h3><a href="#latest">Everyday steps to improve your online security</a></h3><p>Practical ways to protect accounts and personal information.</p></div><span class="trend-arrow">↗</span></article>
+      <article class="tech-row article-card" data-search="productivity software apps tools"><span class="tech-row-icon">▦</span><div><small>USEFUL SOFTWARE</small><h3><a href="#latest">Choosing digital tools for work and daily life</a></h3><p>Questions to ask before choosing a new app or service.</p></div><span class="trend-arrow">↗</span></article>
+    </div></div></div></section>
+
+    <section class="section container content-section" id="beauty"><div class="section-heading"><div><span class="section-kicker">03 — YOUR PERSONAL CARE JOURNAL</span><h2>Beauty & Personal Care<span class="heading-period">.</span></h2><p>Thoughtful basics, ingredient explainers and self-care ideas.</p></div><a class="subtle-link" href="#latest">Explore beauty <span>↗</span></a></div><div class="story-grid three">
+      <article class="story-card article-card" data-search="skincare routine skin beauty"><div class="story-visual visual-beauty"><span class="visual-symbol">✺</span><span class="visual-caption">SKINCARE, SIMPLIFIED</span></div><div class="article-meta"><span>SKINCARE</span><span>5 MIN</span></div><h3><a href="#latest">How to think about a simple skincare routine</a></h3><p>Learn the purpose of cleansing, moisturizing and sun protection.</p></article>
+      <article class="story-card article-card" data-search="hair care healthy hair beauty"><div class="story-visual visual-hair"><span class="visual-symbol">〰</span><span class="visual-caption">HAIR NOTES</span></div><div class="article-meta"><span>HAIR CARE</span><span>6 MIN</span></div><h3><a href="#latest">Everyday hair-care habits and what they do</a></h3><p>A clear look at gentle care, washing and common hair-care claims.</p></article>
+      <article class="story-card article-card" data-search="beauty ingredients cosmetics products"><div class="story-visual visual-glow"><span class="visual-symbol">◇</span><span class="visual-caption">INGREDIENT GUIDE</span></div><div class="article-meta"><span>INGREDIENTS</span><span>7 MIN</span></div><h3><a href="#latest">Getting familiar with common skincare ingredients</a></h3><p>What labels mean and why individual skin needs can differ.</p></article>
+    </div></section>
+
+    <section class="section travel-section" id="travel"><div class="container travel-grid"><div class="travel-copy"><span class="section-kicker">04 — SEE MORE OF THE WORLD</span><h2>Go places.<br><em>Know before you go.</em></h2><p>Explore destination guides, accommodation basics and practical travel planning tips from around the world.</p><a class="button button-primary" href="#latest">Explore travel guides <span>↗</span></a></div><div class="destination-panel"><span class="destination-overline">THE WORLD, AT YOUR PACE</span><div class="destination-globe">◎</div><div class="destination-lines"><span>DESTINATION NOTES</span><b>Find the details<br>that make a trip.</b><small>Places · Stays · Planning · Practical tips</small></div><div class="destination-countries"><span>EUROPE</span><span>ASIA</span><span>THE WORLD</span></div></div></div></section>
+
+    <div class="ad-wrap container"><div class="ad-slot ad-leaderboard" aria-label="Advertisement space"><span class="ad-label">ADVERTISEMENT</span><span class="ad-note">Reserved display placement · between major content groups</span></div></div>
+
+    <section class="section container content-section" id="hospitals"><div class="section-heading"><div><span class="section-kicker">05 — HEALTHCARE INFORMATION</span><h2>Hospitals & Treatments<span class="heading-period">.</span></h2><p>Learn how to research healthcare providers and treatment options.</p></div><span class="edition-tag">INFORMATION, NOT MEDICAL REFERRAL</span></div><div class="care-grid"><div class="care-card"><span class="care-icon">＋</span><div><small>FINDING CARE</small><h3>How to research a hospital or clinic</h3><p>What to check: specialties, credentials, location, patient services and official contact details.</p></div><a href="#latest">Read the guide ↗</a></div><div class="care-card"><span class="care-icon">⌖</span><div><small>UNDERSTANDING OPTIONS</small><h3>Questions to ask about a treatment</h3><p>Prepare for a conversation with a qualified clinician and understand the information you receive.</p></div><a href="#latest">Read the guide ↗</a></div></div><p class="disclaimer-note">Provider information must be checked against official sources. We do not diagnose conditions or recommend treatment for individual patients.</p></section>
+
+    <section class="section money-section" id="money"><div class="container money-grid"><div><span class="section-kicker">06 — SMALLER MONEY STRESS, SMARTER CHOICES</span><h2>Money &<br><em>Smart Living.</em></h2><p>Approachable guides to budgeting, saving and understanding everyday financial decisions.</p><a class="text-link" href="#latest">Explore money guides <span>→</span></a></div><div class="money-note"><span class="money-note-label">A SIMPLE START</span><div class="money-figure">01<span>/03</span></div><h3>Know where<br>your money goes.</h3><p>Track spending, set priorities and make a plan that fits your circumstances.</p><span class="money-note-foot">PRACTICAL FINANCE NOTES</span></div></div></section>
+
+    <section class="section container content-section" id="guides"><div class="section-heading"><div><span class="section-kicker">07 — LITTLE THINGS THAT HELP</span><h2>Everyday Guides & Tips<span class="heading-period">.</span></h2><p>Useful answers for the small questions that come up every day.</p></div><a class="subtle-link" href="#latest">More useful guides <span>↗</span></a></div><div class="guide-grid">
+      <a class="guide-tile" href="#latest"><span>01</span><b>Home & daily routines</b><small>Make everyday tasks simpler</small><i>↗</i></a>
+      <a class="guide-tile" href="#latest"><span>02</span><b>Digital life</b><small>Navigate online services confidently</small><i>↗</i></a>
+      <a class="guide-tile" href="#latest"><span>03</span><b>Personal wellbeing</b><small>Build habits at your own pace</small><i>↗</i></a>
+      <a class="guide-tile" href="#latest"><span>04</span><b>Living around the world</b><small>Understand local essentials</small><i>↗</i></a>
+    </div></section>
+
+    <section class="section news-section" id="news"><div class="container"><div class="section-heading"><div><span class="section-kicker">08 — A CLEARER VIEW OF THE WORLD</span><h2>World briefing<span class="heading-period">.</span></h2><p>Context and explainers on developments that matter to everyday life.</p></div><span class="edition-tag">GLOBAL PERSPECTIVE</span></div><div class="news-panel"><div class="news-lead"><span class="news-date">THE WORLD, EXPLAINED</span><h3>Beyond the headline: understand the story and why it matters.</h3><p>Our editorial approach focuses on context, verified information and links to original reporting.</p></div><div class="news-links"><a href="#latest"><span>01</span><b>Health & science updates</b><i>↗</i></a><a href="#latest"><span>02</span><b>Technology & innovation</b><i>↗</i></a><a href="#latest"><span>03</span><b>Environment & society</b><i>↗</i></a></div></div></div></section>
+
+    <section class="section container latest-section" id="latest"><div class="section-heading"><div><span class="section-kicker">FRESH FROM THE JOURNAL</span><h2>Latest stories<span class="heading-period">.</span></h2><p>Explore our latest practical reads and explainers.</p></div><span class="edition-tag">THE LATEST EDITION</span></div><div class="latest-grid" id="articleResults">
+      <article class="latest-card article-card" data-search="healthy breakfast nutrition health"><span class="latest-category">HEALTH</span><h3><a href="#health">A practical guide to making balanced breakfast choices</a></h3><div class="latest-footer"><span>WELLNESS NOTES · 5 MIN</span><a href="#health">↗</a></div></article>
+      <article class="latest-card article-card" data-search="ai tools technology software"><span class="latest-category">TECHNOLOGY</span><h3><a href="#technology">What to look for when choosing an AI tool</a></h3><div class="latest-footer"><span>DIGITAL LIFE · 7 MIN</span><a href="#technology">↗</a></div></article>
+      <article class="latest-card article-card" data-search="travel hotel accommodation booking"><span class="latest-category">TRAVEL</span><h3><a href="#travel">A thoughtful checklist before booking a hotel</a></h3><div class="latest-footer"><span>TRAVEL NOTES · 6 MIN</span><a href="#travel">↗</a></div></article>
+      <article class="latest-card article-card" data-search="beauty sunscreen skincare care"><span class="latest-category">BEAUTY</span><h3><a href="#beauty">Understanding everyday sun protection basics</a></h3><div class="latest-footer"><span>CARE EDIT · 5 MIN</span><a href="#beauty">↗</a></div></article>
+      <article class="latest-card article-card" data-search="money budget saving finance"><span class="latest-category">MONEY</span><h3><a href="#money">A simple way to begin planning a monthly budget</a></h3><div class="latest-footer"><span>SMART LIVING · 6 MIN</span><a href="#money">↗</a></div></article>
+      <article class="latest-card article-card" data-search="hospital healthcare treatment research"><span class="latest-category">HEALTHCARE</span><h3><a href="#hospitals">How to check healthcare information from official sources</a></h3><div class="latest-footer"><span>CARE GUIDE · 8 MIN</span><a href="#hospitals">↗</a></div></article>
+    </div><p class="no-results" id="noResults" hidden>No matching stories found. Try another search term.</p></section>
+
+    <div class="ad-wrap container"><div class="ad-slot ad-footer-slot" aria-label="Advertisement space"><span class="ad-label">ADVERTISEMENT</span><span class="ad-note">Optional lower-page advertising placement</span></div></div>
+
+    <section class="newsletter-section"><div class="container newsletter-grid"><div><span class="section-kicker">A GOOD READ, NOW AND THEN</span><h2>A little inspiration<br>for your inbox.</h2><p>Get thoughtful guides and useful discoveries. No noise, just the good stuff.</p></div><form class="newsletter-form" id="newsletterForm"><label for="emailInput">YOUR EMAIL ADDRESS</label><div class="newsletter-input"><input id="emailInput" type="email" placeholder="you@example.com" required><button type="submit" aria-label="Subscribe">→</button></div><small id="newsletterMessage">By subscribing, you agree to receive occasional updates. Add a real email service before launch.</small></form></div></section>
+  </main>
+
+  <footer class="site-footer"><div class="container"><div class="footer-top"><a class="brand brand-footer" href="#top"><span class="brand-mark">ea</span><span class="brand-copy"><strong>everyday<span>atlas</span></strong><small>YOUR WORLD, MADE CLEARER</small></span></a><p>Useful knowledge for a more informed, thoughtful everyday.</p><a class="back-top" href="#top">BACK TO TOP ↑</a></div><div class="footer-columns"><div><h4>EXPLORE</h4><a href="#health">Health & Wellness</a><a href="#beauty">Beauty & Care</a><a href="#technology">Technology & AI</a><a href="#travel">Travel & Hotels</a></div><div><h4>DISCOVER</h4><a href="#money">Money & Finance</a><a href="#hospitals">Hospitals & Treatments</a><a href="#guides">Everyday Guides</a><a href="#news">World Briefing</a></div><div><h4>ABOUT</h4><a href="#top">About Everyday Atlas</a><a href="mailto:hello@example.com">Contact</a><a href="#top">Editorial Policy</a><a href="#top">Health Disclaimer</a></div><div><h4>LEGAL</h4><a href="#top">Privacy Policy</a><a href="#top">Terms of Use</a><a href="#top">Cookie Preferences</a><span class="footer-language">Language: <b>English</b></span></div></div><div class="footer-bottom"><span>© <span id="year"></span> Everyday Atlas. All rights reserved.</span><span>INFORMED LIVING STARTS HERE <b>✳</b></span></div></div></footer>
+</body>
+</html>
