@@ -160,7 +160,16 @@
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     document.documentElement.lang = activeLanguage;
-    Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => button.textContent = t.categories[button.dataset.category]);
+    Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
+      const label = t.categories[button.dataset.category];
+      if (button.classList.contains("sidebar-category")) {
+        const textNode = Array.from(button.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+        if (textNode) textNode.nodeValue = label;
+        else button.insertBefore(document.createTextNode(label), button.firstChild);
+      } else {
+        button.textContent = label;
+      }
+    });
     $("#siteSearch").placeholder = t.search;
     $(".eyebrow").textContent = t.stories;
     Array.from(document.querySelectorAll(".post-type-option")).forEach(button => {
