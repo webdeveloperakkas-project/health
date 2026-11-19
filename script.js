@@ -108,7 +108,7 @@
     nextButton.disabled = currentPage >= totalPages;
   }
 
-  $(".category-tab").forEach(button => {
+  $$(".category-tab").forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
       currentPage = 1;
