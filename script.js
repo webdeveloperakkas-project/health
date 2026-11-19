@@ -67,6 +67,33 @@
   ];
 
   const categoryNames = {health:"Health",beauty:"Beauty",technology:"Technology",travel:"Travel",hospitals:"Hospitals",finance:"Finance",world:"World News",tips:"Daily Tips",lifestyle:"Lifestyle"};
+
+  const languageCopy = {
+    en:{categories:{health:"Health",beauty:"Beauty",technology:"Technology",travel:"Travel",hospitals:"Hospitals",finance:"Finance",world:"World News",tips:"Daily Tips",lifestyle:"Lifestyle"},stories:"LATEST STORIES",description:"Latest articles and useful information.",search:"Search articles...",sort:"NEWEST FIRST ↓",page:"Page",of:"of",articles:"Articles",empty:"No sample posts are available in this category yet. More articles will appear here as they are published.",about:"About",contact:"Contact",privacy:"Privacy",aboutTitle:"Clear information for a world of everyday questions.",aboutText:"Our articles are for general information and do not replace professional advice."},
+    bn:{categories:{health:"স্বাস্থ্য",beauty:"সৌন্দর্য",technology:"প্রযুক্তি",travel:"ভ্রমণ",hospitals:"হাসপাতাল",finance:"অর্থনীতি",world:"বিশ্ব সংবাদ",tips:"দৈনন্দিন টিপস",lifestyle:"জীবনযাপন"},stories:"সর্বশেষ লেখা",description:"সাম্প্রতিক প্রবন্ধ ও দরকারি তথ্য।",search:"প্রবন্ধ খুঁজুন...",sort:"নতুন লেখা আগে ↓",page:"পৃষ্ঠা",of:"এর",articles:"প্রবন্ধ",empty:"এই বিভাগে এখনো কোনো নমুনা প্রবন্ধ নেই। প্রকাশিত হলে নতুন প্রবন্ধ এখানে দেখা যাবে।",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা",aboutTitle:"প্রতিদিনের নানা প্রশ্নের জন্য সহজ ও নির্ভরযোগ্য তথ্য।",aboutText:"আমাদের প্রবন্ধ সাধারণ তথ্যের জন্য; এগুলো পেশাদার পরামর্শের বিকল্প নয়।"},
+    hi:{categories:{health:"स्वास्थ्य",beauty:"सौंदर्य",technology:"प्रौद्योगिकी",travel:"यात्रा",hospitals:"अस्पताल",finance:"वित्त",world:"विश्व समाचार",tips:"दैनिक सुझाव",lifestyle:"जीवनशैली"},stories:"नवीनतम लेख",description:"नए लेख और उपयोगी जानकारी।",search:"लेख खोजें...",sort:"नवीनतम पहले ↓",page:"पृष्ठ",of:"में से",articles:"लेख",empty:"इस श्रेणी में अभी कोई नमूना लेख उपलब्ध नहीं है।",about:"परिचय",contact:"संपर्क",privacy:"गोपनीयता",aboutTitle:"रोज़मर्रा के सवालों के लिए स्पष्ट और उपयोगी जानकारी।",aboutText:"हमारे लेख सामान्य जानकारी के लिए हैं और पेशेवर सलाह का विकल्प नहीं हैं।"},
+    de:{categories:{health:"Gesundheit",beauty:"Schönheit",technology:"Technologie",travel:"Reisen",hospitals:"Krankenhäuser",finance:"Finanzen",world:"Weltnachrichten",tips:"Alltagstipps",lifestyle:"Lebensstil"},stories:"NEUESTE ARTIKEL",description:"Neueste Artikel und hilfreiche Informationen.",search:"Artikel suchen...",sort:"NEUESTE ZUERST ↓",page:"Seite",of:"von",articles:"Artikel",empty:"Für diese Kategorie sind noch keine Beispielartikel verfügbar.",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",aboutTitle:"Klare Informationen für die Fragen des Alltags.",aboutText:"Unsere Artikel dienen der allgemeinen Information und ersetzen keine professionelle Beratung."},
+    fr:{categories:{health:"Santé",beauty:"Beauté",technology:"Technologie",travel:"Voyage",hospitals:"Hôpitaux",finance:"Finance",world:"Actualités",tips:"Conseils pratiques",lifestyle:"Mode de vie"},stories:"DERNIERS ARTICLES",description:"Articles récents et informations utiles.",search:"Rechercher des articles...",sort:"PLUS RÉCENT ↓",page:"Page",of:"sur",articles:"Articles",empty:"Aucun article exemple n'est encore disponible dans cette catégorie.",about:"À propos",contact:"Contact",privacy:"Confidentialité",aboutTitle:"Des informations claires pour les questions du quotidien.",aboutText:"Nos articles sont informatifs et ne remplacent pas un avis professionnel."},
+    es:{categories:{health:"Salud",beauty:"Belleza",technology:"Tecnología",travel:"Viajes",hospitals:"Hospitales",finance:"Finanzas",world:"Noticias mundiales",tips:"Consejos diarios",lifestyle:"Estilo de vida"},stories:"ARTÍCULOS RECIENTES",description:"Artículos recientes e información útil.",search:"Buscar artículos...",sort:"MÁS RECIENTES ↓",page:"Página",of:"de",articles:"Artículos",empty:"Todavía no hay artículos de ejemplo en esta categoría.",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",aboutTitle:"Información clara para las preguntas de cada día.",aboutText:"Nuestros artículos son informativos y no sustituyen el asesoramiento profesional."}
+  };
+  let activeLanguage = "en";
+  function applyLanguage(language) {
+    activeLanguage = languageCopy[language] ? language : "en";
+    const t = languageCopy[activeLanguage];
+    document.documentElement.lang = activeLanguage;
+    $(".category-tab").forEach(button => button.textContent = t.categories[button.dataset.category]);
+    $("#siteSearch").placeholder = t.search;
+    $(".eyebrow").textContent = t.stories;
+    $(".sort-label").textContent = t.sort;
+    $("#about h2").textContent = t.aboutTitle;
+    $("#about p").textContent = t.aboutText;
+    const links = $(".footer-links a");
+    if (links[1]) links[1].textContent = t.about;
+    if (links[2]) links[2].textContent = t.contact;
+    if (links[3]) links[3].textContent = t.privacy;
+    render();
+  }
+
   let activeCategory = "health";
   let currentPage = 1;
   const pageSize = 2;
@@ -89,13 +116,14 @@
     const start = (currentPage - 1) * pageSize;
     const visiblePosts = categoryPosts.slice(start, start + pageSize);
 
-    $("#activeCategoryTitle").textContent = (categoryNames[activeCategory] || "Articles") + " Articles";
+    const t = languageCopy[activeLanguage];
+    $("#activeCategoryTitle").textContent = (t.categories[activeCategory] || "Articles") + " " + t.articles;
     $("#feedDescription").textContent = searchTerm
-      ? "Search results in " + (categoryNames[activeCategory] || "this category") + "."
-      : "The newest " + (categoryNames[activeCategory] || "category") + " articles appear first.";
+      ? "Search results in " + (t.categories[activeCategory] || "this category") + "."
+      : t.description;
 
     if (!visiblePosts.length) {
-      articleList.innerHTML = '<div class="empty-state">No sample posts are available in this category yet. More articles will appear here as they are published.</div>';
+      articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
     } else {
       articleList.innerHTML = visiblePosts.map((post, index) => {
         const body = post.body.map(line => "<p>" + escapeHTML(line) + "</p>").join("");
@@ -104,7 +132,7 @@
       }).join("");
     }
 
-    $("#pageStatus").textContent = "Page " + currentPage + " of " + totalPages;
+    $("#pageStatus").textContent = t.page + " " + currentPage + " " + t.of + " " + totalPages;
     previousButton.disabled = currentPage <= 1;
     nextButton.disabled = currentPage >= totalPages;
   }
@@ -145,6 +173,7 @@
 
   $("#languageSelect").addEventListener("change", event => {
     try { localStorage.setItem("ea-language", event.target.value); } catch (_) {}
+    applyLanguage(event.target.value);
   });
   try {
     const savedLanguage = localStorage.getItem("ea-language");
@@ -152,5 +181,5 @@
   } catch (_) {}
 
   $("#year").textContent = new Date().getFullYear();
-  render();
+  applyLanguage($("#languageSelect").value || "en");
 })();
