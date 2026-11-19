@@ -253,6 +253,7 @@
       const menu = $("#mainNav");
       const toggle = $("#menuToggle");
       if (menu) menu.classList.remove("open");
+      document.body.classList.remove("menu-open");
       if (toggle) { toggle.setAttribute("aria-expanded","false"); toggle.setAttribute("aria-label","Open categories"); }
       render();
       // Keep the reader at the exact same scroll position when switching categories.
