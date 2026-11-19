@@ -1706,3 +1706,23 @@ body.policy-open { overflow:hidden; }
     transition:none!important;
   }
 }
+
+
+/* 25. Colourful category icons aligned at the right of the mobile dropdown */
+@media (max-width:800px) {
+  .main-nav .sidebar-category {
+    justify-content:space-between;
+    gap:10px;
+  }
+  .main-nav .category-emoji {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 25px;
+    width:25px;
+    font-size:19px;
+    line-height:1;
+    text-align:center;
+    filter:saturate(1.12);
+  }
+}
