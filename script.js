@@ -69,7 +69,7 @@
   const categoryButtons = Object.entries(categoryNames).map(([id, label]) => `<button type="button" data-category="${id}">${label}</button>`).join("");
   $("#sidebarCategories").innerHTML = categoryButtons;
   $("#desktopCategories").innerHTML = categoryButtons;
-  $(".sidebar-categories button").forEach(button => button.classList.toggle("active", button.dataset.category === "health"));
+  $$(".sidebar-categories button").forEach(button => button.classList.toggle("active", button.dataset.category === "health"));
   let activeCategory = "health";
   let currentPage = 1;
   const pageSize = 2;
@@ -112,30 +112,30 @@
     nextButton.disabled = currentPage >= totalPages;
   }
 
-  $$(".category-tab").forEach(button => {
+  $$$(".category-tab").forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
       currentPage = 1;
       searchTerm = "";
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
-      $(".category-tab").forEach(card => {
+      $$(".category-tab").forEach(card => {
         const selected = card === button;
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
       });
-      $(".sidebar-categories button").forEach(card => card.classList.toggle("active", card.dataset.category === activeCategory));
+      $$(".sidebar-categories button").forEach(card => card.classList.toggle("active", card.dataset.category === activeCategory));
       render();
       $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
     });
   });
 
-  $(".sidebar-categories").forEach(nav => nav.addEventListener("click", event => {
+  $$(".sidebar-categories").forEach(nav => nav.addEventListener("click", event => {
     const button = event.target.closest("button[data-category]");
     if (!button) return;
     activeCategory = button.dataset.category; currentPage = 1; searchTerm = "";
-    $(".category-tab").forEach(tab => { const selected = tab.dataset.category === activeCategory; tab.classList.toggle("active", selected); tab.setAttribute("aria-pressed", String(selected)); });
-    $(".sidebar-categories button").forEach(tab => tab.classList.toggle("active", tab.dataset.category === activeCategory));
+    $$(".category-tab").forEach(tab => { const selected = tab.dataset.category === activeCategory; tab.classList.toggle("active", selected); tab.setAttribute("aria-pressed", String(selected)); });
+    $$(".sidebar-categories button").forEach(tab => tab.classList.toggle("active", tab.dataset.category === activeCategory));
     $("#mainNav").classList.remove("open"); $("#menuToggle").setAttribute("aria-expanded", "false"); $("#menuToggle").textContent = "☰";
     render(); $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
   }));
