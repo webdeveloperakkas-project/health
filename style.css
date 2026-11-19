@@ -1513,3 +1513,30 @@ body.policy-open { overflow:hidden; }
     font-size:48px;
   }
 }
+
+
+/* 23. Improve pagination readability */
+.pagination {
+  gap:18px;
+}
+.pagination button {
+  padding:10px 15px;
+  font-size:14px;
+}
+.pagination span {
+  font-size:15px;
+  font-weight:800;
+  color:var(--navy);
+}
+@media(max-width:600px) {
+  .pagination {
+    gap:12px;
+  }
+  .pagination button {
+    padding:9px 12px;
+    font-size:12px;
+  }
+  .pagination span {
+    font-size:14px;
+  }
+}
