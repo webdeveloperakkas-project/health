@@ -1763,3 +1763,31 @@ body.policy-open { overflow:hidden; }
   .main-nav .sidebar-category:nth-child(9) .category-emoji { background:#e9e6ff; }
   .main-nav .sidebar-category:nth-child(10) .category-emoji { background:#e5f3df; }
 }
+
+
+/* Shift the mobile brand slightly left of the visual midpoint */
+@media (max-width:600px) {
+  .header-main {
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .header-left {
+    flex:0 0 auto;
+    z-index:2;
+  }
+  .brand {
+    position:absolute;
+    left:40%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:1;
+  }
+  .header-tools {
+    margin-left:auto;
+    flex:0 0 auto;
+    position:relative;
+    z-index:2;
+  }
+}
