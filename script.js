@@ -81,7 +81,7 @@
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     document.documentElement.lang = activeLanguage;
-    $(".category-tab").forEach(button => button.textContent = t.categories[button.dataset.category]);
+    $(".category-tab, .sidebar-category").forEach(button => button.textContent = t.categories[button.dataset.category]);
     $("#siteSearch").placeholder = t.search;
     $(".eyebrow").textContent = t.stories;
     $(".sort-label").textContent = t.sort;
