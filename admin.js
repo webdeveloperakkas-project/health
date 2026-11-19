@@ -8,7 +8,7 @@
   "use strict";
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
-  const categories = {health:"Health",beauty:"Beauty",technology:"Technology",travel:"Travel",hospitals:"Hospitals",finance:"Finance",world:"World News",tips:"Daily Tips",lifestyle:"Lifestyle"};
+  const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
   let posts = loadPosts();
   let editingId = null;
