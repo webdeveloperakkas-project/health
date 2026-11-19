@@ -1792,7 +1792,7 @@ body.policy-open { overflow:hidden; }
   }
 }
 
-/* Search control: centered magnifier and expandable mobile search popup */
+/* Search control: centered magnifier and expandable mobile search field */
 .search-form { position:relative; align-items:center; }
 .search-toggle {
   display:none; align-items:center; justify-content:center;
@@ -1808,10 +1808,6 @@ body.policy-open { overflow:hidden; }
   right:-5px; bottom:-3px; border-radius:2px;
   background:#fff; transform:rotate(45deg);
 }
-.search-submit {
-  border:0; border-radius:6px; background:var(--navy);
-  color:#fff; font-size:12px; font-weight:700; cursor:pointer;
-}
 @media (max-width:600px) {
   .header-tools { gap:5px; }
   .language-wrap { margin-right:4px; }
@@ -1822,21 +1818,23 @@ body.policy-open { overflow:hidden; }
   .search-form .search-toggle {
     display:inline-flex; width:34px; height:32px;
   }
-  .search-form input, .search-form .search-submit { display:none; }
+  .search-form input { display:none; }
   .search-form.search-open {
-    position:absolute; top:calc(100% + 8px); right:0; z-index:80;
-    display:flex; width:min(320px, calc(100vw - 28px)); height:52px;
-    padding:7px; gap:6px; background:#fff;
+    position:fixed; top:86px; left:50%; right:auto; z-index:1000;
+    transform:translateX(-50%);
+    display:flex; width:min(320px, calc(100vw - 32px)); height:50px;
+    padding:6px; background:#fff;
     border:1px solid var(--line); border-radius:12px;
     box-shadow:0 14px 35px #15394324;
   }
   .search-form.search-open .search-toggle { display:none; }
   .search-form.search-open input {
-    display:block; flex:1; width:100%; min-width:0; padding:0 8px;
-    border:1px solid var(--line); border-radius:7px; outline:none;
-    font-size:13px;
+    display:block; flex:1; width:100%; min-width:0; height:100%;
+    padding:0 13px; border:1px solid #9bd9d3; border-radius:8px;
+    outline:none; background:#e8f7f5; color:var(--navy);
+    font-size:14px; font-weight:600;
   }
-  .search-form.search-open .search-submit {
-    display:block; flex:0 0 auto; padding:0 13px;
+  .search-form.search-open input::placeholder {
+    color:#287f79; opacity:1;
   }
 }
