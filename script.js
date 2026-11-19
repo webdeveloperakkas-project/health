@@ -159,10 +159,10 @@
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     document.documentElement.lang = activeLanguage;
-    $$(".category-tab, .sidebar-category").forEach(button => button.textContent = t.categories[button.dataset.category]);
+    Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => button.textContent = t.categories[button.dataset.category]);
     $("#siteSearch").placeholder = t.search;
     $(".eyebrow").textContent = t.stories;
-    $$(".post-type-option").forEach(button => {
+    Array.from(document.querySelectorAll(".post-type-option")).forEach(button => {
       button.textContent = t.types[button.dataset.postType];
     });
     $("#about h2").textContent = t.aboutTitle;
@@ -235,16 +235,16 @@
      Purpose: Change category and reset the post-type filter.
      Section complete.
   ========================================================= */
-  $$(".category-tab, .sidebar-category").forEach(button => {
+  Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
       activePostType = "latest";
-      $$(".post-type-option").forEach(option => { const selected = option.dataset.postType === activePostType; option.classList.toggle("active", selected); option.setAttribute("aria-pressed", String(selected)); });
+      Array.from(document.querySelectorAll(".post-type-option")).forEach(option => { const selected = option.dataset.postType === activePostType; option.classList.toggle("active", selected); option.setAttribute("aria-pressed", String(selected)); });
       currentPage = 1;
       searchTerm = "";
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
-      $$(".category-tab, .sidebar-category").forEach(card => {
+      Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(card => {
         const selected = card.dataset.category === activeCategory;
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
@@ -263,11 +263,11 @@
      Purpose: Filter the current category by the selected post type.
      Section complete.
   ========================================================= */
-  $$(".post-type-option").forEach(button => {
+  Array.from(document.querySelectorAll(".post-type-option")).forEach(button => {
     button.addEventListener("click", () => {
       activePostType = button.dataset.postType;
       currentPage = 1;
-      $$(".post-type-option").forEach(option => { const selected = option === button; option.classList.toggle("active", selected); option.setAttribute("aria-pressed", String(selected)); });
+      Array.from(document.querySelectorAll(".post-type-option")).forEach(option => { const selected = option === button; option.classList.toggle("active", selected); option.setAttribute("aria-pressed", String(selected)); });
       render();
     });
   });
