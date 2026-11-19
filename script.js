@@ -159,7 +159,7 @@
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     document.documentElement.lang = activeLanguage;
-    $$$(".category-tab, .sidebar-category").forEach(button => button.textContent = t.categories[button.dataset.category]);
+    $(".category-tab, .sidebar-category").forEach(button => button.textContent = t.categories[button.dataset.category]);
     $("#siteSearch").placeholder = t.search;
     $(".eyebrow").textContent = t.stories;
     $$(".post-type-option").forEach(button => {
@@ -244,7 +244,7 @@
       searchTerm = "";
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
-      $$$(".category-tab, .sidebar-category").forEach(card => {
+      $(".category-tab, .sidebar-category").forEach(card => {
         const selected = card.dataset.category === activeCategory;
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
