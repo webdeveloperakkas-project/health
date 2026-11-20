@@ -171,6 +171,13 @@
       }
     });
     $("#siteSearch").placeholder = t.search;
+    const tickerLabel = $(".ticker-label");
+    if (tickerLabel) {
+      const labelText = activeLanguage === "bn" ? "শিরোনাম" : t.latest;
+      const dot = tickerLabel.querySelector(".ticker-dot");
+      tickerLabel.textContent = labelText;
+      if (dot) tickerLabel.prepend(dot);
+    }
     $("#articleFeed .eyebrow").textContent = t.stories;
     Array.from(document.querySelectorAll(".post-type-option")).forEach(button => {
       button.textContent = t.types[button.dataset.postType];
@@ -263,23 +270,18 @@
   }
   function renderHomeList() {
     const featured = posts.find(post => post.featured) || sortedByDate(posts.filter(post => post.postType === "latest"))[0] || posts[0];
-    const latestItems = sortedByDate(posts.filter(post => post !== featured && post.postType === "latest")).slice(0,10);
+    const latestItems = sortedByDate(posts.filter(post => post.postType === "latest")).slice(0,10);
     const popularItems = [...posts].filter(post => post.postType === "popular")
       .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,10);
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!items.length) {
       homeListPanel.innerHTML = '<div class="home-list-empty">' + (homeListType === "popular" ? "Popular stories will appear here soon." : "New stories will appear here as they are published.") + '</div>';
     } else {
-      homeListPanel.innerHTML = items.map(post => {
-        const postIndex = posts.indexOf(post);
-        return '<div class="home-list-entry">' +
-          '<button class="home-list-item" type="button" data-open-post="' + postIndex + '">' +
-            '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
-            '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
-          '</button>' +
-          '<button class="home-list-details" type="button" data-open-post="' + postIndex + '">Details <span aria-hidden="true">→</span></button>' +
-        '</div>';
-      }).join("");
+      homeListPanel.innerHTML = items.map(post =>
+        '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+          '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
+          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
+        '</button>'
     }
     $$(".home-rail-tab").forEach(button => {
       const selected = button.dataset.homeList === homeListType;
@@ -287,7 +289,7 @@
       button.setAttribute("aria-selected", String(selected));
     });
     const viewAll = $("#homeViewAll");
-    if (viewAll) viewAll.innerHTML = (homeListType === "popular" ? "Explore More Popular Stories" : "Explore More Latest Stories") + ' <span>→</span>';
+    if (viewAll) viewAll.innerHTML = (activeLanguage === "bn" ? "আরও বিস্তারিত" : activeLanguage === "hi" ? "और अधिक जानें" : activeLanguage === "de" ? "Mehr erfahren" : activeLanguage === "fr" ? "En savoir plus" : activeLanguage === "es" ? "Ver más" : "More Details") + ' <span>→</span>';
   }
     function renderHomeFeatured() {
     const post = posts.find(item => item.featured) || sortedByDate(posts.filter(item => item.postType === "latest"))[0] || posts[0];
