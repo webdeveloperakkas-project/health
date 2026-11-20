@@ -599,6 +599,12 @@
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
       activeSportsSubcategory = "";
+      const sportsMenuTrigger = document.querySelector(".sports-category-trigger");
+      const sportsMenu = document.querySelector("#sportsSubmenu");
+      if (sportsMenuTrigger) sportsMenuTrigger.classList.toggle("active", activeCategory === "sports");
+      if (sportsMenuTrigger) sportsMenuTrigger.setAttribute("aria-expanded", "false");
+      if (sportsMenu) sportsMenu.hidden = true;
+      if (sportsMenu) sportsMenu.querySelectorAll("[data-sports-subcategory]").forEach(item => item.classList.remove("active"));
       showHomeFeed = false;
       showFeaturedFeed = false;
       activePostType = "latest";
