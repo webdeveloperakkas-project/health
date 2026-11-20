@@ -171,6 +171,7 @@
     document.documentElement.lang = activeLanguage;
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
     const menuHeading = document.querySelector(".menu-heading"); if (menuHeading) menuHeading.textContent = ui.explore;
+    const menuAbout = document.querySelector('.main-nav > a[href="#about"]'); if (menuAbout) menuAbout.textContent = ui.about;
     const homeRead = document.querySelector(".home-read-button");
     const categoryHeading = document.querySelector(".home-category-widget h2"); if (categoryHeading) categoryHeading.textContent = ui.categoryHighlights;
     const homeEyebrow = document.querySelector(".home-widget-heading .eyebrow"); if (homeEyebrow) homeEyebrow.textContent = ui.explore;
@@ -345,7 +346,7 @@
     homeCategorySpotlight.innerHTML =
       '<button class="home-category-card" type="button" data-open-post="' + postIndex + '">' +
         '<span class="home-category-image"><img src="' + imageForPost(item.post) + '" alt="" loading="lazy"></span>' +
-        '<span class="home-category-label">' + escapeHTML(categoryNames[item.category]) + ' · LATEST</span>' +
+        '<span class="home-category-label">' + escapeHTML(categoryNames[item.category]) + ' · ' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en).latest.toUpperCase() + '</span>' +
         '<strong>' + escapeHTML(item.post.title) + '</strong>' +
         '<span class="home-category-date">' + escapeHTML(item.post.date) + '</span>' +
       '</button>';
