@@ -12,3 +12,12 @@
 
 /* Multi-select feed placements are separate from homepage editorial selection. */
 .placement-fieldset{border:0;padding:0;margin:13px 0 8px;min-width:0}.placement-fieldset legend{padding:0;margin-bottom:8px}.placement-fieldset legend small{display:block;font-size:9px;font-weight:500;color:#91a09e;margin-top:2px}.placement-option{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;margin:6px 0;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}.placement-option input{width:16px;height:16px;margin:2px 0 0;accent-color:var(--teal);flex:none}.placement-option span{display:flex;flex-direction:column;gap:2px}.placement-option strong{font-size:11px;color:var(--navy)}.placement-option small{font-size:10px;line-height:1.4;color:var(--muted)}
+
+/* Search keyword chips in the CMS editor. */
+.keyword-field-label{margin-top:15px!important}
+.keyword-editor{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:40px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#fff}
+.keyword-editor:focus-within{border-color:#8bc8bd;box-shadow:0 0 0 3px #159d9212}
+.keyword-chips{display:contents}
+.keyword-editor input{flex:1 1 150px;width:100%;border:0!important;outline:0!important;padding:5px 2px!important;box-shadow:none!important}
+.keyword-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:5px;background:#f0f4f3;color:#637276;font-size:10px}
+.keyword-chip button{border:0;background:transparent;color:#8b9998;font-size:14px;line-height:1;padding:0 1px}
