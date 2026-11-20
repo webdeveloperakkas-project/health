@@ -2421,3 +2421,11 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 @media(min-width:801px){.header-main{height:84px!important}}
 @media(max-width:800px){.header-main{height:94px!important}}
 @media (pointer:coarse) and (max-device-width:600px){.header-main{height:94px!important}}
+
+
+/* Latest label uses the same warm yellow as the homepage detail CTA. */
+.ticker-label{background:#f7df91!important;color:#172f34!important}
+.ticker-dot{background:#159d92!important;box-shadow:0 0 0 4px #159d9222!important}
+.ticker-track{gap:34px}
+.ticker-track span{font-family:"Hind Siliguri","DM Sans",sans-serif;font-size:14px;line-height:1.5;color:#26383b}
+@media(max-width:800px){.ticker-track{gap:22px}.ticker-track span{font-size:12px}}
