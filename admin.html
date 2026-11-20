@@ -7,8 +7,8 @@
   <title>Everyday Atlas | Content Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=6">
-  <script src="admin.js?v=7" defer></script>
+  <link rel="stylesheet" href="admin.css?v=7">
+  <script src="admin.js?v=8" defer></script>
 </head>
 <body>
   <header class="admin-header">
@@ -31,6 +31,17 @@
         <button class="primary-btn" id="newPostBtn">＋ Create new post</button>
       </div>
       <div class="notice"><strong>Setup mode:</strong> Posts are currently saved in this browser only. Connect Supabase later to enable secure admin login, shared publishing, permanent media storage and live website updates.</div>
+      <section class="panel-card ticker-settings-card">
+        <div class="panel-heading"><div><h2>Homepage Scrolling Headline</h2><p>Write one line at a time. These lines will scroll across the top of the public website.</p></div></div>
+        <label class="field-label" for="tickerHeadlineText">Scrolling headline text</label>
+        <textarea class="text-input ticker-headline-input" id="tickerHeadlineText" rows="5" maxlength="700" placeholder="Enter each scrolling line on a new line...">আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।
+চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি।
+ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে
+মরি হায়, হায় রে
+ও মা, অঘ্রাণে তোর ভরা ক্ষেতে কী দেখেছি মধুর হাসি</textarea>
+        <div class="field-help">Use 4–5 lines or more. No bullet points or separator symbols are needed.</div>
+        <button class="primary-btn" type="button" id="saveTickerHeadline">Save scrolling headline</button>
+      </section>
       <section class="view-panel active" id="dashboardView">
         <div class="stats-grid">
           <article class="stat-card"><span>Total posts</span><strong id="statTotal">0</strong><small>All saved posts</small></article>
