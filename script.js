@@ -381,11 +381,11 @@
   }));
   $("#homeViewAll").addEventListener("click", () => {
     activeCategory = "home";
-    activePostType = "latest";
+    activePostType = homeListType === "popular" ? "popular" : "latest";
     showHomeFeed = true;
     currentPage = 1;
-    $$(".post-type-option").forEach(option => {
-      const selected = option.dataset.postType === "latest";
+    $(".post-type-option").forEach(option => {
+      const selected = option.dataset.postType === activePostType;
       option.classList.toggle("active", selected);
       option.setAttribute("aria-pressed", String(selected));
     });
