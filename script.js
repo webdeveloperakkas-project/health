@@ -100,7 +100,7 @@
       const publicCmsPosts = cmsPosts.filter(item => item && item.status === "published").map(item => {
         const plain = String(item.content || "").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
         const dateValue = item.publishedAt || item.createdAt || item.updatedAt || new Date().toISOString();
-        return {cmsId:item.id,category:item.category,title:item.title,postType:item.postType || "latest",featured:!!item.featured,date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
+        return {cmsId:item.id,category:item.category,title:item.title,postType:item.postType || "latest",featured:!!item.featured,publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
       });
       posts = posts.filter(item => !item.cmsId).concat(publicCmsPosts, posts.filter(item => item.cmsId));
     }
@@ -288,7 +288,11 @@
     return post.cover || categoryImages[post.category] || categoryImages.lifestyle;
   }
   function sortedByDate(items) {
-    return [...items].sort((a,b) => new Date(b.date) - new Date(a.date));
+    return [...items].sort((a,b) => {
+      const aDate = Number(a.publishedTimestamp) || new Date(a.date).getTime() || 0;
+      const bDate = Number(b.publishedTimestamp) || new Date(b.date).getTime() || 0;
+      return bDate - aDate;
+    });
   }
   function articleSlug(post) {
     return String(post.title || "article").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
@@ -330,22 +334,30 @@
     const viewAll = $("#homeViewAll");
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).more + ' <span>→</span>';
   }
-    function renderHomeFeatured() {
-    const post = sortedByDate(posts.filter(item => item.postType === "latest"))[0] || posts[0];
-    if (!post) {
-      homeFeatured.innerHTML = '<div class="home-feature-empty">Your main featured story will appear here.</div>';
+  let homeFeaturedIndex = 0;
+  function renderHomeFeatured() {
+    const stories = sortedByDate(posts);
+    if (!stories.length) {
+      homeFeatured.innerHTML = '<div class="home-feature-empty">Your latest published story will appear here.</div>';
       return;
     }
+    homeFeaturedIndex = ((homeFeaturedIndex % stories.length) + stories.length) % stories.length;
+    const post = stories[homeFeaturedIndex];
     const excerpt = (post.excerpt || (post.body || []).slice(0,2).join(" ")).slice(0,260);
     const index = posts.indexOf(post);
+    const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     homeFeatured.innerHTML =
-      '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en).main + '</span></div>' +
+      '<div class="home-feature-slide"><div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' +
       '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + '</span>' +
       '<h1>' + escapeHTML(post.title) + '</h1>' +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
       shareButtons(post) +
       '<p>' + escapeHTML(excerpt) + '</p>' +
-      '<button class="home-read-button" type="button" data-open-post="' + index + '">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en).read + ' <span>→</span></button></div>';
+      '<button class="home-read-button" type="button" data-open-post="' + index + '">' + labels.read + ' <span>→</span></button></div></div>' +
+      '<div class="home-feature-navigation" aria-label="Main story navigation">' +
+      '<button type="button" class="home-feature-arrow" data-home-feature="previous" aria-label="Previous story">‹</button>' +
+      '<div class="home-feature-pagination" aria-label="Choose a story">' + stories.map((story,i) => '<button type="button" class="home-feature-dot' + (i === homeFeaturedIndex ? ' active' : '') + '" data-home-feature-index="' + i + '" aria-label="Go to story ' + (i+1) + '" aria-current="' + (i === homeFeaturedIndex ? 'true' : 'false') + '"></button>').join("") + '</div>' +
+      '<button type="button" class="home-feature-arrow" data-home-feature="next" aria-label="Next story">›</button></div>';
   }
   function renderFeaturedStories() {
     const section = $("#featuredStoriesSection");
@@ -441,6 +453,16 @@
     $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
   });
   document.addEventListener("click", event => {
+    const featureArrow = event.target.closest("[data-home-feature]");
+    const featureDot = event.target.closest("[data-home-feature-index]");
+    if (featureArrow || featureDot) {
+      const storyCount = sortedByDate(posts).length;
+      if (storyCount) {
+        if (featureDot) homeFeaturedIndex = Number(featureDot.dataset.homeFeatureIndex) || 0;
+        else homeFeaturedIndex = (homeFeaturedIndex + (featureArrow.dataset.homeFeature === "next" ? 1 : -1) + storyCount) % storyCount;
+        renderHomeFeatured();
+      }
+    }
     const openButton = event.target.closest("[data-open-post]");
     if (openButton) {
       const post = posts[Number(openButton.dataset.openPost)];
@@ -614,6 +636,13 @@
   updateHeaderClock();
   window.setInterval(updateHeaderClock, 30000);
   applyLanguage($("#languageSelect").value || "en");
+  window.setInterval(() => {
+    if (homeSection && !homeSection.hidden && posts.length > 1) {
+      const storyCount = sortedByDate(posts).length;
+      homeFeaturedIndex = (homeFeaturedIndex + 1) % storyCount;
+      renderHomeFeatured();
+    }
+  }, 5500);
   const requestedArticle = new URLSearchParams(window.location.search).get("article");
   if (requestedArticle) {
     const requestedPost = posts.find(post => articleSlug(post) === requestedArticle);
