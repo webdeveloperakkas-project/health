@@ -28,3 +28,15 @@
 
 /* Homepage scrolling headline settings */
 .ticker-settings-card{margin-bottom:18px}.ticker-headline-input{min-height:130px;resize:vertical;line-height:1.8;font-family:"Hind Siliguri","DM Sans",sans-serif}.ticker-settings-card .primary-btn{margin-top:12px}
+
+
+/* Headline manager workspace */
+.headline-list{margin-top:14px}
+.headline-table{display:flex;flex-direction:column}
+.headline-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line)}
+.headline-order{display:grid;place-items:center;width:25px;height:25px;border-radius:7px;background:#f0f5f3;color:var(--teal-dark);font-size:10px;font-weight:800}
+.headline-row strong{font-size:12px;line-height:1.6;color:var(--navy);font-family:"Hind Siliguri","DM Sans",sans-serif}
+.headline-actions{display:flex;gap:6px}
+.headline-form h2{margin:0 0 18px}
+.headline-form-actions{display:flex;gap:9px;margin-top:15px}
+@media(max-width:600px){.headline-row{grid-template-columns:28px minmax(0,1fr);gap:8px}.headline-actions{grid-column:2}.headline-form-actions{flex-wrap:wrap}}
