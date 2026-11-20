@@ -2362,3 +2362,23 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .home-feature-dot{width:7px;height:7px;flex:0 0 7px;padding:0;border:0;border-radius:50%;background:#c7d6d1;cursor:pointer;transition:width .2s,background .2s}
 .home-feature-dot.active{width:22px;flex-basis:22px;border-radius:8px;background:var(--teal)}
 @media(max-width:800px){.home-feature-navigation{padding:0 14px 15px;gap:12px}.home-feature-arrow{width:32px;height:32px}}
+
+
+/* Main Featured: concise summary with the article action aligned on the right. */
+.home-feature-summary-row{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:14px}
+.home-feature-summary-row p{flex:1;min-width:0;margin:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.home-feature-summary-row .home-read-button{flex:0 0 auto;white-space:nowrap}
+.home-feature-navigation{justify-content:space-between!important;gap:14px!important}
+.home-feature-arrow{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;height:34px;padding:0 13px!important;border-radius:7px!important;font-size:11px!important;font-weight:800;white-space:nowrap}
+.home-feature-pagination{flex:1}
+@media(max-width:800px){
+ .home-feature-summary-row{align-items:flex-start;gap:10px}
+ .home-feature-summary-row p{font-size:11px!important;line-height:1.5!important}
+ .home-feature-summary-row .home-read-button{padding:10px 11px;font-size:10px}
+ .home-feature-arrow{height:32px!important;padding:0 10px!important}
+}
+@media(max-width:420px){
+ .home-feature-summary-row{flex-direction:column;align-items:stretch}
+ .home-feature-summary-row p{white-space:nowrap}
+ .home-feature-summary-row .home-read-button{align-self:flex-end}
+}
