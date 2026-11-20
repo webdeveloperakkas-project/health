@@ -2509,3 +2509,15 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
     touch-action:pan-y!important;
   }
 }
+
+
+/* Ensure the Sports category label remains visible inside its grid wrapper. */
+.sports-category-menu{display:flex!important;align-items:stretch!important;width:100%!important;min-width:0!important;overflow:visible!important;}
+.sports-category-trigger{display:flex!important;flex:1 1 auto!important;align-items:center!important;justify-content:center!important;min-width:0!important;width:100%!important;height:100%!important;overflow:visible!important;text-indent:0!important;color:#425a60!important;font-size:16px!important;line-height:1.2!important;letter-spacing:-.2px!important;padding:7px 13px 7px 2px!important;white-space:nowrap!important;}
+.sports-category-trigger.active{color:#fff!important;}
+.sports-category-trigger[aria-expanded="true"]{color:var(--teal-dark)!important;}
+.sports-category-trigger::after{right:3px!important;font-size:11px!important;line-height:1!important;}
+@media(max-width:800px){
+  .sports-category-trigger{font-size:14px!important;padding:7px 12px 7px 1px!important;letter-spacing:-.3px!important;}
+  .sports-category-trigger::after{right:2px!important;font-size:10px!important;}
+}
