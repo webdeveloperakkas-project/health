@@ -297,7 +297,7 @@
       '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">MAIN FEATURED</span></div>' +
       '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + '</span>' +
       '<h1>' + escapeHTML(post.title) + '</h1>' +
-      '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time><span>·</span><span>' + escapeHTML(post.time || "10:30 AM") + '</span><span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
+      '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
       shareButtons(post) +
       '<p>' + escapeHTML(excerpt) + '</p>' +
       '<button class="home-read-button" type="button" data-open-post="' + index + '">Read Full Article <span>→</span></button></div>';
@@ -330,7 +330,7 @@
     if (!post) return;
     const paragraphs = (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
     articleDialogContent.innerHTML =
-      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + ' · ' + escapeHTML(post.date) + ' · ' + escapeHTML(post.time || "10:30 AM") + '</div>' +
+      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
       '<h1 id="articleDialogTitle">' + escapeHTML(post.title) + '</h1>' +
       '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '">' +
       shareButtons(post) + '<div class="article-detail-body">' + paragraphs + '</div>';
