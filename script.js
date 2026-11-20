@@ -100,7 +100,7 @@
       const publicCmsPosts = cmsPosts.filter(item => item && item.status === "published").map(item => {
         const plain = String(item.content || "").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
         const dateValue = item.publishedAt || item.createdAt || item.updatedAt || new Date().toISOString();
-        return {cmsId:item.id,category:item.category,title:item.title,postType:item.postType || "latest",featured:!!item.featured,publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
+        return {cmsId:item.id,category:item.category,title:item.title,postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
       });
       posts = posts.filter(item => !item.cmsId).concat(publicCmsPosts, posts.filter(item => item.cmsId));
     }
@@ -124,52 +124,52 @@
       latest:"LATEST",categories:{
         home:"Home",world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
       },stories:"LATEST STORIES",types:{
-        latest:"Latest",popular:"Popular",mostViewed:"Most Viewed"
+        latest:"Latest",popular:"Popular",features:"Features",mostViewed:"Most Viewed"
       },description:"Latest articles and useful information.",search:"Search articles...",sort:"NEWEST FIRST ↓",page:"Page",of:"of",articles:"Articles",empty:"No sample posts are available in this category yet. More articles will appear here as they are published.",about:"About",contact:"Contact",privacy:"Privacy",aboutTitle:"Clear information for a world of everyday questions.",aboutText:"Our articles are for general information and do not replace professional advice."
     },
     bn:{
       latest:"সর্বশেষ",categories:{
         home:"হোম",world:"বিশ্ব সংবাদ",tips:"দৈনন্দিন টিপস",technology:"প্রযুক্তি",sports:"খেলাধুলা",health:"স্বাস্থ্য",beauty:"সৌন্দর্য",travel:"ভ্রমণ",finance:"অর্থনীতি",lifestyle:"জীবনযাপন"
       },stories:"সর্বশেষ লেখা",types:{
-        latest:"সর্বশেষ",popular:"জনপ্রিয়",mostViewed:"সর্বাধিক দেখা"
+        latest:"সর্বশেষ",popular:"জনপ্রিয়",features:"ফিচারস",mostViewed:"সর্বাধিক দেখা"
       },description:"সাম্প্রতিক প্রবন্ধ ও দরকারি তথ্য।",search:"প্রবন্ধ খুঁজুন...",sort:"নতুন লেখা আগে ↓",page:"পৃষ্ঠা",of:"এর",articles:"প্রবন্ধ",empty:"এই বিভাগে এখনো কোনো নমুনা প্রবন্ধ নেই। প্রকাশিত হলে নতুন প্রবন্ধ এখানে দেখা যাবে।",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা",aboutTitle:"প্রতিদিনের নানা প্রশ্নের জন্য সহজ ও নির্ভরযোগ্য তথ্য।",aboutText:"আমাদের প্রবন্ধ সাধারণ তথ্যের জন্য; এগুলো পেশাদার পরামর্শের বিকল্প নয়।"
     },
     hi:{
       latest:"ताज़ा",categories:{
         home:"होम",world:"विश्व समाचार",tips:"दैनिक सुझाव",technology:"प्रौद्योगिकी",sports:"खेल",health:"स्वास्थ्य",beauty:"सौंदर्य",travel:"यात्रा",finance:"वित्त",lifestyle:"जीवनशैली"
       },stories:"नवीनतम लेख",types:{
-        latest:"नवीनतम",popular:"लोकप्रिय",mostViewed:"सबसे अधिक देखे गए"
+        latest:"नवीनतम",popular:"लोकप्रिय",features:"विशेष",mostViewed:"सबसे अधिक देखे गए"
       },description:"नए लेख और उपयोगी जानकारी।",search:"लेख खोजें...",sort:"नवीनतम पहले ↓",page:"पृष्ठ",of:"में से",articles:"लेख",empty:"इस श्रेणी में अभी कोई नमूना लेख उपलब्ध नहीं है।",about:"परिचय",contact:"संपर्क",privacy:"गोपनीयता",aboutTitle:"रोज़मर्रा के सवालों के लिए स्पष्ट और उपयोगी जानकारी।",aboutText:"हमारे लेख सामान्य जानकारी के लिए हैं और पेशेवर सलाह का विकल्प नहीं हैं।"
     },
     de:{
       latest:"AKTUELL",categories:{
         home:"Startseite",world:"Weltnachrichten",tips:"Alltagstipps",technology:"Technologie",sports:"Sport",health:"Gesundheit",beauty:"Schönheit",travel:"Reisen",finance:"Finanzen",lifestyle:"Lebensstil"
       },stories:"NEUESTE ARTIKEL",types:{
-        latest:"Neueste",popular:"Beliebt",mostViewed:"Meistgesehen"
+        latest:"Neueste",popular:"Beliebt",features:"Ausgewählt",mostViewed:"Meistgesehen"
       },description:"Neueste Artikel und hilfreiche Informationen.",search:"Artikel suchen...",sort:"NEUESTE ZUERST ↓",page:"Seite",of:"von",articles:"Artikel",empty:"Für diese Kategorie sind noch keine Beispielartikel verfügbar.",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",aboutTitle:"Klare Informationen für die Fragen des Alltags.",aboutText:"Unsere Artikel dienen der allgemeinen Information und ersetzen keine professionelle Beratung."
     },
     fr:{
       latest:"À LA UNE",categories:{
         home:"Accueil",world:"Actualités",tips:"Conseils pratiques",technology:"Technologie",sports:"Sports",health:"Santé",beauty:"Beauté",travel:"Voyage",finance:"Finance",lifestyle:"Mode de vie"
       },stories:"DERNIERS ARTICLES",types:{
-        latest:"Récent",popular:"Populaire",mostViewed:"Les plus vus"
+        latest:"Récent",popular:"Populaire",features:"À la une",mostViewed:"Les plus vus"
       },description:"Articles récents et informations utiles.",search:"Rechercher des articles...",sort:"PLUS RÉCENT ↓",page:"Page",of:"sur",articles:"Articles",empty:"Aucun article exemple n'est encore disponible dans cette catégorie.",about:"À propos",contact:"Contact",privacy:"Confidentialité",aboutTitle:"Des informations claires pour les questions du quotidien.",aboutText:"Nos articles sont informatifs et ne remplacent pas un avis professionnel."
     },
     es:{
       latest:"ÚLTIMAS NOTICIAS",categories:{
         home:"Inicio",world:"Noticias mundiales",tips:"Consejos diarios",technology:"Tecnología",sports:"Deportes",health:"Salud",beauty:"Belleza",travel:"Viajes",finance:"Finanzas",lifestyle:"Estilo de vida"
       },stories:"ARTÍCULOS RECIENTES",types:{
-        latest:"Recientes",popular:"Popular",mostViewed:"Más vistos"
+        latest:"Recientes",popular:"Popular",features:"Destacados",mostViewed:"Más vistos"
       },description:"Artículos recientes e información útil.",search:"Buscar artículos...",sort:"MÁS RECIENTES ↓",page:"Página",of:"de",articles:"Artículos",empty:"Todavía no hay artículos de ejemplo en esta categoría.",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",aboutTitle:"Información clara para las preguntas de cada día.",aboutText:"Nuestros artículos son informativos y no sustituyen el asesoramiento profesional."
     }
   };
   const extendedUiCopy = {
-    en:{featuredStories:"Featured Stories",featuredDescription:"A collection of editor-selected stories and in-depth reviews.",featuredMore:"Read More Featured Stories",explore:"EXPLORE CATEGORIES",latest:"Latest",popular:"Popular",more:"More Details",emptyLatest:"New stories will appear here as they are published.",emptyPopular:"Popular stories will appear here soon.",main:"MAIN FEATURED",read:"Read Full Article",categoryHighlights:"Category Highlights",explore:"EXPLORE",ad:"ADVERTISEMENT",adSense:"AdSense",adResponsive:"Responsive advertisement placement",stories:"LATEST STORIES",previous:"Previous",next:"Next",categories:"Categories",about:"About Us",contact:"Contact",privacy:"Privacy Policy",editorial:"Editorial Policy",terms:"Terms of Use",disclaimer:"Disclaimer",cookies:"Cookie Policy"},
-    bn:{featuredStories:"ফিচার্ড পোস্ট",featuredDescription:"সম্পাদক বা অ্যাডমিনের নির্বাচিত গুরুত্বপূর্ণ পোস্ট ও বিস্তারিত রিভিউ।",featuredMore:"আরও বিস্তারিত পড়ুন",explore:"ক্যাটাগরি দেখুন",latest:"সর্বশেষ",popular:"জনপ্রিয়",more:"আরও বিস্তারিত",emptyLatest:"নতুন পোস্ট প্রকাশিত হলে এখানে দেখা যাবে।",emptyPopular:"জনপ্রিয় পোস্ট শিগগিরই এখানে দেখা যাবে।",main:"প্রধান নির্বাচিত পোস্ট",read:"সম্পূর্ণ লেখা পড়ুন",categoryHighlights:"ক্যাটাগরির বিশেষ পোস্ট",ad:"বিজ্ঞাপন",adSense:"বিজ্ঞাপন",adResponsive:"রেসপনসিভ বিজ্ঞাপনের স্থান",stories:"সর্বশেষ পোস্ট",previous:"পূর্ববর্তী",next:"পরবর্তী",categories:"ক্যাটাগরি",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা নীতি",editorial:"সম্পাদনা নীতি",terms:"ব্যবহারের শর্ত",disclaimer:"দায়মুক্তি",cookies:"কুকি নীতি"},
-    hi:{featuredStories:"विशेष लेख",featuredDescription:"संपादक द्वारा चुने गए महत्वपूर्ण लेख और विस्तृत समीक्षाएँ।",featuredMore:"और विशेष लेख पढ़ें",explore:"श्रेणियाँ देखें",latest:"नवीनतम",popular:"लोकप्रिय",more:"और अधिक जानें",emptyLatest:"नई पोस्ट प्रकाशित होने पर यहाँ दिखाई देंगी।",emptyPopular:"लोकप्रिय पोस्ट जल्द ही यहाँ दिखाई देंगी।",main:"मुख्य विशेष पोस्ट",read:"पूरा लेख पढ़ें",categoryHighlights:"श्रेणी की खास पोस्ट",ad:"विज्ञापन",adSense:"विज्ञापन",adResponsive:"रिस्पॉन्सिव विज्ञापन स्थान",stories:"नवीनतम पोस्ट",previous:"पिछला",next:"अगला",categories:"श्रेणियाँ",about:"हमारे बारे में",contact:"संपर्क",privacy:"गोपनीयता नीति",editorial:"संपादकीय नीति",terms:"उपयोग की शर्तें",disclaimer:"अस्वीकरण",cookies:"कुकी नीति"},
-    de:{featuredStories:"Ausgewählte Beiträge",featuredDescription:"Wichtige redaktionell ausgewählte Beiträge und ausführliche Rezensionen.",featuredMore:"Weitere ausgewählte Beiträge lesen",explore:"KATEGORIEN ENTDECKEN",latest:"Neueste",popular:"Beliebt",more:"Mehr erfahren",emptyLatest:"Neue Beiträge erscheinen hier nach der Veröffentlichung.",emptyPopular:"Beliebte Beiträge erscheinen bald hier.",main:"HAUPTBEITRAG",read:"Ganzen Artikel lesen",categoryHighlights:"Kategorie-Highlights",ad:"WERBUNG",adSense:"Werbung",adResponsive:"Responsiver Anzeigenplatz",stories:"NEUESTE BEITRÄGE",previous:"Zurück",next:"Weiter",categories:"Kategorien",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",editorial:"Redaktionsrichtlinie",terms:"Nutzungsbedingungen",disclaimer:"Haftungsausschluss",cookies:"Cookie-Richtlinie"},
-    fr:{explore:"DÉCOUVRIR LES CATÉGORIES",latest:"Récent",popular:"Populaire",more:"Voir plus",emptyLatest:"Les nouveaux articles apparaîtront ici après publication.",emptyPopular:"Les articles populaires apparaîtront bientôt ici.",main:"À LA UNE",read:"Lire l’article complet",categoryHighlights:"À découvrir par catégorie",ad:"PUBLICITÉ",adSense:"Publicité",adResponsive:"Espace publicitaire adaptatif",stories:"DERNIERS ARTICLES",previous:"Précédent",next:"Suivant",categories:"Catégories",about:"À propos",contact:"Contact",privacy:"Confidentialité",editorial:"Ligne éditoriale",terms:"Conditions d’utilisation",disclaimer:"Avertissement",cookies:"Politique relative aux cookies"},
-    es:{featuredStories:"Artículos destacados",featuredDescription:"Artículos importantes y reseñas detalladas seleccionados por el equipo editorial.",featuredMore:"Leer más artículos destacados",explore:"EXPLORAR CATEGORÍAS",latest:"Recientes",popular:"Popular",more:"Ver más",emptyLatest:"Las nuevas publicaciones aparecerán aquí al publicarse.",emptyPopular:"Las publicaciones populares aparecerán pronto aquí.",main:"ARTÍCULO DESTACADO",read:"Leer artículo completo",categoryHighlights:"Destacados por categoría",ad:"PUBLICIDAD",adSense:"Publicidad",adResponsive:"Espacio publicitario adaptable",stories:"ARTÍCULOS RECIENTES",previous:"Anterior",next:"Siguiente",categories:"Categorías",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",editorial:"Política editorial",terms:"Términos de uso",disclaimer:"Aviso legal",cookies:"Política de cookies"}
+    en:{featuredStories:"Featured Stories",featuredDescription:"A collection of editor-selected stories and in-depth reviews.",featuredMore:"Read More Featured Stories",explore:"EXPLORE CATEGORIES",latest:"Latest",popular:"Popular",more:"More Details",emptyLatest:"New stories will appear here as they are published.",emptyPopular:"Popular stories will appear here soon.",main:"MAIN HOME PAGE",read:"Read Full Article",categoryHighlights:"Category Highlights",explore:"EXPLORE",ad:"ADVERTISEMENT",adSense:"AdSense",adResponsive:"Responsive advertisement placement",stories:"LATEST STORIES",previous:"Previous",next:"Next",categories:"Categories",about:"About Us",contact:"Contact",privacy:"Privacy Policy",editorial:"Editorial Policy",terms:"Terms of Use",disclaimer:"Disclaimer",cookies:"Cookie Policy"},
+    bn:{featuredStories:"ফিচার্ড পোস্ট",featuredDescription:"সম্পাদক বা অ্যাডমিনের নির্বাচিত গুরুত্বপূর্ণ পোস্ট ও বিস্তারিত রিভিউ।",featuredMore:"আরও বিস্তারিত পড়ুন",explore:"ক্যাটাগরি দেখুন",latest:"সর্বশেষ",popular:"জনপ্রিয়",more:"আরও বিস্তারিত",emptyLatest:"নতুন পোস্ট প্রকাশিত হলে এখানে দেখা যাবে।",emptyPopular:"জনপ্রিয় পোস্ট শিগগিরই এখানে দেখা যাবে।",main:"মূল হোমপেজ",read:"সম্পূর্ণ লেখা পড়ুন",categoryHighlights:"ক্যাটাগরির বিশেষ পোস্ট",ad:"বিজ্ঞাপন",adSense:"বিজ্ঞাপন",adResponsive:"রেসপনসিভ বিজ্ঞাপনের স্থান",stories:"সর্বশেষ পোস্ট",previous:"পূর্ববর্তী",next:"পরবর্তী",categories:"ক্যাটাগরি",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা নীতি",editorial:"সম্পাদনা নীতি",terms:"ব্যবহারের শর্ত",disclaimer:"দায়মুক্তি",cookies:"কুকি নীতি"},
+    hi:{featuredStories:"विशेष लेख",featuredDescription:"संपादक द्वारा चुने गए महत्वपूर्ण लेख और विस्तृत समीक्षाएँ।",featuredMore:"और विशेष लेख पढ़ें",explore:"श्रेणियाँ देखें",latest:"नवीनतम",popular:"लोकप्रिय",more:"और अधिक जानें",emptyLatest:"नई पोस्ट प्रकाशित होने पर यहाँ दिखाई देंगी।",emptyPopular:"लोकप्रिय पोस्ट जल्द ही यहाँ दिखाई देंगी।",main:"मुख्य होम पेज",read:"पूरा लेख पढ़ें",categoryHighlights:"श्रेणी की खास पोस्ट",ad:"विज्ञापन",adSense:"विज्ञापन",adResponsive:"रिस्पॉन्सिव विज्ञापन स्थान",stories:"नवीनतम पोस्ट",previous:"पिछला",next:"अगला",categories:"श्रेणियाँ",about:"हमारे बारे में",contact:"संपर्क",privacy:"गोपनीयता नीति",editorial:"संपादकीय नीति",terms:"उपयोग की शर्तें",disclaimer:"अस्वीकरण",cookies:"कुकी नीति"},
+    de:{featuredStories:"Ausgewählte Beiträge",featuredDescription:"Wichtige redaktionell ausgewählte Beiträge und ausführliche Rezensionen.",featuredMore:"Weitere ausgewählte Beiträge lesen",explore:"KATEGORIEN ENTDECKEN",latest:"Neueste",popular:"Beliebt",more:"Mehr erfahren",emptyLatest:"Neue Beiträge erscheinen hier nach der Veröffentlichung.",emptyPopular:"Beliebte Beiträge erscheinen bald hier.",main:"STARTSEITE",read:"Ganzen Artikel lesen",categoryHighlights:"Kategorie-Highlights",ad:"WERBUNG",adSense:"Werbung",adResponsive:"Responsiver Anzeigenplatz",stories:"NEUESTE BEITRÄGE",previous:"Zurück",next:"Weiter",categories:"Kategorien",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",editorial:"Redaktionsrichtlinie",terms:"Nutzungsbedingungen",disclaimer:"Haftungsausschluss",cookies:"Cookie-Richtlinie"},
+    fr:{explore:"DÉCOUVRIR LES CATÉGORIES",latest:"Récent",popular:"Populaire",more:"Voir plus",emptyLatest:"Les nouveaux articles apparaîtront ici après publication.",emptyPopular:"Les articles populaires apparaîtront bientôt ici.",main:"PAGE D’ACCUEIL",read:"Lire l’article complet",categoryHighlights:"À découvrir par catégorie",ad:"PUBLICITÉ",adSense:"Publicité",adResponsive:"Espace publicitaire adaptatif",stories:"DERNIERS ARTICLES",previous:"Précédent",next:"Suivant",categories:"Catégories",about:"À propos",contact:"Contact",privacy:"Confidentialité",editorial:"Ligne éditoriale",terms:"Conditions d’utilisation",disclaimer:"Avertissement",cookies:"Politique relative aux cookies"},
+    es:{featuredStories:"Artículos destacados",featuredDescription:"Artículos importantes y reseñas detalladas seleccionados por el equipo editorial.",featuredMore:"Leer más artículos destacados",explore:"EXPLORAR CATEGORÍAS",latest:"Recientes",popular:"Popular",more:"Ver más",emptyLatest:"Las nuevas publicaciones aparecerán aquí al publicarse.",emptyPopular:"Las publicaciones populares aparecerán pronto aquí.",main:"PÁGINA PRINCIPAL",read:"Leer artículo completo",categoryHighlights:"Destacados por categoría",ad:"PUBLICIDAD",adSense:"Publicidad",adResponsive:"Espacio publicitario adaptable",stories:"ARTÍCULOS RECIENTES",previous:"Anterior",next:"Siguiente",categories:"Categorías",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",editorial:"Política editorial",terms:"Términos de uso",disclaimer:"Aviso legal",cookies:"Política de cookies"}
   };
   /* =========================================================
      05. LANGUAGE SWITCHING
@@ -319,9 +319,9 @@
       '</div>';
   }
   function renderHomeList() {
-    const featured = posts.find(post => post.featured) || sortedByDate(posts.filter(post => post.postType === "latest"))[0] || posts[0];
+    const featured = posts.find(post => post.featured) || sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest")))[0] || posts[0];
     const latestItems = sortedByDate(posts.filter(post => post.postType === "latest")).slice(0,10);
-    const popularItems = [...posts].filter(post => post.postType === "popular")
+    const popularItems = [...posts].filter(post => (post.postTypes || [post.postType || "latest"]).includes("popular"))
       .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,10);
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!items.length) {
@@ -373,12 +373,12 @@
     const right = $("#featuredStoriesRight");
     const count = $("#featuredStoriesCount");
     if (!section || !left || !right) return;
-    const items = posts.filter(post => post.featured).slice(0,20);
+    const items = posts.filter(post => post.featuredStories ?? post.featured).slice(0,20);
     if (count) count.textContent = items.length + " / 20";
     const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
       '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
       '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
-    left.innerHTML = items.length ? items.slice(0,10).map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Feature on homepage” when publishing an article.</div>';
+    left.innerHTML = items.length ? items.slice(0,10).map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Featured Stories / Editor’s Choice” when publishing an article.</div>';
     right.innerHTML = items.slice(10,20).map(renderItem).join("");
     const viewAll = $("#featuredStoriesViewAll");
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredMore + ' <span>→</span>';
@@ -399,7 +399,7 @@
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
     const categoryPosts = posts
-      .filter(post => showFeaturedFeed ? !!post.featured : (activeCategory === "home" || post.category === activeCategory) && post.postType === activePostType)
+      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType))
       .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "")).toLowerCase().includes(searchTerm));
     const totalPages = Math.max(1, Math.ceil(categoryPosts.length / pageSize));
     currentPage = Math.min(currentPage, totalPages);
