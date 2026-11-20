@@ -328,7 +328,7 @@
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).more + ' <span>→</span>';
   }
     function renderHomeFeatured() {
-    const post = posts.find(item => item.featured) || sortedByDate(posts.filter(item => item.postType === "latest"))[0] || posts[0];
+    const post = sortedByDate(posts.filter(item => item.postType === "latest"))[0] || posts[0];
     if (!post) {
       homeFeatured.innerHTML = '<div class="home-feature-empty">Your main featured story will appear here.</div>';
       return;
