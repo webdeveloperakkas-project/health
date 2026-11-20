@@ -2472,3 +2472,9 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .ticker-label{background:#d71920!important;color:#fff!important;font-family:"Hind Siliguri","DM Sans",sans-serif!important;font-size:15px!important;font-weight:800!important;letter-spacing:.06em!important;padding-left:26px!important;padding-right:26px!important;gap:0!important;white-space:nowrap!important;flex:0 0 auto!important;}
 .ticker-dot{display:none!important;}
 @media(max-width:800px){.ticker-label{font-size:14px!important;padding-left:18px!important;padding-right:18px!important;}}
+
+
+/* Mobile-only compact header and ticker label spacing. */
+@media(max-width:800px){.header-main{height:86px!important;min-height:86px!important;}}
+@media (pointer:coarse) and (max-device-width:600px){.header-main{height:86px!important;min-height:86px!important;}}
+@media(max-width:800px){.ticker-label{padding-left:12px!important;padding-right:12px!important;}}
