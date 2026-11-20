@@ -2572,3 +2572,14 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
     justify-self:center!important;
   }
 }
+
+
+/* Mobile category tabs: compact the short labels without changing the five-column layout. */
+@media (max-width:800px){
+  .category-tabs > .category-tab:nth-child(4),
+  .category-tabs > .category-tab:nth-child(6),
+  .category-tabs > .category-tab:nth-child(8){
+    width:calc(100% - 10px)!important;
+    justify-self:center!important;
+  }
+}
