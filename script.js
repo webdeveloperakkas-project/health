@@ -294,6 +294,14 @@
       return bDate - aDate;
     });
   }
+  function latestPostPerCategory(items) {
+    const seen = new Set();
+    return sortedByDate(items).filter(post => {
+      if (!post.category || seen.has(post.category)) return false;
+      seen.add(post.category);
+      return true;
+    });
+  }
   function articleSlug(post) {
     return String(post.title || "article").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
   }
@@ -336,7 +344,7 @@
   }
   let homeFeaturedIndex = 0;
   function renderHomeFeatured() {
-    const stories = sortedByDate(posts);
+    const stories = latestPostPerCategory(posts);
     if (!stories.length) {
       homeFeatured.innerHTML = '<div class="home-feature-empty">Your latest published story will appear here.</div>';
       return;
@@ -464,7 +472,7 @@
     const featureArrow = event.target.closest("[data-home-feature]");
     const featureDot = event.target.closest("[data-home-feature-index]");
     if (featureArrow || featureDot) {
-      const storyCount = sortedByDate(posts).length;
+      const storyCount = latestPostPerCategory(posts).length;
       if (storyCount) {
         if (featureDot) homeFeaturedIndex = Number(featureDot.dataset.homeFeatureIndex) || 0;
         else homeFeaturedIndex = (homeFeaturedIndex + (featureArrow.dataset.homeFeature === "next" ? 1 : -1) + storyCount) % storyCount;
