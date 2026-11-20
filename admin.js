@@ -145,8 +145,15 @@
   });
 
   /* Form state and CRUD */
+  function syncSportsSubcategory(){
+    const isSports=$("#postCategory").value==="sports";
+    $("#sportsSubcategoryField").hidden=!isSports;
+    $("#postSubcategory").required=isSports;
+    if(!isSports) $("#postSubcategory").value="";
+  }
+  $("#postCategory").addEventListener("change",syncSportsSubcategory);
   function resetForm(){
-    $("#postForm").reset(); $("#articleEditor").innerHTML="<p></p>"; $("#excerptCount").textContent="0";
+    $("#postForm").reset(); syncSportsSubcategory(); $("#articleEditor").innerHTML="<p></p>"; $("#excerptCount").textContent="0";
     currentKeywords=[]; renderKeywordChips();
     coverData=""; $("#coverPreview").textContent="No cover selected"; $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -158,7 +165,7 @@
     const post=posts.find(item=>item.id===postId); if(!post) return;
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>";
-    $("#postCategory").value=post.category||"health"; $("#postLanguage").value=post.language||"en";
+    $("#postCategory").value=post.category||"health"; $("#postSubcategory").value=post.subcategory||""; syncSportsSubcategory(); $("#postLanguage").value=post.language||"en";
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
@@ -199,7 +206,7 @@
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
     const post={
-      id:editingId||id(),title,content,category:$("#postCategory").value,language:$("#postLanguage").value,
+      id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:$("#postCategory").value==="sports"?$("#postSubcategory").value:"",language:$("#postLanguage").value,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
@@ -218,12 +225,13 @@
   function previewHTML(){
     const title=safe($("#postTitle").value||"Untitled article");
     const category=safe(categories[$("#postCategory").value]);
+    const subcategory=$("#postCategory").value==="sports"?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
     const body=$("#articleEditor").innerHTML;
     const cover=coverData?'<img src="'+coverData+'" alt="Article cover">':"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
     const video=$("#videoUrl").value.trim();
     const videoLink=video?'<p><a href="'+safe(video)+'" target="_blank" rel="noopener">Watch featured video ↗</a></p>':"";
-    return cover+'<div class="meta">'+category+' · '+safe(languages[$("#postLanguage").value])+'</div><h1>'+title+'</h1>'+body+videoLink+keywords;
+    return cover+'<div class="meta">'+category+(subcategory?' · '+subcategory:'')+' · '+safe(languages[$("#postLanguage").value])+'</div><h1>'+title+'</h1>'+body+videoLink+keywords;
   }
   $("#previewBtn").addEventListener("click",()=>{$("#previewContent").innerHTML=previewHTML();$("#previewDialog").showModal();});
   $("#closePreview").addEventListener("click",()=>$("#previewDialog").close());
