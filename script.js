@@ -150,6 +150,14 @@
       },description:"Artículos recientes e información útil.",search:"Buscar artículos...",sort:"MÁS RECIENTES ↓",page:"Página",of:"de",articles:"Artículos",empty:"Todavía no hay artículos de ejemplo en esta categoría.",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",aboutTitle:"Información clara para las preguntas de cada día.",aboutText:"Nuestros artículos son informativos y no sustituyen el asesoramiento profesional."
     }
   };
+  const extendedUiCopy = {
+    en:{explore:"EXPLORE CATEGORIES",latest:"Latest",popular:"Popular",more:"More Details",emptyLatest:"New stories will appear here as they are published.",emptyPopular:"Popular stories will appear here soon.",main:"MAIN FEATURED",read:"Read Full Article",categoryHighlights:"Category Highlights",explore:"EXPLORE",ad:"ADVERTISEMENT",adSense:"AdSense",adResponsive:"Responsive advertisement placement",stories:"LATEST STORIES",previous:"← Previous",next:"Next →",categories:"Categories",about:"About Us",contact:"Contact",privacy:"Privacy Policy",editorial:"Editorial Policy",terms:"Terms of Use",disclaimer:"Disclaimer",cookies:"Cookie Policy"},
+    bn:{explore:"ক্যাটাগরি দেখুন",latest:"সর্বশেষ",popular:"জনপ্রিয়",more:"আরও বিস্তারিত",emptyLatest:"নতুন পোস্ট প্রকাশিত হলে এখানে দেখা যাবে।",emptyPopular:"জনপ্রিয় পোস্ট শিগগিরই এখানে দেখা যাবে।",main:"প্রধান নির্বাচিত পোস্ট",read:"সম্পূর্ণ লেখা পড়ুন",categoryHighlights:"ক্যাটাগরির বিশেষ পোস্ট",ad:"বিজ্ঞাপন",adSense:"বিজ্ঞাপন",adResponsive:"রেসপনসিভ বিজ্ঞাপনের স্থান",stories:"সর্বশেষ পোস্ট",previous:"← আগের",next:"পরের →",categories:"ক্যাটাগরি",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা নীতি",editorial:"সম্পাদনা নীতি",terms:"ব্যবহারের শর্ত",disclaimer:"দায়মুক্তি",cookies:"কুকি নীতি"},
+    hi:{explore:"श्रेणियाँ देखें",latest:"नवीनतम",popular:"लोकप्रिय",more:"और अधिक जानें",emptyLatest:"नई पोस्ट प्रकाशित होने पर यहाँ दिखाई देंगी।",emptyPopular:"लोकप्रिय पोस्ट जल्द ही यहाँ दिखाई देंगी।",main:"मुख्य विशेष पोस्ट",read:"पूरा लेख पढ़ें",categoryHighlights:"श्रेणी की खास पोस्ट",ad:"विज्ञापन",adSense:"विज्ञापन",adResponsive:"रिस्पॉन्सिव विज्ञापन स्थान",stories:"नवीनतम पोस्ट",previous:"← पिछला",next:"अगला →",categories:"श्रेणियाँ",about:"हमारे बारे में",contact:"संपर्क",privacy:"गोपनीयता नीति",editorial:"संपादकीय नीति",terms:"उपयोग की शर्तें",disclaimer:"अस्वीकरण",cookies:"कुकी नीति"},
+    de:{explore:"KATEGORIEN ENTDECKEN",latest:"Neueste",popular:"Beliebt",more:"Mehr erfahren",emptyLatest:"Neue Beiträge erscheinen hier nach der Veröffentlichung.",emptyPopular:"Beliebte Beiträge erscheinen bald hier.",main:"HAUPTBEITRAG",read:"Ganzen Artikel lesen",categoryHighlights:"Kategorie-Highlights",ad:"WERBUNG",adSense:"Werbung",adResponsive:"Responsiver Anzeigenplatz",stories:"NEUESTE BEITRÄGE",previous:"← Zurück",next:"Weiter →",categories:"Kategorien",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",editorial:"Redaktionsrichtlinie",terms:"Nutzungsbedingungen",disclaimer:"Haftungsausschluss",cookies:"Cookie-Richtlinie"},
+    fr:{explore:"DÉCOUVRIR LES CATÉGORIES",latest:"Récent",popular:"Populaire",more:"Voir plus",emptyLatest:"Les nouveaux articles apparaîtront ici après publication.",emptyPopular:"Les articles populaires apparaîtront bientôt ici.",main:"À LA UNE",read:"Lire l’article complet",categoryHighlights:"À découvrir par catégorie",ad:"PUBLICITÉ",adSense:"Publicité",adResponsive:"Espace publicitaire adaptatif",stories:"DERNIERS ARTICLES",previous:"← Précédent",next:"Suivant →",categories:"Catégories",about:"À propos",contact:"Contact",privacy:"Confidentialité",editorial:"Ligne éditoriale",terms:"Conditions d’utilisation",disclaimer:"Avertissement",cookies:"Politique relative aux cookies"},
+    es:{explore:"EXPLORAR CATEGORÍAS",latest:"Recientes",popular:"Popular",more:"Ver más",emptyLatest:"Las nuevas publicaciones aparecerán aquí al publicarse.",emptyPopular:"Las publicaciones populares aparecerán pronto aquí.",main:"ARTÍCULO DESTACADO",read:"Leer artículo completo",categoryHighlights:"Destacados por categoría",ad:"PUBLICIDAD",adSense:"Publicidad",adResponsive:"Espacio publicitario adaptable",stories:"ARTÍCULOS RECIENTES",previous:"← Anterior",next:"Siguiente →",categories:"Categorías",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",editorial:"Política editorial",terms:"Términos de uso",disclaimer:"Aviso legal",cookies:"Política de cookies"}
+  };
   /* =========================================================
      05. LANGUAGE SWITCHING
      Purpose: Apply the selected language to interface controls.
@@ -159,7 +167,23 @@
   function applyLanguage(language) {
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
+    const ui = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     document.documentElement.lang = activeLanguage;
+    document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
+    const menuHeading = document.querySelector(".menu-heading"); if (menuHeading) menuHeading.textContent = ui.explore;
+    const homeRead = document.querySelector(".home-read-button");
+    const categoryHeading = document.querySelector(".home-category-widget h2"); if (categoryHeading) categoryHeading.textContent = ui.categoryHighlights;
+    const homeEyebrow = document.querySelector(".home-widget-heading .eyebrow"); if (homeEyebrow) homeEyebrow.textContent = ui.explore;
+    document.querySelectorAll(".home-ad-label,.top-ad > span").forEach(el => el.textContent = ui.ad);
+    const homeAdStrong = document.querySelector(".home-ad-slot strong"); if (homeAdStrong) homeAdStrong.textContent = ui.adSense;
+    document.querySelectorAll(".home-ad-slot small,.top-ad small").forEach(el => el.textContent = ui.adResponsive);
+    const feedEyebrow = document.querySelector("#articleFeed .feed-heading .eyebrow"); if (feedEyebrow) feedEyebrow.textContent = ui.stories;
+    const prev = document.querySelector("#previousPage"); if (prev) prev.textContent = ui.previous;
+    const next = document.querySelector("#nextPage"); if (next) next.textContent = ui.next;
+    const footerLabels = document.querySelectorAll(".footer-links a");
+    const footerText = [ui.categories,ui.about,ui.contact,ui.privacy,ui.editorial,ui.terms,ui.disclaimer,ui.cookies];
+    footerLabels.forEach((link,index) => { if (footerText[index]) link.textContent = footerText[index]; });
+    const aboutHeading = document.querySelector("#about h2");
     Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
       const label = t.categories[button.dataset.category];
       if (button.classList.contains("sidebar-category")) {
@@ -182,12 +206,8 @@
     Array.from(document.querySelectorAll(".post-type-option")).forEach(button => {
       button.textContent = t.types[button.dataset.postType];
     });
-    $("#about h2").textContent = t.aboutTitle;
-    $("#about p").textContent = t.aboutText;
-    const links = $(".footer-links a");
-    if (links[1]) links[1].textContent = t.about;
-    if (links[2]) links[2].textContent = t.contact;
-    if (links[3]) links[3].textContent = t.privacy;
+    if (aboutHeading) aboutHeading.textContent = t.aboutTitle;
+    const aboutParagraph = document.querySelector("#about p"); if (aboutParagraph) aboutParagraph.textContent = t.aboutText;
     render();
   }
   /* =========================================================
@@ -275,7 +295,7 @@
       .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,10);
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!items.length) {
-      homeListPanel.innerHTML = '<div class="home-list-empty">' + (homeListType === "popular" ? "Popular stories will appear here soon." : "New stories will appear here as they are published.") + '</div>';
+      homeListPanel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
     } else {
       homeListPanel.innerHTML = items.map(post =>
         '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
@@ -290,7 +310,7 @@
       button.setAttribute("aria-selected", String(selected));
     });
     const viewAll = $("#homeViewAll");
-    if (viewAll) viewAll.innerHTML = (activeLanguage === "bn" ? "আরও বিস্তারিত" : activeLanguage === "hi" ? "और अधिक जानें" : activeLanguage === "de" ? "Mehr erfahren" : activeLanguage === "fr" ? "En savoir plus" : activeLanguage === "es" ? "Ver más" : "More Details") + ' <span>→</span>';
+    if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).more + ' <span>→</span>';
   }
     function renderHomeFeatured() {
     const post = posts.find(item => item.featured) || sortedByDate(posts.filter(item => item.postType === "latest"))[0] || posts[0];
@@ -301,13 +321,13 @@
     const excerpt = (post.excerpt || (post.body || []).slice(0,2).join(" ")).slice(0,260);
     const index = posts.indexOf(post);
     homeFeatured.innerHTML =
-      '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">MAIN FEATURED</span></div>' +
+      '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en).main + '</span></div>' +
       '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + '</span>' +
       '<h1>' + escapeHTML(post.title) + '</h1>' +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
       shareButtons(post) +
       '<p>' + escapeHTML(excerpt) + '</p>' +
-      '<button class="home-read-button" type="button" data-open-post="' + index + '">Read Full Article <span>→</span></button></div>';
+      '<button class="home-read-button" type="button" data-open-post="' + index + '">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en).read + ' <span>→</span></button></div>';
   }
   function renderHomeCategory() {
     const items = Object.keys(categoryNames).filter(key => key !== "home").map(category => {
