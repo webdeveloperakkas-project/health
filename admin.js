@@ -8,7 +8,7 @@
   "use strict";
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
-  const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
+  const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",entertainment:"Entertainment",health:"Health",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",hospitals:"Hospitals (legacy)"};
   const placementLabels = {latest:"Latest",popular:"Popular",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
@@ -145,14 +145,14 @@
   });
 
   /* Form state and CRUD */
-  function syncSportsSubcategory(){
+  function syncCategorySubcategory(){
     const category=$("#postCategory").value;
-    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other Sports"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["beauty-care","Beauty Care"]]:[];
-    const select=$("#postSubcategory"),previous=select.value;$("#sportsSubcategoryField").hidden=!options.length;select.required=!!options.length;
+    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["beauty-care","Beauty Care"]]:[];
+    const select=$("#postSubcategory"),previous=select.value;$("#categorySubcategoryField").hidden=!options.length;select.required=!!options.length;
     select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
     select.value=options.some(([value])=>value===previous)?previous:"";
   }
-  $("#postCategory").addEventListener("change",syncSportsSubcategory);
+  $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
     $("#postForm").reset(); syncSportsSubcategory(); $("#articleEditor").innerHTML="<p></p>"; $("#excerptCount").textContent="0";
     currentKeywords=[]; renderKeywordChips();
