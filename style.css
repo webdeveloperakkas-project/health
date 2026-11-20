@@ -2215,3 +2215,21 @@ body.policy-open { overflow:hidden; }
   .home-list-entry { padding-bottom:7px; }
   .home-list-details { min-height:30px; font-size:11px; padding:5px 2px; }
 }
+
+
+.latest-ticker { background:#e8f3ef; color:#18383d; }
+.ticker-label { background:#f3d36c; color:#172f34; letter-spacing:.04em; }
+.ticker-dot { background:#159d92; box-shadow:0 0 0 4px #159d9222; }
+.ticker-track span { color:#28494d; }
+.ticker-track i { color:#159d92; }
+.home-list-entry { border:0; padding:0; }
+.home-list-details { display:none !important; }
+.home-view-all { justify-content:center; gap:10px; margin-top:10px; padding:13px 16px; border:1px solid #e8c75e; border-radius:8px; background:#f7df91; color:#172f34; font-size:12px; font-weight:900; text-align:center; transition:background .18s,transform .18s; }
+.home-view-all:hover { background:#f1cf68; transform:translateY(-1px); }
+.home-view-all span { color:#172f34; }
+@media (max-width:800px) {
+  .home-list-panel { height:430px; max-height:430px; }
+  .home-list-panel .home-list-item { display:flex !important; }
+  .home-view-all { min-height:46px; margin-top:10px; }
+}
+@media (max-width:420px) { .home-list-panel { height:410px; max-height:410px; } }
