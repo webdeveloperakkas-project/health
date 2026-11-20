@@ -383,22 +383,24 @@
       '<button type="button" class="home-feature-arrow" data-home-feature="next" aria-label="Next story">' + labels.next + '</button></div>';
   }
   function renderMyChoice() {
-    const section = $("#myChoiceSection");
-    const host = $("#myChoiceList");
+    const section = $("#myChoiceSection"), host = $("#myChoiceList");
     if (!section || !host) return;
     const items = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("myChoice"))).slice(0,4);
     const demos = [
-      {title:"A smarter way to organise your day",summary:"Simple planning ideas to help you focus on what matters. Build a routine that feels clear, practical and easy to maintain."},
-      {title:"Everyday technology worth exploring",summary:"Discover useful digital tools and thoughtful tips. Make technology work better for your daily life."},
-      {title:"Small habits for a healthier lifestyle",summary:"Explore realistic everyday habits that support wellbeing. Start small and make changes at your own pace."},
-      {title:"Travel inspiration for curious minds",summary:"Find fresh ideas for your next journey. Explore places, culture and practical travel inspiration."}
+      {title:"What Happens When You Eat Apples?",summary:"Apples provide fibre and vitamin C. They make a handy snack as part of a balanced diet.",fruit:"🍎",bg:"#fbe8e6"},
+      {title:"Are Grapes Good for You?",summary:"Grapes contain water and helpful plant compounds. Enjoy them as part of a varied diet.",fruit:"🍇",bg:"#eee8fa"},
+      {title:"Why Add Pomegranate to Your Diet?",summary:"Pomegranate offers fibre and plant compounds. Its juicy seeds add colour and flavour to meals.",fruit:"🔴",bg:"#f9e6eb"},
+      {title:"What Makes Bananas a Popular Snack?",summary:"Bananas provide potassium, vitamin B6 and carbohydrates. They are an easy snack on busy days.",fruit:"🍌",bg:"#fff4d8"}
     ];
+    const demoImage = item => {
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"><rect width="320" height="180" rx="14" fill="' + item.bg + '"/><circle cx="160" cy="83" r="59" fill="#fff" opacity=".55"/><text x="160" y="110" text-anchor="middle" font-size="82">' + item.fruit + '</text><text x="160" y="164" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#43545a">EVERYDAY ATLAS</text></svg>';
+      return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    };
     section.hidden = false;
     host.innerHTML = items.length ? items.map(post => {
-      const index = posts.indexOf(post);
-      const summary = post.excerpt || (post.body || []).join(" ").slice(0,145);
-      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,145)) + '</small>' : '') + '</span></button></article>';
-    }).join("") : demos.map((item,i) => '<article class="my-choice-item favorites-demo"><div class="my-choice-open"><span class="my-choice-thumb favorites-demo-thumb">' + ["✦","⌘","♡","✈"][i] + '</span><span class="my-choice-copy"><strong>' + escapeHTML(item.title) + '</strong><small>' + escapeHTML(item.summary) + '</small></span></div></article>').join("");
+      const index = posts.indexOf(post), summary = post.excerpt || (post.body || []).join(" ").slice(0,120);
+      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,120)) + '</small>' : '') + '</span></button></article>';
+    }).join("") : demos.map(item => '<article class="my-choice-item favorites-demo"><div class="my-choice-open"><span class="my-choice-thumb"><img src="' + demoImage(item) + '" alt="' + escapeHTML(item.title) + '" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(item.title) + '</strong><small>' + escapeHTML(item.summary) + '</small></span></div></article>').join("");
   }
   function renderFeaturedStories() {
     const section = $("#featuredStoriesSection");
