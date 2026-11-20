@@ -201,10 +201,40 @@
     ["headerDateDesktop","headerDateMobile"].forEach(id => { const el = $("#"+id); if (el) el.textContent = dateText; });
     ["headerTimeDesktop","headerTimeMobile"].forEach(id => { const el = $("#"+id); if (el) el.textContent = timeText; });
   }
+  function localizeText(value) {
+    const dictionary = window.EA_TRANSLATIONS && window.EA_TRANSLATIONS.content;
+    const entries = dictionary && dictionary[activeLanguage];
+    return entries && Object.prototype.hasOwnProperty.call(entries, String(value)) ? entries[String(value)] : String(value ?? "");
+  }
+  function localizeHtml(html) {
+    if (!html || activeLanguage === "en") return html || "";
+    const host = document.createElement("div");
+    host.innerHTML = html;
+    const dictionary = window.EA_TRANSLATIONS && window.EA_TRANSLATIONS.content;
+    const entries = dictionary && dictionary[activeLanguage];
+    if (!entries) return html;
+    const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const source = node.nodeValue.trim();
+      if (Object.prototype.hasOwnProperty.call(entries, source)) {
+        const leading = node.nodeValue.match(/^\\s*/)?.[0] || "";
+        const trailing = node.nodeValue.match(/\\s*$/)?.[0] || "";
+        node.nodeValue = leading + entries[source] + trailing;
+      }
+    });
+    return host.innerHTML;
+  }
   function applyLanguage(language) {
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     const ui = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
+    const sportsLabels = window.EA_TRANSLATIONS?.sportsSubcategories?.[activeLanguage] || window.EA_TRANSLATIONS?.sportsSubcategories?.en || {};
+    document.querySelectorAll("#sportsSubmenu [data-sports-subcategory]").forEach(button => {
+      const key = button.dataset.sportsSubcategory;
+      if (sportsLabels[key]) button.textContent = sportsLabels[key];
+    });
     document.documentElement.lang = activeLanguage;
     updateHeaderClock();
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
@@ -347,7 +377,7 @@
       homeListPanel.innerHTML = items.map(post =>
         '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
           '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
-          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
+          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
         '</button>'
       ).join("");
     }
@@ -372,9 +402,9 @@
     const index = posts.indexOf(post);
     const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     homeFeatured.innerHTML =
-      '<div class="home-feature-slide"><div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' +
-      '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + (post.subcategory ? " · " + escapeHTML(post.subcategory) : "") + '</span>' +
-      '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '">' + escapeHTML(post.title) + '</h1>' +
+      '<div class="home-feature-slide"><div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' +
+      '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + '</span>' +
+      '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '">' + escapeHTML(localizeText(post.title)) + '</h1>' +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
       shareButtons(post) +
       '<div class="home-feature-summary-row"><p>' + escapeHTML(excerpt) + '</p>' +
@@ -401,7 +431,7 @@
     section.hidden = false;
     host.innerHTML = items.length ? items.map(post => {
       const index = posts.indexOf(post), summary = post.excerpt || (post.body || []).join(" ").slice(0,120);
-      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,120)) + '</small>' : '') + '</span></button></article>';
+      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(localizeText(post.title)) + '</strong>' + (summary ? '<small>' + escapeHTML(localizeText(summary).slice(0,120)) + '</small>' : '') + '</span></button></article>';
     }).join("") : demos.map(item => '<article class="my-choice-item favorites-demo"><div class="my-choice-open"><span class="my-choice-thumb"><img src="' + demoImage(item) + '" alt="' + escapeHTML(item.title) + '" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(item.title) + '</strong><small>' + escapeHTML(item.summary) + '</small></span></div></article>').join("");
   }
   function renderFeaturedStories() {
@@ -414,7 +444,7 @@
     if (count) count.textContent = items.length + " / 20";
     const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
       '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
-      '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
+      '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
     left.innerHTML = items.length ? items.slice(0,10).map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Featured Stories / Editor’s Choice” when publishing an article.</div>';
     right.innerHTML = items.slice(10,20).map(renderItem).join("");
     const viewAll = $("#featuredStoriesViewAll");
@@ -422,11 +452,11 @@
   }
   function openArticleDetail(post) {
     if (!post) return;
-    const paragraphs = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+    const paragraphs = post.contentHtml ? localizeHtml(post.contentHtml) : (post.body || []).map(line => "<p>" + escapeHTML(localizeText(line)) + "</p>").join("");
     articleDialogContent.innerHTML =
-      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + (post.subcategory ? " · " + escapeHTML(post.subcategory) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
-      '<h1 id="articleDialogTitle">' + escapeHTML(post.title) + '</h1>' +
-      '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '">' +
+      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
+      '<h1 id="articleDialogTitle">' + escapeHTML(localizeText(post.title)) + '</h1>' +
+      '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' +
       shareButtons(post) + '<div class="article-detail-body">' + paragraphs + '</div>' + (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '');
     if (typeof articleDialog.showModal === "function") articleDialog.showModal();
     else articleDialog.setAttribute("open","");
@@ -459,8 +489,8 @@
       articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
     } else {
       articleList.innerHTML = visiblePosts.map((post,index) => {
-        const body = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
-        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
+        const body = post.contentHtml ? localizeHtml(post.contentHtml) : (post.body || []).map(line => "<p>" + escapeHTML(localizeText(line)) + "</p>").join("");
+        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(localizeText(post.title)) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
         return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
       }).join("");
     }
