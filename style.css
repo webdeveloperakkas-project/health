@@ -2256,3 +2256,17 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .featured-story-copy time{color:#8b9b9a;font-size:10px}
 .featured-story-empty{padding:28px 16px;border:1px dashed #dce8e4;border-radius:10px;color:var(--muted);font-size:13px;text-align:center}
 @media(max-width:800px){.featured-stories-section{padding:0 0 38px}.featured-stories-grid{grid-template-columns:1fr;gap:0}.featured-stories-heading{align-items:center}.featured-story-item{min-height:86px}.featured-story-thumb{width:100px;height:66px;flex-basis:100px}}
+
+
+/* 23. FEATURED STORIES — OUTER CARD, STORY CARDS AND VIEW ALL */
+.featured-stories-section{padding-top:8px}
+.featured-stories-card{padding:24px 26px 20px;border:1px solid var(--line);border-radius:15px;background:#fff;box-shadow:0 9px 30px rgba(21,57,67,.06)}
+.featured-stories-heading{margin-bottom:12px}
+.featured-story-item{min-height:106px;margin:0 7px 10px;padding:10px;border:1px solid #e8efec!important;border-radius:10px;background:#fff!important;box-shadow:0 3px 12px rgba(21,57,67,.035);transition:border-color .18s,box-shadow .18s,transform .18s}
+.featured-story-item:hover{border-color:#a9d5c9!important;box-shadow:0 6px 17px rgba(21,57,67,.08);transform:translateY(-1px)}
+.featured-story-thumb{width:116px;height:76px;flex-basis:116px}
+.featured-stories-footer{display:flex;justify-content:center;padding-top:17px;margin-top:8px;border-top:1px solid #edf1f0}
+.featured-stories-footer button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:10px 25px;border:0;border-radius:7px;background:#f3d36c;color:#172f32;font-size:13px;font-weight:800;cursor:pointer;transition:background .18s,transform .18s}
+.featured-stories-footer button:hover{background:#edc64c;transform:translateY(-1px)}
+.featured-stories-footer button span{font-size:17px;line-height:1}
+@media(max-width:800px){.featured-stories-card{padding:17px 13px 15px}.featured-stories-grid{gap:0}.featured-story-item{margin:0 0 9px;padding:9px;min-height:92px}.featured-stories-footer button{width:100%}}
