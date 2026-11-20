@@ -2434,3 +2434,8 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 /* Favorites card breathing room below the advertisement/address block. */
 .my-choice-section{margin-top:12px!important;padding-top:20px!important}
 .my-choice-heading{padding-top:3px}
+
+
+/* Scrolling headline: darker text and slightly larger type. */
+.ticker-track span{color:#111!important;font-size:15px!important}
+@media(max-width:800px){.ticker-track span{font-size:13px!important}}
