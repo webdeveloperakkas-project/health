@@ -2305,3 +2305,34 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 }
 /* Category Highlights removed; keep the right rail focused on advertising. */
 .home-right{gap:0}
+
+/* Corrected desktop and mobile header arrangement */
+@media (min-width:801px) {
+ .header-main{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);height:82px;gap:24px}
+ .header-left{display:flex!important;justify-content:flex-start}
+ .header-left .menu-toggle{display:none!important}
+ .header-date-desktop{display:flex!important}
+ .header-date-mobile{display:none!important}
+ .brand{justify-self:center;position:static;transform:none}
+ .header-tools{display:flex;justify-self:end;align-items:center;gap:14px}
+ .header-tools .search-form{order:0;width:178px}
+ .header-tools .language-wrap{order:1}
+}
+@media (max-width:800px) {
+ .header-main{height:92px!important;display:grid!important;grid-template-columns:42px minmax(0,1fr) auto!important;align-items:center;gap:6px}
+ .header-left{grid-column:1;grid-row:1;display:flex!important;align-items:center;justify-content:flex-start;padding:0;z-index:3}
+ .header-left .header-date-desktop{display:none!important}
+ .header-left .menu-toggle{display:inline-flex!important}
+ .brand{grid-column:2;grid-row:1;position:static!important;transform:none!important;justify-self:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;z-index:2}
+ .brand .header-date-mobile{display:flex!important;align-items:center;gap:3px;font-size:9px;line-height:1.15;text-align:center}
+ .brand .header-date-mobile time:first-child{font-size:9px;font-weight:700}
+ .brand .header-date-mobile time:last-child{font-size:10px;font-weight:700;color:var(--teal-dark)}
+ .brand-mark{width:27px;height:27px;font-size:14px}
+ .brand-name{font-size:14px;line-height:1.05}
+ .header-tools{grid-column:3;grid-row:1;display:flex!important;align-items:center;justify-self:end;gap:5px;margin:0!important;z-index:3}
+ .header-tools .search-form{order:0}
+ .header-tools .language-wrap{order:1}
+ .main-nav{top:calc(100% + 8px)}
+ .search-form.search-open{top:100px!important}
+}
+@media(max-width:380px){.header-main{grid-template-columns:36px minmax(0,1fr) auto!important}.brand-name{font-size:12px}.header-tools{gap:3px}}
