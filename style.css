@@ -2270,3 +2270,37 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .featured-stories-footer button:hover{background:#edc64c;transform:translateY(-1px)}
 .featured-stories-footer button span{font-size:17px;line-height:1}
 @media(max-width:800px){.featured-stories-card{padding:17px 13px 15px}.featured-stories-grid{gap:0}.featured-story-item{margin:0 0 9px;padding:9px;min-height:92px}.featured-stories-footer button{width:100%}}
+
+/* Header date/time and centered desktop brand */
+.header-main{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:22px}
+.header-left{min-width:0;justify-content:flex-start}
+.header-date-time{display:flex;flex-direction:column;gap:2px;min-width:0;color:var(--navy);font-variant-numeric:tabular-nums}
+.header-date-time time:first-child{font-size:11px;font-weight:800;letter-spacing:.01em}
+.header-date-time time:last-child{font-size:12px;font-weight:700;color:var(--teal-dark)}
+.brand{justify-self:center}
+.header-tools{justify-self:end;gap:12px}
+@media(min-width:801px){.menu-toggle{display:none}.header-left{padding-left:2px}.header-tools{margin-right:0}.home-right{justify-content:flex-start}.home-ad-slot{width:100%}}
+@media(max-width:800px){
+ .header-main{height:82px!important;position:relative;display:flex;justify-content:space-between;gap:6px}
+ .header-left{display:flex!important;align-items:center;gap:7px;flex:0 0 auto;z-index:2}
+ .header-date-time{max-width:88px;gap:3px}
+ .header-date-time time:first-child{font-size:9px;line-height:1.15}
+ .header-date-time time:last-child{font-size:11px}
+ .brand{left:40%;top:50%;transform:translate(-50%,-50%);z-index:1}
+ .header-tools{margin-left:auto;flex:0 0 auto;position:relative;z-index:2}
+ .main-nav{top:calc(100% + 8px)}
+ .search-form.search-open{top:90px}
+}
+@media(max-width:380px){
+ .header-date-time{max-width:72px}
+ .header-date-time time:first-child{font-size:8px}
+ .brand-name{font-size:13px}
+ .brand-mark{width:27px;height:27px}
+}
+@media (pointer:coarse) and (max-device-width:600px){
+ .header-main{height:82px!important}
+ .header-date-time{max-width:88px}
+ .search-form.search-open{top:90px}
+}
+/* Category Highlights removed; keep the right rail focused on advertising. */
+.home-right{gap:0}
