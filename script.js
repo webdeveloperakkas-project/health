@@ -5,7 +5,22 @@
      Section complete.
   ========================================================= */
   const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const $ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  /* Apply the scrolling headline saved from the local CMS. */
+  const TICKER_STORAGE_KEY = "everyday-atlas-homepage-ticker-v1";
+  const DEFAULT_TICKER_LINES = ["আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।","চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি।","ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে","মরি হায়, হায় রে","ও মা, অঘ্রাণে তোর ভরা ক্ষেতে কী দেখেছি মধুর হাসি"];
+  function renderHomepageTicker() {
+    const track = $(".ticker-track");
+    if (!track) return;
+    let lines = DEFAULT_TICKER_LINES;
+    try {
+      const saved = JSON.parse(localStorage.getItem(TICKER_STORAGE_KEY) || "null");
+      if (Array.isArray(saved) && saved.some(line => String(line).trim())) lines = saved.map(line => String(line).trim()).filter(Boolean);
+    } catch (_) {}
+    const repeated = [...lines, ...lines];
+    track.innerHTML = repeated.map(line => "<span>" + String(line).replace(/[&<>\"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[char])) + "</span>").join("");
+  }
+  renderHomepageTicker();
   /* =========================================================
      02. ARTICLE DATA
      Purpose: Temporary sample articles shown on the public site.
