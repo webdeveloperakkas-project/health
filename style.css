@@ -2466,3 +2466,9 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .ticker-track{animation:ticker 24s linear infinite!important;}
 .ticker-track span{font-family:"Hind Siliguri","DM Sans",sans-serif!important;font-size:18px!important;line-height:1.5!important;font-weight:500!important;color:#000!important;}
 @media(max-width:800px){.ticker-track span{font-size:16px!important;}}
+
+
+/* Ticker label: clean red block with white text, no decorative green dot. */
+.ticker-label{background:#d71920!important;color:#fff!important;font-family:"Hind Siliguri","DM Sans",sans-serif!important;font-size:15px!important;font-weight:800!important;letter-spacing:.06em!important;padding-left:26px!important;padding-right:26px!important;gap:0!important;white-space:nowrap!important;flex:0 0 auto!important;}
+.ticker-dot{display:none!important;}
+@media(max-width:800px){.ticker-label{font-size:14px!important;padding-left:18px!important;padding-right:18px!important;}}
