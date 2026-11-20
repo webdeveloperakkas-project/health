@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=28">
-<script src="script.js?v=15" defer>
+<link rel="stylesheet" href="style.css?v=29">
+<script src="script.js?v=16" defer>
 </script>
 </head>
 
@@ -103,6 +103,49 @@
 <span>ADVERTISEMENT</span>
 <small>Responsive AdSense placement</small>
 </div>
+
+<section class="home-feature-grid" id="homeSection" aria-label="Homepage highlights">
+  <aside class="home-rail home-left">
+    <div class="home-rail-heading">
+      <div class="home-rail-tabs" role="tablist" aria-label="Homepage article lists">
+        <button class="home-rail-tab active" type="button" role="tab" aria-selected="true" data-home-list="latest">Latest</button>
+        <button class="home-rail-tab" type="button" role="tab" aria-selected="false" data-home-list="mostViewed">Most Viewed</button>
+      </div>
+    </div>
+    <div class="home-list-panel" id="homeListPanel" role="list" tabindex="0"></div>
+    <button class="home-view-all" id="homeViewAll" type="button">View all latest stories <span>→</span></button>
+  </aside>
+
+  <article class="home-featured" id="homeFeatured" aria-label="Main featured article"></article>
+
+  <aside class="home-right">
+    <div class="home-ad-slot" aria-label="Advertisement placement">
+      <span class="home-ad-label">ADVERTISEMENT</span>
+      <strong>AdSense</strong>
+      <small>Responsive advertisement placement</small>
+    </div>
+    <section class="home-category-widget" aria-label="Category highlights">
+      <div class="home-widget-heading">
+        <div><span class="eyebrow">EXPLORE</span><h2>Category Highlights</h2></div>
+        <div class="home-slide-controls">
+          <button type="button" id="homeCategoryPrev" aria-label="Previous category">‹</button>
+          <button type="button" id="homeCategoryNext" aria-label="Next category">›</button>
+        </div>
+      </div>
+      <div id="homeCategorySpotlight"></div>
+      <div class="home-category-dots" id="homeCategoryDots" aria-label="Choose category highlight"></div>
+    </section>
+  </aside>
+</section>
+
+<dialog class="article-dialog" id="articleDialog" aria-labelledby="articleDialogTitle">
+  <div class="article-dialog-top">
+    <span class="eyebrow">EVERYDAY ATLAS · ARTICLE</span>
+    <button type="button" id="articleDialogClose" aria-label="Close article">×</button>
+  </div>
+  <article class="article-dialog-content" id="articleDialogContent"></article>
+</dialog>
+
 <section class="article-section" id="articleFeed" aria-live="polite">
 <div class="feed-heading">
 <div>
