@@ -387,12 +387,18 @@
     const host = $("#myChoiceList");
     if (!section || !host) return;
     const items = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("myChoice"))).slice(0,4);
+    const demos = [
+      {title:"A smarter way to organise your day",summary:"Simple planning ideas to help you focus on what matters. Build a routine that feels clear, practical and easy to maintain."},
+      {title:"Everyday technology worth exploring",summary:"Discover useful digital tools and thoughtful tips. Make technology work better for your daily life."},
+      {title:"Small habits for a healthier lifestyle",summary:"Explore realistic everyday habits that support wellbeing. Start small and make changes at your own pace."},
+      {title:"Travel inspiration for curious minds",summary:"Find fresh ideas for your next journey. Explore places, culture and practical travel inspiration."}
+    ];
     section.hidden = false;
     host.innerHTML = items.length ? items.map(post => {
       const index = posts.indexOf(post);
-      const summary = post.excerpt || (post.body || []).join(" ").slice(0,100);
-      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,105)) + '</small>' : '') + '</span></button></article>';
-    }).join("") : '<div class="my-choice-empty">Your personal picks and product recommendations will appear here.</div>';
+      const summary = post.excerpt || (post.body || []).join(" ").slice(0,145);
+      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,145)) + '</small>' : '') + '</span></button></article>';
+    }).join("") : demos.map((item,i) => '<article class="my-choice-item favorites-demo"><div class="my-choice-open"><span class="my-choice-thumb favorites-demo-thumb">' + ["✦","⌘","♡","✈"][i] + '</span><span class="my-choice-copy"><strong>' + escapeHTML(item.title) + '</strong><small>' + escapeHTML(item.summary) + '</small></span></div></article>').join("");
   }
   function renderFeaturedStories() {
     const section = $("#featuredStoriesSection");
