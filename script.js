@@ -13,7 +13,7 @@
      The future control panel will replace this local sample data.
      Section complete.
   ========================================================= */
-  const posts = [
+  let posts = [
   {
     category:"health",title:"Small Daily Habits That Support a Healthier Life",postType:"latest",date:"November 19, 2026",read:"4 MIN READ",body:[
     "Good health is often supported by small choices repeated over time. A regular sleep schedule can help your body maintain a steady daily rhythm.",
@@ -93,6 +93,20 @@
     ]
   }
   ];
+  // Published CMS entries from this browser's local preview storage.
+  // The production database connection will replace this local-only bridge.
+  try {
+    const cmsPosts = JSON.parse(localStorage.getItem("everyday-atlas-cms-posts-v1") || "[]");
+    if (Array.isArray(cmsPosts)) {
+      const publicCmsPosts = cmsPosts.filter(item => item && item.status === "published").map(item => {
+        const plain = String(item.content || "").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
+        const dateValue = item.publishedAt || item.createdAt || item.updatedAt || new Date().toISOString();
+        return {cmsId:item.id,category:item.category,title:item.title,postType:item.postType || "latest",featured:!!item.featured,date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
+      });
+      posts = posts.filter(item => !item.cmsId).concat(publicCmsPosts, posts.filter(item => item.cmsId));
+    }
+  } catch(error) { /* Keep the built-in sample stories available. */ }
+
   /* =========================================================
      03. CATEGORY LABELS
      Purpose: Human-readable names for article categories.
@@ -268,7 +282,7 @@
   const articleDialogContent = $("#articleDialogContent");
 
   function imageForPost(post) {
-    return categoryImages[post.category] || categoryImages.lifestyle;
+    return post.cover || categoryImages[post.category] || categoryImages.lifestyle;
   }
   function sortedByDate(items) {
     return [...items].sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -354,9 +368,23 @@
       '<button type="button" class="' + (index === homeCategoryIndex ? "active" : "") + '" data-category-slide="' + index + '" aria-label="Show ' + escapeHTML(categoryNames[entry.category]) + '"></button>'
     ).join("");
   }
+  function renderFeaturedStories() {
+    const section = $("#featuredStoriesSection");
+    const left = $("#featuredStoriesLeft");
+    const right = $("#featuredStoriesRight");
+    const count = $("#featuredStoriesCount");
+    if (!section || !left || !right) return;
+    const items = posts.filter(post => post.featured).slice(0,20);
+    if (count) count.textContent = items.length + " / 20";
+    const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+      '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
+      '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
+    left.innerHTML = items.length ? items.slice(0,10).map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Feature on homepage” when publishing an article.</div>';
+    right.innerHTML = items.slice(10,20).map(renderItem).join("");
+  }
   function openArticleDetail(post) {
     if (!post) return;
-    const paragraphs = (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+    const paragraphs = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
     articleDialogContent.innerHTML =
       '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
       '<h1 id="articleDialogTitle">' + escapeHTML(post.title) + '</h1>' +
@@ -371,7 +399,7 @@
     articleSection.hidden = isHomeLanding;
     const categoryPosts = posts
       .filter(post => (activeCategory === "home" || post.category === activeCategory) && post.postType === activePostType)
-      .filter(post => !searchTerm || (post.title + " " + post.body.join(" ")).toLowerCase().includes(searchTerm));
+      .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "")).toLowerCase().includes(searchTerm));
     const totalPages = Math.max(1, Math.ceil(categoryPosts.length / pageSize));
     currentPage = Math.min(currentPage, totalPages);
     const start = (currentPage - 1) * pageSize;
@@ -386,13 +414,14 @@
       renderHomeFeatured();
       renderHomeList();
       renderHomeCategory();
+      renderFeaturedStories();
       return;
     }
     if (!visiblePosts.length) {
       articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
     } else {
       articleList.innerHTML = visiblePosts.map((post,index) => {
-        const body = post.body.map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+        const body = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
         const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
         return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
       }).join("");
