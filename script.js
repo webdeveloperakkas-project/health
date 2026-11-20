@@ -319,6 +319,10 @@
     document.querySelectorAll("#sportsSubmenu [data-sports-subcategory]").forEach(button => { const key=button.dataset.sportsSubcategory; if(sportsLabels[key])button.textContent=sportsLabels[key]; });
     const entertainmentLabels={en:{cinema:"Cinema",bollywood:"Bollywood","south-cinema":"South Indian Cinema",music:"Music",hollywood:"Hollywood",television:"Television",serial:"TV Serials","folk-art":"Folk Culture"},bn:{cinema:"সিনেমা",bollywood:"বলিউড","south-cinema":"দক্ষিণের সিনেমা",music:"গান",hollywood:"হলিউড",television:"টেলিভিশন",serial:"সিরিয়াল","folk-art":"লোক-সংস্কৃতি"},hi:{cinema:"सिनेमा",bollywood:"बॉलीवुड","south-cinema":"दक्षिण भारतीय सिनेमा",music:"संगीत",hollywood:"हॉलीवुड",television:"टेलीविजन",serial:"धारावाहिक","folk-art":"लोक संस्कृति"},de:{cinema:"Kino",bollywood:"Bollywood","south-cinema":"Südkino",music:"Musik",hollywood:"Hollywood",television:"Fernsehen",serial:"Serien","folk-art":"Volkskultur"},fr:{cinema:"Cinéma",bollywood:"Bollywood","south-cinema":"Cinéma du Sud",music:"Musique",hollywood:"Hollywood",television:"Télévision",serial:"Séries","folk-art":"Culture populaire"},es:{cinema:"Cine",bollywood:"Bollywood","south-cinema":"Cine del sur",music:"Música",hollywood:"Hollywood",television:"Televisión",serial:"Series","folk-art":"Cultura popular"}}[activeLanguage]||{};
     document.querySelectorAll("#entertainmentSubmenu [data-entertainment-subcategory]").forEach(button=>{const key=button.dataset.entertainmentSubcategory;if(entertainmentLabels[key])button.textContent=entertainmentLabels[key];});
+    const regionalLabels={en:{bangladesh:"Bangladesh",india:"India",pakistan:"Pakistan",asia:"Asia",europe:"Europe","middle-east":"Middle East"},bn:{bangladesh:"বাংলাদেশ",india:"ভারত",pakistan:"পাকিস্তান",asia:"এশিয়া",europe:"ইউরোপ","middle-east":"মধ্যপ্রাচ্য"},hi:{bangladesh:"बांग्लादेश",india:"भारत",pakistan:"पाकिस्तान",asia:"एशिया",europe:"यूरोप","middle-east":"मध्य पूर्व"},de:{bangladesh:"Bangladesch",india:"Indien",pakistan:"Pakistan",asia:"Asien",europe:"Europa","middle-east":"Naher Osten"},fr:{bangladesh:"Bangladesh",india:"Inde",pakistan:"Pakistan",asia:"Asie",europe:"Europe","middle-east":"Moyen-Orient"},es:{bangladesh:"Bangladés",india:"India",pakistan:"Pakistán",asia:"Asia",europe:"Europa","middle-east":"Oriente Medio"}}[activeLanguage]||{};
+    document.querySelectorAll("#worldSubmenu [data-world-subcategory]").forEach(button=>{const key=button.dataset.worldSubcategory;if(regionalLabels[key])button.textContent=regionalLabels[key];});
+    const beautyLabels={en:"Beauty Care",bn:"রূপচর্চা",hi:"सौंदर्य देखभाल",de:"Schönheitspflege",fr:"Soins de beauté",es:"Cuidado de belleza"};
+    document.querySelectorAll("#lifestyleSubmenu [data-lifestyle-subcategory]").forEach(button=>button.textContent=beautyLabels[activeLanguage]||beautyLabels.en);
     document.documentElement.lang = activeLanguage;
     updateHeaderClock();
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
@@ -565,7 +569,7 @@
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
     const categoryPosts = posts
-      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType) && ((activeCategory !== "sports" && activeCategory !== "entertainment") || !activeSubcategory || post.subcategory === activeSubcategory))
+      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType) && ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory))
       .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "") + " " + (post.keywords || []).join(" ")).toLowerCase().includes(searchTerm));
     const totalPages = Math.max(1, Math.ceil(categoryPosts.length / pageSize));
     currentPage = Math.min(currentPage, totalPages);
@@ -677,8 +681,8 @@
       activeCategory=category;activeSubcategory=choice.getAttribute(dataAttribute)||"";showHomeFeed=false;showFeaturedFeed=false;activePostType="latest";
       document.querySelectorAll(".post-type-option").forEach(option=>{const selected=option.dataset.postType===activePostType;option.classList.toggle("active",selected);option.setAttribute("aria-pressed",String(selected));});
       currentPage=1;searchTerm="";const searchInput=$("#siteSearch");if(searchInput)searchInput.value="";
-      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger),.sidebar-category").forEach(card=>{const selected=card.dataset.category===category;card.classList.toggle("active",selected);card.setAttribute("aria-pressed",String(selected));});
-      document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger").forEach(item=>item.classList.toggle("active",item===trigger));
+      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger),.sidebar-category").forEach(card=>{const selected=card.dataset.category===category;card.classList.toggle("active",selected);card.setAttribute("aria-pressed",String(selected));});
+      document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger").forEach(item=>item.classList.toggle("active",item===trigger));
       submenu.querySelectorAll(dataSelector).forEach(item=>item.classList.toggle("active",item===choice));
       submenu.hidden=true;trigger.setAttribute("aria-expanded","false");render();
     });
@@ -687,13 +691,15 @@
   }
   setupSubcategoryMenu(".sports-category-trigger","#sportsSubmenu","sports","[data-sports-subcategory]","data-sports-subcategory");
   setupSubcategoryMenu(".entertainment-category-trigger","#entertainmentSubmenu","entertainment","[data-entertainment-subcategory]","data-entertainment-subcategory");
+  setupSubcategoryMenu(".world-category-trigger","#worldSubmenu","world","[data-world-subcategory]","data-world-subcategory");
+  setupSubcategoryMenu(".lifestyle-category-trigger","#lifestyleSubmenu","lifestyle","[data-lifestyle-subcategory]","data-lifestyle-subcategory");
 
   /* =========================================================
      09. CATEGORY NAVIGATION
      Purpose: Change category and reset the post-type filter.
      Section complete.
   ========================================================= */
-  Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger), .sidebar-category")).forEach(button => {
+  Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger), .sidebar-category")).forEach(button => {
     button.addEventListener("click", () => {
       /* Home is the fresh landing-page entry: reload with normal browser caching
          so updated homepage content/state is re-initialized without cache-busting assets. */
@@ -709,6 +715,8 @@
       const sportsMenu = document.querySelector("#sportsSubmenu");
       const entertainmentMenuTrigger=document.querySelector(".entertainment-category-trigger");
       const entertainmentMenu=document.querySelector("#entertainmentSubmenu");
+      const worldMenuTrigger=document.querySelector(".world-category-trigger"),worldMenu=document.querySelector("#worldSubmenu");
+      const lifestyleMenuTrigger=document.querySelector(".lifestyle-category-trigger"),lifestyleMenu=document.querySelector("#lifestyleSubmenu");
       if (sportsMenuTrigger) sportsMenuTrigger.classList.toggle("active", activeCategory === "sports");
       if (sportsMenuTrigger) sportsMenuTrigger.setAttribute("aria-expanded", "false");
       if (sportsMenu) sportsMenu.hidden = true;
@@ -717,6 +725,7 @@
       if(entertainmentMenuTrigger)entertainmentMenuTrigger.setAttribute("aria-expanded","false");
       if(entertainmentMenu)entertainmentMenu.hidden=true;
       if(entertainmentMenu)entertainmentMenu.querySelectorAll("[data-entertainment-subcategory]").forEach(item=>item.classList.remove("active"));
+      [[worldMenuTrigger,worldMenu],[lifestyleMenuTrigger,lifestyleMenu]].forEach(([trigger,menu])=>{if(trigger){trigger.classList.toggle("active",trigger.dataset.category===activeCategory);trigger.setAttribute("aria-expanded","false");}if(menu){menu.hidden=true;menu.querySelectorAll("button").forEach(item=>item.classList.remove("active"));}});
       showHomeFeed = false;
       showFeaturedFeed = false;
       activePostType = "latest";
