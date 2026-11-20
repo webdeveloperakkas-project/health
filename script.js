@@ -263,29 +263,27 @@
   }
   function renderHomeList() {
     const featured = posts.find(post => post.featured) || sortedByDate(posts.filter(post => post.postType === "latest"))[0] || posts[0];
-    const latestItems = sortedByDate(posts.filter(post => post !== featured && post.postType === "latest")).slice(0,5);
+    const latestItems = sortedByDate(posts.filter(post => post !== featured && post.postType === "latest")).slice(0,10);
     const popularItems = [...posts].filter(post => post.postType === "popular")
-      .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,5);
-    const mobile = window.matchMedia("(max-width: 800px)").matches;
-    const renderItems = (items, offset) => items.map((post,index) =>
-      '<button class="home-list-item" type="button" role="listitem" data-open-post="' + posts.indexOf(post) + '">' +
-        '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
-        '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
-      '</button>'
-    ).join("");
-    if (mobile) {
-      homeListPanel.innerHTML =
-        '<section class="home-mobile-list-group"><h3>Latest Stories</h3>' + (latestItems.length ? renderItems(latestItems,0) : '<div class="home-list-empty">New stories will appear here as they are published.</div>') + '</section>' +
-        '<section class="home-mobile-list-group"><h3>Popular Stories</h3>' + (popularItems.length ? renderItems(popularItems,5) : '<div class="home-list-empty">Popular stories will appear here soon.</div>') + '</section>';
+      .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,10);
+    const items = homeListType === "popular" ? popularItems : latestItems;
+    if (!items.length) {
+      homeListPanel.innerHTML = '<div class="home-list-empty">' + (homeListType === "popular" ? "Popular stories will appear here soon." : "New stories will appear here as they are published.") + '</div>';
     } else {
-      const items = (homeListType === "popular" ? popularItems : latestItems);
-      homeListPanel.innerHTML = items.length ? renderItems(items,0) : '<div class="home-list-empty">' + (homeListType === "popular" ? "Popular stories will appear here soon." : "New stories will appear here as they are published.") + '</div>';
+      homeListPanel.innerHTML = items.map(post =>
+        '<button class="home-list-item" type="button" role="listitem" data-open-post="' + posts.indexOf(post) + '">' +
+          '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
+          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
+        '</button>'
+      ).join("");
     }
     $$(".home-rail-tab").forEach(button => {
       const selected = button.dataset.homeList === homeListType;
       button.classList.toggle("active", selected);
       button.setAttribute("aria-selected", String(selected));
     });
+    const viewAll = $("#homeViewAll");
+    if (viewAll) viewAll.innerHTML = (homeListType === "popular" ? "Explore More Popular Stories" : "Explore More Latest Stories") + ' <span>→</span>';
   }
     function renderHomeFeatured() {
     const post = posts.find(item => item.featured) || sortedByDate(posts.filter(item => item.postType === "latest"))[0] || posts[0];
