@@ -24,3 +24,7 @@
 
 .my-choice-placement{border-color:#d9c98e;background:#fffdf5}
 .my-choice-placement strong{color:#80651d!important}
+
+
+/* Homepage scrolling headline settings */
+.ticker-settings-card{margin-bottom:18px}.ticker-headline-input{min-height:130px;resize:vertical;line-height:1.8;font-family:"Hind Siliguri","DM Sans",sans-serif}.ticker-settings-card .primary-btn{margin-top:12px}
