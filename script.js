@@ -465,7 +465,7 @@
       homeListPanel.innerHTML = items.map(post =>
         '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
           '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
-          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
+          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
         '</button>'
       ).join("");
     }
@@ -532,7 +532,7 @@
     if (count) count.textContent = items.length + " / 20";
     const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
       '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
-      '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
+      '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
     left.innerHTML = items.length ? items.slice(0,10).map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Featured Stories / Editor’s Choice” when publishing an article.</div>';
     right.innerHTML = items.slice(10,20).map(renderItem).join("");
     const viewAll = $("#featuredStoriesViewAll");
@@ -546,7 +546,7 @@
     const isBengali = activeLanguage === "bn";
     const paragraphs = isBengali ? '<p class="article-translation-status" role="status">নিবন্ধটি বাংলায় অনুবাদ করা হচ্ছে…</p>' : localizeHtml(sourceHtml);
     articleDialogContent.innerHTML =
-      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
+      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
       '<h1 id="articleDialogTitle">' + escapeHTML(localizeText(post.title)) + '</h1>' +
       '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' +
       shareButtons(post) + '<div class="article-detail-body" id="articleDetailBody">' + paragraphs + '</div>' + (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\\s+/g,'')) + '</span>').join('') + '</div>' : '');
@@ -660,7 +660,7 @@
       const post = posts[Number(shareButton.dataset.postIndex)];
       if (!post) return;
       const url = articleShareUrl(post);
-      const text = encodeURIComponent(post.title + " — Everyday Atlas");
+      const text = encodeURIComponent(post.title + " — Global Scope 24");
       const target = shareButton.dataset.share;
       if (target === "facebook") window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url),"_blank","noopener,noreferrer");
       else if (target === "x") window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + encodeURIComponent(url),"_blank","noopener,noreferrer");
