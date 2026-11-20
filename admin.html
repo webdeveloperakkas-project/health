@@ -8,13 +8,30 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css?v=8">
-  <script src="admin.js?v=14" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin-auth.js?v=1" defer></script>
+  <script src="admin.js?v=15" defer></script>
 </head>
 <body>
   <header class="admin-header">
     <a class="admin-brand" href="index.html"><span class="brand-mark">ea</span><span>Everyday <b>Atlas</b><small>CONTENT MANAGEMENT</small></span></a>
-    <div class="header-actions"><span class="mode-pill">LOCAL PREVIEW MODE</span><a href="index.html" class="view-site">View website ↗</a></div>
+    <div class="header-actions"><span class="mode-pill" id="adminMode">ADMIN LOGIN REQUIRED</span><button class="small-btn" id="adminLogout" type="button" hidden>Log out</button><a href="index.html" class="view-site">View website ↗</a></div>
   </header>
+  <main class="admin-login-screen" id="adminLoginScreen">
+    <form class="admin-login-card" id="adminLoginForm">
+      <div class="login-mark">ea</div>
+      <div class="eyebrow">PRIVATE WORKSPACE</div>
+      <h1>Admin sign in</h1>
+      <p>Sign in with the authorised Everyday Atlas administrator account.</p>
+      <label for="adminEmail">Email address</label>
+      <input id="adminEmail" name="email" type="email" autocomplete="username" required>
+      <label for="adminPassword">Password</label>
+      <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
+      <button class="primary-btn" id="adminLoginButton" type="submit">Sign in securely</button>
+      <p class="login-error" id="adminLoginError" role="alert" hidden></p>
+      <small>Administrator access only. Public registration is disabled.</small>
+    </form>
+  </main>
   <div class="admin-layout">
     <aside class="sidebar">
       <div class="side-label">WORKSPACE</div>
