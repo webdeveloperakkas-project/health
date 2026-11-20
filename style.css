@@ -1871,3 +1871,197 @@ body.policy-open { overflow:hidden; }
     stroke-linecap:round; stroke-linejoin:round;
   }
 }
+
+
+/* 26. Compact information links and improve phone desktop-mode layout */
+.site-footer {
+  padding:18px 0 16px;
+}
+.footer-inner {
+  gap:10px 14px;
+}
+.footer-links {
+  align-items:center;
+  flex-wrap:wrap;
+  column-gap:12px;
+  row-gap:4px;
+}
+.footer-links a,
+.footer-inner>span {
+  line-height:1.35;
+}
+
+/* Phones requesting Desktop site: use the physical device width for layout.
+   This prevents the browser's wide desktop viewport from shrinking the page. */
+@media (pointer:coarse) and (max-device-width:600px) {
+  .container {
+    width:calc(100% - 28px);
+  }
+  .site-header {
+    position:sticky;
+    top:0;
+  }
+  .header-main {
+    display:flex;
+    height:66px;
+    gap:7px;
+    justify-content:space-between;
+  }
+  .header-left {
+    display:flex !important;
+    flex:0 0 auto;
+  }
+  .menu-toggle {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:34px;
+    height:34px;
+  }
+  .brand {
+    position:absolute;
+    left:40%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    gap:6px;
+  }
+  .brand-mark {
+    width:30px;
+    height:30px;
+    font-size:15px;
+  }
+  .brand-name {
+    font-size:15px;
+  }
+  .header-tools {
+    display:flex;
+    flex:0 0 auto;
+    gap:5px;
+    margin-left:auto;
+  }
+  .language-wrap {
+    height:31px;
+    padding:0 5px;
+    margin-right:4px;
+  }
+  .language-wrap select {
+    max-width:45px;
+    font-size:9px;
+  }
+  .search-form {
+    width:36px;
+    height:36px;
+    padding:2px;
+    border:0;
+    background:transparent;
+    justify-content:center;
+  }
+  .search-form .search-toggle {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:34px;
+    height:32px;
+  }
+  .search-form input,
+  .search-form .search-submit {
+    display:none;
+  }
+  .search-form.search-open {
+    position:fixed;
+    top:74px;
+    left:50%;
+    right:auto;
+    z-index:1000;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    box-sizing:border-box;
+    width:calc(100vw - 24px);
+    max-width:390px;
+    min-width:0;
+    height:52px;
+    padding:5px;
+    gap:6px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 14px 35px #15394324;
+  }
+  .search-form.search-open .search-toggle {
+    display:none;
+  }
+  .search-form.search-open input {
+    display:block;
+    flex:1 1 0;
+    width:0;
+    min-width:0;
+    height:100%;
+    box-sizing:border-box;
+    padding:0 9px;
+    border:0;
+    border-radius:8px;
+    outline:none;
+    background:#e8f7f5;
+    color:var(--navy);
+    font-size:14px;
+  }
+  .search-form.search-open .search-submit {
+    display:inline-flex;
+    flex:0 0 40px;
+    width:40px;
+    height:40px;
+  }
+  .latest-ticker {
+    height:39px;
+  }
+  .page-layout {
+    grid-template-columns:1fr;
+    gap:0;
+    padding-top:15px;
+  }
+  .desktop-sidebar {
+    display:none !important;
+  }
+  .category-tabs {
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
+  }
+  .category-tab {
+    min-height:39px;
+    padding:7px 2px;
+    font-size:10px;
+    line-height:1.25;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .site-footer {
+    padding:16px 0 14px;
+  }
+  .footer-inner {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:7px 10px;
+  }
+  .footer-links {
+    order:3;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;
+    gap:4px 8px;
+    justify-content:initial;
+  }
+  .footer-links a {
+    display:block;
+    font-size:10px;
+    line-height:1.25;
+    padding:2px 0;
+    overflow-wrap:anywhere;
+  }
+  .footer-inner>span {
+    margin-left:auto;
+    font-size:9px;
+  }
+}
