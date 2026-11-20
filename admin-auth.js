@@ -2,7 +2,7 @@
 (() => {
   "use strict";
   const SUPABASE_URL = "https://oxxnjxrunvhrfwxdvbsr.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_UKOjnMUUrbVK3a0fruk55Q_Anjk04RA";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY";
   const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
   const $ = (id) => document.getElementById(id);
   const form = $("adminLoginForm"), screen = $("adminLoginScreen");
