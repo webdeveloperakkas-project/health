@@ -252,6 +252,7 @@
      Section complete.
   ========================================================= */
   let activeCategory = "home";
+  let activeSportsSubcategory = "";
   let currentPage = 1;
   let activePostType = "latest";
   const pageSize = 2;
@@ -434,7 +435,7 @@
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
     const categoryPosts = posts
-      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType))
+      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType) && (activeCategory !== "sports" || !activeSportsSubcategory || post.subcategory === activeSportsSubcategory))
       .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "") + " " + (post.keywords || []).join(" ")).toLowerCase().includes(searchTerm));
     const totalPages = Math.max(1, Math.ceil(categoryPosts.length / pageSize));
     currentPage = Math.min(currentPage, totalPages);
@@ -538,14 +539,66 @@
     if (event.target === articleDialog) articleDialog.close();
   });
   
+  const sportsTrigger = document.querySelector(".sports-category-trigger");
+  const sportsSubmenu = document.querySelector("#sportsSubmenu");
+  if (sportsTrigger && sportsSubmenu) {
+    sportsTrigger.addEventListener("click", event => {
+      event.stopPropagation();
+      const willOpen = sportsSubmenu.hidden;
+      sportsSubmenu.hidden = !willOpen;
+      sportsTrigger.setAttribute("aria-expanded", String(willOpen));
+    });
+    sportsSubmenu.addEventListener("click", event => {
+      const choice = event.target.closest("[data-sports-subcategory]");
+      if (!choice) return;
+      activeCategory = "sports";
+      activeSportsSubcategory = choice.dataset.sportsSubcategory || "";
+      showHomeFeed = false;
+      showFeaturedFeed = false;
+      activePostType = "latest";
+      Array.from(document.querySelectorAll(".post-type-option")).forEach(option => {
+        const selected = option.dataset.postType === activePostType;
+        option.classList.toggle("active", selected);
+        option.setAttribute("aria-pressed", String(selected));
+      });
+      currentPage = 1;
+      searchTerm = "";
+      const searchInput = $("#siteSearch");
+      if (searchInput) searchInput.value = "";
+      Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(card => {
+        const selected = card.dataset.category === "sports";
+        card.classList.toggle("active", selected);
+        card.setAttribute("aria-pressed", String(selected));
+      });
+      sportsTrigger.classList.add("active");
+      sportsSubmenu.querySelectorAll("[data-sports-subcategory]").forEach(item => item.classList.toggle("active", item === choice));
+      sportsSubmenu.hidden = true;
+      sportsTrigger.setAttribute("aria-expanded", "false");
+      render();
+    });
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".sports-category-menu")) {
+        sportsSubmenu.hidden = true;
+        sportsTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        sportsSubmenu.hidden = true;
+        sportsTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
   /* =========================================================
      09. CATEGORY NAVIGATION
      Purpose: Change category and reset the post-type filter.
      Section complete.
   ========================================================= */
-  Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
+  Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
+      activeSportsSubcategory = "";
       showHomeFeed = false;
       showFeaturedFeed = false;
       activePostType = "latest";
@@ -554,7 +607,7 @@
       searchTerm = "";
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
-      Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(card => {
+      Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(card => {
         const selected = card.dataset.category === activeCategory;
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
