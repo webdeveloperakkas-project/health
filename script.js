@@ -165,7 +165,7 @@
   };
   const extendedUiCopy = {
     en:{featuredStories:"Featured Stories",featuredDescription:"A collection of editor-selected stories and in-depth reviews.",featuredMore:"Read More Featured Stories",explore:"EXPLORE CATEGORIES",latest:"Latest",popular:"Popular",more:"More Details",emptyLatest:"New stories will appear here as they are published.",emptyPopular:"Popular stories will appear here soon.",main:"MAIN FEATURED",read:"Read Full Article",categoryHighlights:"Category Highlights",explore:"EXPLORE",ad:"ADVERTISEMENT",adSense:"AdSense",adResponsive:"Responsive advertisement placement",stories:"LATEST STORIES",previous:"Previous",next:"Next",categories:"Categories",about:"About Us",contact:"Contact",privacy:"Privacy Policy",editorial:"Editorial Policy",terms:"Terms of Use",disclaimer:"Disclaimer",cookies:"Cookie Policy"},
-    bn:{featuredStories:"ফিচার্ড পোস্ট",featuredDescription:"সম্পাদক বা অ্যাডমিনের নির্বাচিত গুরুত্বপূর্ণ পোস্ট ও বিস্তারিত রিভিউ।",featuredMore:"আরও বিস্তারিত পড়ুন",explore:"ক্যাটাগরি দেখুন",latest:"সর্বশেষ",popular:"জনপ্রিয়",more:"আরও বিস্তারিত",emptyLatest:"নতুন পোস্ট প্রকাশিত হলে এখানে দেখা যাবে।",emptyPopular:"জনপ্রিয় পোস্ট শিগগিরই এখানে দেখা যাবে।",main:"প্রধান নির্বাচিত পোস্ট",read:"সম্পূর্ণ লেখা পড়ুন",categoryHighlights:"ক্যাটাগরির বিশেষ পোস্ট",ad:"বিজ্ঞাপন",adSense:"বিজ্ঞাপন",adResponsive:"রেসপনসিভ বিজ্ঞাপনের স্থান",stories:"সর্বশেষ পোস্ট",previous:"আগের",next:"পরের",categories:"ক্যাটাগরি",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা নীতি",editorial:"সম্পাদনা নীতি",terms:"ব্যবহারের শর্ত",disclaimer:"দায়মুক্তি",cookies:"কুকি নীতি"},
+    bn:{featuredStories:"ফিচার্ড পোস্ট",featuredDescription:"সম্পাদক বা অ্যাডমিনের নির্বাচিত গুরুত্বপূর্ণ পোস্ট ও বিস্তারিত রিভিউ।",featuredMore:"আরও বিস্তারিত পড়ুন",explore:"ক্যাটাগরি দেখুন",latest:"সর্বশেষ",popular:"জনপ্রিয়",more:"আরও বিস্তারিত",emptyLatest:"নতুন পোস্ট প্রকাশিত হলে এখানে দেখা যাবে।",emptyPopular:"জনপ্রিয় পোস্ট শিগগিরই এখানে দেখা যাবে।",main:"প্রধান নির্বাচিত পোস্ট",read:"সম্পূর্ণ লেখা পড়ুন",categoryHighlights:"ক্যাটাগরির বিশেষ পোস্ট",ad:"বিজ্ঞাপন",adSense:"বিজ্ঞাপন",adResponsive:"রেসপনসিভ বিজ্ঞাপনের স্থান",stories:"সর্বশেষ পোস্ট",previous:"পূর্ববর্তী",next:"পরবর্তী",categories:"ক্যাটাগরি",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা নীতি",editorial:"সম্পাদনা নীতি",terms:"ব্যবহারের শর্ত",disclaimer:"দায়মুক্তি",cookies:"কুকি নীতি"},
     hi:{featuredStories:"विशेष लेख",featuredDescription:"संपादक द्वारा चुने गए महत्वपूर्ण लेख और विस्तृत समीक्षाएँ।",featuredMore:"और विशेष लेख पढ़ें",explore:"श्रेणियाँ देखें",latest:"नवीनतम",popular:"लोकप्रिय",more:"और अधिक जानें",emptyLatest:"नई पोस्ट प्रकाशित होने पर यहाँ दिखाई देंगी।",emptyPopular:"लोकप्रिय पोस्ट जल्द ही यहाँ दिखाई देंगी।",main:"मुख्य विशेष पोस्ट",read:"पूरा लेख पढ़ें",categoryHighlights:"श्रेणी की खास पोस्ट",ad:"विज्ञापन",adSense:"विज्ञापन",adResponsive:"रिस्पॉन्सिव विज्ञापन स्थान",stories:"नवीनतम पोस्ट",previous:"पिछला",next:"अगला",categories:"श्रेणियाँ",about:"हमारे बारे में",contact:"संपर्क",privacy:"गोपनीयता नीति",editorial:"संपादकीय नीति",terms:"उपयोग की शर्तें",disclaimer:"अस्वीकरण",cookies:"कुकी नीति"},
     de:{featuredStories:"Ausgewählte Beiträge",featuredDescription:"Wichtige redaktionell ausgewählte Beiträge und ausführliche Rezensionen.",featuredMore:"Weitere ausgewählte Beiträge lesen",explore:"KATEGORIEN ENTDECKEN",latest:"Neueste",popular:"Beliebt",more:"Mehr erfahren",emptyLatest:"Neue Beiträge erscheinen hier nach der Veröffentlichung.",emptyPopular:"Beliebte Beiträge erscheinen bald hier.",main:"HAUPTBEITRAG",read:"Ganzen Artikel lesen",categoryHighlights:"Kategorie-Highlights",ad:"WERBUNG",adSense:"Werbung",adResponsive:"Responsiver Anzeigenplatz",stories:"NEUESTE BEITRÄGE",previous:"Zurück",next:"Weiter",categories:"Kategorien",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",editorial:"Redaktionsrichtlinie",terms:"Nutzungsbedingungen",disclaimer:"Haftungsausschluss",cookies:"Cookie-Richtlinie"},
     fr:{explore:"DÉCOUVRIR LES CATÉGORIES",latest:"Récent",popular:"Populaire",more:"Voir plus",emptyLatest:"Les nouveaux articles apparaîtront ici après publication.",emptyPopular:"Les articles populaires apparaîtront bientôt ici.",main:"À LA UNE",read:"Lire l’article complet",categoryHighlights:"À découvrir par catégorie",ad:"PUBLICITÉ",adSense:"Publicité",adResponsive:"Espace publicitaire adaptatif",stories:"DERNIERS ARTICLES",previous:"Précédent",next:"Suivant",categories:"Catégories",about:"À propos",contact:"Contact",privacy:"Confidentialité",editorial:"Ligne éditoriale",terms:"Conditions d’utilisation",disclaimer:"Avertissement",cookies:"Politique relative aux cookies"},
@@ -347,9 +347,9 @@
     const index = posts.indexOf(post);
     const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     homeFeatured.innerHTML =
-      '<div class="home-feature-slide"><div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' +
+      '<div class="home-feature-slide"><div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' +
       '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + '</span>' +
-      '<h1>' + escapeHTML(post.title) + '</h1>' +
+      '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '">' + escapeHTML(post.title) + '</h1>' +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
       shareButtons(post) +
       '<div class="home-feature-summary-row"><p>' + escapeHTML(excerpt) + '</p>' +
@@ -451,6 +451,14 @@
     $("#siteSearch").value = "";
     render();
     $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  document.addEventListener("keydown", event => {
+    const articleTrigger = event.target.closest('[data-open-post][role="button"]');
+    if (articleTrigger && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      const post = posts[Number(articleTrigger.dataset.openPost)];
+      if (post) openArticleDetail(post);
+    }
   });
   document.addEventListener("click", event => {
     const featureArrow = event.target.closest("[data-home-feature]");
@@ -637,12 +645,12 @@
   window.setInterval(updateHeaderClock, 30000);
   applyLanguage($("#languageSelect").value || "en");
   window.setInterval(() => {
-    if (homeSection && !homeSection.hidden && posts.length > 1) {
-      const storyCount = sortedByDate(posts).length;
+    const storyCount = sortedByDate(posts).length;
+    if (storyCount > 1 && homeFeatured) {
       homeFeaturedIndex = (homeFeaturedIndex + 1) % storyCount;
       renderHomeFeatured();
     }
-  }, 1800);
+  }, 2000);
   const requestedArticle = new URLSearchParams(window.location.search).get("article");
   if (requestedArticle) {
     const requestedPost = posts.find(post => articleSlug(post) === requestedArticle);
