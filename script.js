@@ -171,7 +171,7 @@
       }
     });
     $("#siteSearch").placeholder = t.search;
-    $(".eyebrow").textContent = t.stories;
+    $("#articleFeed .eyebrow").textContent = t.stories;
     Array.from(document.querySelectorAll(".post-type-option")).forEach(button => {
       button.textContent = t.types[button.dataset.postType];
     });
