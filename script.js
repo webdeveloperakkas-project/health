@@ -598,6 +598,14 @@
   ========================================================= */
   Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(button => {
     button.addEventListener("click", () => {
+      /* Home is the fresh landing-page entry: reload with normal browser caching
+         so updated homepage content/state is re-initialized without cache-busting assets. */
+      if (button.dataset.category === "home") {
+        try { window.history.scrollRestoration = "manual"; } catch (_) {}
+        window.scrollTo(0, 0);
+        window.location.reload();
+        return;
+      }
       activeCategory = button.dataset.category;
       activeSportsSubcategory = "";
       const sportsMenuTrigger = document.querySelector(".sports-category-trigger");
