@@ -479,7 +479,7 @@
   }
   let homeFeaturedIndex = 0;
   function renderHomeFeatured() {
-    const stories = latestPostPerCategory(posts.filter(post => !(post.postTypes || [post.postType || "latest"]).includes("myChoice") || (post.postTypes || []).some(type => type === "latest" || type === "popular")));
+    const stories = latestPostPerCategory(posts);
     if (!stories.length) {
       homeFeatured.innerHTML = '<div class="home-feature-empty">Your latest published story will appear here.</div>';
       return;
@@ -568,9 +568,20 @@
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
+    const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
+      ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
+    const placementMatches = post => {
+      const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
+      return activePostType === "mostViewed" || placements.includes(activePostType);
+    };
     const categoryPosts = posts
-      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType) && ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory))
-      .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "") + " " + (post.keywords || []).join(" ")).toLowerCase().includes(searchTerm));
+      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : categoryMatches(post) && placementMatches(post))
+      .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "") + " " + (post.keywords || []).join(" ")).toLowerCase().includes(searchTerm))
+      .sort((a,b) => {
+        if (showFeaturedFeed) return (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0);
+        if (activePostType === "mostViewed" || activePostType === "popular") return (Number(b.views)||0) - (Number(a.views)||0) || (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0);
+        return (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0);
+      });
     const totalPages = Math.max(1, Math.ceil(categoryPosts.length / pageSize));
     currentPage = Math.min(currentPage, totalPages);
     const start = (currentPage - 1) * pageSize;
@@ -643,7 +654,7 @@
     const featureArrow = event.target.closest("[data-home-feature]");
     const featureDot = event.target.closest("[data-home-feature-index]");
     if (featureArrow || featureDot) {
-      const storyCount = latestPostPerCategory(posts.filter(post => !(post.postTypes || [post.postType || "latest"]).includes("myChoice") || (post.postTypes || []).some(type => type === "latest" || type === "popular"))).length;
+      const storyCount = latestPostPerCategory(posts).length;
       if (storyCount) {
         if (featureDot) homeFeaturedIndex = Number(featureDot.dataset.homeFeatureIndex) || 0;
         else homeFeaturedIndex = (homeFeaturedIndex + (featureArrow.dataset.homeFeature === "next" ? 1 : -1) + storyCount) % storyCount;
@@ -882,7 +893,7 @@
   window.setInterval(updateHeaderClock, 30000);
   applyLanguage($("#languageSelect").value || "en");
   window.setInterval(() => {
-    const storyCount = sortedByDate(posts).length;
+    const storyCount = latestPostPerCategory(posts).length;
     if (storyCount > 1 && homeFeatured) {
       homeFeaturedIndex = (homeFeaturedIndex + 1) % storyCount;
       renderHomeFeatured();
