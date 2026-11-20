@@ -73,7 +73,6 @@
 
   client.auth.onAuthStateChange((event) => {
     if (event === "SIGNED_OUT") showLogin();
-    if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") setTimeout(validateAdmin, 0);
   });
 
   window.EA_SUPABASE = client;
