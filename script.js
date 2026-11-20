@@ -222,6 +222,7 @@
     const aboutHeading = document.querySelector("#about h2");
     Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
       const label = t.categories[button.dataset.category];
+      if (!label) return;
       if (button.classList.contains("sidebar-category")) {
         const textNode = Array.from(button.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
         if (textNode) textNode.nodeValue = label;
