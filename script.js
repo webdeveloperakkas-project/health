@@ -177,15 +177,14 @@
      Section complete.
   ========================================================= */
   let activeLanguage = "en";
-  const headerDate = $("#headerDate");
-  const headerTime = $("#headerTime");
   const dateLocales = {en:"en-US",bn:"bn-BD",hi:"hi-IN",de:"de-DE",fr:"fr-FR",es:"es-ES"};
   function updateHeaderClock() {
-    if (!headerDate || !headerTime) return;
     const now = new Date();
     const locale = dateLocales[activeLanguage] || "en-US";
-    headerDate.textContent = new Intl.DateTimeFormat(locale,{weekday:"short",month:"short",day:"numeric",year:"numeric"}).format(now);
-    headerTime.textContent = new Intl.DateTimeFormat(locale,{hour:"numeric",minute:"2-digit"}).format(now);
+    const dateText = new Intl.DateTimeFormat(locale,{weekday:"short",month:"short",day:"numeric",year:"numeric"}).format(now);
+    const timeText = new Intl.DateTimeFormat(locale,{hour:"numeric",minute:"2-digit"}).format(now);
+    ["headerDateDesktop","headerDateMobile"].forEach(id => { const el = $("#"+id); if (el) el.textContent = dateText; });
+    ["headerTimeDesktop","headerTimeMobile"].forEach(id => { const el = $("#"+id); if (el) el.textContent = timeText; });
   }
   function applyLanguage(language) {
     activeLanguage = languageCopy[language] ? language : "en";
