@@ -2177,3 +2177,20 @@ body.policy-open { overflow:hidden; }
   .home-list-thumb { flex-basis:104px; width:104px; height:78px; }
   .home-feature-meta { gap:6px; font-size:9px; }
 }
+
+/* Homepage story list: static, scrollable editorial list on mobile. */
+.home-mobile-list-group { display:block; }
+.home-mobile-list-group h3 { margin:12px 0 5px; padding-bottom:8px; border-bottom:1px solid var(--line); color:var(--navy); font:800 13px/1.3 Manrope,sans-serif; }
+.home-mobile-list-group:first-child h3 { margin-top:2px; }
+.home-mobile-list-group .home-list-item { display:flex; }
+@media (max-width:800px) {
+  .home-list-panel { height:430px; max-height:430px; overflow-y:auto; overscroll-behavior:contain; padding:0 7px 0 0; scrollbar-width:thin; scrollbar-color:#b7cbc6 #f3f7f6; border:1px solid var(--line); border-radius:10px; background:#fff; padding:4px 10px; }
+  .home-rail-heading { margin-bottom:8px; }
+  .home-list-item { min-height:76px; padding:9px 0; border-bottom:1px solid #edf1f0; }
+  .home-list-thumb { flex-basis:94px; width:94px; height:68px; }
+  .home-list-copy strong { font-size:12px; }
+  .home-mobile-list-group + .home-mobile-list-group { margin-top:8px; }
+}
+@media (max-width:420px) {
+  .home-list-panel { height:410px; max-height:410px; }
+}
