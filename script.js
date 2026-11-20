@@ -115,7 +115,7 @@
       const publicCmsPosts = cmsPosts.filter(item => item && item.status === "published").map(item => {
         const plain = String(item.content || "").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
         const dateValue = item.publishedAt || item.createdAt || item.updatedAt || new Date().toISOString();
-        return {cmsId:item.id,category:item.category,title:item.title,postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
+        return {cmsId:item.id,category:item.category,subcategory:item.subcategory||"",title:item.title,postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
       });
       posts = posts.filter(item => !item.cmsId).concat(publicCmsPosts, posts.filter(item => item.cmsId));
     }
@@ -371,7 +371,7 @@
     const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     homeFeatured.innerHTML =
       '<div class="home-feature-slide"><div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' +
-      '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + '</span>' +
+      '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + (post.subcategory ? " · " + escapeHTML(post.subcategory) : "") + '</span>' +
       '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '">' + escapeHTML(post.title) + '</h1>' +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
       shareButtons(post) +
@@ -422,7 +422,7 @@
     if (!post) return;
     const paragraphs = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
     articleDialogContent.innerHTML =
-      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
+      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + (post.subcategory ? " · " + escapeHTML(post.subcategory) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
       '<h1 id="articleDialogTitle">' + escapeHTML(post.title) + '</h1>' +
       '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '">' +
       shareButtons(post) + '<div class="article-detail-body">' + paragraphs + '</div>' + (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '');
@@ -458,7 +458,7 @@
     } else {
       articleList.innerHTML = visiblePosts.map((post,index) => {
         const body = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
-        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
+        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
         return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
       }).join("");
     }
