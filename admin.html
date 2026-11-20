@@ -7,8 +7,8 @@
   <title>Everyday Atlas | Content Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=7">
-  <script src="admin.js?v=8" defer></script>
+  <link rel="stylesheet" href="admin.css?v=8">
+  <script src="admin.js?v=9" defer></script>
 </head>
 <body>
   <header class="admin-header">
@@ -21,8 +21,11 @@
       <button class="nav-item active" data-view="dashboard">▦ <span>Dashboard</span></button>
       <button class="nav-item" data-view="posts">▤ <span>All Posts</span></button>
       <button class="nav-item" data-view="editor">＋ <span>Write a Post</span></button>
+      <div class="side-label side-spaced">HEADLINES</div>
+      <button class="nav-item" data-view="headlines">▤ <span>All Headlines</span></button>
+      <button class="nav-item" data-view="headlineEditor">＋ <span>Write a Headline</span></button>
       <div class="side-label side-spaced">PUBLISHING</div>
-      <div class="side-note">Main Home Page is automatic by category. Latest, Popular and My Choice are separate placements. Featured Stories is a separate editorial selection.</div>
+      <div class="side-note">Main Home Page is automatic by category. Latest, Popular and Favorites are separate placements. Featured Stories is a separate editorial selection.</div>
       <div class="sidebar-footer">Everyday Atlas CMS<br><span>Version 1.0 · Setup stage</span></div>
     </aside>
     <main class="main-area">
@@ -31,17 +34,6 @@
         <button class="primary-btn" id="newPostBtn">＋ Create new post</button>
       </div>
       <div class="notice"><strong>Setup mode:</strong> Posts are currently saved in this browser only. Connect Supabase later to enable secure admin login, shared publishing, permanent media storage and live website updates.</div>
-      <section class="panel-card ticker-settings-card">
-        <div class="panel-heading"><div><h2>Homepage Scrolling Headline</h2><p>Write one line at a time. These lines will scroll across the top of the public website.</p></div></div>
-        <label class="field-label" for="tickerHeadlineText">Scrolling headline text</label>
-        <textarea class="text-input ticker-headline-input" id="tickerHeadlineText" rows="5" maxlength="700" placeholder="Enter each scrolling line on a new line...">আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।
-চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি।
-ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে
-মরি হায়, হায় রে
-ও মা, অঘ্রাণে তোর ভরা ক্ষেতে কী দেখেছি মধুর হাসি</textarea>
-        <div class="field-help">Use 4–5 lines or more. No bullet points or separator symbols are needed.</div>
-        <button class="primary-btn" type="button" id="saveTickerHeadline">Save scrolling headline</button>
-      </section>
       <section class="view-panel active" id="dashboardView">
         <div class="stats-grid">
           <article class="stat-card"><span>Total posts</span><strong id="statTotal">0</strong><small>All saved posts</small></article>
@@ -53,13 +45,28 @@
           <div class="panel-heading"><div><h2>Recent posts</h2><p>Your latest content activity</p></div><button class="text-btn" data-open="posts">View all posts →</button></div>
           <div id="recentPosts" class="table-wrap"></div>
         </div>
-        <div class="panel-card rules-card"><h2>How post placement works</h2><div class="rules-grid"><div><b>Main Home Page</b><p>Automatic. The newest published post from every category appears in the homepage main slider. It is not a manual placement option.</p></div><div><b>Latest / Popular</b><p>Choose Latest, Popular, My Choice, or any combination. My Choice is reserved for personal picks and affiliate/product recommendations.</p></div><div><b>Featured Stories / Editor’s Choice</b><p>This is a separate editorial selection. Select its checkbox to add a hand-picked article to the homepage Featured Stories section (maximum 20).</p></div><div><b>Most Viewed</b><p>Automatic ranking by real article views after live view tracking is connected.</p></div></div></div>
+        <div class="panel-card rules-card"><h2>How post placement works</h2><div class="rules-grid"><div><b>Main Home Page</b><p>Automatic. The newest published post from every category appears in the homepage main slider. It is not a manual placement option.</p></div><div><b>Latest / Popular</b><p>Choose Latest, Popular, Favorites, or any combination. Favorites is reserved for personal picks and affiliate/product recommendations.</p></div><div><b>Featured Stories / Editor’s Choice</b><p>This is a separate editorial selection. Select its checkbox to add a hand-picked article to the homepage Featured Stories section (maximum 20).</p></div><div><b>Most Viewed</b><p>Automatic ranking by real article views after live view tracking is connected.</p></div></div></div>
       </section>
       <section class="view-panel" id="postsView">
         <div class="panel-card">
           <div class="list-toolbar"><div><h2>All posts</h2><p>Search, edit, publish or delete your content.</p></div><div class="filters"><input id="postSearch" type="search" placeholder="Search posts"><select id="statusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option></select></div></div>
           <div id="allPosts" class="table-wrap"></div>
         </div>
+      </section>
+      <section class="view-panel" id="headlinesView">
+        <div class="panel-card">
+          <div class="list-toolbar"><div><h2>All Headlines</h2><p>Manage the lines shown in the homepage scrolling ticker.</p></div><button class="primary-btn" type="button" id="newHeadlineBtn">＋ Write a Headline</button></div>
+          <div id="allHeadlines" class="headline-list"></div>
+        </div>
+      </section>
+      <section class="view-panel" id="headlineEditorView">
+        <form id="headlineForm" class="panel-card headline-form">
+          <h2 id="headlineFormTitle">Write a Headline</h2>
+          <label class="field-label" for="headlineText">Headline text</label>
+          <textarea class="text-input" id="headlineText" rows="3" maxlength="220" placeholder="Write one scrolling headline..." required></textarea>
+          <div class="field-help">Each saved headline appears in the scrolling ticker at the top of the main website.</div>
+          <div class="headline-form-actions"><button class="primary-btn" type="submit">Save Headline</button><button class="secondary-btn" type="button" id="cancelHeadlineBtn">Cancel</button></div>
+        </form>
       </section>
       <section class="view-panel" id="editorView">
         <form id="postForm" class="editor-grid">
@@ -79,7 +86,7 @@
           </div>
           <aside class="editor-side">
             <div class="panel-card"><h2>Article details</h2><label class="field-label" for="postCategory">Category</label><select id="postCategory" class="text-input" required><option value="world">World News</option><option value="tips">Daily Tips</option><option value="technology">Technology</option><option value="sports">Sports</option><option value="health">Health</option><option value="beauty">Beauty</option><option value="travel">Travel</option><option value="finance">Finance</option><option value="lifestyle">Lifestyle</option></select><label class="field-label" for="postLanguage">Article language</label><select id="postLanguage" class="text-input"><option value="en">English</option><option value="bn">বাংলা</option><option value="hi">हिन्दी</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="es">Español</option></select><label class="field-label" for="postExcerpt">Short excerpt (optional)</label><textarea id="postExcerpt" class="text-input excerpt-input" rows="4" maxlength="280" placeholder="A short summary for search and sharing..."></textarea><div class="field-help"><span id="excerptCount">0</span>/280 characters</div><label class="field-label keyword-field-label" for="postKeywordInput">Search keywords (optional)</label><div class="keyword-editor" id="keywordEditor"><div class="keyword-chips" id="keywordChips"></div><input id="postKeywordInput" class="text-input" type="text" placeholder="Type a keyword and press Enter" autocomplete="off"></div><div class="field-help">Add keywords one by one. Press Enter after each keyword.</div></div>
-            <div class="panel-card publish-card"><h2>Publish</h2><div class="status-line"><span id="editorStatusDot"></span><span id="editorStatusText">Draft</span></div><label class="field-label" for="postStatus">Status</label><select id="postStatus" class="text-input"><option value="draft">Save as draft</option><option value="published">Publish article</option></select><fieldset class="placement-fieldset"><legend class="field-label">Post placement <small>Select any combination</small></legend><label class="placement-option"><input type="checkbox" name="postPlacement" value="latest" checked><span><strong>Latest</strong><small>Show in the Latest feed.</small></span></label><label class="placement-option"><input type="checkbox" name="postPlacement" value="popular"><span><strong>Popular</strong><small>Show in the Popular feed.</small></span></label><label class="placement-option my-choice-placement"><input type="checkbox" name="postPlacement" value="myChoice"><span><strong>My Choice</strong><small>Show in the homepage My Choice section (maximum 4 items).</small></span></label><p class="field-help">Main Home Page is automatic. Most Viewed is calculated automatically when live view tracking is connected.</p></fieldset><label class="featured-check-row"><input id="postFeaturedStories" type="checkbox"><span><strong>Featured Stories / Editor’s Choice</strong><small>Select this to add the post to the homepage Featured Stories / Editor’s Choice section (maximum 20 posts).</small></span></label><button class="primary-btn full-btn" type="submit" id="savePostBtn">Save post</button><button class="secondary-btn full-btn" type="button" id="previewBtn">Preview article</button><button class="danger-text full-btn" type="button" id="deleteCurrentBtn" hidden>Delete this post</button></div>
+            <div class="panel-card publish-card"><h2>Publish</h2><div class="status-line"><span id="editorStatusDot"></span><span id="editorStatusText">Draft</span></div><label class="field-label" for="postStatus">Status</label><select id="postStatus" class="text-input"><option value="draft">Save as draft</option><option value="published">Publish article</option></select><fieldset class="placement-fieldset"><legend class="field-label">Post placement <small>Select any combination</small></legend><label class="placement-option"><input type="checkbox" name="postPlacement" value="latest" checked><span><strong>Latest</strong><small>Show in the Latest feed.</small></span></label><label class="placement-option"><input type="checkbox" name="postPlacement" value="popular"><span><strong>Popular</strong><small>Show in the Popular feed.</small></span></label><label class="placement-option my-choice-placement"><input type="checkbox" name="postPlacement" value="myChoice"><span><strong>Favorites</strong><small>Show in the homepage Favorites section (maximum 4 items).</small></span></label><p class="field-help">Main Home Page is automatic. Most Viewed is calculated automatically when live view tracking is connected.</p></fieldset><label class="featured-check-row"><input id="postFeaturedStories" type="checkbox"><span><strong>Featured Stories / Editor’s Choice</strong><small>Select this to add the post to the homepage Featured Stories / Editor’s Choice section (maximum 20 posts).</small></span></label><button class="primary-btn full-btn" type="submit" id="savePostBtn">Save post</button><button class="secondary-btn full-btn" type="button" id="previewBtn">Preview article</button><button class="danger-text full-btn" type="button" id="deleteCurrentBtn" hidden>Delete this post</button></div>
           </aside>
         </form>
       </section>
