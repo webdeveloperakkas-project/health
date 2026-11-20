@@ -2381,3 +2381,8 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
  .home-feature-summary-row p{white-space:nowrap}
  .home-feature-summary-row .home-read-button{align-self:flex-end}
 }
+
+
+/* Make the featured image and headline clear, accessible article links. */
+.home-feature-image img[data-open-post],.home-feature-content h1[data-open-post]{cursor:pointer}
+.home-feature-content h1[data-open-post]:focus-visible,.home-feature-image img[data-open-post]:focus-visible{outline:3px solid #159d92;outline-offset:4px;border-radius:4px}
