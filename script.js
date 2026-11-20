@@ -226,6 +226,91 @@
     });
     return host.innerHTML;
   }
+
+  /* Bengali article translation: free MyMemory endpoint + per-browser cache. */
+  const BN_TRANSLATION_CACHE_PREFIX = "ea-bn-translation-v1:";
+  let currentArticlePost = null;
+  let articleTranslationRun = 0;
+  function translationHash(value) {
+    let hash = 2166136261;
+    for (let i = 0; i < value.length; i++) {
+      hash ^= value.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0).toString(36);
+  }
+  function splitTranslationText(value) {
+    const encoder = new TextEncoder();
+    let sentences;
+    try {
+      sentences = [...new Intl.Segmenter("en", {granularity:"sentence"}).segment(value)].map(item => item.segment);
+    } catch (_) {
+      sentences = value.match(/[^.!?।]+[.!?।]+\\s*|[^.!?।]+$/gu) || [value];
+    }
+    const chunks = [];
+    sentences.forEach(sentence => {
+      if (encoder.encode(sentence).length <= 450) {
+        chunks.push(sentence);
+        return;
+      }
+      const words = sentence.match(/\\S+\\s*/gu) || [sentence];
+      let chunk = "";
+      words.forEach(word => {
+        if (chunk && encoder.encode(chunk + word).length > 450) {
+          chunks.push(chunk);
+          chunk = "";
+        }
+        chunk += word;
+      });
+      if (chunk) chunks.push(chunk);
+    });
+    return chunks;
+  }
+  async function translateBnSegment(source) {
+    const cacheKey = BN_TRANSLATION_CACHE_PREFIX + translationHash(source);
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) return cached;
+    } catch (_) {}
+    const params = new URLSearchParams({q:source, langpair:"en|bn", mt:"1"});
+    const response = await fetch("https://api.mymemory.translated.net/get?" + params.toString(), {
+      method:"GET",
+      headers:{"Accept":"application/json"}
+    });
+    if (!response.ok) throw new Error("Translation service unavailable");
+    const data = await response.json();
+    const translated = data && data.responseData && data.responseData.translatedText;
+    if (!translated || Number(data.responseStatus) !== 200) throw new Error("No Bengali translation returned");
+    try { localStorage.setItem(cacheKey, translated); } catch (_) {}
+    return translated;
+  }
+  async function translateBnText(source) {
+    const chunks = splitTranslationText(source);
+    let translated = "";
+    for (const chunk of chunks) translated += await translateBnSegment(chunk);
+    return translated;
+  }
+  async function translateArticleHtmlToBengali(html, runId) {
+    const host = document.createElement("div");
+    host.innerHTML = html || "";
+    const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.nodeValue.trim() && !node.parentElement.closest("script,style,code,pre")) nodes.push(node);
+    }
+    for (const node of nodes) {
+      const original = node.nodeValue;
+      const leading = original.match(/^\\s*/)?.[0] || "";
+      const trailing = original.match(/\\s*$/)?.[0] || "";
+      const core = original.trim();
+      if (!core) continue;
+      const translated = await translateBnText(core);
+      if (runId !== articleTranslationRun) return null;
+      node.nodeValue = leading + translated + trailing;
+    }
+    return host.innerHTML;
+  }
   function applyLanguage(language) {
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
@@ -452,14 +537,29 @@
   }
   function openArticleDetail(post) {
     if (!post) return;
-    const paragraphs = post.contentHtml ? localizeHtml(post.contentHtml) : (post.body || []).map(line => "<p>" + escapeHTML(localizeText(line)) + "</p>").join("");
+    currentArticlePost = post;
+    const runId = ++articleTranslationRun;
+    const sourceHtml = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+    const isBengali = activeLanguage === "bn";
+    const paragraphs = isBengali ? '<p class="article-translation-status" role="status">নিবন্ধটি বাংলায় অনুবাদ করা হচ্ছে…</p>' : localizeHtml(sourceHtml);
     articleDialogContent.innerHTML =
       '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
       '<h1 id="articleDialogTitle">' + escapeHTML(localizeText(post.title)) + '</h1>' +
       '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' +
-      shareButtons(post) + '<div class="article-detail-body">' + paragraphs + '</div>' + (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '');
+      shareButtons(post) + '<div class="article-detail-body" id="articleDetailBody">' + paragraphs + '</div>' + (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\\s+/g,'')) + '</span>').join('') + '</div>' : '');
     if (typeof articleDialog.showModal === "function") articleDialog.showModal();
     else articleDialog.setAttribute("open","");
+    if (isBengali) {
+      translateArticleHtmlToBengali(sourceHtml, runId).then(translatedHtml => {
+        if (translatedHtml === null || runId !== articleTranslationRun) return;
+        const body = $("#articleDetailBody");
+        if (body) body.innerHTML = translatedHtml;
+      }).catch(() => {
+        if (runId !== articleTranslationRun) return;
+        const body = $("#articleDetailBody");
+        if (body) body.innerHTML = sourceHtml + '<p class="article-translation-status" role="status">এই মুহূর্তে বাংলা অনুবাদ পাওয়া যাচ্ছে না। মূল ইংরেজি লেখা দেখানো হচ্ছে।</p>';
+      });
+    }
   }
   function render() {
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
@@ -771,6 +871,7 @@
   $("#languageSelect").addEventListener("change", event => {
     try { localStorage.setItem("ea-language", event.target.value); } catch (_) {}
     applyLanguage(event.target.value);
+    if (currentArticlePost && articleDialog.open) openArticleDetail(currentArticlePost);
   });
   try {
     const savedLanguage = localStorage.getItem("ea-language");
