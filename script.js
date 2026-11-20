@@ -282,8 +282,9 @@
           '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
           '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
         '</button>'
+      ).join("");
     }
-    $$(".home-rail-tab").forEach(button => {
+    $(".home-rail-tab").forEach(button => {
       const selected = button.dataset.homeList === homeListType;
       button.classList.toggle("active", selected);
       button.setAttribute("aria-selected", String(selected));
