@@ -82,7 +82,7 @@
     ]
   },
   {
-    category:"beauty",title:"A Simple, Thoughtful Approach to Daily Skincare",postType:"latest",date:"November 19, 2026",read:"4 MIN READ",body:[
+    category:"lifestyle",title:"A Simple, Thoughtful Approach to Daily Skincare",postType:"latest",date:"November 19, 2026",read:"4 MIN READ",body:[
     "A skincare routine does not need to contain many products to feel organised. Many basic routines focus on gentle cleansing, moisturising and sun protection.",
     "Choose products that suit your skin and introduce new items gradually. Using several new products at the same time can make it harder to identify what works for you.",
     "Read product labels and follow the directions provided by the manufacturer. A patch test may be useful when trying a new product, although it cannot guarantee that irritation will not occur.",
@@ -93,14 +93,14 @@
     ]
   },
   {
-    category:"beauty",title:"Understanding the Basics of Hair Care",postType:"popular",date:"November 18, 2026",read:"3 MIN READ",body:[
+    category:"lifestyle",title:"Understanding the Basics of Hair Care",postType:"popular",date:"November 18, 2026",read:"3 MIN READ",body:[
     "Hair needs can differ depending on hair type, styling habits and the environment. Start by noticing how your hair responds to your current routine.",
     "Use shampoo and conditioner according to their directions and avoid rough handling when hair is wet. Heat styling less often may help reduce avoidable damage.",
     "Choose a manageable routine instead of following every trend. If you notice sudden or persistent hair loss or scalp problems, seek professional advice."
     ]
   },
   {
-    category:"beauty",title:"How to Read a Personal Care Product Label",postType:"mostViewed",date:"November 17, 2026",read:"3 MIN READ",body:[
+    category:"lifestyle",title:"How to Read a Personal Care Product Label",postType:"mostViewed",date:"November 17, 2026",read:"3 MIN READ",body:[
     "Product labels can help you understand what an item is intended to do and how it should be used. Read the directions, warnings and ingredient list before use.",
     "Check the expiry information and store products as recommended. Be careful with claims that promise instant or guaranteed results.",
     "If you have allergies or sensitive skin, review ingredients carefully and ask a qualified professional when unsure. Stop using a product if it causes a concerning reaction."
@@ -115,7 +115,7 @@
       const publicCmsPosts = cmsPosts.filter(item => item && item.status === "published").map(item => {
         const plain = String(item.content || "").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
         const dateValue = item.publishedAt || item.createdAt || item.updatedAt || new Date().toISOString();
-        return {cmsId:item.id,category:item.category,subcategory:item.subcategory||"",title:item.title,postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
+        return {cmsId:item.id,category:item.category==="beauty"?"lifestyle":item.category,subcategory:item.subcategory||"",title:item.title,postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
       });
       posts = posts.filter(item => !item.cmsId).concat(publicCmsPosts, posts.filter(item => item.cmsId));
     }
@@ -127,7 +127,7 @@
      Section complete.
   ========================================================= */
   const categoryNames = {
-    home:"Home",world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
+    home:"Home",world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
   };
   /* =========================================================
      04. LANGUAGE CONTENT
@@ -137,42 +137,42 @@
   const languageCopy = {
     en:{
       latest:"LATEST",categories:{
-        home:"Home",world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
+        home:"Home",world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
       },stories:"LATEST STORIES",types:{
         latest:"Latest",popular:"Popular",mostViewed:"Most Viewed"
       },description:"Latest articles and useful information.",search:"Search articles...",sort:"NEWEST FIRST ↓",page:"Page",of:"of",articles:"Articles",empty:"No sample posts are available in this category yet. More articles will appear here as they are published.",about:"About",contact:"Contact",privacy:"Privacy",aboutTitle:"Clear information for a world of everyday questions.",aboutText:"Our articles are for general information and do not replace professional advice."
     },
     bn:{
       latest:"সর্বশেষ",categories:{
-        home:"হোম",world:"বিশ্ব সংবাদ",tips:"দৈনন্দিন টিপস",technology:"প্রযুক্তি",sports:"খেলাধুলা",health:"স্বাস্থ্য",beauty:"সৌন্দর্য",travel:"ভ্রমণ",finance:"অর্থনীতি",lifestyle:"জীবনযাপন"
+        home:"হোম",world:"বিশ্ব সংবাদ",tips:"দৈনন্দিন টিপস",technology:"প্রযুক্তি",sports:"খেলাধুলা",health:"স্বাস্থ্য",entertainment:"বিনোদন",travel:"ভ্রমণ",finance:"অর্থনীতি",lifestyle:"জীবনযাপন"
       },stories:"সর্বশেষ লেখা",types:{
         latest:"সর্বশেষ",popular:"জনপ্রিয়",mostViewed:"সর্বাধিক দেখা"
       },description:"সাম্প্রতিক প্রবন্ধ ও দরকারি তথ্য।",search:"প্রবন্ধ খুঁজুন...",sort:"নতুন লেখা আগে ↓",page:"পৃষ্ঠা",of:"এর",articles:"প্রবন্ধ",empty:"এই বিভাগে এখনো কোনো নমুনা প্রবন্ধ নেই। প্রকাশিত হলে নতুন প্রবন্ধ এখানে দেখা যাবে।",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা",aboutTitle:"প্রতিদিনের নানা প্রশ্নের জন্য সহজ ও নির্ভরযোগ্য তথ্য।",aboutText:"আমাদের প্রবন্ধ সাধারণ তথ্যের জন্য; এগুলো পেশাদার পরামর্শের বিকল্প নয়।"
     },
     hi:{
       latest:"ताज़ा",categories:{
-        home:"होम",world:"विश्व समाचार",tips:"दैनिक सुझाव",technology:"प्रौद्योगिकी",sports:"खेल",health:"स्वास्थ्य",beauty:"सौंदर्य",travel:"यात्रा",finance:"वित्त",lifestyle:"जीवनशैली"
+        home:"होम",world:"विश्व समाचार",tips:"दैनिक सुझाव",technology:"प्रौद्योगिकी",sports:"खेल",health:"स्वास्थ्य",entertainment:"मनोरंजन",travel:"यात्रा",finance:"वित्त",lifestyle:"जीवनशैली"
       },stories:"नवीनतम लेख",types:{
         latest:"नवीनतम",popular:"लोकप्रिय",mostViewed:"सबसे अधिक देखे गए"
       },description:"नए लेख और उपयोगी जानकारी।",search:"लेख खोजें...",sort:"नवीनतम पहले ↓",page:"पृष्ठ",of:"में से",articles:"लेख",empty:"इस श्रेणी में अभी कोई नमूना लेख उपलब्ध नहीं है।",about:"परिचय",contact:"संपर्क",privacy:"गोपनीयता",aboutTitle:"रोज़मर्रा के सवालों के लिए स्पष्ट और उपयोगी जानकारी।",aboutText:"हमारे लेख सामान्य जानकारी के लिए हैं और पेशेवर सलाह का विकल्प नहीं हैं।"
     },
     de:{
       latest:"AKTUELL",categories:{
-        home:"Startseite",world:"Weltnachrichten",tips:"Alltagstipps",technology:"Technologie",sports:"Sport",health:"Gesundheit",beauty:"Schönheit",travel:"Reisen",finance:"Finanzen",lifestyle:"Lebensstil"
+        home:"Startseite",world:"Weltnachrichten",tips:"Alltagstipps",technology:"Technologie",sports:"Sport",health:"Gesundheit",entertainment:"Unterhaltung",travel:"Reisen",finance:"Finanzen",lifestyle:"Lebensstil"
       },stories:"NEUESTE ARTIKEL",types:{
         latest:"Neueste",popular:"Beliebt",mostViewed:"Meistgesehen"
       },description:"Neueste Artikel und hilfreiche Informationen.",search:"Artikel suchen...",sort:"NEUESTE ZUERST ↓",page:"Seite",of:"von",articles:"Artikel",empty:"Für diese Kategorie sind noch keine Beispielartikel verfügbar.",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",aboutTitle:"Klare Informationen für die Fragen des Alltags.",aboutText:"Unsere Artikel dienen der allgemeinen Information und ersetzen keine professionelle Beratung."
     },
     fr:{
       latest:"À LA UNE",categories:{
-        home:"Accueil",world:"Actualités",tips:"Conseils pratiques",technology:"Technologie",sports:"Sports",health:"Santé",beauty:"Beauté",travel:"Voyage",finance:"Finance",lifestyle:"Mode de vie"
+        home:"Accueil",world:"Actualités",tips:"Conseils pratiques",technology:"Technologie",sports:"Sports",health:"Santé",entertainment:"Divertissement",travel:"Voyage",finance:"Finance",lifestyle:"Mode de vie"
       },stories:"DERNIERS ARTICLES",types:{
         latest:"Récent",popular:"Populaire",mostViewed:"Les plus vus"
       },description:"Articles récents et informations utiles.",search:"Rechercher des articles...",sort:"PLUS RÉCENT ↓",page:"Page",of:"sur",articles:"Articles",empty:"Aucun article exemple n'est encore disponible dans cette catégorie.",about:"À propos",contact:"Contact",privacy:"Confidentialité",aboutTitle:"Des informations claires pour les questions du quotidien.",aboutText:"Nos articles sont informatifs et ne remplacent pas un avis professionnel."
     },
     es:{
       latest:"ÚLTIMAS NOTICIAS",categories:{
-        home:"Inicio",world:"Noticias mundiales",tips:"Consejos diarios",technology:"Tecnología",sports:"Deportes",health:"Salud",beauty:"Belleza",travel:"Viajes",finance:"Finanzas",lifestyle:"Estilo de vida"
+        home:"Inicio",world:"Noticias mundiales",tips:"Consejos diarios",technology:"Tecnología",sports:"Deportes",health:"Salud",entertainment:"Entretenimiento",travel:"Viajes",finance:"Finanzas",lifestyle:"Estilo de vida"
       },stories:"ARTÍCULOS RECIENTES",types:{
         latest:"Recientes",popular:"Popular",mostViewed:"Más vistos"
       },description:"Artículos recientes e información útil.",search:"Buscar artículos...",sort:"MÁS RECIENTES ↓",page:"Página",of:"de",articles:"Artículos",empty:"Todavía no hay artículos de ejemplo en esta categoría.",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",aboutTitle:"Información clara para las preguntas de cada día.",aboutText:"Nuestros artículos son informativos y no sustituyen el asesoramiento profesional."
@@ -316,10 +316,9 @@
     const t = languageCopy[activeLanguage];
     const ui = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     const sportsLabels = window.EA_TRANSLATIONS?.sportsSubcategories?.[activeLanguage] || window.EA_TRANSLATIONS?.sportsSubcategories?.en || {};
-    document.querySelectorAll("#sportsSubmenu [data-sports-subcategory]").forEach(button => {
-      const key = button.dataset.sportsSubcategory;
-      if (sportsLabels[key]) button.textContent = sportsLabels[key];
-    });
+    document.querySelectorAll("#sportsSubmenu [data-sports-subcategory]").forEach(button => { const key=button.dataset.sportsSubcategory; if(sportsLabels[key])button.textContent=sportsLabels[key]; });
+    const entertainmentLabels={en:{cinema:"Cinema",bollywood:"Bollywood","south-cinema":"South Indian Cinema",music:"Music",hollywood:"Hollywood",television:"Television",serial:"TV Serials","folk-art":"Folk Culture"},bn:{cinema:"সিনেমা",bollywood:"বলিউড","south-cinema":"দক্ষিণের সিনেমা",music:"গান",hollywood:"হলিউড",television:"টেলিভিশন",serial:"সিরিয়াল","folk-art":"লোক-সংস্কৃতি"},hi:{cinema:"सिनेमा",bollywood:"बॉलीवुड","south-cinema":"दक्षिण भारतीय सिनेमा",music:"संगीत",hollywood:"हॉलीवुड",television:"टेलीविजन",serial:"धारावाहिक","folk-art":"लोक संस्कृति"},de:{cinema:"Kino",bollywood:"Bollywood","south-cinema":"Südkino",music:"Musik",hollywood:"Hollywood",television:"Fernsehen",serial:"Serien","folk-art":"Volkskultur"},fr:{cinema:"Cinéma",bollywood:"Bollywood","south-cinema":"Cinéma du Sud",music:"Musique",hollywood:"Hollywood",television:"Télévision",serial:"Séries","folk-art":"Culture populaire"},es:{cinema:"Cine",bollywood:"Bollywood","south-cinema":"Cine del sur",music:"Música",hollywood:"Hollywood",television:"Televisión",serial:"Series","folk-art":"Cultura popular"}}[activeLanguage]||{};
+    document.querySelectorAll("#entertainmentSubmenu [data-entertainment-subcategory]").forEach(button=>{const key=button.dataset.entertainmentSubcategory;if(entertainmentLabels[key])button.textContent=entertainmentLabels[key];});
     document.documentElement.lang = activeLanguage;
     updateHeaderClock();
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
@@ -368,7 +367,7 @@
      Section complete.
   ========================================================= */
   let activeCategory = "home";
-  let activeSportsSubcategory = "";
+  let activeSubcategory = "";
   let currentPage = 1;
   let activePostType = "latest";
   const pageSize = 2;
@@ -566,7 +565,7 @@
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
     const categoryPosts = posts
-      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType) && (activeCategory !== "sports" || !activeSportsSubcategory || post.subcategory === activeSportsSubcategory))
+      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : (activeCategory === "home" || post.category === activeCategory) && (post.postTypes || [post.postType || "latest"]).includes(activePostType) && ((activeCategory !== "sports" && activeCategory !== "entertainment") || !activeSubcategory || post.subcategory === activeSubcategory))
       .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "") + " " + (post.keywords || []).join(" ")).toLowerCase().includes(searchTerm));
     const totalPages = Math.max(1, Math.ceil(categoryPosts.length / pageSize));
     currentPage = Math.min(currentPage, totalPages);
@@ -670,63 +669,31 @@
     if (event.target === articleDialog) articleDialog.close();
   });
   
-  const sportsTrigger = document.querySelector(".sports-category-trigger");
-  const sportsSubmenu = document.querySelector("#sportsSubmenu");
-  if (sportsTrigger && sportsSubmenu) {
-    sportsTrigger.addEventListener("click", event => {
-      event.stopPropagation();
-      const willOpen = sportsSubmenu.hidden;
-      sportsSubmenu.hidden = !willOpen;
-      sportsTrigger.setAttribute("aria-expanded", String(willOpen));
+  function setupSubcategoryMenu(triggerSelector,submenuSelector,category,dataSelector,dataAttribute){
+    const trigger=document.querySelector(triggerSelector),submenu=document.querySelector(submenuSelector);if(!trigger||!submenu)return;
+    trigger.addEventListener("click",event=>{event.stopPropagation();const open=submenu.hidden;submenu.hidden=!open;trigger.setAttribute("aria-expanded",String(open));});
+    submenu.addEventListener("click",event=>{
+      const choice=event.target.closest(dataSelector);if(!choice)return;
+      activeCategory=category;activeSubcategory=choice.getAttribute(dataAttribute)||"";showHomeFeed=false;showFeaturedFeed=false;activePostType="latest";
+      document.querySelectorAll(".post-type-option").forEach(option=>{const selected=option.dataset.postType===activePostType;option.classList.toggle("active",selected);option.setAttribute("aria-pressed",String(selected));});
+      currentPage=1;searchTerm="";const searchInput=$("#siteSearch");if(searchInput)searchInput.value="";
+      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger),.sidebar-category").forEach(card=>{const selected=card.dataset.category===category;card.classList.toggle("active",selected);card.setAttribute("aria-pressed",String(selected));});
+      document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger").forEach(item=>item.classList.toggle("active",item===trigger));
+      submenu.querySelectorAll(dataSelector).forEach(item=>item.classList.toggle("active",item===choice));
+      submenu.hidden=true;trigger.setAttribute("aria-expanded","false");render();
     });
-    sportsSubmenu.addEventListener("click", event => {
-      const choice = event.target.closest("[data-sports-subcategory]");
-      if (!choice) return;
-      activeCategory = "sports";
-      activeSportsSubcategory = choice.dataset.sportsSubcategory || "";
-      showHomeFeed = false;
-      showFeaturedFeed = false;
-      activePostType = "latest";
-      Array.from(document.querySelectorAll(".post-type-option")).forEach(option => {
-        const selected = option.dataset.postType === activePostType;
-        option.classList.toggle("active", selected);
-        option.setAttribute("aria-pressed", String(selected));
-      });
-      currentPage = 1;
-      searchTerm = "";
-      const searchInput = $("#siteSearch");
-      if (searchInput) searchInput.value = "";
-      Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(card => {
-        const selected = card.dataset.category === "sports";
-        card.classList.toggle("active", selected);
-        card.setAttribute("aria-pressed", String(selected));
-      });
-      sportsTrigger.classList.add("active");
-      sportsSubmenu.querySelectorAll("[data-sports-subcategory]").forEach(item => item.classList.toggle("active", item === choice));
-      sportsSubmenu.hidden = true;
-      sportsTrigger.setAttribute("aria-expanded", "false");
-      render();
-    });
-    document.addEventListener("click", event => {
-      if (!event.target.closest(".sports-category-menu")) {
-        sportsSubmenu.hidden = true;
-        sportsTrigger.setAttribute("aria-expanded", "false");
-      }
-    });
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        sportsSubmenu.hidden = true;
-        sportsTrigger.setAttribute("aria-expanded", "false");
-      }
-    });
+    document.addEventListener("click",event=>{if(!event.target.closest(trigger.parentElement.classList[0])){submenu.hidden=true;trigger.setAttribute("aria-expanded","false");}});
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"){submenu.hidden=true;trigger.setAttribute("aria-expanded","false");}});
   }
+  setupSubcategoryMenu(".sports-category-trigger","#sportsSubmenu","sports","[data-sports-subcategory]","data-sports-subcategory");
+  setupSubcategoryMenu(".entertainment-category-trigger","#entertainmentSubmenu","entertainment","[data-entertainment-subcategory]","data-entertainment-subcategory");
 
   /* =========================================================
      09. CATEGORY NAVIGATION
      Purpose: Change category and reset the post-type filter.
      Section complete.
   ========================================================= */
-  Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(button => {
+  Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger), .sidebar-category")).forEach(button => {
     button.addEventListener("click", () => {
       /* Home is the fresh landing-page entry: reload with normal browser caching
          so updated homepage content/state is re-initialized without cache-busting assets. */
@@ -737,13 +704,19 @@
         return;
       }
       activeCategory = button.dataset.category;
-      activeSportsSubcategory = "";
+      activeSubcategory = "";
       const sportsMenuTrigger = document.querySelector(".sports-category-trigger");
       const sportsMenu = document.querySelector("#sportsSubmenu");
+      const entertainmentMenuTrigger=document.querySelector(".entertainment-category-trigger");
+      const entertainmentMenu=document.querySelector("#entertainmentSubmenu");
       if (sportsMenuTrigger) sportsMenuTrigger.classList.toggle("active", activeCategory === "sports");
       if (sportsMenuTrigger) sportsMenuTrigger.setAttribute("aria-expanded", "false");
       if (sportsMenu) sportsMenu.hidden = true;
       if (sportsMenu) sportsMenu.querySelectorAll("[data-sports-subcategory]").forEach(item => item.classList.remove("active"));
+      if(entertainmentMenuTrigger)entertainmentMenuTrigger.classList.toggle("active",activeCategory==="entertainment");
+      if(entertainmentMenuTrigger)entertainmentMenuTrigger.setAttribute("aria-expanded","false");
+      if(entertainmentMenu)entertainmentMenu.hidden=true;
+      if(entertainmentMenu)entertainmentMenu.querySelectorAll("[data-entertainment-subcategory]").forEach(item=>item.classList.remove("active"));
       showHomeFeed = false;
       showFeaturedFeed = false;
       activePostType = "latest";
