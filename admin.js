@@ -147,7 +147,7 @@
   /* Form state and CRUD */
   function syncSportsSubcategory(){
     const category=$("#postCategory").value;
-    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other Sports"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:[];
+    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other Sports"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["beauty-care","Beauty Care"]]:[];
     const select=$("#postSubcategory"),previous=select.value;$("#sportsSubcategoryField").hidden=!options.length;select.required=!!options.length;
     select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
     select.value=options.some(([value])=>value===previous)?previous:"";
@@ -166,7 +166,7 @@
     const post=posts.find(item=>item.id===postId); if(!post) return;
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>";
-    $("#postCategory").value=post.category||"health"; $("#postSubcategory").value=post.subcategory||""; syncSportsSubcategory(); $("#postLanguage").value=post.language||"en";
+    $("#postCategory").value=post.category||"health"; syncSportsSubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
@@ -207,7 +207,7 @@
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
     const post={
-      id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:["sports","entertainment"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
+      id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
@@ -226,7 +226,7 @@
   function previewHTML(){
     const title=safe($("#postTitle").value||"Untitled article");
     const category=safe(categories[$("#postCategory").value]);
-    const subcategory=["sports","entertainment"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
+    const subcategory=["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
     const body=$("#articleEditor").innerHTML;
     const cover=coverData?'<img src="'+coverData+'" alt="Article cover">':"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
