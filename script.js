@@ -124,42 +124,42 @@
       latest:"LATEST",categories:{
         home:"Home",world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
       },stories:"LATEST STORIES",types:{
-        latest:"Latest",popular:"Popular",features:"Features",mostViewed:"Most Viewed"
+        latest:"Latest",popular:"Popular",mostViewed:"Most Viewed"
       },description:"Latest articles and useful information.",search:"Search articles...",sort:"NEWEST FIRST ↓",page:"Page",of:"of",articles:"Articles",empty:"No sample posts are available in this category yet. More articles will appear here as they are published.",about:"About",contact:"Contact",privacy:"Privacy",aboutTitle:"Clear information for a world of everyday questions.",aboutText:"Our articles are for general information and do not replace professional advice."
     },
     bn:{
       latest:"সর্বশেষ",categories:{
         home:"হোম",world:"বিশ্ব সংবাদ",tips:"দৈনন্দিন টিপস",technology:"প্রযুক্তি",sports:"খেলাধুলা",health:"স্বাস্থ্য",beauty:"সৌন্দর্য",travel:"ভ্রমণ",finance:"অর্থনীতি",lifestyle:"জীবনযাপন"
       },stories:"সর্বশেষ লেখা",types:{
-        latest:"সর্বশেষ",popular:"জনপ্রিয়",features:"ফিচারস",mostViewed:"সর্বাধিক দেখা"
+        latest:"সর্বশেষ",popular:"জনপ্রিয়",mostViewed:"সর্বাধিক দেখা"
       },description:"সাম্প্রতিক প্রবন্ধ ও দরকারি তথ্য।",search:"প্রবন্ধ খুঁজুন...",sort:"নতুন লেখা আগে ↓",page:"পৃষ্ঠা",of:"এর",articles:"প্রবন্ধ",empty:"এই বিভাগে এখনো কোনো নমুনা প্রবন্ধ নেই। প্রকাশিত হলে নতুন প্রবন্ধ এখানে দেখা যাবে।",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা",aboutTitle:"প্রতিদিনের নানা প্রশ্নের জন্য সহজ ও নির্ভরযোগ্য তথ্য।",aboutText:"আমাদের প্রবন্ধ সাধারণ তথ্যের জন্য; এগুলো পেশাদার পরামর্শের বিকল্প নয়।"
     },
     hi:{
       latest:"ताज़ा",categories:{
         home:"होम",world:"विश्व समाचार",tips:"दैनिक सुझाव",technology:"प्रौद्योगिकी",sports:"खेल",health:"स्वास्थ्य",beauty:"सौंदर्य",travel:"यात्रा",finance:"वित्त",lifestyle:"जीवनशैली"
       },stories:"नवीनतम लेख",types:{
-        latest:"नवीनतम",popular:"लोकप्रिय",features:"विशेष",mostViewed:"सबसे अधिक देखे गए"
+        latest:"नवीनतम",popular:"लोकप्रिय",mostViewed:"सबसे अधिक देखे गए"
       },description:"नए लेख और उपयोगी जानकारी।",search:"लेख खोजें...",sort:"नवीनतम पहले ↓",page:"पृष्ठ",of:"में से",articles:"लेख",empty:"इस श्रेणी में अभी कोई नमूना लेख उपलब्ध नहीं है।",about:"परिचय",contact:"संपर्क",privacy:"गोपनीयता",aboutTitle:"रोज़मर्रा के सवालों के लिए स्पष्ट और उपयोगी जानकारी।",aboutText:"हमारे लेख सामान्य जानकारी के लिए हैं और पेशेवर सलाह का विकल्प नहीं हैं।"
     },
     de:{
       latest:"AKTUELL",categories:{
         home:"Startseite",world:"Weltnachrichten",tips:"Alltagstipps",technology:"Technologie",sports:"Sport",health:"Gesundheit",beauty:"Schönheit",travel:"Reisen",finance:"Finanzen",lifestyle:"Lebensstil"
       },stories:"NEUESTE ARTIKEL",types:{
-        latest:"Neueste",popular:"Beliebt",features:"Ausgewählt",mostViewed:"Meistgesehen"
+        latest:"Neueste",popular:"Beliebt",mostViewed:"Meistgesehen"
       },description:"Neueste Artikel und hilfreiche Informationen.",search:"Artikel suchen...",sort:"NEUESTE ZUERST ↓",page:"Seite",of:"von",articles:"Artikel",empty:"Für diese Kategorie sind noch keine Beispielartikel verfügbar.",about:"Über uns",contact:"Kontakt",privacy:"Datenschutz",aboutTitle:"Klare Informationen für die Fragen des Alltags.",aboutText:"Unsere Artikel dienen der allgemeinen Information und ersetzen keine professionelle Beratung."
     },
     fr:{
       latest:"À LA UNE",categories:{
         home:"Accueil",world:"Actualités",tips:"Conseils pratiques",technology:"Technologie",sports:"Sports",health:"Santé",beauty:"Beauté",travel:"Voyage",finance:"Finance",lifestyle:"Mode de vie"
       },stories:"DERNIERS ARTICLES",types:{
-        latest:"Récent",popular:"Populaire",features:"À la une",mostViewed:"Les plus vus"
+        latest:"Récent",popular:"Populaire",mostViewed:"Les plus vus"
       },description:"Articles récents et informations utiles.",search:"Rechercher des articles...",sort:"PLUS RÉCENT ↓",page:"Page",of:"sur",articles:"Articles",empty:"Aucun article exemple n'est encore disponible dans cette catégorie.",about:"À propos",contact:"Contact",privacy:"Confidentialité",aboutTitle:"Des informations claires pour les questions du quotidien.",aboutText:"Nos articles sont informatifs et ne remplacent pas un avis professionnel."
     },
     es:{
       latest:"ÚLTIMAS NOTICIAS",categories:{
         home:"Inicio",world:"Noticias mundiales",tips:"Consejos diarios",technology:"Tecnología",sports:"Deportes",health:"Salud",beauty:"Belleza",travel:"Viajes",finance:"Finanzas",lifestyle:"Estilo de vida"
       },stories:"ARTÍCULOS RECIENTES",types:{
-        latest:"Recientes",popular:"Popular",features:"Destacados",mostViewed:"Más vistos"
+        latest:"Recientes",popular:"Popular",mostViewed:"Más vistos"
       },description:"Artículos recientes e información útil.",search:"Buscar artículos...",sort:"MÁS RECIENTES ↓",page:"Página",of:"de",articles:"Artículos",empty:"Todavía no hay artículos de ejemplo en esta categoría.",about:"Acerca de",contact:"Contacto",privacy:"Privacidad",aboutTitle:"Información clara para las preguntas de cada día.",aboutText:"Nuestros artículos son informativos y no sustituyen el asesoramiento profesional."
     }
   };
@@ -319,7 +319,7 @@
       '</div>';
   }
   function renderHomeList() {
-    const featured = posts.find(post => post.featured) || sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest")))[0] || posts[0];
+    const featured = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest")))[0] || posts[0];
     const latestItems = sortedByDate(posts.filter(post => post.postType === "latest")).slice(0,10);
     const popularItems = [...posts].filter(post => (post.postTypes || [post.postType || "latest"]).includes("popular"))
       .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,10);
