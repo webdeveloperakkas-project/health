@@ -2193,3 +2193,25 @@ body.policy-open { overflow:hidden; }
 @media (max-width:420px) {
   .home-list-panel { height:410px; max-height:410px; }
 }
+
+
+/* Mobile home tabs and individual story details */
+.home-rail-tabs { position:relative; z-index:2; }
+.home-rail-tab { min-height:42px; touch-action:manipulation; }
+.home-list-entry { padding:0 3px 7px; border-bottom:1px solid #edf1f0; }
+.home-list-entry .home-list-item { border-bottom:0; padding-bottom:5px; }
+.home-list-details {
+  display:inline-flex; align-items:center; gap:7px;
+  margin:0 0 1px 3px; padding:4px 0;
+  border:0; background:transparent; color:var(--teal-dark);
+  font-size:10px; font-weight:800; cursor:pointer;
+  touch-action:manipulation;
+}
+.home-list-details span { font-size:14px; line-height:1; }
+@media (max-width:800px) {
+  .home-rail-tabs { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .home-rail-tab { min-height:46px; padding:11px 8px; font-size:13px; }
+  .home-list-panel .home-list-item { display:flex !important; min-height:76px; padding:9px 0 5px; }
+  .home-list-entry { padding-bottom:7px; }
+  .home-list-details { min-height:30px; font-size:11px; padding:5px 2px; }
+}
