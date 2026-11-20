@@ -10,9 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=57">
+<link rel="stylesheet" href="style.css?v=59">
 <script src="translations.js?v=1" defer></script>
-  <script src="script.js?v=40" defer>
+  <script src="script.js?v=41" defer>
 </script>
 </head>
 
@@ -86,7 +86,7 @@ LATEST</div>
 <section class="category-section" id="categories" aria-label="Choose a category">
 <div class="category-tabs" role="group" aria-label="Article categories">
 <button class="category-tab active" data-category="home" aria-pressed="true">Home</button>
-<button class="category-tab" data-category="world" aria-pressed="false">World News</button>
+<div class="world-category-menu"><button class="category-tab world-category-trigger" data-category="world" type="button" aria-expanded="false" aria-haspopup="true">World News</button><div class="sports-submenu world-submenu" id="worldSubmenu" hidden><button type="button" data-world-subcategory="bangladesh">Bangladesh</button><button type="button" data-world-subcategory="india">India</button><button type="button" data-world-subcategory="pakistan">Pakistan</button><button type="button" data-world-subcategory="asia">Asia</button><button type="button" data-world-subcategory="europe">Europe</button><button type="button" data-world-subcategory="middle-east">Middle East</button></div></div>
 <button class="category-tab" data-category="tips" aria-pressed="false">Daily Tips</button>
 <button class="category-tab" data-category="technology" aria-pressed="false">Technology</button>
 <div class="sports-category-menu"><button class="category-tab sports-category-trigger" data-category="sports" type="button" aria-expanded="false" aria-haspopup="true">Sports</button><div class="sports-submenu" id="sportsSubmenu" hidden><button type="button" data-sports-subcategory="cricket">Cricket</button><button type="button" data-sports-subcategory="football">Football</button><button type="button" data-sports-subcategory="tennis">Tennis</button><button type="button" data-sports-subcategory="basketball">Basketball</button><button type="button" data-sports-subcategory="other-sports">Other</button></div></div>
@@ -94,7 +94,7 @@ LATEST</div>
 <div class="entertainment-category-menu"><button class="category-tab entertainment-category-trigger" data-category="entertainment" type="button" aria-expanded="false" aria-haspopup="true">Entertainment</button><div class="sports-submenu entertainment-submenu" id="entertainmentSubmenu" hidden><button type="button" data-entertainment-subcategory="cinema">Cinema</button><button type="button" data-entertainment-subcategory="bollywood">Bollywood</button><button type="button" data-entertainment-subcategory="south-cinema">South Indian Cinema</button><button type="button" data-entertainment-subcategory="music">Music</button><button type="button" data-entertainment-subcategory="hollywood">Hollywood</button><button type="button" data-entertainment-subcategory="television">Television</button><button type="button" data-entertainment-subcategory="serial">TV Serials</button><button type="button" data-entertainment-subcategory="folk-art">Folk Culture</button></div></div>
 <button class="category-tab" data-category="travel" aria-pressed="false">Travel</button>
 <button class="category-tab" data-category="finance" aria-pressed="false">Finance</button>
-<button class="category-tab" data-category="lifestyle" aria-pressed="false">Lifestyle</button>
+<div class="lifestyle-category-menu"><button class="category-tab lifestyle-category-trigger" data-category="lifestyle" type="button" aria-expanded="false" aria-haspopup="true">Lifestyle</button><div class="sports-submenu lifestyle-submenu" id="lifestyleSubmenu" hidden><button type="button" data-lifestyle-subcategory="beauty-care">Beauty Care</button></div></div>
 </div>
 </section>
 <div class="ad-slot top-ad" aria-label="Advertisement placement">
