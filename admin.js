@@ -229,6 +229,23 @@
   $("#closePreview").addEventListener("click",()=>$("#previewDialog").close());
   $("#previewDialog").addEventListener("click",event=>{if(event.target===$("#previewDialog")) $("#previewDialog").close();});
 
+  /* Homepage scrolling headline settings */
+  const TICKER_STORAGE_KEY = "everyday-atlas-homepage-ticker-v1";
+  const defaultTickerLines = ["আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।","চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি।","ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে","মরি হায়, হায় রে","ও মা, অঘ্রাণে তোর ভরা ক্ষেতে কী দেখেছি মধুর হাসি"];
+  const tickerInput = $("#tickerHeadlineText");
+  try {
+    const savedTicker = localStorage.getItem(TICKER_STORAGE_KEY);
+    if (savedTicker) tickerInput.value = JSON.parse(savedTicker).join("\n");
+  } catch (_) {}
+  $("#saveTickerHeadline").addEventListener("click", () => {
+    const lines = tickerInput.value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    if (!lines.length) return showToast("Please enter at least one headline line.");
+    try {
+      localStorage.setItem(TICKER_STORAGE_KEY, JSON.stringify(lines));
+      showToast("Homepage scrolling headline saved in this browser.");
+    } catch (_) { showToast("Could not save the scrolling headline."); }
+  });
+
   /* Initial state */
   renderLists();
   openView("dashboard");
