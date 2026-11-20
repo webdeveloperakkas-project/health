@@ -178,17 +178,25 @@
      Section complete.
   ========================================================= */
   let activeLanguage = "en";
+  const headerDate = $("#headerDate");
+  const headerTime = $("#headerTime");
+  const dateLocales = {en:"en-US",bn:"bn-BD",hi:"hi-IN",de:"de-DE",fr:"fr-FR",es:"es-ES"};
+  function updateHeaderClock() {
+    if (!headerDate || !headerTime) return;
+    const now = new Date();
+    const locale = dateLocales[activeLanguage] || "en-US";
+    headerDate.textContent = new Intl.DateTimeFormat(locale,{weekday:"short",month:"short",day:"numeric",year:"numeric"}).format(now);
+    headerTime.textContent = new Intl.DateTimeFormat(locale,{hour:"numeric",minute:"2-digit"}).format(now);
+  }
   function applyLanguage(language) {
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     const ui = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     document.documentElement.lang = activeLanguage;
+    updateHeaderClock();
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
     const menuHeading = document.querySelector(".menu-heading"); if (menuHeading) menuHeading.textContent = ui.explore;
     const menuAbout = document.querySelector('.main-nav > a[href="#about"]'); if (menuAbout) menuAbout.textContent = ui.about;
-    const homeRead = document.querySelector(".home-read-button");
-    const categoryHeading = document.querySelector(".home-category-widget h2"); if (categoryHeading) categoryHeading.textContent = ui.categoryHighlights;
-    const homeEyebrow = document.querySelector(".home-widget-heading .eyebrow"); if (homeEyebrow) homeEyebrow.textContent = ui.explore;
     document.querySelectorAll(".home-ad-label,.top-ad > span").forEach(el => el.textContent = ui.ad);
     const homeAdStrong = document.querySelector(".home-ad-slot strong"); if (homeAdStrong) homeAdStrong.textContent = ui.adSense;
     document.querySelectorAll(".home-ad-slot small,.top-ad small").forEach(el => el.textContent = ui.adResponsive);
@@ -256,9 +264,7 @@
   let showFeaturedFeed = false;
   let homeListType = "latest";
   let homeListIndex = 0;
-  let homeCategoryIndex = 0;
   let homeListTimer = null;
-  let homeCategoryTimer = null;
 
   const categoryImages = {
     health:"https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=85",
@@ -277,8 +283,6 @@
   const articleSection = $("#articleFeed");
   const homeListPanel = $("#homeListPanel");
   const homeFeatured = $("#homeFeatured");
-  const homeCategorySpotlight = $("#homeCategorySpotlight");
-  const homeCategoryDots = $("#homeCategoryDots");
   const articleDialog = $("#articleDialog");
   const articleDialogContent = $("#articleDialogContent");
 
@@ -345,30 +349,6 @@
       '<p>' + escapeHTML(excerpt) + '</p>' +
       '<button class="home-read-button" type="button" data-open-post="' + index + '">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en).read + ' <span>→</span></button></div>';
   }
-  function renderHomeCategory() {
-    const items = Object.keys(categoryNames).filter(key => key !== "home").map(category => {
-      const post = sortedByDate(posts.filter(item => item.category === category))[0];
-      return post ? {category,post} : null;
-    }).filter(Boolean);
-    if (!items.length) {
-      homeCategorySpotlight.innerHTML = '<div class="home-category-empty">Category stories will appear here.</div>';
-      homeCategoryDots.innerHTML = "";
-      return;
-    }
-    homeCategoryIndex = homeCategoryIndex % items.length;
-    const item = items[homeCategoryIndex];
-    const postIndex = posts.indexOf(item.post);
-    homeCategorySpotlight.innerHTML =
-      '<button class="home-category-card" type="button" data-open-post="' + postIndex + '">' +
-        '<span class="home-category-image"><img src="' + imageForPost(item.post) + '" alt="" loading="lazy"></span>' +
-        '<span class="home-category-label">' + escapeHTML(categoryNames[item.category]) + ' · ' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en).latest.toUpperCase() + '</span>' +
-        '<strong>' + escapeHTML(item.post.title) + '</strong>' +
-        '<span class="home-category-date">' + escapeHTML(item.post.date) + '</span>' +
-      '</button>';
-    homeCategoryDots.innerHTML = items.map((entry,index) =>
-      '<button type="button" class="' + (index === homeCategoryIndex ? "active" : "") + '" data-category-slide="' + index + '" aria-label="Show ' + escapeHTML(categoryNames[entry.category]) + '"></button>'
-    ).join("");
-  }
   function renderFeaturedStories() {
     const section = $("#featuredStoriesSection");
     const left = $("#featuredStoriesLeft");
@@ -416,7 +396,6 @@
     if (isHomeLanding) {
       renderHomeFeatured();
       renderHomeList();
-      renderHomeCategory();
       renderFeaturedStories();
       return;
     }
@@ -462,24 +441,6 @@
     $("#siteSearch").value = "";
     render();
     $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
-  });
-  $("#homeCategoryPrev").addEventListener("click", () => {
-    const total = $$("#homeCategoryDots button").length;
-    if (!total) return;
-    homeCategoryIndex = (homeCategoryIndex - 1 + total) % total;
-    renderHomeCategory();
-  });
-  $("#homeCategoryNext").addEventListener("click", () => {
-    const total = $$("#homeCategoryDots button").length;
-    if (!total) return;
-    homeCategoryIndex = (homeCategoryIndex + 1) % total;
-    renderHomeCategory();
-  });
-  homeCategoryDots.addEventListener("click", event => {
-    const dot = event.target.closest("[data-category-slide]");
-    if (!dot) return;
-    homeCategoryIndex = Number(dot.dataset.categorySlide) || 0;
-    renderHomeCategory();
   });
   document.addEventListener("click", event => {
     const openButton = event.target.closest("[data-open-post]");
@@ -652,18 +613,15 @@
      Section complete.
   ========================================================= */
   $("#year").textContent = new Date().getFullYear();
+  updateHeaderClock();
+  window.setInterval(updateHeaderClock, 30000);
   applyLanguage($("#languageSelect").value || "en");
   const requestedArticle = new URLSearchParams(window.location.search).get("article");
   if (requestedArticle) {
     const requestedPost = posts.find(post => articleSlug(post) === requestedArticle);
     if (requestedPost) openArticleDetail(requestedPost);
   }
-  homeCategoryTimer = window.setInterval(() => {
-    if (activeCategory === "home" && !showHomeFeed && !document.hidden) {
-      const total = $("#homeCategoryDots button").length;
-      if (total > 1) { homeCategoryIndex = (homeCategoryIndex + 1) % total; renderHomeCategory(); }
-    }
-  }, 5000);
+
 
   /* =========================================================
      16. FOOTER POLICY MODAL
