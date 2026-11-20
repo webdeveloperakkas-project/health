@@ -349,7 +349,7 @@
         '</button>'
       ).join("");
     }
-    $(".home-rail-tab").forEach(button => {
+    $$(".home-rail-tab").forEach(button => {
       const selected = button.dataset.homeList === homeListType;
       button.classList.toggle("active", selected);
       button.setAttribute("aria-selected", String(selected));
@@ -478,7 +478,7 @@
     activePostType = homeListType === "popular" ? "popular" : "latest";
     showHomeFeed = true;
     currentPage = 1;
-    $(".post-type-option").forEach(option => {
+    $$(".post-type-option").forEach(option => {
       const selected = option.dataset.postType === activePostType;
       option.classList.toggle("active", selected);
       option.setAttribute("aria-pressed", String(selected));
