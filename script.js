@@ -642,7 +642,7 @@
       homeFeaturedIndex = (homeFeaturedIndex + 1) % storyCount;
       renderHomeFeatured();
     }
-  }, 5500);
+  }, 1800);
   const requestedArticle = new URLSearchParams(window.location.search).get("article");
   if (requestedArticle) {
     const requestedPost = posts.find(post => articleSlug(post) === requestedArticle);
