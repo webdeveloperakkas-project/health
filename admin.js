@@ -9,7 +9,7 @@
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
   const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
-  const placementLabels = {latest:"Latest",popular:"Popular",features:"Features"};
+  const placementLabels = {latest:"Latest",popular:"Popular"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
   let posts = loadPosts();
@@ -160,14 +160,14 @@
     if(!plainText(content)) return showToast("Please write the article content.");
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
-    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular or Features.");
+    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest or Popular.");
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
     const post={
       id:editingId||id(),title,content,category:$("#postCategory").value,language:$("#postLanguage").value,
-      postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),
+      postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
     };
