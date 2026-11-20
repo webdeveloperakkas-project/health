@@ -9,7 +9,7 @@
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
   const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
-  const placementLabels = {latest:"Latest",popular:"Popular",myChoice:"My Choice"};
+  const placementLabels = {latest:"Latest",popular:"Popular",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
   let posts = loadPosts();
@@ -70,7 +70,7 @@
   function openView(view){
     document.querySelectorAll(".view-panel").forEach(panel=>panel.classList.toggle("active",panel.id===view+"View"));
     document.querySelectorAll(".nav-item").forEach(button=>button.classList.toggle("active",button.dataset.view===view));
-    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",editor:editingId?"Edit Post":"Write a Post"}[view]||"Dashboard";
+    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
     if(view!=="editor") renderLists();
   }
   document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.view)));
@@ -190,10 +190,10 @@
     if(!plainText(content)) return showToast("Please write the article content.");
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
-    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular or My Choice.");
+    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular or Favorites.");
     const selectingMyChoice=selectedPostTypes.includes("myChoice");
     const alreadyMyChoice=posts.filter(item=>item.id!==editingId && (Array.isArray(item.postTypes)?item.postTypes.includes("myChoice"):item.postType==="myChoice")).length;
-    if(selectingMyChoice && alreadyMyChoice>=4) return showToast("My Choice can contain up to 4 selected items.");
+    if(selectingMyChoice && alreadyMyChoice>=4) return showToast("Favorites can contain up to 4 selected items.");
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
@@ -229,24 +229,66 @@
   $("#closePreview").addEventListener("click",()=>$("#previewDialog").close());
   $("#previewDialog").addEventListener("click",event=>{if(event.target===$("#previewDialog")) $("#previewDialog").close();});
 
-  /* Homepage scrolling headline settings */
+  /* Headline management: local CMS list drives the public scrolling ticker. */
   const TICKER_STORAGE_KEY = "everyday-atlas-homepage-ticker-v1";
-  const defaultTickerLines = ["আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।","চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি।","ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে","মরি হায়, হায় রে","ও মা, অঘ্রাণে তোর ভরা ক্ষেতে কী দেখেছি মধুর হাসি"];
-  const tickerInput = $("#tickerHeadlineText");
-  try {
-    const savedTicker = localStorage.getItem(TICKER_STORAGE_KEY);
-    if (savedTicker) tickerInput.value = JSON.parse(savedTicker).join("\n");
-  } catch (_) {}
-  $("#saveTickerHeadline").addEventListener("click", () => {
-    const lines = tickerInput.value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-    if (!lines.length) return showToast("Please enter at least one headline line.");
+  const HEADLINE_STORAGE_KEY = "everyday-atlas-headlines-v1";
+  let editingHeadlineId = null;
+  function loadHeadlines() {
     try {
-      localStorage.setItem(TICKER_STORAGE_KEY, JSON.stringify(lines));
-      showToast("Homepage scrolling headline saved in this browser.");
-    } catch (_) { showToast("Could not save the scrolling headline."); }
+      const saved = JSON.parse(localStorage.getItem(HEADLINE_STORAGE_KEY) || "null");
+      if (Array.isArray(saved)) return saved;
+      const oldLines = JSON.parse(localStorage.getItem(TICKER_STORAGE_KEY) || "[]");
+      return (Array.isArray(oldLines) ? oldLines : []).map((text,index)=>({id:"headline-"+index,text:String(text)}));
+    } catch (_) { return []; }
+  }
+  let headlines = loadHeadlines();
+  function persistHeadlines() {
+    try {
+      localStorage.setItem(HEADLINE_STORAGE_KEY, JSON.stringify(headlines));
+      localStorage.setItem(TICKER_STORAGE_KEY, JSON.stringify(headlines.map(item=>item.text).filter(Boolean)));
+      return true;
+    } catch (_) { showToast("Could not save headlines in this browser."); return false; }
+  }
+  function renderHeadlines() {
+    const host=$("#allHeadlines");
+    if(!host) return;
+    host.innerHTML=headlines.length ? '<div class="headline-table">'+headlines.map((item,index)=>'<div class="headline-row"><span class="headline-order">'+(index+1)+'</span><strong>'+safe(item.text)+'</strong><span class="headline-actions"><button type="button" class="small-btn" data-edit-headline="'+safe(item.id)+'">Edit</button><button type="button" class="small-btn delete" data-delete-headline="'+safe(item.id)+'">Delete</button></span></div>').join("")+'</div>' : '<div class="empty-table">No headlines yet. Write your first headline.</div>';
+  }
+  function newHeadline() {
+    editingHeadlineId=null; $("#headlineForm").reset(); $("#headlineFormTitle").textContent="Write a Headline";
+    openView("headlineEditor"); $("#headlineText").focus();
+  }
+  function editHeadline(id) {
+    const item=headlines.find(entry=>entry.id===id); if(!item) return;
+    editingHeadlineId=id; $("#headlineText").value=item.text; $("#headlineFormTitle").textContent="Edit Headline";
+    openView("headlineEditor"); $("#headlineText").focus();
+  }
+  $("#newHeadlineBtn").addEventListener("click",newHeadline);
+  $("#cancelHeadlineBtn").addEventListener("click",()=>openView("headlines"));
+  $("#headlineForm").addEventListener("submit",event=>{
+    event.preventDefault();
+    const value=$("#headlineText").value.trim();
+    if(!value) return showToast("Please write a headline.");
+    if(editingHeadlineId) {
+      const item=headlines.find(entry=>entry.id===editingHeadlineId);
+      if(item) item.text=value;
+    } else headlines.push({id:"headline-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),text:value});
+    if(!persistHeadlines()) return;
+    renderHeadlines(); showToast("Headline saved in this browser."); openView("headlines");
+  });
+  $("#allHeadlines").addEventListener("click",event=>{
+    const edit=event.target.closest("[data-edit-headline]");
+    const del=event.target.closest("[data-delete-headline]");
+    if(edit) editHeadline(edit.dataset.editHeadline);
+    if(del) {
+      const id=del.dataset.deleteHeadline;
+      headlines=headlines.filter(item=>item.id!==id);
+      persistHeadlines(); renderHeadlines(); showToast("Headline deleted.");
+    }
   });
 
   /* Initial state */
   renderLists();
+  renderHeadlines();
   openView("dashboard");
 })();
