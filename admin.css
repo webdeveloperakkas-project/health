@@ -9,3 +9,6 @@
 /* CMS: identify category leaders shown in the homepage main slider. */
 .main-slider-badge{display:inline-block;margin:2px 0;padding:3px 6px;border-radius:5px;background:#e4f5f0;color:#147d73;font-size:9px;font-weight:800;white-space:nowrap}
 .rules-grid{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+
+/* Multi-select feed placements are separate from homepage editorial selection. */
+.placement-fieldset{border:0;padding:0;margin:13px 0 8px;min-width:0}.placement-fieldset legend{padding:0;margin-bottom:8px}.placement-fieldset legend small{display:block;font-size:9px;font-weight:500;color:#91a09e;margin-top:2px}.placement-option{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;margin:6px 0;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}.placement-option input{width:16px;height:16px;margin:2px 0 0;accent-color:var(--teal);flex:none}.placement-option span{display:flex;flex-direction:column;gap:2px}.placement-option strong{font-size:11px;color:var(--navy)}.placement-option small{font-size:10px;line-height:1.4;color:var(--muted)}
