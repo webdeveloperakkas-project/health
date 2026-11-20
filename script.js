@@ -513,7 +513,7 @@
       {title:"What Makes Bananas a Popular Snack?",summary:"Bananas provide potassium, vitamin B6 and carbohydrates. They are an easy snack on busy days.",fruit:"🍌",bg:"#fff4d8"}
     ];
     const demoImage = item => {
-      const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"><rect width="320" height="180" rx="14" fill="' + item.bg + '"/><circle cx="160" cy="83" r="59" fill="#fff" opacity=".55"/><text x="160" y="110" text-anchor="middle" font-size="82">' + item.fruit + '</text><text x="160" y="164" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#43545a">EVERYDAY ATLAS</text></svg>';
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"><rect width="320" height="180" rx="14" fill="' + item.bg + '"/><circle cx="160" cy="83" r="59" fill="#fff" opacity=".55"/><text x="160" y="110" text-anchor="middle" font-size="82">' + item.fruit + '</text><text x="160" y="164" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#43545a">GLOBAL SCOPE 24</text></svg>';
       return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
     };
     section.hidden = false;
@@ -593,7 +593,7 @@
     } else {
       articleList.innerHTML = visiblePosts.map((post,index) => {
         const body = post.contentHtml ? localizeHtml(post.contentHtml) : (post.body || []).map(line => "<p>" + escapeHTML(localizeText(line)) + "</p>").join("");
-        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(localizeText(post.title)) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
+        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(localizeText(post.title)) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · GLOBAL SCOPE 24</div></article>';
         return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
       }).join("");
     }
