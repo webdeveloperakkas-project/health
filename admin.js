@@ -9,6 +9,8 @@
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
   const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
+  const placementLabels = {latest:"Latest",popular:"Popular",features:"Features"};
+  function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
   let posts = loadPosts();
   let editingId = null;
@@ -48,8 +50,9 @@
     const mainSliderIds = latestPublishedByCategory();
     return '<table><thead><tr><th>Article</th><th>Category</th><th>Placement</th><th>Status</th><th>Views</th><th>Actions</th></tr></thead><tbody>'+items.map(post=>{
       const date=new Date(post.updatedAt||post.createdAt).toLocaleDateString();
-      const autoMain = mainSliderIds.has(post.id) ? ' · <span class="main-slider-badge">Main Slider</span>' : '';
-      return '<tr><td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+'</td><td>'+safe(post.postType==="popular"?"Popular":"Latest")+(post.featured?" · Featured":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions"><button class="small-btn" data-edit="'+safe(post.id)+'">Edit</button><button class="small-btn delete" data-delete="'+safe(post.id)+'">Delete</button></div></td></tr>';
+      const autoMain = mainSliderIds.has(post.id) ? ' · <span class="main-slider-badge">Main Home Page</span>' : '';
+      const placementText = placementsFor(post).map(value=>placementLabels[value]).join(", ") || "—";
+      return '<tr><td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+'</td><td>'+safe(placementText)+((post.featuredStories ?? post.featured)?" · Featured Stories":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions"><button class="small-btn" data-edit="'+safe(post.id)+'">Edit</button><button class="small-btn delete" data-delete="'+safe(post.id)+'">Delete</button></div></td></tr>';
     }).join("")+'</tbody></table>';
   }
   function renderLists(){
@@ -127,7 +130,7 @@
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>";
     $("#postCategory").value=post.category||"health"; $("#postLanguage").value=post.language||"en";
-    $("#postType").value=post.postType||"latest"; $("#postStatus").value=post.status||"draft"; $("#postFeatured").checked=!!post.featured;
+    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||"";
     if(coverData) $("#coverPreview").innerHTML='<img src="'+coverData+'" alt="Cover preview">';
@@ -156,10 +159,15 @@
     if(!title) return showToast("Please add an article title.");
     if(!plainText(content)) return showToast("Please write the article content.");
     const existing=posts.find(item=>item.id===editingId);
+    const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
+    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular or Features.");
+    const selectingFeaturedStories=$("#postFeaturedStories").checked;
+    const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
+    if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
     const post={
       id:editingId||id(),title,content,category:$("#postCategory").value,language:$("#postLanguage").value,
-      postType:$("#postType").value,featured:$("#postFeatured").checked,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),
+      postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
     };
