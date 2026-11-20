@@ -320,7 +320,7 @@
   }
   function renderHomeList() {
     const featured = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest")))[0] || posts[0];
-    const latestItems = sortedByDate(posts.filter(post => post.postType === "latest")).slice(0,10);
+    const latestItems = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest"))).slice(0,10);
     const popularItems = [...posts].filter(post => (post.postTypes || [post.postType || "latest"]).includes("popular"))
       .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,10);
     const items = homeListType === "popular" ? popularItems : latestItems;
@@ -344,7 +344,7 @@
   }
   let homeFeaturedIndex = 0;
   function renderHomeFeatured() {
-    const stories = latestPostPerCategory(posts);
+    const stories = latestPostPerCategory(posts.filter(post => !(post.postTypes || [post.postType || "latest"]).includes("myChoice") || (post.postTypes || []).some(type => type === "latest" || type === "popular")));
     if (!stories.length) {
       homeFeatured.innerHTML = '<div class="home-feature-empty">Your latest published story will appear here.</div>';
       return;
@@ -366,6 +366,18 @@
       '<button type="button" class="home-feature-arrow" data-home-feature="previous" aria-label="Previous story">' + labels.previous + '</button>' +
       '<div class="home-feature-pagination" aria-label="Choose a story">' + stories.map((story,i) => '<button type="button" class="home-feature-dot' + (i === homeFeaturedIndex ? ' active' : '') + '" data-home-feature-index="' + i + '" aria-label="Go to story ' + (i+1) + '" aria-current="' + (i === homeFeaturedIndex ? 'true' : 'false') + '"></button>').join("") + '</div>' +
       '<button type="button" class="home-feature-arrow" data-home-feature="next" aria-label="Next story">' + labels.next + '</button></div>';
+  }
+  function renderMyChoice() {
+    const section = $("#myChoiceSection");
+    const host = $("#myChoiceList");
+    if (!section || !host) return;
+    const items = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("myChoice"))).slice(0,4);
+    section.hidden = !items.length;
+    host.innerHTML = items.map(post => {
+      const index = posts.indexOf(post);
+      const summary = post.excerpt || (post.body || []).join(" ").slice(0,100);
+      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,105)) + '</small>' : '') + '</span></button></article>';
+    }).join("");
   }
   function renderFeaturedStories() {
     const section = $("#featuredStoriesSection");
@@ -415,6 +427,7 @@
       renderHomeFeatured();
       renderHomeList();
       renderFeaturedStories();
+      renderMyChoice();
       return;
     }
     if (!visiblePosts.length) {
