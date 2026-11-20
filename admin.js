@@ -8,7 +8,7 @@
   "use strict";
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
-  const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
+  const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
   const placementLabels = {latest:"Latest",popular:"Popular",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
@@ -18,7 +18,7 @@
   let currentKeywords = [];
 
   function loadPosts(){
-    try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); return Array.isArray(saved) ? saved : []; }
+    try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); if(!Array.isArray(saved))return []; let changed=false; saved.forEach(post=>{if(post&&post.category==="beauty"){post.category="lifestyle";changed=true;}}); if(changed)localStorage.setItem(STORAGE_KEY,JSON.stringify(saved)); return saved; }
     catch(error){ return []; }
   }
   function persist(){
@@ -146,10 +146,11 @@
 
   /* Form state and CRUD */
   function syncSportsSubcategory(){
-    const isSports=$("#postCategory").value==="sports";
-    $("#sportsSubcategoryField").hidden=!isSports;
-    $("#postSubcategory").required=isSports;
-    if(!isSports) $("#postSubcategory").value="";
+    const category=$("#postCategory").value;
+    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other Sports"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:[];
+    const select=$("#postSubcategory"),previous=select.value;$("#sportsSubcategoryField").hidden=!options.length;select.required=!!options.length;
+    select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
+    select.value=options.some(([value])=>value===previous)?previous:"";
   }
   $("#postCategory").addEventListener("change",syncSportsSubcategory);
   function resetForm(){
@@ -206,7 +207,7 @@
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
     const post={
-      id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:$("#postCategory").value==="sports"?$("#postSubcategory").value:"",language:$("#postLanguage").value,
+      id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:["sports","entertainment"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
@@ -225,7 +226,7 @@
   function previewHTML(){
     const title=safe($("#postTitle").value||"Untitled article");
     const category=safe(categories[$("#postCategory").value]);
-    const subcategory=$("#postCategory").value==="sports"?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
+    const subcategory=["sports","entertainment"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
     const body=$("#articleEditor").innerHTML;
     const cover=coverData?'<img src="'+coverData+'" alt="Article cover">':"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
