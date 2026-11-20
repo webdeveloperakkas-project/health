@@ -38,7 +38,7 @@
     if(!items.length) return '<div class="empty-table">No posts yet. Create your first article to get started.</div>';
     return '<table><thead><tr><th>Article</th><th>Category</th><th>Placement</th><th>Status</th><th>Views</th><th>Actions</th></tr></thead><tbody>'+items.map(post=>{
       const date=new Date(post.updatedAt||post.createdAt).toLocaleDateString();
-      return '<tr><td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+'</td><td>'+safe(post.postType==="popular"?"Popular":"Latest")+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions"><button class="small-btn" data-edit="'+safe(post.id)+'">Edit</button><button class="small-btn delete" data-delete="'+safe(post.id)+'">Delete</button></div></td></tr>';
+      return '<tr><td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+'</td><td>'+safe(post.postType==="popular"?"Popular":"Latest")+(post.featured?" · Featured":"")+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions"><button class="small-btn" data-edit="'+safe(post.id)+'">Edit</button><button class="small-btn delete" data-delete="'+safe(post.id)+'">Delete</button></div></td></tr>';
     }).join("")+'</tbody></table>';
   }
   function renderLists(){
@@ -116,7 +116,7 @@
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>";
     $("#postCategory").value=post.category||"health"; $("#postLanguage").value=post.language||"en";
-    $("#postType").value=post.postType||"latest"; $("#postStatus").value=post.status||"draft";
+    $("#postType").value=post.postType||"latest"; $("#postStatus").value=post.status||"draft"; $("#postFeatured").checked=!!post.featured;
     $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||"";
     if(coverData) $("#coverPreview").innerHTML='<img src="'+coverData+'" alt="Cover preview">';
@@ -148,7 +148,7 @@
     const now=new Date().toISOString();
     const post={
       id:editingId||id(),title,content,category:$("#postCategory").value,language:$("#postLanguage").value,
-      postType:$("#postType").value,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),
+      postType:$("#postType").value,featured:$("#postFeatured").checked,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
     };
