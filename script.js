@@ -270,12 +270,16 @@
     if (!items.length) {
       homeListPanel.innerHTML = '<div class="home-list-empty">' + (homeListType === "popular" ? "Popular stories will appear here soon." : "New stories will appear here as they are published.") + '</div>';
     } else {
-      homeListPanel.innerHTML = items.map(post =>
-        '<button class="home-list-item" type="button" role="listitem" data-open-post="' + posts.indexOf(post) + '">' +
-          '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
-          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
-        '</button>'
-      ).join("");
+      homeListPanel.innerHTML = items.map(post => {
+        const postIndex = posts.indexOf(post);
+        return '<div class="home-list-entry">' +
+          '<button class="home-list-item" type="button" data-open-post="' + postIndex + '">' +
+            '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
+            '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
+          '</button>' +
+          '<button class="home-list-details" type="button" data-open-post="' + postIndex + '">Details <span aria-hidden="true">→</span></button>' +
+        '</div>';
+      }).join("");
     }
     $$(".home-rail-tab").forEach(button => {
       const selected = button.dataset.homeList === homeListType;
