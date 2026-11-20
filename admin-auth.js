@@ -1,4 +1,4 @@
-/* Everyday Atlas — secure admin-only Supabase authentication gate. */
+/* Global Scope 24 — secure admin-only Supabase authentication gate. */
 (() => {
   "use strict";
   const SUPABASE_URL = "https://oxxnjxrunvhrfwxdvbsr.supabase.co";
@@ -55,7 +55,7 @@
       const { error } = await client.auth.signInWithPassword({ email, password });
       if (error) throw error;
       const valid = await validateAdmin();
-      if (!valid) throw new Error("This account is not authorised as the Everyday Atlas administrator.");
+      if (!valid) throw new Error("This account is not authorised as the Global Scope 24 administrator.");
       $("adminPassword").value = "";
     } catch (error) {
       showLogin(error.message || "Sign-in failed. Check your email and password.");
