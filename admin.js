@@ -1,6 +1,6 @@
 
 /* =========================================================
-   EVERYDAY ATLAS CMS
+   GLOBAL SCOPE 24 CMS
    Local prototype for content workflow and editor interactions.
    Supabase authentication, database and permanent media storage
    will be connected after the project credentials are supplied.
