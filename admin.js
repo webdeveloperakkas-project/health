@@ -154,7 +154,7 @@
   }
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
-    $("#postForm").reset(); syncSportsSubcategory(); $("#articleEditor").innerHTML="<p></p>"; $("#excerptCount").textContent="0";
+    $("#postForm").reset(); syncCategorySubcategory(); $("#articleEditor").innerHTML="<p></p>"; $("#excerptCount").textContent="0";
     currentKeywords=[]; renderKeywordChips();
     coverData=""; $("#coverPreview").textContent="No cover selected"; $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -166,7 +166,7 @@
     const post=posts.find(item=>item.id===postId); if(!post) return;
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>";
-    $("#postCategory").value=post.category||"health"; syncSportsSubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
+    $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
