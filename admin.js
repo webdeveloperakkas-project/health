@@ -9,7 +9,7 @@
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
   const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",health:"Health",beauty:"Beauty",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle",hospitals:"Hospitals (legacy)"};
-  const placementLabels = {latest:"Latest",popular:"Popular"};
+  const placementLabels = {latest:"Latest",popular:"Popular",myChoice:"My Choice"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
   let posts = loadPosts();
@@ -190,7 +190,10 @@
     if(!plainText(content)) return showToast("Please write the article content.");
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
-    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest or Popular.");
+    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular or My Choice.");
+    const selectingMyChoice=selectedPostTypes.includes("myChoice");
+    const alreadyMyChoice=posts.filter(item=>item.id!==editingId && (Array.isArray(item.postTypes)?item.postTypes.includes("myChoice"):item.postType==="myChoice")).length;
+    if(selectingMyChoice && alreadyMyChoice>=4) return showToast("My Choice can contain up to 4 selected items.");
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
