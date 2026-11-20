@@ -682,7 +682,7 @@
       submenu.querySelectorAll(dataSelector).forEach(item=>item.classList.toggle("active",item===choice));
       submenu.hidden=true;trigger.setAttribute("aria-expanded","false");render();
     });
-    document.addEventListener("click",event=>{if(!event.target.closest(trigger.parentElement.classList[0])){submenu.hidden=true;trigger.setAttribute("aria-expanded","false");}});
+    document.addEventListener("click",event=>{if(!event.target.closest("." + trigger.parentElement.classList[0])){submenu.hidden=true;trigger.setAttribute("aria-expanded","false");}});
     document.addEventListener("keydown",event=>{if(event.key==="Escape"){submenu.hidden=true;trigger.setAttribute("aria-expanded","false");}});
   }
   setupSubcategoryMenu(".sports-category-trigger","#sportsSubmenu","sports","[data-sports-subcategory]","data-sports-subcategory");
