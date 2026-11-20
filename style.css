@@ -2479,6 +2479,17 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 @media (pointer:coarse) and (max-device-width:600px){.header-main{height:86px!important;min-height:86px!important;}}
 @media(max-width:800px){.ticker-label{padding-left:12px!important;padding-right:12px!important;}}
 
+/* Category navigation: match the ticker text size while keeping all ten categories on one desktop row. */
+@media (min-width:801px){
+  .category-tabs{grid-template-columns:repeat(10,minmax(0,1fr))!important;gap:4px!important;}
+  .category-tab{padding:7px 0!important;font-size:18px!important;line-height:1.2!important;white-space:nowrap!important;letter-spacing:-.35px!important;}
+}
+@media (max-width:800px){
+  .category-tabs{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;}
+  .category-tab{padding:7px 0!important;font-size:16px!important;line-height:1.2!important;white-space:normal!important;letter-spacing:-.25px!important;}
+}
+@media (max-width:380px){.category-tab{font-size:14px!important;}}
+
 
 /* Mobile: allow vertical page scrolling to chain naturally from the Latest/Popular list. */
 @media(max-width:800px){
