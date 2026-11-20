@@ -372,12 +372,12 @@
     const host = $("#myChoiceList");
     if (!section || !host) return;
     const items = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("myChoice"))).slice(0,4);
-    section.hidden = !items.length;
-    host.innerHTML = items.map(post => {
+    section.hidden = false;
+    host.innerHTML = items.length ? items.map(post => {
       const index = posts.indexOf(post);
       const summary = post.excerpt || (post.body || []).join(" ").slice(0,100);
       return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,105)) + '</small>' : '') + '</span></button></article>';
-    }).join("");
+    }).join("") : '<div class="my-choice-empty">Your personal picks and product recommendations will appear here.</div>';
   }
   function renderFeaturedStories() {
     const section = $("#featuredStoriesSection");
@@ -485,7 +485,7 @@
     const featureArrow = event.target.closest("[data-home-feature]");
     const featureDot = event.target.closest("[data-home-feature-index]");
     if (featureArrow || featureDot) {
-      const storyCount = latestPostPerCategory(posts).length;
+      const storyCount = latestPostPerCategory(posts.filter(post => !(post.postTypes || [post.postType || "latest"]).includes("myChoice") || (post.postTypes || []).some(type => type === "latest" || type === "popular"))).length;
       if (storyCount) {
         if (featureDot) homeFeaturedIndex = Number(featureDot.dataset.homeFeatureIndex) || 0;
         else homeFeaturedIndex = (homeFeaturedIndex + (featureArrow.dataset.homeFeature === "next" ? 1 : -1) + storyCount) % storyCount;
