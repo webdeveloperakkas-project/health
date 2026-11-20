@@ -1,4 +1,4 @@
-/* Everyday Atlas — free, offline translation dictionary.
+/* Global Scope 24 — free, offline translation dictionary.
    Add translated strings here without changing the original article content.
    Supported locales: en, bn, hi, de, fr, es.
 */
