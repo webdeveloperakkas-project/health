@@ -2557,3 +2557,18 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu{overflow:hidden;max-height:0;opacity:0;transform:translateY(-8px);transform-origin:top;transition:max-height .24s ease,opacity .2s ease,transform .24s ease;will-change:max-height,opacity,transform;}
 .sports-submenu.is-open,.entertainment-submenu.is-open,.world-submenu.is-open,.lifestyle-submenu.is-open{opacity:1;transform:translateY(0);}
 @media(max-width:800px){.world-category-trigger,.lifestyle-category-trigger{font-size:16px;padding:7px 17px 7px 1px!important;}.world-category-trigger::after,.lifestyle-category-trigger::after{right:5px;width:6px;height:6px;}}
+
+
+/* Desktop category tabs: allocate more room to longer labels and visually compact short labels. */
+@media (min-width:801px){
+  .category-tabs{
+    grid-template-columns:.78fr 1.28fr 1.22fr .86fr .88fr .78fr 1.48fr .78fr .82fr 1.18fr!important;
+    gap:4px!important;
+  }
+  .category-tabs > .category-tab:nth-child(4),
+  .category-tabs > .category-tab:nth-child(6),
+  .category-tabs > .category-tab:nth-child(8){
+    width:calc(100% - 14px)!important;
+    justify-self:center!important;
+  }
+}
