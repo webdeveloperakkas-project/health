@@ -210,7 +210,137 @@
      Purpose: Display posts matching the selected category and type.
      Section complete.
   ========================================================= */
+  let showHomeFeed = false;
+  let homeListType = "latest";
+  let homeListIndex = 0;
+  let homeCategoryIndex = 0;
+  let homeListTimer = null;
+  let homeCategoryTimer = null;
+
+  const categoryImages = {
+    health:"https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=85",
+    technology:"https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
+    beauty:"https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1200&q=85",
+    world:"https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=1200&q=85",
+    tips:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=85",
+    sports:"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=85",
+    travel:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=85",
+    finance:"https://images.unsplash.com/photo-146 An?auto=format&fit=crop&w=1200&q=85",
+    lifestyle:"https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1200&q=85"
+  };
+  categoryImages.finance = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=85";
+
+  const homeSection = $("#homeSection");
+  const articleSection = $("#articleFeed");
+  const homeListPanel = $("#homeListPanel");
+  const homeFeatured = $("#homeFeatured");
+  const homeCategorySpotlight = $("#homeCategorySpotlight");
+  const homeCategoryDots = $("#homeCategoryDots");
+  const articleDialog = $("#articleDialog");
+  const articleDialogContent = $("#articleDialogContent");
+
+  function imageForPost(post) {
+    return categoryImages[post.category] || categoryImages.lifestyle;
+  }
+  function sortedByDate(items) {
+    return [...items].sort((a,b) => new Date(b.date) - new Date(a.date));
+  }
+  function articleSlug(post) {
+    return String(post.title || "article").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  }
+  function articleShareUrl(post) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("article", articleSlug(post));
+    return url.toString();
+  }
+  function shareButtons(post) {
+    return '<div class="home-share-row" aria-label="Share article">' +
+      '<button type="button" data-share="facebook" data-post-index="' + posts.indexOf(post) + '" aria-label="Share on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3 0-5 2-5 5v2H6v4h3v5h4v-5h3l1-4h-4V9c0-.7.3-1 1-1Z"/></svg></button>' +
+      '<button type="button" data-share="x" data-post-index="' + posts.indexOf(post) + '" aria-label="Share on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h4.5l11.5 18h-4.5L4 3Zm0 18 6.8-8.1m2.4-2.8L20 3"/></svg></button>' +
+      '<button type="button" data-share="whatsapp" data-post-index="' + posts.indexOf(post) + '" aria-label="Share on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4A8 8 0 1 1 20 11.5Z"/><path d="M9 8.5c.5 2.3 2.2 4 4.5 4.5l1-1 2 1c-.3 1.2-1.2 2-2.5 2-3.7-.3-6.7-3.3-7-7 0-1.3.8-2.2 2-2.5l1 2-1 1Z"/></svg></button>' +
+      '<button type="button" data-share="copy" data-post-index="' + posts.indexOf(post) + '" aria-label="Copy article link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15 15 9"/><path d="M8 12H6a4 4 0 0 1 0-8h5a4 4 0 0 1 4 4v1"/><path d="M16 12h2a4 4 0 0 1 0 8h-5a4 4 0 0 1-4-4v-1"/></svg></button>' +
+      '</div>';
+  }
+  function renderHomeList() {
+    const featured = posts.find(post => post.featured) || sortedByDate(posts.filter(post => post.postType === "latest"))[0] || posts[0];
+    let items = homeListType === "latest"
+      ? sortedByDate(posts.filter(post => post !== featured && post.postType === "latest"))
+      : [...posts].filter(post => post.postType === "mostViewed").sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0));
+    if (!items.length) items = sortedByDate(posts.filter(post => post !== featured));
+    items = items.slice(0,10);
+    if (!items.length) {
+      homeListPanel.innerHTML = '<div class="home-list-empty">New stories will appear here as they are published.</div>';
+      return;
+    }
+    homeListIndex = homeListIndex % items.length;
+    homeListPanel.innerHTML = items.map((post,index) =>
+      '<button class="home-list-item ' + (index === homeListIndex ? "is-active" : "") + '" type="button" role="listitem" data-open-post="' + posts.indexOf(post) + '">' +
+        '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
+        '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
+      '</button>'
+    ).join("");
+    $$(".home-rail-tab").forEach(button => {
+      const selected = button.dataset.homeList === homeListType;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-selected", String(selected));
+    });
+  }
+  function renderHomeFeatured() {
+    const post = posts.find(item => item.featured) || sortedByDate(posts.filter(item => item.postType === "latest"))[0] || posts[0];
+    if (!post) {
+      homeFeatured.innerHTML = '<div class="home-feature-empty">Your main featured story will appear here.</div>';
+      return;
+    }
+    const excerpt = (post.excerpt || (post.body || []).slice(0,2).join(" ")).slice(0,260);
+    const index = posts.indexOf(post);
+    homeFeatured.innerHTML =
+      '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"><span class="home-feature-tag">MAIN FEATURED</span></div>' +
+      '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + '</span>' +
+      '<h1>' + escapeHTML(post.title) + '</h1>' +
+      '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time><span>·</span><span>' + escapeHTML(post.time || "10:30 AM") + '</span><span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
+      shareButtons(post) +
+      '<p>' + escapeHTML(excerpt) + '</p>' +
+      '<button class="home-read-button" type="button" data-open-post="' + index + '">Read Full Article <span>→</span></button></div>';
+  }
+  function renderHomeCategory() {
+    const items = Object.keys(categoryNames).filter(key => key !== "home").map(category => {
+      const post = sortedByDate(posts.filter(item => item.category === category))[0];
+      return post ? {category,post} : null;
+    }).filter(Boolean);
+    if (!items.length) {
+      homeCategorySpotlight.innerHTML = '<div class="home-category-empty">Category stories will appear here.</div>';
+      homeCategoryDots.innerHTML = "";
+      return;
+    }
+    homeCategoryIndex = homeCategoryIndex % items.length;
+    const item = items[homeCategoryIndex];
+    const postIndex = posts.indexOf(item.post);
+    homeCategorySpotlight.innerHTML =
+      '<button class="home-category-card" type="button" data-open-post="' + postIndex + '">' +
+        '<span class="home-category-image"><img src="' + imageForPost(item.post) + '" alt="" loading="lazy"></span>' +
+        '<span class="home-category-label">' + escapeHTML(categoryNames[item.category]) + ' · LATEST</span>' +
+        '<strong>' + escapeHTML(item.post.title) + '</strong>' +
+        '<span class="home-category-date">' + escapeHTML(item.post.date) + '</span>' +
+      '</button>';
+    homeCategoryDots.innerHTML = items.map((entry,index) =>
+      '<button type="button" class="' + (index === homeCategoryIndex ? "active" : "") + '" data-category-slide="' + index + '" aria-label="Show ' + escapeHTML(categoryNames[entry.category]) + '"></button>'
+    ).join("");
+  }
+  function openArticleDetail(post) {
+    if (!post) return;
+    const paragraphs = (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+    articleDialogContent.innerHTML =
+      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Everyday Atlas") + ' · ' + escapeHTML(post.date) + ' · ' + escapeHTML(post.time || "10:30 AM") + '</div>' +
+      '<h1 id="articleDialogTitle">' + escapeHTML(post.title) + '</h1>' +
+      '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '">' +
+      shareButtons(post) + '<div class="article-detail-body">' + paragraphs + '</div>';
+    if (typeof articleDialog.showModal === "function") articleDialog.showModal();
+    else articleDialog.setAttribute("open","");
+  }
   function render() {
+    const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
+    homeSection.hidden = !isHomeLanding;
+    articleSection.hidden = isHomeLanding;
     const categoryPosts = posts
       .filter(post => (activeCategory === "home" || post.category === activeCategory) && post.postType === activePostType)
       .filter(post => !searchTerm || (post.title + " " + post.body.join(" ")).toLowerCase().includes(searchTerm));
@@ -218,28 +348,92 @@
     currentPage = Math.min(currentPage, totalPages);
     const start = (currentPage - 1) * pageSize;
     const visiblePosts = categoryPosts.slice(start, start + pageSize);
-
     const t = languageCopy[activeLanguage];
     $("#activeCategoryTitle").textContent = t.categories[activeCategory] || "Home";
     $("#feedDescription").textContent = searchTerm
       ? "Search results in " + (t.categories[activeCategory] || "this category") + "."
       : t.description;
 
+    if (isHomeLanding) {
+      renderHomeFeatured();
+      renderHomeList();
+      renderHomeCategory();
+      return;
+    }
     if (!visiblePosts.length) {
       articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
     } else {
-      articleList.innerHTML = visiblePosts.map((post, index) => {
+      articleList.innerHTML = visiblePosts.map((post,index) => {
         const body = post.body.map(line => "<p>" + escapeHTML(line) + "</p>").join("");
-        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML(categoryNames[post.category].toUpperCase()) + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
+        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · EVERYDAY ATLAS</div></article>';
         return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
       }).join("");
     }
-
     $("#pageStatus").textContent = t.page + " " + currentPage + " " + t.of + " " + totalPages;
     previousButton.disabled = currentPage <= 1;
     nextButton.disabled = currentPage >= totalPages;
   }
 
+  $$(".home-rail-tab").forEach(button => button.addEventListener("click", () => {
+    homeListType = button.dataset.homeList;
+    homeListIndex = 0;
+    renderHomeList();
+  }));
+  $("#homeViewAll").addEventListener("click", () => {
+    activeCategory = "home";
+    activePostType = "latest";
+    showHomeFeed = true;
+    currentPage = 1;
+    $$(".post-type-option").forEach(option => {
+      const selected = option.dataset.postType === "latest";
+      option.classList.toggle("active", selected);
+      option.setAttribute("aria-pressed", String(selected));
+    });
+    render();
+    $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  $("#homeCategoryPrev").addEventListener("click", () => {
+    const total = $$("#homeCategoryDots button").length;
+    if (!total) return;
+    homeCategoryIndex = (homeCategoryIndex - 1 + total) % total;
+    renderHomeCategory();
+  });
+  $("#homeCategoryNext").addEventListener("click", () => {
+    const total = $$("#homeCategoryDots button").length;
+    if (!total) return;
+    homeCategoryIndex = (homeCategoryIndex + 1) % total;
+    renderHomeCategory();
+  });
+  homeCategoryDots.addEventListener("click", event => {
+    const dot = event.target.closest("[data-category-slide]");
+    if (!dot) return;
+    homeCategoryIndex = Number(dot.dataset.categorySlide) || 0;
+    renderHomeCategory();
+  });
+  document.addEventListener("click", event => {
+    const openButton = event.target.closest("[data-open-post]");
+    if (openButton) {
+      const post = posts[Number(openButton.dataset.openPost)];
+      if (post) openArticleDetail(post);
+    }
+    const shareButton = event.target.closest("[data-share]");
+    if (shareButton) {
+      const post = posts[Number(shareButton.dataset.postIndex)];
+      if (!post) return;
+      const url = articleShareUrl(post);
+      const text = encodeURIComponent(post.title + " — Everyday Atlas");
+      const target = shareButton.dataset.share;
+      if (target === "facebook") window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url),"_blank","noopener,noreferrer");
+      else if (target === "x") window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + encodeURIComponent(url),"_blank","noopener,noreferrer");
+      else if (target === "whatsapp") window.open("https://wa.me/?text=" + text + "%20" + encodeURIComponent(url),"_blank","noopener,noreferrer");
+      else if (target === "copy" && navigator.clipboard) navigator.clipboard.writeText(url).then(() => { shareButton.classList.add("copied"); shareButton.setAttribute("aria-label","Link copied"); }).catch(() => {});
+    }
+  });
+  $("#articleDialogClose").addEventListener("click", () => articleDialog.close());
+  articleDialog.addEventListener("click", event => {
+    if (event.target === articleDialog) articleDialog.close();
+  });
+  
   /* =========================================================
      09. CATEGORY NAVIGATION
      Purpose: Change category and reset the post-type filter.
@@ -248,6 +442,7 @@
   Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.category;
+      showHomeFeed = false;
       activePostType = "latest";
       Array.from(document.querySelectorAll(".post-type-option")).forEach(option => { const selected = option.dataset.postType === activePostType; option.classList.toggle("active", selected); option.setAttribute("aria-pressed", String(selected)); });
       currentPage = 1;
@@ -357,6 +552,7 @@
   $("#searchForm").addEventListener("submit", event => {
     event.preventDefault();
     searchTerm = ($("#siteSearch").value || "").trim().toLowerCase();
+    showHomeFeed = true;
     currentPage = 1;
     render();
     $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
@@ -385,6 +581,23 @@
   ========================================================= */
   $("#year").textContent = new Date().getFullYear();
   applyLanguage($("#languageSelect").value || "en");
+  const requestedArticle = new URLSearchParams(window.location.search).get("article");
+  if (requestedArticle) {
+    const requestedPost = posts.find(post => articleSlug(post) === requestedArticle);
+    if (requestedPost) openArticleDetail(requestedPost);
+  }
+  homeListTimer = window.setInterval(() => {
+    if (activeCategory === "home" && !showHomeFeed && window.matchMedia("(max-width: 800px)").matches) {
+      homeListIndex++;
+      renderHomeList();
+    }
+  }, 4200);
+  homeCategoryTimer = window.setInterval(() => {
+    if (activeCategory === "home" && !showHomeFeed && !document.hidden) {
+      const total = $("#homeCategoryDots button").length;
+      if (total > 1) { homeCategoryIndex = (homeCategoryIndex + 1) % total; renderHomeCategory(); }
+    }
+  }, 5000);
 
   /* =========================================================
      16. FOOTER POLICY MODAL
