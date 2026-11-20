@@ -34,11 +34,22 @@
     $("#statDrafts").textContent=posts.filter(post=>post.status==="draft").length;
     $("#statViews").textContent=posts.reduce((sum,post)=>sum+(Number(post.views)||0),0).toLocaleString();
   }
+  function latestPublishedByCategory(){
+    const latest = new Map();
+    posts.filter(post=>post.status==="published" && post.category).forEach(post=>{
+      const stamp = new Date(post.publishedAt || post.createdAt || post.updatedAt || 0).getTime() || 0;
+      const current = latest.get(post.category);
+      if(!current || stamp > current.stamp) latest.set(post.category,{id:post.id,stamp});
+    });
+    return new Set([...latest.values()].map(item=>item.id));
+  }
   function postRows(items){
     if(!items.length) return '<div class="empty-table">No posts yet. Create your first article to get started.</div>';
+    const mainSliderIds = latestPublishedByCategory();
     return '<table><thead><tr><th>Article</th><th>Category</th><th>Placement</th><th>Status</th><th>Views</th><th>Actions</th></tr></thead><tbody>'+items.map(post=>{
       const date=new Date(post.updatedAt||post.createdAt).toLocaleDateString();
-      return '<tr><td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+'</td><td>'+safe(post.postType==="popular"?"Popular":"Latest")+(post.featured?" · Featured":"")+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions"><button class="small-btn" data-edit="'+safe(post.id)+'">Edit</button><button class="small-btn delete" data-delete="'+safe(post.id)+'">Delete</button></div></td></tr>';
+      const autoMain = mainSliderIds.has(post.id) ? ' · <span class="main-slider-badge">Main Slider</span>' : '';
+      return '<tr><td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+'</td><td>'+safe(post.postType==="popular"?"Popular":"Latest")+(post.featured?" · Featured":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions"><button class="small-btn" data-edit="'+safe(post.id)+'">Edit</button><button class="small-btn delete" data-delete="'+safe(post.id)+'">Delete</button></div></td></tr>';
     }).join("")+'</tbody></table>';
   }
   function renderLists(){
