@@ -2429,3 +2429,8 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .ticker-track{gap:34px}
 .ticker-track span{font-family:"Hind Siliguri","DM Sans",sans-serif;font-size:14px;line-height:1.5;color:#26383b}
 @media(max-width:800px){.ticker-track{gap:22px}.ticker-track span{font-size:12px}}
+
+
+/* Favorites card breathing room below the advertisement/address block. */
+.my-choice-section{margin-top:12px!important;padding-top:20px!important}
+.my-choice-heading{padding-top:3px}
