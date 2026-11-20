@@ -2350,3 +2350,15 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
  .brand-mark{display:none!important}
  .brand{gap:0!important}
 }
+
+
+/* Main homepage story carousel: gentle horizontal entrance and manual pagination */
+.home-feature-slide{animation:homeFeatureSlideIn .48s cubic-bezier(.2,.75,.25,1) both}
+@keyframes homeFeatureSlideIn{from{opacity:.35;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
+.home-feature-navigation{display:flex;align-items:center;justify-content:center;gap:14px;padding:0 20px 18px}
+.home-feature-arrow{display:grid;place-items:center;width:34px;height:34px;border:1px solid #dce8e4;border-radius:50%;background:#fff;color:var(--teal-dark);font-size:25px;line-height:1;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
+.home-feature-arrow:hover{border-color:var(--teal);background:#e8f3ef;color:var(--navy)}
+.home-feature-pagination{display:flex;align-items:center;justify-content:center;gap:7px;max-width:min(55%,360px);overflow:hidden}
+.home-feature-dot{width:7px;height:7px;flex:0 0 7px;padding:0;border:0;border-radius:50%;background:#c7d6d1;cursor:pointer;transition:width .2s,background .2s}
+.home-feature-dot.active{width:22px;flex-basis:22px;border-radius:8px;background:var(--teal)}
+@media(max-width:800px){.home-feature-navigation{padding:0 14px 15px;gap:12px}.home-feature-arrow{width:32px;height:32px}}
