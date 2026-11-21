@@ -71,3 +71,5 @@
 .cover-image-preview:has(img){align-items:flex-start;flex-direction:column}
 .cover-empty{font-size:10px;color:#9aa8a6}
 .cover-remove-btn{border:1px solid #ead3d3;background:#fff;color:var(--red);border-radius:6px;padding:5px 9px;font-size:10px;font-weight:700}
+
+.toolbar-delete-image{border:1px solid #e8caca!important;background:#fff7f7!important;color:#b42318!important;border-radius:6px!important;padding:6px 9px!important;font-size:10px!important;font-weight:800!important}.toolbar-delete-image:hover{background:#fdecec!important;border-color:#d99b9b!important}
