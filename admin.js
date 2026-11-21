@@ -80,10 +80,14 @@
         if(Array.isArray(saved)) localHeadlines=saved;
         else localHeadlines=(JSON.parse(localStorage.getItem("everyday-atlas-homepage-ticker-v1")||"[]")||[]).map((text,index)=>({id:"headline-"+index,text:String(text)}));
       }catch(_){}
-      if((postRows||[]).length===0&&(localPosts.length||localHeadlines.length)){
-        if(window.confirm("We found posts or headlines saved in this browser. Would you like to transfer them to Supabase so they can appear on every device? Your browser copies will remain unchanged.")){
+      const remotePostIds=new Set((postRows||[]).map(row=>String(row.id)));
+      const remoteHeadlineIds=new Set((headlineRows||[]).map(row=>String(row.id)));
+      const postsToMigrate=localPosts.filter(item=>item&&item.id&&!remotePostIds.has(String(item.id)));
+      const headlinesToMigrate=localHeadlines.filter((item,index)=>!remoteHeadlineIds.has(String(item.id||("headline-"+index))));
+      if(postsToMigrate.length||headlinesToMigrate.length){
+        if(window.confirm("We found posts or headlines saved in this browser that are not yet in Supabase. Would you like to transfer them so they can appear on every device? Your browser copies will remain unchanged.")){
           showToast("Transferring your existing content to Supabase…");
-          for(const oldPost of localPosts){
+          for(const oldPost of postsToMigrate){
             const stamp=new Date().toISOString();
             const migrated={...oldPost,category:oldPost.category==="beauty"?"lifestyle":oldPost.category,
               postTypes:Array.isArray(oldPost.postTypes)?oldPost.postTypes:(oldPost.postType?[oldPost.postType]:["latest"]),
@@ -91,8 +95,9 @@
             await savePostToCloud(migrated);
           }
           for(let index=0;index<localHeadlines.length;index++){
-            const item=localHeadlines[index];
-            const {error}=await db().from("headlines").upsert({id:String(item.id||("headline-"+index)),text:String(item.text||""),sort_order:index,is_active:true},{onConflict:"id"});
+            const item=localHeadlines[index],headlineId=String(item.id||("headline-"+index));
+            if(remoteHeadlineIds.has(headlineId)) continue;
+            const {error}=await db().from("headlines").upsert({id:headlineId,text:String(item.text||""),sort_order:index,is_active:true},{onConflict:"id"});
             if(error) throw error;
           }
           showToast("Your existing content has been transferred to Supabase.");
