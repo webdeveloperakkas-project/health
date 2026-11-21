@@ -104,6 +104,13 @@
                 <button type="button" data-command="bold"><b>B</b></button><button type="button" data-command="italic"><i>I</i></button><button type="button" data-command="underline"><u>U</u></button><button type="button" data-command="insertUnorderedList">• List</button><button type="button" id="linkBtn">↗ Link</button><i></i><button type="button" id="imageBtn">▧ Image</button><button type="button" id="videoBtn">▶ Video</button>
               </div>
               <div id="articleEditor" class="article-editor" contenteditable="true" data-placeholder="Start writing your article here..."><p></p></div>
+<section class="inline-image-panel" id="inlineImagePanel">
+<strong>Image layout</strong><p>Select an image, then drag its side or corner handles to resize it.</p>
+<div class="inline-image-actions"><button type="button" data-image-align="left">Align left</button><button type="button" data-image-align="center">Center</button><button type="button" data-image-align="right">Align right</button></div>
+<label>Image width <input id="inlineImageWidth" type="range" min="20" max="100" value="100"><output id="inlineImageWidthValue">100%</output></label>
+<label>Text on image <input id="inlineImageCaption" type="text" maxlength="120" placeholder="Optional text overlay"></label>
+<label>Text position <select id="inlineImageCaptionPosition" class="text-input"><option value="center">Center</option><option value="top">Top</option><option value="bottom">Bottom</option></select></label>
+<small>Drag the image block up or down inside the article to change its position.</small></section>
               <input id="imageUpload" type="file" accept="image/*" multiple hidden>
               <div class="editor-help">Use the toolbar to format text and insert images or video links. Keep article content original, clear and helpful.</div>
             </div>
