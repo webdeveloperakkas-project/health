@@ -187,10 +187,21 @@
     }));
     event.target.value="";
   });
+  function renderCoverPreview(){
+    const host=$("#coverImagePreview");
+    if(!host) return;
+    host.innerHTML=coverData
+      ? '<img src="'+coverData+'" alt="Selected cover image"><button type="button" class="cover-remove-btn" id="removeCoverImage">Remove</button>'
+      : '<span class="cover-empty">No cover image selected</span>';
+  }
   $("#coverUpload").addEventListener("change",event=>{
     const file=event.target.files[0]; if(!file) return;
-    readImage(file,data=>{coverData=data;showToast("Cover image selected.");});
+    readImage(file,data=>{coverData=data;renderCoverPreview();showToast("Cover image selected.");});
   });
+  $("#coverImagePreview").addEventListener("click",event=>{
+    if(event.target.closest("#removeCoverImage")){coverData="";$("#coverUpload").value="";renderCoverPreview();}
+  });
+  renderCoverPreview();
   $("#videoBtn").addEventListener("click",()=>{
     const url=window.prompt("Paste a YouTube or Vimeo video URL");
     if(!url) return;
@@ -198,7 +209,6 @@
     $("#articleEditor").focus();
     document.execCommand("insertHTML",false,'<p><a href="'+safe(url)+'" target="_blank" rel="noopener">Watch the video ↗</a></p>');
   });
-  $("#postExcerpt").addEventListener("input",()=>$("#excerptCount").textContent=$("#postExcerpt").value.length);
   function renderKeywordChips(){
     const host=$("#keywordChips");
     if(!host) return;
@@ -237,9 +247,9 @@
   }
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
-    $("#postForm").reset(); syncCategorySubcategory(); $("#articleEditor").innerHTML="<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible"); $("#excerptCount").textContent="0";
+    $("#postForm").reset(); syncCategorySubcategory(); $("#articleEditor").innerHTML="<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
-    coverData=""; $("#coverUpload").value=""; $("#deleteCurrentBtn").hidden=true;
+    coverData=""; $("#coverUpload").value=""; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
   }
   function newPost(){
@@ -251,9 +261,8 @@
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
-    $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
-    $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||"";
+    $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; renderCoverPreview();
     
     $("#deleteCurrentBtn").hidden=false;
     $("#editorStatusText").textContent=post.status==="published"?"Published":"Draft";
@@ -291,7 +300,7 @@
     const now=new Date().toISOString();
     const post={
       id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
-      postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:$("#postStatus").value,excerpt:$("#postExcerpt").value.trim(),keywords:[...currentKeywords],
+      postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:$("#postStatus").value,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
     };
