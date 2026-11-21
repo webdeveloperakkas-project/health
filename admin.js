@@ -1,30 +1,113 @@
 
 /* =========================================================
    GLOBAL SCOPE 24 CMS
-   Local prototype for content workflow and editor interactions.
-   Supabase authentication, database and permanent media storage
-   will be connected after the project credentials are supplied.
+   Supabase-backed content workflow and permanent media storage.
 ========================================================= */
 (() => {
   "use strict";
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
+  const MEDIA_BUCKET = "everyday-atlas-media";
+  const db = () => window.EA_SUPABASE;
   const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",entertainment:"Entertainment",health:"Health",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",hospitals:"Hospitals (legacy)"};
   const placementLabels = {latest:"Latest",popular:"Popular",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
-  let posts = loadPosts();
+  let posts = [];
   let editingId = null;
   let coverData = "";
   let currentKeywords = [];
+  let cloudReady = false;
 
-  function loadPosts(){
-    try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); if(!Array.isArray(saved))return []; let changed=false; saved.forEach(post=>{if(post&&post.category==="beauty"){post.category="lifestyle";changed=true;}}); if(changed)localStorage.setItem(STORAGE_KEY,JSON.stringify(saved)); return saved; }
+  function loadLocalPosts(){
+    try { const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"); return Array.isArray(saved)?saved:[]; }
     catch(error){ return []; }
   }
-  function persist(){
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(posts)); return true; }
-    catch(error){ showToast("Browser storage is full. Remove large images and try again."); return false; }
+  function fromDatabase(row){
+    return {id:row.id,title:row.title,content:row.content_html||"",category:row.category==="beauty"?"lifestyle":row.category,
+      subcategory:row.subcategory||"",language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
+      postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
+      status:row.status||"draft",excerpt:row.excerpt||"",keywords:row.keywords||[],videoUrl:row.video_url||"",
+      cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at};
+  }
+  async function uploadDataImage(dataUrl,postId){
+    if(!/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(dataUrl)) return dataUrl;
+    const response=await fetch(dataUrl);
+    const blob=await response.blob();
+    const ext=({ "image/jpeg":"jpg","image/png":"png","image/webp":"webp","image/gif":"gif" })[blob.type]||"jpg";
+    const path="articles/"+postId+"/"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8)+"."+ext;
+    const {error}=await db().storage.from(MEDIA_BUCKET).upload(path,blob,{contentType:blob.type,upsert:true});
+    if(error) throw error;
+    const {data}=db().storage.from(MEDIA_BUCKET).getPublicUrl(path);
+    return data.publicUrl;
+  }
+  async function preparePostMedia(post){
+    let content=post.content||"";
+    const dataUrls=[...new Set(content.match(/data:image\/(?:png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+/gi)||[])];
+    for(const dataUrl of dataUrls) content=content.split(dataUrl).join(await uploadDataImage(dataUrl,post.id));
+    const cover=post.cover?await uploadDataImage(post.cover,post.id):"";
+    return {...post,content,cover};
+  }
+  async function savePostToCloud(post){
+    const prepared=await preparePostMedia(post);
+    const row={id:prepared.id,title:prepared.title,content_html:prepared.content,category:prepared.category,
+      subcategory:prepared.subcategory||"",language:prepared.language||"en",post_types:prepared.postTypes||["latest"],
+      featured_stories:!!prepared.featuredStories,status:prepared.status,excerpt:prepared.excerpt||"",
+      keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",
+      views:Number(prepared.views)||0,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null};
+    const {error}=await db().from("posts").upsert(row,{onConflict:"id"});
+    if(error) throw error;
+    return prepared;
+  }
+  async function initializeCloud(){
+    try{
+      if(!db()) throw new Error("Supabase client is not available. Please reload the Admin Panel.");
+      const [{data:postRows,error:postError},{data:headlineRows,error:headlineError}]=await Promise.all([
+        db().from("posts").select("*").order("updated_at",{ascending:false}),
+        db().from("headlines").select("*").order("sort_order",{ascending:true})
+      ]);
+      if(postError) throw postError;
+      if(headlineError) throw headlineError;
+      const localPosts=loadLocalPosts();
+      let localHeadlines=[];
+      try{
+        const saved=JSON.parse(localStorage.getItem("everyday-atlas-headlines-v1")||"null");
+        if(Array.isArray(saved)) localHeadlines=saved;
+        else localHeadlines=(JSON.parse(localStorage.getItem("everyday-atlas-homepage-ticker-v1")||"[]")||[]).map((text,index)=>({id:"headline-"+index,text:String(text)}));
+      }catch(_){}
+      if((postRows||[]).length===0&&(localPosts.length||localHeadlines.length)){
+        if(window.confirm("We found posts or headlines saved in this browser. Would you like to transfer them to Supabase so they can appear on every device? Your browser copies will remain unchanged.")){
+          showToast("Transferring your existing content to Supabase…");
+          for(const oldPost of localPosts){
+            const stamp=new Date().toISOString();
+            const migrated={...oldPost,category:oldPost.category==="beauty"?"lifestyle":oldPost.category,
+              postTypes:Array.isArray(oldPost.postTypes)?oldPost.postTypes:(oldPost.postType?[oldPost.postType]:["latest"]),
+              createdAt:oldPost.createdAt||stamp,updatedAt:oldPost.updatedAt||stamp};
+            await savePostToCloud(migrated);
+          }
+          for(let index=0;index<localHeadlines.length;index++){
+            const item=localHeadlines[index];
+            const {error}=await db().from("headlines").upsert({id:String(item.id||("headline-"+index)),text:String(item.text||""),sort_order:index,is_active:true},{onConflict:"id"});
+            if(error) throw error;
+          }
+          showToast("Your existing content has been transferred to Supabase.");
+        }
+      }
+      const {data:finalPosts,error:finalPostError}=await db().from("posts").select("*").order("updated_at",{ascending:false});
+      if(finalPostError) throw finalPostError;
+      const {data:finalHeadlines,error:finalHeadlineError}=await db().from("headlines").select("*").order("sort_order",{ascending:true});
+      if(finalHeadlineError) throw finalHeadlineError;
+      posts=(finalPosts||[]).map(fromDatabase);
+      headlines=(finalHeadlines||[]).map(row=>({id:row.id,text:row.text}));
+      cloudReady=true;
+      renderLists();renderHeadlines();openView("dashboard");
+      const notice=document.querySelector(".notice");
+      if(notice) notice.innerHTML="<strong>Connected:</strong> Posts, headlines and images are now stored in Supabase and shared across devices.";
+    }catch(error){
+      console.error("Supabase CMS load failed:",error);
+      showToast("Could not load Supabase content: "+(error.message||"Please check the database setup."));
+      renderLists();renderHeadlines();openView("dashboard");
+    }
   }
   function id(){ return "ea-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,7); }
   function safe(value){ return String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char])); }
@@ -279,9 +362,11 @@
   function deletePost(postId){
     const post=posts.find(item=>item.id===postId); if(!post) return;
     if(!window.confirm('Delete "'+(post.title||"Untitled")+'"? This cannot be undone.')) return;
-    posts=posts.filter(item=>item.id!==postId); persist();
-    if(editingId===postId){editingId=null;resetForm();openView("posts");}
-    renderLists(); showToast("Post deleted from this browser.");
+    posts=posts.filter(item=>item.id!==postId);
+    (async()=>{try{const {error}=await db().from("posts").delete().eq("id",postId);if(error)throw error;
+      if(editingId===postId){editingId=null;resetForm();openView("posts");}
+      renderLists();showToast("Post deleted from Supabase.");}
+      catch(error){showToast("Could not delete post: "+(error.message||"Database error."));await initializeCloud();}})();
   }
   document.addEventListener("click",event=>{
     const edit=event.target.closest("[data-edit]"); const del=event.target.closest("[data-delete]");
@@ -290,7 +375,7 @@
   });
   $("#deleteCurrentBtn").addEventListener("click",()=>editingId&&deletePost(editingId));
 
-  $("#postForm").addEventListener("submit",event=>{
+  $("#postForm").addEventListener("submit",async event=>{
     event.preventDefault();
     const title=$("#postTitle").value.trim(); const content=cleanArticleHTML();
     if(!title) return showToast("Please add an article title.");
@@ -311,15 +396,23 @@
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
     };
-    const previous=posts.findIndex(item=>item.id===post.id);
-    if(previous>=0) posts[previous]=post; else posts.unshift(post);
-    if(!persist()) return;
+    const saveButton=$("#savePostBtn");
+    saveButton.disabled=true;saveButton.textContent="Saving to Supabase…";
+    try{
+      if(!cloudReady) throw new Error("Supabase is not connected yet. Please reload the Admin Panel.");
+      const savedPost=await savePostToCloud(post);
+      const previous=posts.findIndex(item=>item.id===savedPost.id);
+      if(previous>=0) posts[previous]=savedPost; else posts.unshift(savedPost);
+    }catch(error){
+      showToast("Could not save post: "+(error.message||"Database or image upload error."));
+      return;
+    }finally{saveButton.disabled=false;saveButton.textContent="Save post";}
     editingId=post.id; $("#deleteCurrentBtn").hidden=false;
     $("#editorStatusText").textContent=post.status==="published"?"Published":"Draft";
     $("#editorStatusDot").parentElement.classList.toggle("live",post.status==="published");
     renderLists();
-    if(post.status==="draft"){ openView("drafts"); showToast("Draft saved. It is now listed under My Drafts and is not public."); }
-    else { openView("posts"); showToast("Saved as published in local preview. Public-site publishing is not yet connected."); }
+    if(post.status==="draft"){ openView("drafts"); showToast("Draft saved securely to Supabase."); }
+    else { openView("posts"); showToast("Article published successfully. It is now available across devices."); }
     $("#pageTitle").textContent=post.status==="published"?"All Posts":"My Drafts";
   });
 
@@ -343,21 +436,11 @@
   const TICKER_STORAGE_KEY = "everyday-atlas-homepage-ticker-v1";
   const HEADLINE_STORAGE_KEY = "everyday-atlas-headlines-v1";
   let editingHeadlineId = null;
-  function loadHeadlines() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(HEADLINE_STORAGE_KEY) || "null");
-      if (Array.isArray(saved)) return saved;
-      const oldLines = JSON.parse(localStorage.getItem(TICKER_STORAGE_KEY) || "[]");
-      return (Array.isArray(oldLines) ? oldLines : []).map((text,index)=>({id:"headline-"+index,text:String(text)}));
-    } catch (_) { return []; }
-  }
+  function loadHeadlines() { return []; }
   let headlines = loadHeadlines();
-  function persistHeadlines() {
-    try {
-      localStorage.setItem(HEADLINE_STORAGE_KEY, JSON.stringify(headlines));
-      localStorage.setItem(TICKER_STORAGE_KEY, JSON.stringify(headlines.map(item=>item.text).filter(Boolean)));
-      return true;
-    } catch (_) { showToast("Could not save headlines in this browser."); return false; }
+  async function saveHeadlineToCloud(item,index){
+    const {error}=await db().from("headlines").upsert({id:item.id,text:item.text,sort_order:index,is_active:true},{onConflict:"id"});
+    if(error) throw error;
   }
   function renderHeadlines() {
     const host=$("#allHeadlines");
@@ -375,7 +458,7 @@
   }
   $("#newHeadlineBtn").addEventListener("click",newHeadline);
   $("#cancelHeadlineBtn").addEventListener("click",()=>openView("headlines"));
-  $("#headlineForm").addEventListener("submit",event=>{
+  $("#headlineForm").addEventListener("submit",async event=>{
     event.preventDefault();
     const value=$("#headlineText").value.trim();
     if(!value) return showToast("Please write a headline.");
@@ -383,8 +466,11 @@
       const item=headlines.find(entry=>entry.id===editingHeadlineId);
       if(item) item.text=value;
     } else headlines.push({id:"headline-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),text:value});
-    if(!persistHeadlines()) return;
-    renderHeadlines(); showToast("Headline saved in this browser."); openView("headlines");
+    try{
+      const item=headlines.find(entry=>entry.id===editingHeadlineId)||headlines[headlines.length-1];
+      await saveHeadlineToCloud(item,Math.max(0,headlines.indexOf(item)));
+      renderHeadlines();showToast("Headline saved to Supabase.");openView("headlines");
+    }catch(error){showToast("Could not save headline: "+(error.message||"Database error."));}
   });
   $("#allHeadlines").addEventListener("click",event=>{
     const edit=event.target.closest("[data-edit-headline]");
@@ -393,12 +479,11 @@
     if(del) {
       const id=del.dataset.deleteHeadline;
       headlines=headlines.filter(item=>item.id!==id);
-      persistHeadlines(); renderHeadlines(); showToast("Headline deleted.");
+      (async()=>{try{const {error}=await db().from("headlines").delete().eq("id",id);if(error)throw error;renderHeadlines();showToast("Headline deleted from Supabase.");}
+        catch(error){showToast("Could not delete headline: "+(error.message||"Database error."));await initializeCloud();}})();
     }
   });
 
-  /* Initial state */
-  renderLists();
-  renderHeadlines();
-  openView("dashboard");
+  /* Load the shared CMS data before rendering the dashboard. */
+  initializeCloud();
 })();
