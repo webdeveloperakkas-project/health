@@ -9,10 +9,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=66">
+<link rel="stylesheet" href="style.css?v=67">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="translations.js?v=1" defer></script>
-<script src="script.js?v=46" defer></script>
+<script src="script.js?v=47" defer></script>
 </head>
 
 
@@ -101,6 +101,9 @@ LATEST</div>
 <small>Responsive AdSense placement</small>
 </div>
 
+<section id="singleArticleView" class="single-article-view" hidden aria-live="polite"></section>
+
+
 <section class="home-feature-grid" id="homeSection" aria-label="Homepage highlights">
   <aside class="home-rail home-left">
     <div class="home-rail-card">
@@ -144,13 +147,7 @@ LATEST</div>
   </div>
 </section>
 
-<dialog class="article-dialog" id="articleDialog" aria-labelledby="articleDialogTitle">
-  <div class="article-dialog-top">
-    <span class="eyebrow">GLOBAL SCOPE 24 · ARTICLE</span>
-    <button type="button" id="articleDialogClose" aria-label="Close article">×</button>
-  </div>
-  <article class="article-dialog-content" id="articleDialogContent"></article>
-</dialog>
+
 
 <section class="article-section" id="articleFeed" aria-live="polite">
 <div class="feed-heading">
