@@ -101,9 +101,70 @@
     reader.readAsDataURL(file);
   }
   $("#imageBtn").addEventListener("click",()=>$("#imageUpload").click());
+  let selectedInlineFigure=null;
+  function cleanArticleHTML(){
+    const clone=$("#articleEditor").cloneNode(true);
+    clone.querySelectorAll(".cms-resize-handle").forEach(node=>node.remove());
+    clone.querySelectorAll("figure.cms-image-frame").forEach(node=>{node.classList.remove("cms-image-frame","cms-image-active");node.removeAttribute("draggable");});
+    return clone.innerHTML.trim();
+  }
+  function addResizeHandles(figure){
+    figure.querySelectorAll(".cms-resize-handle").forEach(node=>node.remove());
+    ["nw","ne","sw","se","e","w"].forEach(direction=>{
+      const handle=document.createElement("span");handle.className="cms-resize-handle handle-"+direction;handle.dataset.direction=direction;handle.contentEditable="false";figure.appendChild(handle);
+    });
+  }
+  function selectInlineImage(image){
+    if(selectedInlineFigure)selectedInlineFigure.classList.remove("cms-image-active");
+    selectedInlineFigure=image.closest("figure")||image.parentElement;
+    if(!selectedInlineFigure)return;
+    selectedInlineFigure.classList.add("cms-image-frame","cms-image-active");
+    selectedInlineFigure.draggable=true;addResizeHandles(selectedInlineFigure);
+    const width=Number(selectedInlineFigure.dataset.width||100);
+    $("#inlineImageWidth").value=width;$("#inlineImageWidthValue").textContent=width+"%";
+    $("#inlineImageCaption").value=selectedInlineFigure.querySelector("figcaption")?.textContent||"";
+    $("#inlineImageCaptionPosition").value=selectedInlineFigure.dataset.captionPosition||"center";
+    $("#inlineImagePanel").classList.add("is-visible");
+  }
+  $("#articleEditor").addEventListener("click",event=>{
+    const image=event.target.closest("img");if(image&&$("#articleEditor").contains(image))selectInlineImage(image);
+  });
+  $("#articleEditor").addEventListener("pointerdown",event=>{
+    const handle=event.target.closest(".cms-resize-handle");if(!handle)return;
+    event.preventDefault();event.stopPropagation();
+    const figure=handle.closest("figure"),startX=event.clientX,startWidth=figure.getBoundingClientRect().width,parentWidth=figure.parentElement.getBoundingClientRect().width;
+    const direction=handle.dataset.direction;
+    function move(e){let delta=e.clientX-startX;if(direction.includes("w"))delta=-delta;const width=Math.max(80,Math.min(parentWidth,startWidth+delta));figure.style.width=width+"px";figure.dataset.width=Math.round(width/parentWidth*100);$("#inlineImageWidth").value=figure.dataset.width;$("#inlineImageWidthValue").textContent=figure.dataset.width+"%";}
+    function stop(){document.removeEventListener("pointermove",move);document.removeEventListener("pointerup",stop);}
+    document.addEventListener("pointermove",move);document.addEventListener("pointerup",stop,{once:true});
+  });
+  function applyInlineImageControls(){
+    if(!selectedInlineFigure)return;
+    const width=Number($("#inlineImageWidth").value);selectedInlineFigure.dataset.width=width;selectedInlineFigure.style.width=width+"%";$("#inlineImageWidthValue").textContent=width+"%";
+    const text=$("#inlineImageCaption").value.trim();let caption=selectedInlineFigure.querySelector("figcaption");
+    if(text){if(!caption){caption=document.createElement("figcaption");selectedInlineFigure.appendChild(caption);}caption.textContent=text;const pos=$("#inlineImageCaptionPosition").value;selectedInlineFigure.dataset.captionPosition=pos;caption.style.cssText="position:absolute;left:0;right:0;"+(pos==="top"?"top:0":pos==="bottom"?"bottom:0":"top:50%;transform:translateY(-50%)")+";padding:12px;background:rgba(0,0,0,.58);color:#fff;text-align:center;font-weight:800;";}
+    else if(caption)caption.remove();
+  }
+  $("#inlineImageWidth").addEventListener("input",applyInlineImageControls);
+  $("#inlineImageCaption").addEventListener("input",applyInlineImageControls);
+  $("#inlineImageCaptionPosition").addEventListener("change",applyInlineImageControls);
+  document.querySelectorAll("[data-image-align]").forEach(button=>button.addEventListener("click",()=>{
+    if(!selectedInlineFigure)return;const align=button.dataset.imageAlign;selectedInlineFigure.dataset.align=align;
+    selectedInlineFigure.style.margin=align==="left"?"18px auto 18px 0":align==="right"?"18px 0 18px auto":"18px auto";
+  }));
+  let draggedImage=null;
+  $("#articleEditor").addEventListener("dragstart",event=>{const figure=event.target.closest("figure.cms-image-frame");if(figure)draggedImage=figure;});
+  $("#articleEditor").addEventListener("dragover",event=>{if(draggedImage)event.preventDefault();});
+  $("#articleEditor").addEventListener("drop",event=>{
+    if(!draggedImage)return;event.preventDefault();const target=event.target.closest("figure");
+    if(target&&target!==draggedImage){const rect=target.getBoundingClientRect();target.parentNode.insertBefore(draggedImage,event.clientY<rect.top+rect.height/2?target:target.nextSibling);}
+    else if(event.target===$("#articleEditor"))$("#articleEditor").appendChild(draggedImage);
+    draggedImage=null;
+  });
   $("#imageUpload").addEventListener("change",event=>{
     Array.from(event.target.files||[]).forEach(file=>readImage(file,data=>{
-      $("#articleEditor").focus(); document.execCommand("insertHTML",false,'<p><img src="'+data+'" alt="'+safe(file.name)+'"></p>');
+      $("#articleEditor").focus();document.execCommand("insertHTML",false,'<figure class="cms-image-frame" data-width="100" style="width:100%;position:relative;margin:18px auto"><img src="'+data+'" alt="'+safe(file.name)+'" style="display:block;width:100%;height:auto"></figure><p></p>');
+      const img=Array.from($("#articleEditor").querySelectorAll("img")).pop();if(img)selectInlineImage(img);
     }));
     event.target.value="";
   });
@@ -157,7 +218,7 @@
   }
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
-    $("#postForm").reset(); syncCategorySubcategory(); $("#articleEditor").innerHTML="<p></p>"; $("#excerptCount").textContent="0";
+    $("#postForm").reset(); syncCategorySubcategory(); $("#articleEditor").innerHTML="<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible"); $("#excerptCount").textContent="0";
     currentKeywords=[]; renderKeywordChips();
     coverData=""; $("#coverPreview").textContent="No cover selected"; $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -168,7 +229,7 @@
   function editPost(postId){
     const post=posts.find(item=>item.id===postId); if(!post) return;
     editingId=postId; resetForm();
-    $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>";
+    $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
@@ -196,7 +257,7 @@
 
   $("#postForm").addEventListener("submit",event=>{
     event.preventDefault();
-    const title=$("#postTitle").value.trim(); const content=$("#articleEditor").innerHTML.trim();
+    const title=$("#postTitle").value.trim(); const content=cleanArticleHTML();
     if(!title) return showToast("Please add an article title.");
     if(!plainText(content)) return showToast("Please write the article content.");
     const existing=posts.find(item=>item.id===editingId);
@@ -232,7 +293,7 @@
     const title=safe($("#postTitle").value||"Untitled article");
     const category=safe(categories[$("#postCategory").value]);
     const subcategory=["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
-    const body=$("#articleEditor").innerHTML;
+    const body=cleanArticleHTML();
     const cover=coverData?'<img src="'+coverData+'" alt="Article cover">':"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
     const video=$("#videoUrl").value.trim();
