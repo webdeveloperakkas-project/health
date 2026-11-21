@@ -116,8 +116,12 @@
   }
   function selectInlineImage(image){
     if(selectedInlineFigure)selectedInlineFigure.classList.remove("cms-image-active");
-    selectedInlineFigure=image.closest("figure")||image.parentElement;
-    if(!selectedInlineFigure)return;
+    selectedInlineFigure=image.closest("figure");
+    if(!selectedInlineFigure){
+      selectedInlineFigure=document.createElement("figure");
+      image.parentNode.insertBefore(selectedInlineFigure,image);
+      selectedInlineFigure.appendChild(image);
+    }
     selectedInlineFigure.classList.add("cms-image-frame","cms-image-active");
     selectedInlineFigure.draggable=true;addResizeHandles(selectedInlineFigure);
     const width=Number(selectedInlineFigure.dataset.width||100);
@@ -158,7 +162,11 @@
   $("#articleEditor").addEventListener("drop",event=>{
     if(!draggedImage)return;event.preventDefault();const target=event.target.closest("figure");
     if(target&&target!==draggedImage){const rect=target.getBoundingClientRect();target.parentNode.insertBefore(draggedImage,event.clientY<rect.top+rect.height/2?target:target.nextSibling);}
-    else if(event.target===$("#articleEditor"))$("#articleEditor").appendChild(draggedImage);
+    else {
+      const block=event.target.closest("p,h2,h3,ul,ol,blockquote");
+      if(block&&$("#articleEditor").contains(block)){const rect=block.getBoundingClientRect();block.parentNode.insertBefore(draggedImage,event.clientY<rect.top+rect.height/2?block:block.nextSibling);}
+      else if(event.target===$("#articleEditor"))$("#articleEditor").appendChild(draggedImage);
+    }
     draggedImage=null;
   });
   $("#imageUpload").addEventListener("change",event=>{
