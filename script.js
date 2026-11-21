@@ -355,9 +355,8 @@
   }
   function articleSlug(post) { return shortArticleId(post); }
   function siteBasePath() {
-    const script = Array.from(document.scripts).find(item => /script\.js(?:\?|$)/.test(item.src));
-    if (script) return new URL(".",script.src).pathname;
-    return "/";
+    /* GitHub Pages project site base. Keep this independent of the current article URL. */
+    return window.location.pathname.startsWith("/health/") ? "/health/" : "/";
   }
   function articleRoute(post) {
     const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",shortArticleId(post)].filter(Boolean);
@@ -832,8 +831,16 @@
   applyLanguage($("#languageSelect").value || "en");
   const routeParam = new URLSearchParams(window.location.search).get("route");
   if (routeParam) {
-    const cleanRoute = routeParam.split("?")[0].replace(/^\/+|\/+$/g,"");
-    if (cleanRoute) history.replaceState(null,"",siteBasePath() + cleanRoute.split("/").map(part => encodeURIComponent(decodeURIComponent(part))).join("/") + "/");
+    const rawParts = routeParam.split("?")[0].split("/").filter(Boolean).map(part => decodeURIComponent(part));
+    const idIndex = rawParts.map(part => /^[a-z0-9]{10}$/i.test(part)).lastIndexOf(true);
+    let routeParts = rawParts;
+    if (idIndex >= 1) {
+      const categorySlugs = new Set(["world-news","daily-tips","technology","sports","health","beauty","travel","finance","lifestyle"]);
+      const hasSubcategory = idIndex >= 2 && categorySlugs.has(rawParts[idIndex - 2]);
+      routeParts = rawParts.slice(hasSubcategory ? idIndex - 2 : idIndex - 1, idIndex + 1);
+    }
+    const cleanRoute = routeParts.join("/");
+    if (cleanRoute) history.replaceState(null,"",siteBasePath() + routeParts.map(part => encodeURIComponent(part)).join("/") + "/");
   }
   function requestedArticleSlug() {
     const legacy = new URLSearchParams(window.location.search).get("article");
