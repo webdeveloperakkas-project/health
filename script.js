@@ -409,9 +409,6 @@
   const articleDialog = $("#articleDialog");
   const articleDialogContent = $("#articleDialogContent");
 
-  function imageForPost(post) {
-    return post.cover || categoryImages[post.category] || categoryImages.lifestyle;
-  }
   function sortedByDate(items) {
     return [...items].sort((a,b) => {
       const aDate = Number(a.publishedTimestamp) || new Date(a.date).getTime() || 0;
