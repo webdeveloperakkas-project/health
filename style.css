@@ -2637,3 +2637,121 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   .home-list-item { padding:6px; }
   .home-list-copy strong { font-size:11px; }
 }
+
+
+/* Homepage editorial list: full-width stacked story rows beneath the lead story. */
+.home-feature-grid {
+  grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr);
+  grid-template-areas:"feature right" "latest latest";
+  align-items:start;
+}
+.home-left { min-width:0; }
+.home-rail-card { width:100%; }
+.home-list-panel {
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  max-height:none;
+  min-height:0;
+  overflow:visible;
+  padding:0;
+}
+.home-list-item,
+.home-list-item.is-active,
+.home-mobile-list-group .home-list-item {
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  gap:10px;
+  min-height:0;
+  padding:16px 4px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  border-radius:0;
+  background:#fff;
+  box-shadow:none;
+  text-align:left;
+}
+.home-list-item:nth-child(n+7) { display:flex; }
+.home-list-heading {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:3px;
+  width:100%;
+}
+.home-list-heading strong {
+  color:var(--navy);
+  font:800 17px/1.35 Manrope,"Hind Siliguri",sans-serif;
+}
+.home-list-summary-row {
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  width:100%;
+}
+.home-list-thumb {
+  display:block;
+  flex:0 0 164px;
+  width:164px;
+  height:94px;
+  aspect-ratio:1.75/1;
+  border-radius:7px;
+}
+.home-list-excerpt {
+  display:-webkit-box;
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+  color:#53666c;
+  font-size:13px;
+  line-height:1.55;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+}
+.home-list-meta {
+  display:block;
+  width:100%;
+  color:#8b9b9a;
+  font-size:10px;
+  line-height:1.4;
+}
+.home-list-copy { display:none; }
+@media(max-width:800px) {
+  .home-feature-grid {
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"feature" "latest" "right";
+    gap:20px;
+  }
+  .home-list-item,
+  .home-list-item.is-active,
+  .home-mobile-list-group .home-list-item {
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:9px;
+    padding:13px 2px;
+    border:0;
+    border-bottom:1px solid var(--line);
+    border-radius:0;
+    box-shadow:none;
+  }
+  .home-list-item:nth-child(n+7) { display:flex; }
+  .home-list-heading strong { font-size:15px; line-height:1.4; }
+  .home-list-summary-row { gap:12px; }
+  .home-list-thumb {
+    flex:0 0 126px;
+    width:126px;
+    height:76px;
+    aspect-ratio:1.65/1;
+  }
+  .home-list-excerpt { font-size:11px; line-height:1.5; -webkit-line-clamp:3; }
+  .home-list-meta { font-size:9px; }
+  .home-rail-card { padding:12px; }
+}
+@media(max-width:380px) {
+  .home-list-thumb { flex-basis:108px; width:108px; height:68px; }
+  .home-list-summary-row { gap:9px; }
+  .home-list-excerpt { font-size:10px; }
+}
