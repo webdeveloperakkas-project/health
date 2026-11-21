@@ -2814,3 +2814,26 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   .single-article-body { font-size:16px; line-height:1.85; }
   .single-article-body p { margin-bottom:18px; }
 }
+
+
+/* Restore the desktop three-column homepage: Latest/Popular on the left,
+   the lead story in the center, and the right rail on the right.
+   The mobile stacking order remains unchanged below 801px. */
+@media (min-width:801px) {
+  .home-feature-grid {
+    display:grid;
+    grid-template-columns:minmax(230px,.92fr) minmax(0,1.72fr) minmax(220px,.9fr);
+    grid-template-areas:"latest feature right";
+    gap:22px;
+    align-items:start;
+  }
+  .home-left { grid-area:latest; min-width:0; }
+  .home-featured { grid-area:feature; min-width:0; }
+  .home-right { grid-area:right; min-width:0; }
+}
+@media (min-width:801px) and (max-width:1100px) {
+  .home-feature-grid {
+    grid-template-columns:minmax(190px,.85fr) minmax(0,1.5fr) minmax(190px,.85fr);
+    gap:14px;
+  }
+}
