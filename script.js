@@ -399,18 +399,8 @@
   let homeListIndex = 0;
   let homeListTimer = null;
 
-  const categoryImages = {
-    health:"https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=85",
-    technology:"https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
-    entertainment:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=85",
-    world:"https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=1200&q=85",
-    tips:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=85",
-    sports:"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=85",
-    travel:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=85",
-    finance:"https://images.unsplash.com/photo-146 An?auto=format&fit=crop&w=1200&q=85",
-    lifestyle:"https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1200&q=85"
-  };
-  categoryImages.finance = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=85";
+  // No automatic category images: only the uploaded cover is shown.
+  function imageForPost(post) { return post && typeof post.cover === "string" ? post.cover.trim() : ""; }
 
   const homeSection = $("#homeSection");
   const articleSection = $("#articleFeed");
@@ -490,7 +480,7 @@
     const index = posts.indexOf(post);
     const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     homeFeatured.innerHTML =
-      '<div class="home-feature-slide"><div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' +
+      '<div class="home-feature-slide">' + (imageForPost(post) ? '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' : '') +
       '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + '</span>' +
       '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '">' + escapeHTML(localizeText(post.title)) + '</h1>' +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
@@ -548,7 +538,7 @@
     articleDialogContent.innerHTML =
       '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
       '<h1 id="articleDialogTitle">' + escapeHTML(localizeText(post.title)) + '</h1>' +
-      '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' +
+      (imageForPost(post) ? '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' : '') +
       shareButtons(post) + '<div class="article-detail-body" id="articleDetailBody">' + paragraphs + '</div>' + (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\\s+/g,'')) + '</span>').join('') + '</div>' : '');
     if (typeof articleDialog.showModal === "function") articleDialog.showModal();
     else articleDialog.setAttribute("open","");
