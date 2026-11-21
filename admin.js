@@ -28,7 +28,7 @@
     return {id:row.id,title:row.title,content:row.content_html||"",category:row.category==="beauty"?"lifestyle":row.category,
       subcategory:row.subcategory||"",language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
-      status:row.status||"draft",excerpt:row.excerpt||"",keywords:row.keywords||[],videoUrl:row.video_url||"",
+      status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",keywords:row.keywords||[],videoUrl:row.video_url||"",
       cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at};
   }
   async function uploadDataImage(dataUrl,postId){
@@ -53,7 +53,7 @@
     const prepared=await preparePostMedia(post);
     const row={id:prepared.id,title:prepared.title,content_html:prepared.content,category:prepared.category,
       subcategory:prepared.subcategory||"",language:prepared.language||"en",post_types:prepared.postTypes||["latest"],
-      featured_stories:!!prepared.featuredStories,status:prepared.status,excerpt:prepared.excerpt||"",
+      featured_stories:!!prepared.featuredStories,status:prepared.status,scheduled_at:prepared.scheduledAt||null,excerpt:prepared.excerpt||"",
       keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",
       views:Number(prepared.views)||0,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null};
     const {error}=await db().from("posts").upsert(row,{onConflict:"id"});
@@ -130,7 +130,7 @@
   function renderStats(){
     $("#statTotal").textContent=posts.length;
     $("#statPublished").textContent=posts.filter(post=>post.status==="published").length;
-    $("#statDrafts").textContent=posts.filter(post=>post.status==="draft").length;
+    $("#statDrafts").textContent=posts.filter(post=>post.status==="draft").length; const scheduledStat=$("#statScheduled"); if(scheduledStat) scheduledStat.textContent=posts.filter(post=>post.status==="scheduled").length;
     $("#statViews").textContent=posts.reduce((sum,post)=>sum+(Number(post.views)||0),0).toLocaleString();
   }
   function latestPublishedByCategory(){
@@ -159,6 +159,8 @@
     const query=($("#postSearch").value||"").trim().toLowerCase();
     const published=[...posts].filter(post=>post.status==="published"&&(!query||(post.title+" "+plainText(post.content)).toLowerCase().includes(query))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
     $("#allPosts").innerHTML=published.length ? postRows(published) : '<div class="empty-table">No published posts yet. Published articles will appear here.</div>';
+    const scheduled=[...posts].filter(post=>post.status==="scheduled").sort((a,b)=>new Date(a.scheduledAt)-new Date(b.scheduledAt));
+    const scheduledBox=$("#allScheduled"); if(scheduledBox) scheduledBox.innerHTML=scheduled.length?postRows(scheduled):'<div class="empty-table">No scheduled posts yet.</div>';
     const draftQuery=($("#draftSearch")?.value||"").trim().toLowerCase();
     const drafts=[...posts].filter(post=>post.status==="draft"&&(!draftQuery||(post.title+" "+plainText(post.content)).toLowerCase().includes(draftQuery))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
     $("#allDrafts").innerHTML=drafts.length ? postRows(drafts) : '<div class="empty-table">No drafts yet. Save an article as Draft and it will appear here.</div>';
@@ -168,7 +170,7 @@
   function openView(view){
     document.querySelectorAll(".view-panel").forEach(panel=>panel.classList.toggle("active",panel.id===view+"View"));
     document.querySelectorAll(".nav-item").forEach(button=>button.classList.toggle("active",button.dataset.view===view));
-    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"My Drafts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
+    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"My Drafts",scheduled:"Scheduled Posts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
     if(view!=="editor") renderLists();
   }
   document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.view)));
@@ -347,9 +349,11 @@
     select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
     select.value=options.some(([value])=>value===previous)?previous:"";
   }
+  function syncScheduleFields(){ const field=$("#scheduledPublishFields"); if(field) field.hidden=$("#postStatus").value!=="scheduled"; }
+  $("#postStatus").addEventListener("change",syncScheduleFields);
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
-    $("#postForm").reset(); syncCategorySubcategory(); $("#articleEditor").innerHTML="<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); syncCategorySubcategory(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; $("#coverUpload").value=""; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -362,12 +366,12 @@
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
-    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
+    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#scheduledPublishAt").value=post.scheduledAt?new Date(post.scheduledAt).toISOString().slice(0,16):""; syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; renderCoverPreview();
     
     $("#deleteCurrentBtn").hidden=false;
-    $("#editorStatusText").textContent=post.status==="published"?"Published":"Draft";
+    $("#editorStatusText").textContent=post.status==="published"?"Published":post.status==="scheduled"?"Scheduled":"Draft";
     if(post.status==="published") $("#editorStatusDot").parentElement.classList.add("live");
     openView("editor"); $("#pageTitle").textContent="Edit Post";
   }
@@ -402,11 +406,15 @@
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
+    const selectedStatus=$("#postStatus").value;
+    const scheduledValue=$("#scheduledPublishAt").value;
+    if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
+    const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
       id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
-      postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:$("#postStatus").value,keywords:[...currentKeywords],
+      postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
-      createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:$("#postStatus").value==="published"?(existing&&existing.publishedAt||now):null
+      createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null
     };
     const saveButton=$("#savePostBtn");
     saveButton.disabled=true;saveButton.textContent="Saving to Supabase…";
@@ -424,8 +432,9 @@
     $("#editorStatusDot").parentElement.classList.toggle("live",post.status==="published");
     renderLists();
     if(post.status==="draft"){ openView("drafts"); showToast("Draft saved securely to Supabase."); }
+    else if(post.status==="scheduled"){ openView("scheduled"); showToast("Scheduled post saved. It will publish automatically when the scheduler runs."); }
     else { openView("posts"); showToast("Article published successfully. It is now available across devices."); }
-    $("#pageTitle").textContent=post.status==="published"?"All Posts":"My Drafts";
+    $("#pageTitle").textContent=post.status==="published"?"All Posts":post.status==="scheduled"?"Scheduled Posts":"My Drafts";
   });
 
   /* Article preview */
