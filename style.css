@@ -2101,7 +2101,7 @@ body.policy-open { overflow:hidden; }
 .home-view-all { display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:10px; padding:12px 13px; border:0; border-radius:7px; background:#f3d36c; color:#172f32; font-size:12px; font-weight:800; text-align:left; cursor:pointer; transition:filter .18s ease,transform .18s ease; }
 .home-view-all:hover { filter:brightness(.97); transform:translateY(-1px); }
 .home-view-all span { font-size:17px; color:#172f32; }
-.home-feature-image { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; background:linear-gradient(135deg,#153943,#159d92 55%,#e8b85b); }
+.home-feature-image { position:relative; width:100%; aspect-ratio:2.2/1; overflow:hidden; background:linear-gradient(135deg,#153943,#159d92 55%,#e8b85b); }
 .home-feature-image:after { content:""; position:absolute; inset:45% 0 0; background:linear-gradient(transparent,rgba(8,31,38,.22)); pointer-events:none; }
 .home-feature-tag { position:absolute; z-index:1; top:16px; left:16px; padding:7px 11px; border-radius:4px; background:var(--gold); color:#263c42; font-size:9px; font-weight:900; letter-spacing:.12em; }
 .home-feature-content { padding:22px 25px 24px; }
