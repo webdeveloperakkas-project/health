@@ -33,7 +33,8 @@ create table if not exists public.posts (
   language text not null default 'en',
   post_types text[] not null default array['latest']::text[],
   featured_stories boolean not null default false,
-  status text not null default 'draft' check (status in ('draft', 'published')),
+  status text not null default 'draft',
+  scheduled_at timestamptz,
   excerpt text not null default '',
   keywords text[] not null default '{}'::text[],
   video_url text not null default '',
@@ -43,6 +44,12 @@ create table if not exists public.posts (
   updated_at timestamptz not null default now(),
   published_at timestamptz
 );
+
+alter table public.posts add column if not exists scheduled_at timestamptz;
+alter table public.posts drop constraint if exists posts_status_check;
+alter table public.posts add constraint posts_status_check check (status in ('draft', 'scheduled', 'published'));
+
+create index if not exists posts_schedule_idx on public.posts (scheduled_at) where status = 'scheduled';
 
 create index if not exists posts_publication_idx
   on public.posts (status, published_at desc);
