@@ -350,6 +350,7 @@
     select.value=options.some(([value])=>value===previous)?previous:"";
   }
   function syncScheduleFields(){ const field=$("#scheduledPublishFields"); if(field) field.hidden=$("#postStatus").value!=="scheduled"; }
+  function toLocalDateTime(value){ if(!value) return ""; const date=new Date(value); if(Number.isNaN(date.getTime())) return ""; const local=new Date(date.getTime()-date.getTimezoneOffset()*60000); return local.toISOString().slice(0,16); }
   $("#postStatus").addEventListener("change",syncScheduleFields);
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
@@ -366,7 +367,7 @@
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
-    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#scheduledPublishAt").value=post.scheduledAt?new Date(post.scheduledAt).toISOString().slice(0,16):""; syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
+    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#scheduledPublishAt").value=toLocalDateTime(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; renderCoverPreview();
     
