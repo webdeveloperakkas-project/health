@@ -311,6 +311,7 @@
   // No automatic category images: only the uploaded cover is shown.
   function imageForPost(post) { return post && typeof post.cover === "string" ? post.cover.trim() : ""; }
 
+  const pageLayout = $(".page-layout");
   const homeSection = $("#homeSection");
   const articleSection = $("#articleFeed");
   const homeListPanel = $("#homeListPanel");
@@ -478,6 +479,7 @@
         (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '') +
       '</article>';
     singleArticleView.hidden = false;
+    if (pageLayout) pageLayout.classList.add("article-page-active");
     if (homeSection) homeSection.hidden = true;
     if (articleSection) articleSection.hidden = true;
     if (featuredStoriesSection) featuredStoriesSection.hidden = true;
@@ -894,6 +896,7 @@
           document.title = "Article Not Found | Global Scope 24";
           singleArticleView.innerHTML = '<div class="single-article container"><h1>Article not found</h1><p>This article may have been unpublished or moved.</p><a href="' + siteBasePath() + '">Return to Global Scope 24</a></div>';
           singleArticleView.hidden = false;
+          if (pageLayout) pageLayout.classList.add("article-page-active");
           if (homeSection) homeSection.hidden = true;
           if (articleSection) articleSection.hidden = true;
           if (featuredStoriesSection) featuredStoriesSection.hidden = true;
