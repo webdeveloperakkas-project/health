@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Loading article | Global Scope 24</title>
+<script>
+(function () {
+  var path = window.location.pathname;
+  var base = path.indexOf("/health/") === 0 ? "/health/" : "/";
+  var relative = path.indexOf(base) === 0 ? path.slice(base.length) : path.replace(/^\/+/, "");
+  var requested = relative + window.location.search + window.location.hash;
+  window.location.replace(base + "?route=" + encodeURIComponent(requested));
+})();
+</script>
+</head>
+<body>
+<p>Opening the requested Global Scope 24 page…</p>
+</body>
+</html>
