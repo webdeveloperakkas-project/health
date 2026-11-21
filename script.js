@@ -371,7 +371,7 @@
       '<button type="button" data-share="copy" data-post-index="' + posts.indexOf(post) + '" aria-label="Copy article link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15 15 9"/><path d="M8 12H6a4 4 0 0 1 0-8h5a4 4 0 0 1 4 4v1"/><path d="M16 12h2a4 4 0 0 1 0 8h-5a4 4 0 0 1-4-4v-1"/></svg></button>' +
       '</div>';
   }
-  function renderHomeList(panel = homeListPanel, tabs = $(".home-rail-tab:not(.article-home-rail-tab)"), excludePost = null) {
+  function renderHomeList(panel = homeListPanel, tabs = Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab)")), excludePost = null) {
     const latestItems = sortedByDate(posts.filter(post =>
       post !== excludePost && (post.postTypes || [post.postType || "latest"]).includes("latest")
     )).slice(0,10);
@@ -575,13 +575,13 @@
     nextButton.disabled = currentPage >= totalPages;
   }
 
-  $(".home-rail-tab").forEach(button => button.addEventListener("click", () => {
+  Array.from(document.querySelectorAll(".home-rail-tab")).forEach(button => button.addEventListener("click", () => {
     homeListType = button.dataset.homeList;
     homeListIndex = 0;
     const articleList = button.classList.contains("article-home-rail-tab");
     renderHomeList(
       articleList ? $("#articleHomeListPanel") : homeListPanel,
-      articleList ? $(".article-home-rail-tab") : $(".home-rail-tab:not(.article-home-rail-tab)"),
+      articleList ? Array.from(document.querySelectorAll(".article-home-rail-tab")) : Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab)")),
       articleList ? currentArticlePost : null
     );
   }));
