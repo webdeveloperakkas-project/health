@@ -189,7 +189,7 @@
   });
   $("#coverUpload").addEventListener("change",event=>{
     const file=event.target.files[0]; if(!file) return;
-    readImage(file,data=>{coverData=data;$("#coverPreview").innerHTML='<img src="'+data+'" alt="Cover preview">';});
+    readImage(file,data=>{coverData=data;showToast("Cover image selected.");});
   });
   $("#videoBtn").addEventListener("click",()=>{
     const url=window.prompt("Paste a YouTube or Vimeo video URL");
@@ -239,7 +239,7 @@
   function resetForm(){
     $("#postForm").reset(); syncCategorySubcategory(); $("#articleEditor").innerHTML="<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible"); $("#excerptCount").textContent="0";
     currentKeywords=[]; renderKeywordChips();
-    coverData=""; $("#coverPreview").textContent="No cover selected"; $("#deleteCurrentBtn").hidden=true;
+    coverData=""; $("#coverUpload").value=""; $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
   }
   function newPost(){
@@ -254,7 +254,7 @@
     $("#postExcerpt").value=post.excerpt||""; $("#excerptCount").textContent=($("#postExcerpt").value).length;
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||"";
-    if(coverData) $("#coverPreview").innerHTML='<img src="'+coverData+'" alt="Cover preview">';
+    
     $("#deleteCurrentBtn").hidden=false;
     $("#editorStatusText").textContent=post.status==="published"?"Published":"Draft";
     if(post.status==="published") $("#editorStatusDot").parentElement.classList.add("live");
