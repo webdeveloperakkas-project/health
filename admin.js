@@ -59,21 +59,21 @@
   }
   function renderLists(){
     renderStats();
-    const recent=[...posts].sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt)).slice(0,5);
-    $("#recentPosts").innerHTML=postRows(recent);
+    const recent=[...posts].filter(post=>post.status==="published").sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt)).slice(0,5);
+    $("#recentPosts").innerHTML=recent.length ? postRows(recent) : '<div class="empty-table">No published posts yet. Your published articles will appear here.</div>';
     const query=($("#postSearch").value||"").trim().toLowerCase();
     const published=[...posts].filter(post=>post.status==="published"&&(!query||(post.title+" "+plainText(post.content)).toLowerCase().includes(query))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
     $("#allPosts").innerHTML=published.length ? postRows(published) : '<div class="empty-table">No published posts yet. Published articles will appear here.</div>';
     const draftQuery=($("#draftSearch")?.value||"").trim().toLowerCase();
     const drafts=[...posts].filter(post=>post.status==="draft"&&(!draftQuery||(post.title+" "+plainText(post.content)).toLowerCase().includes(draftQuery))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
-    $("#allDrafts").innerHTML=drafts.length ? postRows(drafts) : '<div class="empty-table">No drafts yet. Articles saved as draft will appear here.</div>';
+    $("#allDrafts").innerHTML=drafts.length ? postRows(drafts) : '<div class="empty-table">No drafts yet. Save an article as Draft and it will appear here.</div>';
   }
 
   /* View navigation */
   function openView(view){
     document.querySelectorAll(".view-panel").forEach(panel=>panel.classList.toggle("active",panel.id===view+"View"));
     document.querySelectorAll(".nav-item").forEach(button=>button.classList.toggle("active",button.dataset.view===view));
-    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"All Drafts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
+    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"My Drafts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
     if(view!=="editor") renderLists();
   }
   document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.view)));
@@ -221,8 +221,10 @@
     editingId=post.id; $("#deleteCurrentBtn").hidden=false;
     $("#editorStatusText").textContent=post.status==="published"?"Published":"Draft";
     $("#editorStatusDot").parentElement.classList.toggle("live",post.status==="published");
-    renderLists(); showToast(post.status==="published"?"Saved as published in local preview.":"Draft saved in this browser.");
-    $("#pageTitle").textContent="Edit Post";
+    renderLists();
+    if(post.status==="draft"){ openView("drafts"); showToast("Draft saved. It is now listed under My Drafts and is not public."); }
+    else { openView("posts"); showToast("Saved as published in local preview. Public-site publishing is not yet connected."); }
+    $("#pageTitle").textContent=post.status==="published"?"All Posts":"My Drafts";
   });
 
   /* Article preview */
