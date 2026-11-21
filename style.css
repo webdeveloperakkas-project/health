@@ -2836,3 +2836,7 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
     gap:14px;
   }
 }
+
+
+/* Expand the article page across the full content grid instead of leaving the homepage side rail column empty. */
+.page-layout.article-page-active{grid-template-columns:minmax(0,1fr)!important;gap:0!important}.page-layout.article-page-active>.main-column{grid-column:1/-1;width:100%;min-width:0}.page-layout.article-page-active .single-article-view{display:block;width:100%;min-width:0}.page-layout.article-page-active .single-article{width:min(1120px,calc(100% - 36px));max-width:100%;margin-left:auto;margin-right:auto}.page-layout.article-page-active .single-article-body{width:100%;min-width:0;overflow:visible;overflow-wrap:anywhere}
