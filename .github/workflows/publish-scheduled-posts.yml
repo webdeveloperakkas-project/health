@@ -1,0 +1,32 @@
+name: Publish scheduled articles
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish-due-posts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish articles whose scheduled time has arrived
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo 'Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY repository secrets.'
+            exit 1
+          fi
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          curl --fail --silent --show-error --request PATCH \
+            "${SUPABASE_URL}/rest/v1/posts?status=eq.scheduled&scheduled_at=lte.${NOW}" \
+            --header "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            --header "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            --header 'Content-Type: application/json' \
+            --header 'Prefer: return=representation' \
+            --data "{\"status\":\"published\",\"published_at\":\"${NOW}\",\"updated_at\":\"${NOW}\"}"
