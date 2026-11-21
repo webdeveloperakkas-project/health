@@ -13,8 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Publish articles whose scheduled time has arrived
+        # Supabase project URL is already filled in below.
+        # Add your private Service Role Key in GitHub:
+        # Settings -> Secrets and variables -> Actions -> New repository secret
+        # Secret name: SUPABASE_SERVICE_ROLE_KEY
+        # Secret value: paste your Supabase service_role key (do not put it in this file).
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_URL: https://oxxnjxrunvhrfwxdvbsr.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           set -euo pipefail
