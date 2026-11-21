@@ -152,10 +152,21 @@
   $("#inlineImageWidth").addEventListener("input",applyInlineImageControls);
   $("#inlineImageCaption").addEventListener("input",applyInlineImageControls);
   $("#inlineImageCaptionPosition").addEventListener("change",applyInlineImageControls);
-  document.querySelectorAll("[data-image-align]").forEach(button=>button.addEventListener("click",()=>{
-    if(!selectedInlineFigure)return;const align=button.dataset.imageAlign;selectedInlineFigure.dataset.align=align;
+  $("#inlineImagePanel").addEventListener("click",event=>{
+    const button=event.target.closest("[data-image-align]");
+    if(!button)return;
+    if(!selectedInlineFigure){showToast("First click an image inside the article.");return;}
+    const align=button.dataset.imageAlign;
+    let width=Number(selectedInlineFigure.dataset.width||100);
+    // A full-width image cannot visibly move left or right, so make it narrower on first alignment.
+    if(width>=100){width=70;selectedInlineFigure.dataset.width="70";selectedInlineFigure.style.width="70%";$("#inlineImageWidth").value=70;$("#inlineImageWidthValue").textContent="70%";}
+    selectedInlineFigure.dataset.align=align;
+    selectedInlineFigure.style.display="block";
+    selectedInlineFigure.style.maxWidth="100%";
     selectedInlineFigure.style.margin=align==="left"?"18px auto 18px 0":align==="right"?"18px 0 18px auto":"18px auto";
-  }));
+    selectedInlineFigure.style.float="none";
+    showToast("Image aligned "+align+".");
+  });
   let draggedImage=null;
   $("#articleEditor").addEventListener("dragstart",event=>{const figure=event.target.closest("figure.cms-image-frame");if(figure)draggedImage=figure;});
   $("#articleEditor").addEventListener("dragover",event=>{if(draggedImage)event.preventDefault();});
