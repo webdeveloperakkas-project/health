@@ -429,20 +429,29 @@
       '</div>';
   }
   function renderHomeList() {
-    const featured = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest")))[0] || posts[0];
     const latestItems = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest"))).slice(0,10);
     const popularItems = [...posts].filter(post => (post.postTypes || [post.postType || "latest"]).includes("popular"))
-      .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || new Date(b.date) - new Date(a.date)).slice(0,10);
+      .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)).slice(0,10);
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!items.length) {
       homeListPanel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
     } else {
-      homeListPanel.innerHTML = items.map(post =>
-        '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
-          (imageForPost(post) ? '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') +
-          '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
-        '</button>'
-      ).join("");
+      homeListPanel.innerHTML = items.map(post => {
+        const plainExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\\s+/g," ").trim();
+        const excerpt = plainExcerpt.length > 210 ? plainExcerpt.slice(0,207).trimEnd() + "…" : plainExcerpt;
+        const stamp = Number(post.publishedTimestamp) || new Date(post.date).getTime();
+        const dateTime = Number.isFinite(stamp) && stamp > 0
+          ? new Date(stamp).toLocaleDateString(activeLanguage==="bn"?"bn-BD":activeLanguage==="hi"?"hi-IN":"en-US",{day:"numeric",month:"short",year:"numeric"}) + " · " + new Date(stamp).toLocaleTimeString(activeLanguage==="bn"?"bn-BD":activeLanguage==="hi"?"hi-IN":"en-US",{hour:"numeric",minute:"2-digit"})
+          : String(post.date || "");
+        return '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+          '<span class="home-list-heading"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong></span>' +
+          '<span class="home-list-summary-row">' +
+            (imageForPost(post) ? '<span class="home-list-thumb"><img src="' + escapeHTML(imageForPost(post)) + '" alt="" loading="lazy"></span>' : '') +
+            '<span class="home-list-excerpt">' + escapeHTML(localizeText(excerpt)) + '</span>' +
+          '</span>' +
+          '<time class="home-list-meta">' + escapeHTML(dateTime) + '</time>' +
+        '</button>';
+      }).join("");
     }
     $$(".home-rail-tab").forEach(button => {
       const selected = button.dataset.homeList === homeListType;
