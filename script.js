@@ -801,7 +801,7 @@
   $("#languageSelect").addEventListener("change", event => {
     try { localStorage.setItem("ea-language", event.target.value); } catch (_) {}
     applyLanguage(event.target.value);
-    if (currentArticlePost && articleDialog.open) openArticleDetail(currentArticlePost);
+    if (currentArticlePost) openArticleDetail(currentArticlePost);
   });
   try {
     const savedLanguage = localStorage.getItem("ea-language");
