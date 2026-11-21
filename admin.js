@@ -18,6 +18,7 @@
   let coverData = "";
   let currentKeywords = [];
   let cloudReady = false;
+  let cloudLoading = false;
 
   function loadLocalPosts(){
     try { const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"); return Array.isArray(saved)?saved:[]; }
@@ -60,6 +61,8 @@
     return prepared;
   }
   async function initializeCloud(){
+    if(cloudLoading||cloudReady) return;
+    cloudLoading=true;
     try{
       if(!db()) throw new Error("Supabase client is not available. Please reload the Admin Panel.");
       const {data:adminAllowed,error:adminCheckError}=await db().rpc("is_admin");
@@ -109,6 +112,8 @@
       console.error("Supabase CMS load failed:",error);
       showToast("Could not load Supabase content: "+(error.message||"Please check the database setup."));
       renderLists();renderHeadlines();openView("dashboard");
+    }finally{
+      cloudLoading=false;
     }
   }
   function id(){ return "ea-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,7); }
