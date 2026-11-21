@@ -62,6 +62,8 @@
   async function initializeCloud(){
     try{
       if(!db()) throw new Error("Supabase client is not available. Please reload the Admin Panel.");
+      const {data:adminAllowed,error:adminCheckError}=await db().rpc("is_admin");
+      if(adminCheckError||adminAllowed!==true) throw new Error("Please sign in with the authorised administrator account to load the CMS.");
       const [{data:postRows,error:postError},{data:headlineRows,error:headlineError}]=await Promise.all([
         db().from("posts").select("*").order("updated_at",{ascending:false}),
         db().from("headlines").select("*").order("sort_order",{ascending:true})
@@ -484,6 +486,7 @@
     }
   });
 
-  /* Load the shared CMS data before rendering the dashboard. */
+  /* Load shared data after administrator authentication. */
+  window.addEventListener("ea-admin-authenticated",initializeCloud);
   initializeCloud();
 })();
