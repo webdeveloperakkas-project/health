@@ -456,6 +456,41 @@
     const viewAll = $("#featuredStoriesViewAll");
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredMore + ' <span>→</span>';
   }
+  function renderArticleRecommendations(currentPost) {
+    const currentIndex = posts.indexOf(currentPost);
+    const latest = sortedByDate(posts.filter(post =>
+      post !== currentPost &&
+      (post.postTypes || [post.postType || "latest"]).includes("latest")
+    )).slice(0,4);
+    const popular = posts.filter(post =>
+      post !== currentPost &&
+      (post.postTypes || [post.postType || "latest"]).includes("popular")
+    ).sort((a,b) =>
+      (Number(b.views)||0) - (Number(a.views)||0) ||
+      (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) -
+      (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)
+    ).slice(0,4);
+
+    const card = post => {
+      const index = posts.indexOf(post);
+      const image = imageForPost(post);
+      const summary = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\\s+/g," ").trim();
+      return '<button class="article-recommendation-card" type="button" data-open-post="' + index + '">' +
+        (image ? '<span class="article-recommendation-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '') +
+        '<span class="article-recommendation-copy"><span class="article-recommendation-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span>' +
+        '<strong>' + escapeHTML(localizeText(post.title)) + '</strong>' +
+        (summary ? '<small>' + escapeHTML(localizeText(summary.slice(0,110))) + '</small>' : '') +
+        '<time>' + escapeHTML(post.date || "") + '</time></span></button>';
+    };
+    const section = (title, items, kind) => items.length
+      ? '<section class="article-recommendation-section ' + kind + '"><h2>' + title + '</h2><div class="article-recommendation-grid">' + items.map(card).join("") + '</div></section>'
+      : '';
+    return '<div class="article-recommendations">' +
+      section("Recent Posts",latest,"recent-posts") +
+      section("Popular Posts",popular,"popular-posts") +
+      '</div>';
+  }
+
   function openArticleDetail(post) {
     if (!post || !singleArticleView) return;
     currentArticlePost = post;
@@ -476,7 +511,8 @@
         shareButtons(post) +
         '<div class="single-article-body" id="singleArticleBody">' + paragraphs + '</div>' +
         (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '') +
-      '</article>';
+      '</article>' +
+      renderArticleRecommendations(post);
     singleArticleView.hidden = false;
     if (pageLayout) pageLayout.classList.add("article-page-active");
     if (homeSection) homeSection.hidden = true;
@@ -665,7 +701,8 @@
       if (button.dataset.category === "home") {
         try { window.history.scrollRestoration = "manual"; } catch (_) {}
         window.scrollTo(0, 0);
-        window.location.reload();
+        /* Return from any nested article URL to the clean project homepage. */
+        window.location.assign(siteBasePath());
         return;
       }
       activeCategory = button.dataset.category;
