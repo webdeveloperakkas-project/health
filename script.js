@@ -466,28 +466,26 @@
   }
   let homeFeaturedIndex = 0;
   function renderHomeFeatured() {
-    const stories = latestPostPerCategory(posts);
+    // Newest story stays fixed on page load; navigation is always manual.
+    const stories = sortedByDate(posts);
     if (!stories.length) {
       homeFeatured.innerHTML = '<div class="home-feature-empty">Your latest published story will appear here.</div>';
       return;
     }
     homeFeaturedIndex = ((homeFeaturedIndex % stories.length) + stories.length) % stories.length;
     const post = stories[homeFeaturedIndex];
-    const excerpt = (post.excerpt || (post.body || []).slice(0,2).join(" ")).slice(0,260);
     const index = posts.indexOf(post);
     const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     homeFeatured.innerHTML =
-      '<div class="home-feature-slide">' + (imageForPost(post) ? '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '" fetchpriority="high"><span class="home-feature-tag">' + labels.main + '</span></div>' : '') +
-      '<div class="home-feature-content"><span class="home-feature-category">' + escapeHTML(categoryNames[post.category] || "FEATURED STORY") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + '</span>' +
+      '<div class="home-feature-slide">' +
+      (imageForPost(post) ? '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '" fetchpriority="high"></div>' : '') +
+      '<div class="home-feature-content">' +
       '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '">' + escapeHTML(localizeText(post.title)) + '</h1>' +
-      '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time>' + (post.time ? '<span>·</span><span>' + escapeHTML(post.time) + '</span>' : '') + '<span>·</span><span>' + escapeHTML(post.read || "4 MIN READ") + '</span></div>' +
-      shareButtons(post) +
-      '<div class="home-feature-summary-row"><p>' + escapeHTML(excerpt) + '</p>' +
-      '<button class="home-read-button" type="button" data-open-post="' + index + '">' + labels.read + ' <span>→</span></button></div></div></div>' +
+      '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time></div></div></div>' +
       '<div class="home-feature-navigation" aria-label="Main story navigation">' +
-      '<button type="button" class="home-feature-arrow" data-home-feature="previous" aria-label="Previous story">' + labels.previous + '</button>' +
+      '<button type="button" class="home-feature-arrow" data-home-feature="previous">' + labels.previous + '</button>' +
       '<div class="home-feature-pagination" aria-label="Choose a story">' + stories.map((story,i) => '<button type="button" class="home-feature-dot' + (i === homeFeaturedIndex ? ' active' : '') + '" data-home-feature-index="' + i + '" aria-label="Go to story ' + (i+1) + '" aria-current="' + (i === homeFeaturedIndex ? 'true' : 'false') + '"></button>').join("") + '</div>' +
-      '<button type="button" class="home-feature-arrow" data-home-feature="next" aria-label="Next story">' + labels.next + '</button></div>';
+      '<button type="button" class="home-feature-arrow" data-home-feature="next">' + labels.next + '</button></div>';
   }
   function renderMyChoice() {
     const section = $("#myChoiceSection"), host = $("#myChoiceList");
@@ -641,7 +639,7 @@
     const featureArrow = event.target.closest("[data-home-feature]");
     const featureDot = event.target.closest("[data-home-feature-index]");
     if (featureArrow || featureDot) {
-      const storyCount = latestPostPerCategory(posts).length;
+      const storyCount = sortedByDate(posts).length;
       if (storyCount) {
         if (featureDot) homeFeaturedIndex = Number(featureDot.dataset.homeFeatureIndex) || 0;
         else homeFeaturedIndex = (homeFeaturedIndex + (featureArrow.dataset.homeFeature === "next" ? 1 : -1) + storyCount) % storyCount;
@@ -879,13 +877,6 @@
   updateHeaderClock();
   window.setInterval(updateHeaderClock, 30000);
   applyLanguage($("#languageSelect").value || "en");
-  window.setInterval(() => {
-    const storyCount = latestPostPerCategory(posts).length;
-    if (storyCount > 1 && homeFeatured) {
-      homeFeaturedIndex = (homeFeaturedIndex + 1) % storyCount;
-      renderHomeFeatured();
-    }
-  }, 2000);
   const requestedArticle = new URLSearchParams(window.location.search).get("article");
   if (requestedArticle) {
     const requestedPost = posts.find(post => articleSlug(post) === requestedArticle);
