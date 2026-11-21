@@ -353,7 +353,7 @@
   }
   function articleSlug(post) { return shortArticleId(post); }
   function siteBasePath() {
-    const script = Array.from(document.scripts).find(item => /script\\.js(?:\\?|$)/.test(item.src));
+    const script = Array.from(document.scripts).find(item => /script\.js(?:\?|$)/.test(item.src));
     if (script) return new URL(".",script.src).pathname;
     return "/";
   }
