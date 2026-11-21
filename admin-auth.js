@@ -23,6 +23,7 @@
     mode.textContent = email || "AUTHORISED ADMIN";
     logout.hidden = false;
     errorBox.hidden = true;
+    window.dispatchEvent(new Event("ea-admin-authenticated"));
   }
   async function validateAdmin() {
     if (checking) return false;
