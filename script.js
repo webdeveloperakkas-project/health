@@ -341,14 +341,24 @@
     return String(value || "").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()
       .replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
   }
-  function articleSlug(post) { return routeSlug(post && post.title) || "article"; }
+  /* Stable, compact base-36 ID derived from the Supabase row ID. */
+  function shortArticleId(post) {
+    const source = String(post && (post.cmsId || post.id || post.title) || "article");
+    let hash = 146959810393`46656037n`;
+    for (let index = 0; index < source.length; index++) {
+      hash ^= BigInt(source.charCodeAt(index));
+      hash = BigInt.asUintN(64, hash * 1099511628211n);
+    }
+    return hash.toString(36).slice(0,10);
+  }
+  function articleSlug(post) { return shortArticleId(post); }
   function siteBasePath() {
-    const script = Array.from(document.scripts).find(item => /script\.js(?:\?|$)/.test(item.src));
+    const script = Array.from(document.scripts).find(item => /script\\.js(?:\\?|$)/.test(item.src));
     if (script) return new URL(".",script.src).pathname;
     return "/";
   }
   function articleRoute(post) {
-    const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",articleSlug(post)].filter(Boolean);
+    const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",shortArticleId(post)].filter(Boolean);
     return siteBasePath() + parts.map(part => encodeURIComponent(part)).join("/") + "/";
   }
   function articleShareUrl(post) { return new URL(articleRoute(post),window.location.origin).toString(); }
@@ -825,6 +835,9 @@
   function requestedArticleSlug() {
     const legacy = new URLSearchParams(window.location.search).get("article");
     if (legacy) return legacy;
+    const routeParam = new URLSearchParams(window.location.search).get("route");
+    const routeParts = (routeParam || "").split("?")[0].split("/").filter(Boolean);
+    if (routeParts.length >= 2) return decodeURIComponent(routeParts[routeParts.length - 1]);
     const parts = window.location.pathname.split("/").filter(Boolean);
     const baseParts = siteBasePath().split("/").filter(Boolean);
     const relative = parts.slice(baseParts.length);
@@ -874,7 +887,8 @@
       render();
       const currentArticleSlug = requestedArticleSlug();
       if (currentArticleSlug) {
-        const cloudArticle = posts.find(post => articleSlug(post) === currentArticleSlug);
+        const cloudArticle = posts.find(post => shortArticleId(post) === currentArticleSlug) ||
+          posts.find(post => routeSlug(post.title) === currentArticleSlug);
         if (cloudArticle) openArticleDetail(cloudArticle);
         else {
           document.title = "Article Not Found | Global Scope 24";
