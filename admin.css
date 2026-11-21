@@ -72,3 +72,5 @@
 .cover-remove-btn{border:1px solid #ead3d3;background:#fff;color:var(--red);border-radius:6px;padding:5px 9px;font-size:10px;font-weight:700}
 
 .toolbar-delete-image{border:1px solid #e8caca!important;background:#fff7f7!important;color:#b42318!important;border-radius:6px!important;padding:6px 9px!important;font-size:10px!important;font-weight:800!important}.toolbar-delete-image:hover{background:#fdecec!important;border-color:#d99b9b!important}
+
+.scheduled-publish-fields{margin:12px 0;padding:12px;border:1px solid #d7e7e2;border-radius:8px;background:#f6fbf9}.scheduled-publish-fields[hidden]{display:none}.status-badge.scheduled{background:#fff4d9;color:#8b6410}
