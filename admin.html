@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="admin.css?v=8">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="admin-auth.js?v=1" defer></script>
-  <script src="admin.js?v=15" defer></script>
+  <script src="admin.js?v=16" defer></script>
 </head>
 <body>
   <header class="admin-header">
@@ -38,6 +38,7 @@
       <div class="side-label">WORKSPACE</div>
       <button class="nav-item active" data-view="dashboard">▦ <span>Dashboard</span></button>
       <button class="nav-item" data-view="posts">▤ <span>All Posts</span></button>
+      <button class="nav-item" data-view="drafts">▧ <span>All Drafts</span></button>
       <button class="nav-item" data-view="editor">＋ <span>Write a Post</span></button>
       <div class="side-label side-spaced">HEADLINES</div>
       <button class="nav-item" data-view="headlines">▤ <span>All Headlines</span></button>
@@ -67,8 +68,14 @@
       </section>
       <section class="view-panel" id="postsView">
         <div class="panel-card">
-          <div class="list-toolbar"><div><h2>All posts</h2><p>Search, edit, publish or delete your content.</p></div><div class="filters"><input id="postSearch" type="search" placeholder="Search posts"><select id="statusFilter"><option value="all">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option></select></div></div>
+          <div class="list-toolbar"><div><h2>All Posts</h2><p>Published articles only. Manage, edit or remove published content.</p></div><div class="filters"><input id="postSearch" type="search" placeholder="Search published posts"></div></div>
           <div id="allPosts" class="table-wrap"></div>
+        </div>
+      </section>
+      <section class="view-panel" id="draftsView">
+        <div class="panel-card">
+          <div class="list-toolbar"><div><h2>All Drafts</h2><p>Unpublished articles saved privately in this browser.</p></div><div class="filters"><input id="draftSearch" type="search" placeholder="Search drafts"></div></div>
+          <div id="allDrafts" class="table-wrap"></div>
         </div>
       </section>
       <section class="view-panel" id="headlinesView">
