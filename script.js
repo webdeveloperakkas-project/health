@@ -107,19 +107,7 @@
     ]
   }
   ];
-  // Published CMS entries from this browser's local preview storage.
-  // The production database connection will replace this local-only bridge.
-  try {
-    const cmsPosts = JSON.parse(localStorage.getItem("everyday-atlas-cms-posts-v1") || "[]");
-    if (Array.isArray(cmsPosts)) {
-      const publicCmsPosts = cmsPosts.filter(item => item && item.status === "published").map(item => {
-        const plain = String(item.content || "").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
-        const dateValue = item.publishedAt || item.createdAt || item.updatedAt || new Date().toISOString();
-        return {cmsId:item.id,category:item.category==="beauty"?"lifestyle":item.category,subcategory:item.subcategory||"",title:item.title,language:item.language || "en",postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
-      });
-      posts = posts.filter(item => !item.cmsId).concat(publicCmsPosts, posts.filter(item => item.cmsId));
-    }
-  } catch(error) { /* Keep the built-in sample stories available. */ }
+  // Published articles are loaded from the shared Supabase database after page initialization.
 
   /* =========================================================
      03. CATEGORY LABELS
@@ -883,5 +871,56 @@
     if (requestedPost) openArticleDetail(requestedPost);
   }
 
+  /* Shared public content: published posts and active headlines come from Supabase. */
+  async function loadSharedPublishedContent() {
+    try {
+      const client = window.supabase.createClient(
+        "https://oxxnjxrunvhrfwxdvbsr.supabase.co",
+        "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY"
+      );
+      const [{data:rows,error:postsError},{data:headlineRows,error:headlinesError}] = await Promise.all([
+        client.from("posts").select("*").eq("status","published").order("published_at",{ascending:false}),
+        client.from("headlines").select("text").eq("is_active",true).order("sort_order",{ascending:true})
+      ]);
+      if (postsError) throw postsError;
+      if (headlinesError) throw headlinesError;
+      const cloudPosts = (rows || []).map(row => {
+        const contentHtml = row.content_html || "";
+        const textNode = document.createElement("div");
+        textNode.innerHTML = contentHtml;
+        const plain = (textNode.textContent || "").replace(/\\s+/g," ").trim();
+        const stamp = row.published_at || row.created_at || new Date().toISOString();
+        const publishedDate = new Date(stamp);
+        return {
+          cmsId:row.id,category:row.category==="beauty"?"lifestyle":row.category,
+          subcategory:row.subcategory||"",title:row.title||"",language:row.language||"en",
+          postType:(row.post_types||["latest"])[0]||"latest",
+          postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
+          featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
+          publishedTimestamp:publishedDate.getTime(),
+          date:publishedDate.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),
+          read:"",excerpt:row.excerpt||plain.slice(0,260),body:plain?[plain]:[],
+          contentHtml,cover:row.cover_url||"",videoUrl:row.video_url||"",
+          keywords:Array.isArray(row.keywords)?row.keywords:[],views:Number(row.views)||0
+        };
+      });
+      if (cloudPosts.length) posts = cloudPosts;
+      const track = $(".ticker-track");
+      const headlines = (headlineRows || []).map(item => String(item.text||"").trim()).filter(Boolean);
+      if (track && headlines.length) {
+        const escaped = headlines.map(line => "<span>" + escapeHTML(line) + "</span>");
+        track.innerHTML = [...escaped,...escaped].join("");
+      }
+      render();
+      const currentArticleSlug = new URLSearchParams(window.location.search).get("article");
+      if (currentArticleSlug) {
+        const cloudArticle = posts.find(post => articleSlug(post) === currentArticleSlug);
+        if (cloudArticle) openArticleDetail(cloudArticle);
+      }
+    } catch (error) {
+      console.error("Could not load published Global Scope 24 content from Supabase:", error);
+    }
+  }
+  loadSharedPublishedContent();
 
 })();
