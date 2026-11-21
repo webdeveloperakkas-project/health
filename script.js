@@ -344,7 +344,7 @@
   /* Stable, compact base-36 ID derived from the Supabase row ID. */
   function shortArticleId(post) {
     const source = String(post && (post.cmsId || post.id || post.title) || "article");
-    let hash = 146959810393`46656037n`;
+    let hash = 14695981039346656037n;
     for (let index = 0; index < source.length; index++) {
       hash ^= BigInt(source.charCodeAt(index));
       hash = BigInt.asUintN(64, hash * 1099511628211n);
