@@ -2858,3 +2858,10 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .article-recommendation-copy time{margin-top:auto;padding-top:4px;color:#879590;font-size:11px}
 @media(max-width:900px){.article-recommendation-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
 @media(max-width:480px){.article-recommendations{width:calc(100% - 28px)}.article-recommendation-grid{grid-template-columns:1fr}.article-recommendation-card{flex-direction:row;min-height:104px}.article-recommendation-image{width:112px;min-width:112px;aspect-ratio:1/1}.article-recommendation-copy{padding:10px}.article-recommendation-copy small{display:none}}
+
+
+/* Reuse the homepage Latest/Popular rail below every article. */
+.article-below-lists{width:min(1120px,calc(100% - 36px));margin:34px auto 64px}
+.article-below-lists .home-rail-card{width:100%;max-width:none}
+.article-below-lists .home-list-panel{max-height:none;overflow:visible}
+@media(max-width:700px){.article-below-lists{width:calc(100% - 28px);margin-top:26px}}
