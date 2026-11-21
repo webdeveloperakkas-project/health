@@ -454,7 +454,7 @@
     } else {
       homeListPanel.innerHTML = items.map(post =>
         '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
-          '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
+          (imageForPost(post) ? '<span class="home-list-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') +
           '<span class="home-list-copy"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + (post.time ? " · " + escapeHTML(post.time) : "") + '</time></span>' +
         '</button>'
       ).join("");
@@ -509,7 +509,7 @@
     section.hidden = false;
     host.innerHTML = items.length ? items.map(post => {
       const index = posts.indexOf(post), summary = post.excerpt || (post.body || []).join(" ").slice(0,120);
-      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '"><span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(localizeText(post.title)) + '</strong>' + (summary ? '<small>' + escapeHTML(localizeText(summary).slice(0,120)) + '</small>' : '') + '</span></button></article>';
+      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '">' + (imageForPost(post) ? '<span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') + '<span class="my-choice-copy"><strong>' + escapeHTML(localizeText(post.title)) + '</strong>' + (summary ? '<small>' + escapeHTML(localizeText(summary).slice(0,120)) + '</small>' : '') + '</span></button></article>';
     }).join("") : demos.map(item => '<article class="my-choice-item favorites-demo"><div class="my-choice-open"><span class="my-choice-thumb"><img src="' + demoImage(item) + '" alt="' + escapeHTML(item.title) + '" loading="lazy"></span><span class="my-choice-copy"><strong>' + escapeHTML(item.title) + '</strong><small>' + escapeHTML(item.summary) + '</small></span></div></article>').join("");
   }
   function renderFeaturedStories() {
@@ -521,7 +521,7 @@
     const items = posts.filter(post => post.featuredStories ?? post.featured).slice(0,20);
     if (count) count.textContent = items.length + " / 20";
     const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
-      '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' +
+      (imageForPost(post) ? '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') +
       '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
     left.innerHTML = items.length ? items.slice(0,10).map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Featured Stories / Editor’s Choice” when publishing an article.</div>';
     right.innerHTML = items.slice(10,20).map(renderItem).join("");
