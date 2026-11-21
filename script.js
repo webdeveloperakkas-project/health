@@ -356,7 +356,7 @@
   function articleSlug(post) { return shortArticleId(post); }
   function siteBasePath() {
     /* GitHub Pages project site base. Keep this independent of the current article URL. */
-    return window.location.pathname.startsWith("/health/") ? "/health/" : "/";
+    return "/health/";
   }
   function articleRoute(post) {
     const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",shortArticleId(post)].filter(Boolean);
@@ -371,15 +371,23 @@
       '<button type="button" data-share="copy" data-post-index="' + posts.indexOf(post) + '" aria-label="Copy article link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15 15 9"/><path d="M8 12H6a4 4 0 0 1 0-8h5a4 4 0 0 1 4 4v1"/><path d="M16 12h2a4 4 0 0 1 0 8h-5a4 4 0 0 1-4-4v-1"/></svg></button>' +
       '</div>';
   }
-  function renderHomeList() {
-    const latestItems = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("latest"))).slice(0,10);
-    const popularItems = [...posts].filter(post => (post.postTypes || [post.postType || "latest"]).includes("popular"))
-      .sort((a,b) => (Number(b.views)||0) - (Number(a.views)||0) || (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)).slice(0,10);
+  function renderHomeList(panel = homeListPanel, tabs = $(".home-rail-tab:not(.article-home-rail-tab)"), excludePost = null) {
+    const latestItems = sortedByDate(posts.filter(post =>
+      post !== excludePost && (post.postTypes || [post.postType || "latest"]).includes("latest")
+    )).slice(0,10);
+    const popularItems = [...posts].filter(post =>
+      post !== excludePost && (post.postTypes || [post.postType || "latest"]).includes("popular")
+    ).sort((a,b) =>
+      (Number(b.views)||0) - (Number(a.views)||0) ||
+      (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) -
+      (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)
+    ).slice(0,10);
     const items = homeListType === "popular" ? popularItems : latestItems;
+    if (!panel) return;
     if (!items.length) {
-      homeListPanel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
+      panel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
     } else {
-      homeListPanel.innerHTML = items.map(post => {
+      panel.innerHTML = items.map(post => {
         const plainExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\\s+/g," ").trim();
         const excerpt = plainExcerpt.length > 210 ? plainExcerpt.slice(0,207).trimEnd() + "…" : plainExcerpt;
         const stamp = Number(post.publishedTimestamp) || new Date(post.date).getTime();
@@ -396,7 +404,7 @@
         '</button>';
       }).join("");
     }
-    $$(".home-rail-tab").forEach(button => {
+    tabs.forEach(button => {
       const selected = button.dataset.homeList === homeListType;
       button.classList.toggle("active", selected);
       button.setAttribute("aria-selected", String(selected));
@@ -457,39 +465,16 @@
     const viewAll = $("#featuredStoriesViewAll");
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredMore + ' <span>→</span>';
   }
-  function renderArticleRecommendations(currentPost) {
-    const currentIndex = posts.indexOf(currentPost);
-    const latest = sortedByDate(posts.filter(post =>
-      post !== currentPost &&
-      (post.postTypes || [post.postType || "latest"]).includes("latest")
-    )).slice(0,4);
-    const popular = posts.filter(post =>
-      post !== currentPost &&
-      (post.postTypes || [post.postType || "latest"]).includes("popular")
-    ).sort((a,b) =>
-      (Number(b.views)||0) - (Number(a.views)||0) ||
-      (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) -
-      (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)
-    ).slice(0,4);
-
-    const card = post => {
-      const index = posts.indexOf(post);
-      const image = imageForPost(post);
-      const summary = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\\s+/g," ").trim();
-      return '<button class="article-recommendation-card" type="button" data-open-post="' + index + '">' +
-        (image ? '<span class="article-recommendation-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '') +
-        '<span class="article-recommendation-copy"><span class="article-recommendation-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span>' +
-        '<strong>' + escapeHTML(localizeText(post.title)) + '</strong>' +
-        (summary ? '<small>' + escapeHTML(localizeText(summary.slice(0,110))) + '</small>' : '') +
-        '<time>' + escapeHTML(post.date || "") + '</time></span></button>';
-    };
-    const section = (title, items, kind) => items.length
-      ? '<section class="article-recommendation-section ' + kind + '"><h2>' + title + '</h2><div class="article-recommendation-grid">' + items.map(card).join("") + '</div></section>'
-      : '';
-    return '<div class="article-recommendations">' +
-      section("Recent Posts",latest,"recent-posts") +
-      section("Popular Posts",popular,"popular-posts") +
-      '</div>';
+  function renderArticleRecommendations() {
+    return '<section class="article-below-lists" aria-label="More articles">' +
+      '<div class="home-rail-card">' +
+        '<div class="home-rail-heading"><div class="home-rail-tabs" role="tablist" aria-label="More articles">' +
+          '<button class="home-rail-tab article-home-rail-tab active" type="button" role="tab" aria-selected="true" data-home-list="latest">Latest</button>' +
+          '<button class="home-rail-tab article-home-rail-tab" type="button" role="tab" aria-selected="false" data-home-list="popular">Popular</button>' +
+        '</div></div>' +
+        '<div class="home-list-panel" id="articleHomeListPanel" role="list" tabindex="0"></div>' +
+      '</div>' +
+    '</section>';
   }
 
   function openArticleDetail(post) {
@@ -513,7 +498,7 @@
         '<div class="single-article-body" id="singleArticleBody">' + paragraphs + '</div>' +
         (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '') +
       '</article>' +
-      renderArticleRecommendations(post);
+      renderArticleRecommendations();
     singleArticleView.hidden = false;
     if (pageLayout) pageLayout.classList.add("article-page-active");
     if (homeSection) homeSection.hidden = true;
@@ -589,10 +574,15 @@
     nextButton.disabled = currentPage >= totalPages;
   }
 
-  $$(".home-rail-tab").forEach(button => button.addEventListener("click", () => {
+  $(".home-rail-tab").forEach(button => button.addEventListener("click", () => {
     homeListType = button.dataset.homeList;
     homeListIndex = 0;
-    renderHomeList();
+    const articleList = button.classList.contains("article-home-rail-tab");
+    renderHomeList(
+      articleList ? $("#articleHomeListPanel") : homeListPanel,
+      articleList ? $(".article-home-rail-tab") : $(".home-rail-tab:not(.article-home-rail-tab)"),
+      articleList ? currentArticlePost : null
+    );
   }));
   $("#homeViewAll").addEventListener("click", () => {
     showFeaturedFeed = false;
@@ -703,7 +693,7 @@
         try { window.history.scrollRestoration = "manual"; } catch (_) {}
         window.scrollTo(0, 0);
         /* Return from any nested article URL to the clean project homepage. */
-        window.location.assign(siteBasePath());
+        window.location.href = siteBasePath();
         return;
       }
       activeCategory = button.dataset.category;
