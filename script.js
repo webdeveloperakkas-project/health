@@ -499,6 +499,7 @@
         (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '') +
       '</article>' +
       renderArticleRecommendations();
+    renderHomeList($("#articleHomeListPanel"), $(".article-home-rail-tab"), post);
     singleArticleView.hidden = false;
     if (pageLayout) pageLayout.classList.add("article-page-active");
     if (homeSection) homeSection.hidden = true;
