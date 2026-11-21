@@ -350,7 +350,9 @@
     select.value=options.some(([value])=>value===previous)?previous:"";
   }
   function syncScheduleFields(){ const field=$("#scheduledPublishFields"); if(field) field.hidden=$("#postStatus").value!=="scheduled"; }
-  function toLocalDateTime(value){ if(!value) return ""; const date=new Date(value); if(Number.isNaN(date.getTime())) return ""; const local=new Date(date.getTime()-date.getTimezoneOffset()*60000); return local.toISOString().slice(0,16); }
+  function toLocalDateTime(value){ if(!value) return ""; const date=new Date(value); if(Number.isNaN(date.getTime())) return {date:"",time:""}; const local=new Date(date.getTime()-date.getTimezoneOffset()*60000).toISOString().slice(0,16); return {date:local.slice(0,10),time:local.slice(11,16)}; }
+  function setScheduleInputs(value){ const parts=toLocalDateTime(value); $("#scheduledPublishDate").value=parts.date; $("#scheduledPublishTime").value=parts.time; }
+  function getScheduleInputValue(){ const date=$("#scheduledPublishDate").value; const time=$("#scheduledPublishTime").value; return date&&time?date+"T"+time:""; }
   $("#postStatus").addEventListener("change",syncScheduleFields);
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
@@ -367,7 +369,7 @@
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
-    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; $("#scheduledPublishAt").value=toLocalDateTime(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
+    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; renderCoverPreview();
     
@@ -408,7 +410,7 @@
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
     const selectedStatus=$("#postStatus").value;
-    const scheduledValue=$("#scheduledPublishAt").value;
+    const scheduledValue=getScheduleInputValue();
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
