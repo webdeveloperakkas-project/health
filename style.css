@@ -2840,3 +2840,21 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 
 /* Expand the article page across the full content grid instead of leaving the homepage side rail column empty. */
 .page-layout.article-page-active{grid-template-columns:minmax(0,1fr)!important;gap:0!important}.page-layout.article-page-active>.main-column{grid-column:1/-1;width:100%;min-width:0}.page-layout.article-page-active .single-article-view{display:block;width:100%;min-width:0}.page-layout.article-page-active .single-article{width:min(1120px,calc(100% - 36px));max-width:100%;margin-left:auto;margin-right:auto}.page-layout.article-page-active .single-article-body{width:100%;min-width:0;overflow:visible;overflow-wrap:anywhere}
+
+
+/* Related reading shown automatically after every full article. */
+.article-recommendations{width:min(1120px,calc(100% - 36px));margin:0 auto 64px}
+.article-recommendation-section{margin:34px 0 0;padding-top:24px;border-top:1px solid var(--line,#e5ece9)}
+.article-recommendation-section h2{margin:0 0 17px;color:var(--navy,#153943);font-size:clamp(21px,2.4vw,27px);font-weight:800}
+.article-recommendation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.article-recommendation-card{display:flex;flex-direction:column;min-width:0;padding:0;border:1px solid #e7eeeb;border-radius:10px;overflow:hidden;background:#fff;text-align:left;color:inherit;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.article-recommendation-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(21,57,67,.09)}
+.article-recommendation-image{display:block;width:100%;aspect-ratio:16/9;background:#f0f5f3;overflow:hidden}
+.article-recommendation-image img{width:100%;height:100%;object-fit:cover;display:block}
+.article-recommendation-copy{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:13px;min-width:0}
+.article-recommendation-category{color:var(--teal-dark,#087c75);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.article-recommendation-copy strong{color:var(--navy,#153943);font-size:14px;line-height:1.4}
+.article-recommendation-copy small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:#687b78;font-size:12px;line-height:1.5}
+.article-recommendation-copy time{margin-top:auto;padding-top:4px;color:#879590;font-size:11px}
+@media(max-width:900px){.article-recommendation-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+@media(max-width:480px){.article-recommendations{width:calc(100% - 28px)}.article-recommendation-grid{grid-template-columns:1fr}.article-recommendation-card{flex-direction:row;min-height:104px}.article-recommendation-image{width:112px;min-width:112px;aspect-ratio:1/1}.article-recommendation-copy{padding:10px}.article-recommendation-copy small{display:none}}
