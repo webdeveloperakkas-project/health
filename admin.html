@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="admin.css?v=8">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="admin-auth.js?v=1" defer></script>
-  <script src="admin.js?v=16" defer></script>
+  <script src="admin.js?v=17" defer></script>
 </head>
 <body>
   <header class="admin-header">
@@ -38,7 +38,7 @@
       <div class="side-label">WORKSPACE</div>
       <button class="nav-item active" data-view="dashboard">▦ <span>Dashboard</span></button>
       <button class="nav-item" data-view="posts">▤ <span>All Posts</span></button>
-      <button class="nav-item" data-view="drafts">▧ <span>All Drafts</span></button>
+      <button class="nav-item" data-view="drafts">▧ <span>My Drafts</span></button>
       <button class="nav-item" data-view="editor">＋ <span>Write a Post</span></button>
       <div class="side-label side-spaced">HEADLINES</div>
       <button class="nav-item" data-view="headlines">▤ <span>All Headlines</span></button>
@@ -52,7 +52,7 @@
         <div><div class="eyebrow">CONTENT WORKSPACE</div><h1 id="pageTitle">Dashboard</h1><p>Manage articles for the Global Scope 24 journal.</p></div>
         <button class="primary-btn" id="newPostBtn">＋ Create new post</button>
       </div>
-      <div class="notice"><strong>Setup mode:</strong> Posts are currently saved in this browser only. Connect Supabase later to enable secure admin login, shared publishing, permanent media storage and live website updates.</div>
+      <div class="notice"><strong>Setup mode:</strong> Posts are currently saved in this browser only. Drafts stay private; public publishing is not yet connected.</div>
       <section class="view-panel active" id="dashboardView">
         <div class="stats-grid">
           <article class="stat-card"><span>Total posts</span><strong id="statTotal">0</strong><small>All saved posts</small></article>
@@ -74,7 +74,7 @@
       </section>
       <section class="view-panel" id="draftsView">
         <div class="panel-card">
-          <div class="list-toolbar"><div><h2>All Drafts</h2><p>Unpublished articles saved privately in this browser.</p></div><div class="filters"><input id="draftSearch" type="search" placeholder="Search drafts"></div></div>
+          <div class="list-toolbar"><div><h2>My Drafts</h2><p>Only your unpublished articles appear here. Drafts are not visible to website visitors.</p></div><div class="filters"><input id="draftSearch" type="search" placeholder="Search drafts"></div></div>
           <div id="allDrafts" class="table-wrap"></div>
         </div>
       </section>
