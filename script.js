@@ -115,7 +115,7 @@
       const publicCmsPosts = cmsPosts.filter(item => item && item.status === "published").map(item => {
         const plain = String(item.content || "").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
         const dateValue = item.publishedAt || item.createdAt || item.updatedAt || new Date().toISOString();
-        return {cmsId:item.id,category:item.category==="beauty"?"lifestyle":item.category,subcategory:item.subcategory||"",title:item.title,postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
+        return {cmsId:item.id,category:item.category==="beauty"?"lifestyle":item.category,subcategory:item.subcategory||"",title:item.title,language:item.language || "en",postType:item.postType || "latest",postTypes:Array.isArray(item.postTypes)?item.postTypes:(item.postType?[item.postType]:["latest"]),featuredStories:!!(item.featuredStories ?? item.featured),publishedTimestamp:new Date(dateValue).getTime(),date:new Date(dateValue).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),read:"",excerpt:item.excerpt || plain.slice(0,260),body:plain ? [plain] : [],contentHtml:item.content || "",cover:item.cover || "",videoUrl:item.videoUrl || "",views:Number(item.views)||0};
       });
       posts = posts.filter(item => !item.cmsId).concat(publicCmsPosts, posts.filter(item => item.cmsId));
     }
@@ -543,7 +543,7 @@
     currentArticlePost = post;
     const runId = ++articleTranslationRun;
     const sourceHtml = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
-    const isBengali = activeLanguage === "bn";
+    const isBengali = activeLanguage === "bn" && post.language !== "bn";
     const paragraphs = isBengali ? '<p class="article-translation-status" role="status">নিবন্ধটি বাংলায় অনুবাদ করা হচ্ছে…</p>' : localizeHtml(sourceHtml);
     articleDialogContent.innerHTML =
       '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
