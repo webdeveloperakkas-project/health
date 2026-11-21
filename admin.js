@@ -152,6 +152,13 @@
   $("#inlineImageWidth").addEventListener("input",applyInlineImageControls);
   $("#inlineImageCaption").addEventListener("input",applyInlineImageControls);
   $("#inlineImageCaptionPosition").addEventListener("change",applyInlineImageControls);
+  $("#deleteInlineImageBtn").addEventListener("click",()=>{
+    if(!selectedInlineFigure){showToast("First click an image inside the article.");return;}
+    selectedInlineFigure.remove();
+    selectedInlineFigure=null;
+    $("#inlineImagePanel").classList.remove("is-visible");
+    showToast("Article image deleted.");
+  });
   $("#inlineImagePanel").addEventListener("click",event=>{
     const button=event.target.closest("[data-image-align]");
     if(!button)return;
