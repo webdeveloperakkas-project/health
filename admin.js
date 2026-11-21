@@ -184,7 +184,7 @@
   });
   function readImage(file,callback){
     if(!file||!file.type.startsWith("image/")) return showToast("Please choose an image file.");
-    if(file.size>2*1024*1024) return showToast("For this local preview, each image must be under 2 MB.");
+    if(file.size>2*1024*1024) return showToast("Each image must be under 2 MB.");
     const reader=new FileReader();
     reader.onload=()=>callback(String(reader.result));
     reader.onerror=()=>showToast("Could not read this image.");
