@@ -62,23 +62,25 @@
     const recent=[...posts].sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt)).slice(0,5);
     $("#recentPosts").innerHTML=postRows(recent);
     const query=($("#postSearch").value||"").trim().toLowerCase();
-    const status=$("#statusFilter").value;
-    const filtered=[...posts].filter(post=>(status==="all"||post.status===status)&&(!query||(post.title+" "+plainText(post.content)).toLowerCase().includes(query))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
-    $("#allPosts").innerHTML=postRows(filtered);
+    const published=[...posts].filter(post=>post.status==="published"&&(!query||(post.title+" "+plainText(post.content)).toLowerCase().includes(query))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+    $("#allPosts").innerHTML=published.length ? postRows(published) : '<div class="empty-table">No published posts yet. Published articles will appear here.</div>';
+    const draftQuery=($("#draftSearch")?.value||"").trim().toLowerCase();
+    const drafts=[...posts].filter(post=>post.status==="draft"&&(!draftQuery||(post.title+" "+plainText(post.content)).toLowerCase().includes(draftQuery))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+    $("#allDrafts").innerHTML=drafts.length ? postRows(drafts) : '<div class="empty-table">No drafts yet. Articles saved as draft will appear here.</div>';
   }
 
   /* View navigation */
   function openView(view){
     document.querySelectorAll(".view-panel").forEach(panel=>panel.classList.toggle("active",panel.id===view+"View"));
     document.querySelectorAll(".nav-item").forEach(button=>button.classList.toggle("active",button.dataset.view===view));
-    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
+    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"All Drafts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
     if(view!=="editor") renderLists();
   }
   document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.view)));
   document.querySelectorAll("[data-open]").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.open)));
   $("#newPostBtn").addEventListener("click",()=>newPost());
   $("#postSearch").addEventListener("input",renderLists);
-  $("#statusFilter").addEventListener("change",renderLists);
+  $("#draftSearch").addEventListener("input",renderLists);
 
   /* Rich text editor toolbar */
   document.querySelectorAll("[data-command]").forEach(button=>button.addEventListener("click",()=>{
