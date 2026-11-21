@@ -2755,3 +2755,34 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   .home-list-summary-row { gap:9px; }
   .home-list-excerpt { font-size:10px; }
 }
+
+
+/* Homepage story excerpt: larger text, ending level with the thumbnail. */
+.home-list-summary-row { align-items:stretch; }
+.home-list-thumb { align-self:flex-start; }
+.home-list-excerpt {
+  height:94px;
+  max-height:94px;
+  align-self:stretch;
+  font-size:14px;
+  line-height:1.55;
+  -webkit-line-clamp:4;
+}
+@media(max-width:800px) {
+  .home-list-excerpt {
+    height:76px;
+    max-height:76px;
+    font-size:12px;
+    line-height:1.5;
+    -webkit-line-clamp:4;
+  }
+}
+@media(max-width:380px) {
+  .home-list-excerpt {
+    height:68px;
+    max-height:68px;
+    font-size:11px;
+    line-height:1.5;
+    -webkit-line-clamp:4;
+  }
+}
