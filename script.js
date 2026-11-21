@@ -315,8 +315,12 @@
   const articleSection = $("#articleFeed");
   const homeListPanel = $("#homeListPanel");
   const homeFeatured = $("#homeFeatured");
-  const articleDialog = $("#articleDialog");
-  const articleDialogContent = $("#articleDialogContent");
+  const singleArticleView = $("#singleArticleView");
+  const tickerSection = $(".latest-ticker");
+  const categorySection = $("#categories");
+  const topAdSlot = $(".top-ad");
+  const featuredStoriesSection = $("#featuredStoriesSection");
+  const aboutSection = $("#about");
 
   function sortedByDate(items) {
     return [...items].sort((a,b) => {
@@ -333,14 +337,21 @@
       return true;
     });
   }
-  function articleSlug(post) {
-    return String(post.title || "article").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  function routeSlug(value) {
+    return String(value || "").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()
+      .replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
   }
-  function articleShareUrl(post) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("article", articleSlug(post));
-    return url.toString();
+  function articleSlug(post) { return routeSlug(post && post.title) || "article"; }
+  function siteBasePath() {
+    const script = Array.from(document.scripts).find(item => /script\.js(?:\?|$)/.test(item.src));
+    if (script) return new URL(".",script.src).pathname;
+    return "/";
   }
+  function articleRoute(post) {
+    const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",articleSlug(post)].filter(Boolean);
+    return siteBasePath() + parts.map(part => encodeURIComponent(part)).join("/") + "/";
+  }
+  function articleShareUrl(post) { return new URL(articleRoute(post),window.location.origin).toString(); }
   function shareButtons(post) {
     return '<div class="home-share-row" aria-label="Share article">' +
       '<button type="button" data-share="facebook" data-post-index="' + posts.indexOf(post) + '" aria-label="Share on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3 0-5 2-5 5v2H6v4h3v5h4v-5h3l1-4h-4V9c0-.7.3-1 1-1Z"/></svg></button>' +
@@ -436,30 +447,50 @@
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredMore + ' <span>→</span>';
   }
   function openArticleDetail(post) {
-    if (!post) return;
+    if (!post || !singleArticleView) return;
     currentArticlePost = post;
     const runId = ++articleTranslationRun;
     const sourceHtml = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
     const isBengali = activeLanguage === "bn" && post.language !== "bn";
+    const categoryLabel = categoryNames[post.category] || post.category || "Global Scope 24";
+    const subcategoryLabel = post.subcategory ? localizeText(post.subcategory.replace(/-/g," ")) : "";
     const paragraphs = isBengali ? '<p class="article-translation-status" role="status">নিবন্ধটি বাংলায় অনুবাদ করা হচ্ছে…</p>' : localizeHtml(sourceHtml);
-    articleDialogContent.innerHTML =
-      '<div class="article-detail-meta">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + (post.subcategory ? " · " + escapeHTML(localizeText(post.subcategory)) : "") + ' · ' + escapeHTML(post.date) + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</div>' +
-      '<h1 id="articleDialogTitle">' + escapeHTML(localizeText(post.title)) + '</h1>' +
-      (imageForPost(post) ? '<img class="article-detail-image" src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' : '') +
-      shareButtons(post) + '<div class="article-detail-body" id="articleDetailBody">' + paragraphs + '</div>' + (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\\s+/g,'')) + '</span>').join('') + '</div>' : '');
-    if (typeof articleDialog.showModal === "function") articleDialog.showModal();
-    else articleDialog.setAttribute("open","");
+    singleArticleView.innerHTML =
+      '<article class="single-article container">' +
+        '<div class="single-article-heading">' +
+          '<div class="single-article-category">' + escapeHTML(categoryLabel) + (subcategoryLabel ? ' <span>›</span> ' + escapeHTML(subcategoryLabel) : '') + '</div>' +
+          '<h1>' + escapeHTML(localizeText(post.title)) + '</h1>' +
+          '<div class="single-article-meta"><time>' + escapeHTML(post.date || "") + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</time></div>' +
+        '</div>' +
+        (imageForPost(post) ? '<img class="single-article-cover" src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' : '') +
+        shareButtons(post) +
+        '<div class="single-article-body" id="singleArticleBody">' + paragraphs + '</div>' +
+        (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '') +
+      '</article>';
+    singleArticleView.hidden = false;
+    if (homeSection) homeSection.hidden = true;
+    if (articleSection) articleSection.hidden = true;
+    if (featuredStoriesSection) featuredStoriesSection.hidden = true;
+    if (aboutSection) aboutSection.hidden = true;
+    if (tickerSection) tickerSection.hidden = true;
+    if (categorySection) categorySection.hidden = false;
+    if (topAdSlot) topAdSlot.hidden = false;
+    document.title = localizeText(post.title) + " | Global Scope 24";
+    const description = (post.excerpt || (post.contentHtml || "").replace(/<[^>]*>/g," ").replace(/\s+/g," ")).trim().slice(0,155);
+    const descriptionTag = document.querySelector('meta[name="description"]');
+    if (descriptionTag && description) descriptionTag.setAttribute("content",description);
     if (isBengali) {
-      translateArticleHtmlToBengali(sourceHtml, runId).then(translatedHtml => {
+      translateArticleHtmlToBengali(sourceHtml,runId).then(translatedHtml => {
         if (translatedHtml === null || runId !== articleTranslationRun) return;
-        const body = $("#articleDetailBody");
+        const body = $("#singleArticleBody");
         if (body) body.innerHTML = translatedHtml;
       }).catch(() => {
         if (runId !== articleTranslationRun) return;
-        const body = $("#articleDetailBody");
+        const body = $("#singleArticleBody");
         if (body) body.innerHTML = sourceHtml + '<p class="article-translation-status" role="status">এই মুহূর্তে বাংলা অনুবাদ পাওয়া যাচ্ছে না। মূল ইংরেজি লেখা দেখানো হচ্ছে।</p>';
       });
     }
+    window.scrollTo(0,0);
   }
   function render() {
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
@@ -544,7 +575,7 @@
     if (articleTrigger && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
       const post = posts[Number(articleTrigger.dataset.openPost)];
-      if (post) openArticleDetail(post);
+      if (post) window.location.assign(articleRoute(post));
     }
   });
   document.addEventListener("click", event => {
@@ -561,7 +592,7 @@
     const openButton = event.target.closest("[data-open-post]");
     if (openButton) {
       const post = posts[Number(openButton.dataset.openPost)];
-      if (post) openArticleDetail(post);
+      if (post) window.location.assign(articleRoute(post));
     }
     const shareButton = event.target.closest("[data-share]");
     if (shareButton) {
@@ -576,10 +607,7 @@
       else if (target === "copy" && navigator.clipboard) navigator.clipboard.writeText(url).then(() => { shareButton.classList.add("copied"); shareButton.setAttribute("aria-label","Link copied"); }).catch(() => {});
     }
   });
-  $("#articleDialogClose").addEventListener("click", () => articleDialog.close());
-  articleDialog.addEventListener("click", event => {
-    if (event.target === articleDialog) articleDialog.close();
-  });
+
   
   function setupSubcategoryMenu(triggerSelector,submenuSelector,category,dataSelector,dataAttribute){
     const trigger=document.querySelector(triggerSelector),submenu=document.querySelector(submenuSelector);if(!trigger||!submenu)return;
@@ -789,10 +817,18 @@
   updateHeaderClock();
   window.setInterval(updateHeaderClock, 30000);
   applyLanguage($("#languageSelect").value || "en");
-  const requestedArticle = new URLSearchParams(window.location.search).get("article");
-  if (requestedArticle) {
-    const requestedPost = posts.find(post => articleSlug(post) === requestedArticle);
-    if (requestedPost) openArticleDetail(requestedPost);
+  const routeParam = new URLSearchParams(window.location.search).get("route");
+  if (routeParam) {
+    const cleanRoute = routeParam.split("?")[0].replace(/^\/+|\/+$/g,"");
+    if (cleanRoute) history.replaceState(null,"",siteBasePath() + cleanRoute.split("/").map(part => encodeURIComponent(decodeURIComponent(part))).join("/") + "/");
+  }
+  function requestedArticleSlug() {
+    const legacy = new URLSearchParams(window.location.search).get("article");
+    if (legacy) return legacy;
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    const baseParts = siteBasePath().split("/").filter(Boolean);
+    const relative = parts.slice(baseParts.length);
+    return relative.length >= 2 ? decodeURIComponent(relative[relative.length-1]) : "";
   }
 
   /* Shared public content: published posts and active headlines come from Supabase. */
@@ -828,7 +864,7 @@
           keywords:Array.isArray(row.keywords)?row.keywords:[],views:Number(row.views)||0
         };
       });
-      if (cloudPosts.length) posts = cloudPosts;
+      posts = cloudPosts;
       const track = $(".ticker-track");
       const headlines = (headlineRows || []).map(item => String(item.text||"").trim()).filter(Boolean);
       if (track && headlines.length) {
@@ -836,10 +872,20 @@
         track.innerHTML = [...escaped,...escaped].join("");
       }
       render();
-      const currentArticleSlug = new URLSearchParams(window.location.search).get("article");
+      const currentArticleSlug = requestedArticleSlug();
       if (currentArticleSlug) {
         const cloudArticle = posts.find(post => articleSlug(post) === currentArticleSlug);
         if (cloudArticle) openArticleDetail(cloudArticle);
+        else {
+          document.title = "Article Not Found | Global Scope 24";
+          singleArticleView.innerHTML = '<div class="single-article container"><h1>Article not found</h1><p>This article may have been unpublished or moved.</p><a href="' + siteBasePath() + '">Return to Global Scope 24</a></div>';
+          singleArticleView.hidden = false;
+          if (homeSection) homeSection.hidden = true;
+          if (articleSection) articleSection.hidden = true;
+          if (featuredStoriesSection) featuredStoriesSection.hidden = true;
+          if (aboutSection) aboutSection.hidden = true;
+          if (tickerSection) tickerSection.hidden = true;
+        }
       }
     } catch (error) {
       console.error("Could not load published Global Scope 24 content from Supabase:", error);
