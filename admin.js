@@ -533,7 +533,7 @@
     if(selectingMyChoice && alreadyMyChoice>=4) return showToast("Favorites can contain up to 4 selected items.");
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
-    if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
+    if(selectingFeaturedStories && alreadyFeaturedStories>=40) return showToast("Featured Stories can contain up to 40 selected posts.");
     const now=new Date().toISOString();
     const selectedStatus=$("#postStatus").value;
     const scheduledValue=getScheduleInputValue();
