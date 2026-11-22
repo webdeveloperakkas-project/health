@@ -2741,7 +2741,7 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   .home-list-heading strong { font-size:15px; line-height:1.4; }
   .home-list-summary-row { gap:12px; }
   .home-list-thumb {
-    flex:0 0 126px;
+    flex:0 0 130px;
     width:126px;
     height:76px;
     aspect-ratio:1.65/1;
@@ -3418,17 +3418,3 @@ img {
 }
 
 
-/* Mobile Latest/Popular cards: compact 70×65px thumbnails with a top-aligned three-line excerpt. */
-@media (max-width: 800px) {
-  .home-list-summary-row {
-    align-items: flex-start !important;
-  }
-
-  .home-list-thumb {
-    flex: 0 0 70px !important;
-    width: 70px !important;
-    min-width: 70px !important;
-    height: 65px !important;
-    aspect-ratio: auto !important;
-  }
-}
