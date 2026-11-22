@@ -56,7 +56,7 @@ begin
 end;
 $$;
 
-drop function if exists public.get_most_read_posts();
+drop function if exists public.get_trending_posts();
 
 create or replace function public.get_most_read_posts()
 returns table (
