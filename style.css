@@ -3162,7 +3162,7 @@ img {
   .category-tabs > .world-category-menu > .world-category-trigger {
     box-sizing: border-box !important;
     padding-left: 0 !important;
-    padding-right: 23px !important;
+    padding-right: 19px !important;
     text-align: center !important;
   }
 
@@ -3173,6 +3173,6 @@ img {
 
 @media (max-width: 380px) {
   .category-tabs > .world-category-menu > .world-category-trigger {
-    padding-right: 21px !important;
+    padding-right: 17px !important;
   }
 }
