@@ -35,7 +35,7 @@ button, input, select {
 }
 
 .container {
-  width:min(var(--max), calc(100% - 44px));
+  width:min(var(--max), calc(100% - 64px));
   margin:auto
 }
 
