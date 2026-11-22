@@ -3259,3 +3259,24 @@ img {
     transform: translateX(4px) !important;
   }
 }
+
+/* Bengali mobile category labels: set selected categories to 14px; leave Daily Tips and English unchanged. */
+@media (max-width: 800px) {
+  html[lang="bn"] .category-tabs > .category-tab[data-category="health"],
+  html[lang="bn"] .category-tabs > .category-tab[data-category="travel"],
+  html[lang="bn"] .category-tabs > .category-tab[data-category="finance"],
+  html[lang="bn"] .category-tabs > .category-tab[data-category="technology"],
+  html[lang="bn"] .category-tabs > .sports-category-menu > .sports-category-trigger,
+  html[lang="bn"] .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
+    font-size: 14px !important;
+  }
+
+  /* Move Sports left 2px and Lifestyle left 1px (slightly less). */
+  .category-tabs > .sports-category-menu {
+    transform: translateX(-2px) !important;
+  }
+
+  .category-tabs > .lifestyle-category-menu {
+    transform: translateX(-1px) !important;
+  }
+}
