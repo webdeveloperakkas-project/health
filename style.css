@@ -3130,3 +3130,23 @@ img {
     max-width: none;
   }
 }
+
+
+/* Fine-tune mobile outer gutter and the Home/Travel category button backgrounds. */
+@media (max-width: 800px) {
+  .container {
+    width: calc(100% - 4px) !important;
+  }
+
+  .category-tabs > .category-tab[data-category="home"],
+  .category-tabs > .category-tab[data-category="travel"] {
+    width: calc(100% - 8px) !important;
+    justify-self: center !important;
+  }
+}
+
+@media (pointer: coarse) and (max-device-width: 600px) {
+  .container {
+    width: calc(100% - 4px) !important;
+  }
+}
