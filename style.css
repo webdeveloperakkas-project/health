@@ -3242,3 +3242,12 @@ img {
     margin-left: -14px !important;
   }
 }
+
+
+/* Mobile: keep Health unchanged and separate its background from Entertainment by 2px. */
+@media (max-width: 800px) {
+  .category-tabs > .entertainment-category-menu {
+    width: calc(100% + 22px) !important;
+    margin-left: -12px !important;
+  }
+}
