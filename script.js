@@ -410,6 +410,10 @@
       ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
     const placementMatches = post => {
       const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
+      // Category pages are driven by category assignment, not homepage placement.
+      // Their default Latest view includes every post in that category; selecting
+      // Popular or Favorites still filters to the matching editorial placement.
+      if (activeCategory !== "home" && activePostType === "latest") return true;
       return activePostType === "mostViewed" || placements.includes(activePostType);
     };
     const categoryPosts = posts
