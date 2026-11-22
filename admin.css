@@ -84,7 +84,7 @@
 .editor-mode-switch>div{display:flex;gap:5px}
 .editor-mode-btn{border:1px solid #dce8e4;background:#fff;color:#627477;border-radius:6px;padding:7px 10px;font-size:10px;font-weight:800;cursor:pointer}
 .editor-mode-btn.active{background:#e4f4ef;border-color:#a8d7c9;color:#087c75}
-.article-html-editor{display:block;width:100%;min-height:430px;padding:17px;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;background:#102b32;color:#e4f5ee;font:12px/1.7 Consolas,Monaco,monospace;resize:vertical;white-space:pre;overflow:auto}
+.article-html-editor{display:block;width:100%;min-height:430px;padding:17px;border:1px solid #eadcae;border-top:0;border-radius:0 0 8px 8px;background:#fff9e8;color:#35413b;font:12px/1.8 Consolas,Monaco,monospace;resize:vertical;white-space:pre;overflow:auto;tab-size:2;caret-color:#8a6a22}
 .article-html-editor[hidden],.article-editor[hidden],.editor-toolbar[hidden]{display:none!important}
 .seo-fields{margin-top:18px;padding:14px;border:1px solid #dce9e4;border-radius:9px;background:#f8fbfa}
 .seo-fields h3{margin:0 0 12px;color:var(--navy);font-size:13px}
@@ -93,3 +93,5 @@
 .cloudinary-status{margin-top:9px;padding:8px;border-radius:6px;background:#fff5e4;color:#8b6410;font-size:10px}
 .cloudinary-status.is-ready{background:#e8f7ef;color:#14734f}
 @media(max-width:600px){.editor-mode-switch{align-items:flex-start;flex-direction:column}.editor-mode-switch>div{width:100%}.editor-mode-btn{flex:1}.article-html-editor{min-height:330px}}
+
+.format-html-btn{background:#fff3cf;color:#80631d;border-color:#ead59b}.format-html-btn:hover{background:#ffedb5}
