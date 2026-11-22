@@ -28,6 +28,8 @@
      No bundled demo or sample posts are displayed.
   ========================================================= */
   let posts = [];
+  let trendingPosts = [];
+  let publicSupabaseClient = null;
   
   // Published articles are loaded from the shared Supabase database after page initialization.
 
@@ -248,9 +250,10 @@
     /* GitHub Pages project site base. Keep this independent of the current article URL. */
     return "/health/";
   }
-  function articleRoute(post) {
+  function articleRoute(post, source = "") {
     const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",shortArticleId(post)].filter(Boolean);
-    return siteBasePath() + parts.map(part => encodeURIComponent(part)).join("/") + "/";
+    const path = siteBasePath() + parts.map(part => encodeURIComponent(part)).join("/") + "/";
+    return source === "trending" ? path + "?source=trending" : path;
   }
   function articleShareUrl(post) { return new URL(articleRoute(post),window.location.origin).toString(); }
   function shareButtons(post) {
@@ -359,6 +362,26 @@
     const viewAll = $("#featuredStoriesViewAll");
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredMore + ' <span>→</span>';
   }
+
+  function renderTrendingStories() {
+    const list = $("#trendingStoriesList");
+    const section = $("#trendingSection");
+    if (!list || !section) return;
+    const items = trendingPosts
+      .map(item => ({...item, post:posts.find(post => String(post.cmsId) === String(item.post_id))}))
+      .filter(item => item.post)
+      .slice(0,10);
+    const title = $("#trendingStoriesTitle");
+    const description = $("#trendingStoriesDescription");
+    if (title) title.textContent = activeLanguage === "bn" ? "ট্রেন্ডিং" : "Trending";
+    if (description) description.textContent = activeLanguage === "bn"
+      ? "গত ৭ দিনে সবচেয়ে বেশি পড়া ১০টি পোস্ট"
+      : "The 10 most-read stories in the last 7 days";
+    list.innerHTML = items.length
+      ? items.map((item,index) => '<button class="trending-story-link" type="button" data-open-post="' + posts.indexOf(item.post) + '" data-open-source="trending"><span class="trending-story-rank">' + String(index+1).padStart(2,"0") + '</span><span class="trending-story-title">' + escapeHTML(item.post.title) + '</span><span class="trending-story-arrow" aria-hidden="true">↗</span></button>').join("")
+      : '<div class="trending-empty">' + (activeLanguage === "bn" ? "গত ৭ দিনের ভিউ জমা হলে জনপ্রিয় পোস্টগুলো এখানে স্বয়ংক্রিয়ভাবে দেখা যাবে।" : "Trending stories will appear here as views are recorded over the next 7 days.") + '</div>';
+  }
+
   function renderArticleRecommendations() {
     return '<section class="article-below-lists" aria-label="More articles">' +
       '<div class="home-rail-card">' +
@@ -374,13 +397,19 @@
   function openArticleDetail(post) {
     if (!post || !singleArticleView) return;
     currentArticlePost = post;
+    recordArticleView(post);
     const rawSourceHtml = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
     const sourceHtml = window.DOMPurify ? DOMPurify.sanitize(rawSourceHtml,{USE_PROFILES:{html:true},ADD_ATTR:["target","style","width","height","loading"]}) : rawSourceHtml;
     const categoryLabel = categoryNames[post.category] || post.category || "Global Scope 24";
     const subcategoryLabel = post.subcategory ? post.subcategory.replace(/-/g," ") : "";
     const paragraphs = sourceHtml;
+    const articleSource = new URLSearchParams(window.location.search).get("source");
+    const breadcrumb = articleSource === "trending"
+      ? '<nav class="article-breadcrumb" aria-label="Breadcrumb"><a href="' + siteBasePath() + '">Home</a><span>›</span><span>Trending</span></nav>'
+      : "";
     singleArticleView.innerHTML =
       '<article class="single-article container">' +
+        breadcrumb +
         '<div class="single-article-heading">' +
           '<div class="single-article-category">' + escapeHTML(categoryLabel) + (subcategoryLabel ? ' <span>›</span> ' + escapeHTML(subcategoryLabel) : '') + '</div>' +
           '<h1>' + escapeHTML(post.title) + '</h1>' +
@@ -442,6 +471,7 @@
       renderHomeFeatured();
       renderHomeList();
       renderFeaturedStories();
+      renderTrendingStories();
       renderMyChoice();
       return;
     }
@@ -498,7 +528,7 @@
     if (articleTrigger && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
       const post = posts[Number(articleTrigger.dataset.openPost)];
-      if (post) window.location.assign(articleRoute(post));
+      if (post) window.location.assign(articleRoute(post, articleTrigger.dataset.openSource));
     }
   });
   document.addEventListener("click", event => {
@@ -515,7 +545,7 @@
     const openButton = event.target.closest("[data-open-post]");
     if (openButton) {
       const post = posts[Number(openButton.dataset.openPost)];
-      if (post) window.location.assign(articleRoute(post));
+      if (post) window.location.assign(articleRoute(post, openButton.dataset.openSource));
     }
     const shareButton = event.target.closest("[data-share]");
     if (shareButton) {
@@ -766,6 +796,51 @@
     return relative.length >= 2 ? decodeURIComponent(relative[relative.length-1]) : "";
   }
 
+  function getTrendingVisitorId() {
+    const key = "gs24-trending-visitor";
+    try {
+      let id = localStorage.getItem(key);
+      if (!id) {
+        id = window.crypto && typeof window.crypto.randomUUID === "function"
+          ? window.crypto.randomUUID()
+          : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, char => {
+              const random = Math.random() * 16 | 0;
+              return (char === "x" ? random : (random & 3 | 8)).toString(16);
+            });
+        localStorage.setItem(key,id);
+      }
+      return id;
+    } catch (_) {
+      return "00000000-0000-4000-8000-000000000001";
+    }
+  }
+
+  async function refreshTrendingStories() {
+    if (!publicSupabaseClient) return;
+    const {data,error} = await publicSupabaseClient.rpc("get_trending_posts");
+    if (error) {
+      console.warn("Trending data is not available yet. Run supabase/trending_views.sql:",error.message);
+      trendingPosts = [];
+    } else {
+      trendingPosts = Array.isArray(data) ? data : [];
+    }
+    renderTrendingStories();
+  }
+
+  function recordArticleView(post) {
+    if (!publicSupabaseClient || !post || !post.cmsId) return;
+    publicSupabaseClient.rpc("record_post_view",{
+      p_post_id:String(post.cmsId),
+      p_visitor_id:getTrendingVisitorId()
+    }).then(({error}) => {
+      if (error) {
+        console.warn("Could not record trending view. Run supabase/trending_views.sql:",error.message);
+        return;
+      }
+      refreshTrendingStories();
+    });
+  }
+
   /* Shared public content: published posts and active headlines come from Supabase. */
   async function loadSharedPublishedContent() {
     try {
@@ -773,6 +848,7 @@
         "https://oxxnjxrunvhrfwxdvbsr.supabase.co",
         "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY"
       );
+      publicSupabaseClient = client;
       const [{data:rows,error:postsError},{data:headlineRows,error:headlinesError}] = await Promise.all([
         client.from("posts").select("*").eq("status","published").order("published_at",{ascending:false}),
         client.from("headlines").select("text").eq("is_active",true).order("sort_order",{ascending:true})
@@ -800,6 +876,7 @@
         };
       });
       posts = cloudPosts;
+      await refreshTrendingStories();
       const track = $(".ticker-track");
       const headlines = (headlineRows || []).map(item => String(item.text||"").trim()).filter(Boolean);
       if (track && headlines.length) {
