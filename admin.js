@@ -226,26 +226,26 @@
     return window.DOMPurify?DOMPurify.sanitize(raw,{USE_PROFILES:{html:true},ADD_ATTR:["target","style","width","height","loading"]}):raw;
   }
   function formatHTMLSource(source){
-    const tokens=String(source||"").match(/<!--[\\s\\S]*?-->|<![^>]*>|<\\/?[a-zA-Z][^>]*>|[^<]+/g)||[];
+    const tokens=String(source||"").match(/<!--[\s\S]*?-->|<![^>]*>|<\/?[a-zA-Z][^>]*>|[^<]+/g)||[];
     const voidTags=new Set(["area","base","br","col","embed","hr","img","input","link","meta","param","source","track","wbr"]);
     const preserveTags=new Set(["pre","textarea","script","style"]);
     const lines=[];let depth=0,preserveDepth=0;
     for(const token of tokens){
       if(!token.trim()&&!preserveDepth)continue;
-      const closing= /^<\\//.test(token);
+      const closing=/^<\//.test(token);
       const opening=/^<[a-zA-Z]/.test(token);
-      const tag=(token.match(/^<\\/?\\s*([a-zA-Z0-9-]+)/)||[])[1]?.toLowerCase()||"";
-      const selfClosing=/\\/>$/.test(token)||voidTags.has(tag);
+      const tag=(token.match(/^<\/?\s*([a-zA-Z0-9-]+)/)||[])[1]?.toLowerCase()||"";
+      const selfClosing=/\/>$/.test(token)||voidTags.has(tag);
       if(closing){if(preserveTags.has(tag))preserveDepth=Math.max(0,preserveDepth-1);depth=Math.max(0,depth-1);lines.push("  ".repeat(depth)+token.trim());continue;}
       if(opening){
         lines.push("  ".repeat(depth)+token.trim());
         if(!selfClosing){depth++;if(preserveTags.has(tag))preserveDepth++;}
         continue;
       }
-      const text=preserveDepth?token.replace(/^\\n+|\\n+$/g,""):token.trim();
+      const text=preserveDepth?token.replace(/^\n+|\n+$/g,""):token.trim();
       if(text)lines.push("  ".repeat(depth)+text);
     }
-    return lines.join("\\n");
+    return lines.join("\n");
   }
   function setEditorMode(mode){
     const htmlMode=mode==="html";
