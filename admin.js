@@ -291,10 +291,29 @@
     $("#articleEditor").hidden=htmlMode;$("#articleHtmlEditor").hidden=!htmlMode;$("#visualToolbar").hidden=htmlMode;
     $("#visualModeBtn").classList.toggle("active",!htmlMode);$("#htmlModeBtn").classList.toggle("active",htmlMode);
     $("#visualModeBtn").setAttribute("aria-pressed",String(!htmlMode));$("#htmlModeBtn").setAttribute("aria-pressed",String(htmlMode));
+    updateArticleTextSize();
   }
   $("#visualModeBtn").addEventListener("click",()=>setEditorMode("visual"));
   $("#htmlModeBtn").addEventListener("click",()=>setEditorMode("html"));
   $("#formatHtmlBtn").addEventListener("click",()=>{$("#articleHtmlEditor").value=formatHTMLSource($("#articleHtmlEditor").value);showToast("HTML code formatted.");});
+
+  /* Live estimate of article text only (UTF-8); media files and HTML markup are excluded. */
+  function updateArticleTextSize(){
+    const source=editorMode==="html"?$("#articleHtmlEditor").value:$("#articleEditor").innerHTML;
+    const textOnly=document.createElement("div");
+    textOnly.innerHTML=source;
+    textOnly.querySelectorAll("img,svg,video,iframe,audio,source,track,script,style,.cms-resize-handle").forEach(node=>node.remove());
+    const plainText=(textOnly.textContent||"").replace(/\\u00a0/g," ").replace(/\\s+/g," ").trim();
+    const byteSize=new TextEncoder().encode(plainText).length;
+    const kb=(byteSize/1024).toFixed(2);
+    $("#articleTextSizeValue").textContent=kb+" KB";
+    $("#articleTextSizeDetail").textContent=byteSize.toLocaleString()+" bytes · Images excluded";
+  }
+  $("#articleEditor").addEventListener("input",updateArticleTextSize);
+  $("#articleHtmlEditor").addEventListener("input",updateArticleTextSize);
+  const articleTextSizeObserver=new MutationObserver(updateArticleTextSize);
+  articleTextSizeObserver.observe($("#articleEditor"),{childList:true,subtree:true,characterData:true});
+
   $("#imageUrlBtn").addEventListener("click",()=>{
     const url=window.prompt("Paste a public image URL (https://...)");
     if(!url)return;
