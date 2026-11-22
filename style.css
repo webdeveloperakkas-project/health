@@ -3336,3 +3336,23 @@ img {
   height: 24px;
   flex: 0 0 24px;
 }
+
+
+/* Mobile-only spacing below the category section.
+   Keep the category section itself and all desktop layouts unchanged. */
+@media (max-width: 800px) {
+  .main-column > .category-section ~ * {
+    margin-left: 1px !important;
+    margin-right: 1px !important;
+  }
+
+  /* Give the full-article title a precise 2px left inset. */
+  .single-article-heading h1 {
+    padding-left: 2px !important;
+  }
+
+  /* Increase only the readable article body text by 2px on mobile. */
+  .single-article-body {
+    font-size: 18px !important;
+  }
+}
