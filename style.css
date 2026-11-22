@@ -2888,3 +2888,9 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   object-position: center;
   display: block;
 }
+
+
+/* Featured Stories: two cards per row, up to 40 editorial selections. */
+.featured-stories-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}
+.featured-stories-grid .featured-story-item{min-width:0;margin:0}
+@media(max-width:800px){.featured-stories-grid{grid-template-columns:1fr;gap:0}}
