@@ -3059,8 +3059,8 @@ img {
   }
 
   .home-rail-card {
-    padding-left: 1px !important;
-    padding-right: 1px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
   }
 
   .home-featured {
@@ -3103,7 +3103,7 @@ img {
   }
 
   .home-feature-content h1 {
-    margin-left: 3px !important;
+    margin-left: 4px !important;
   }
 
   .home-list-heading strong,
