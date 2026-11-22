@@ -3390,3 +3390,29 @@ img {
   line-height: 1.5 !important;
   color: #222222 !important;
 }
+
+
+/* Homepage story cards: move each image and title 1px inward from the left edge. */
+.home-list-item {
+  padding-left: 4px !important;
+}
+.home-feature-image {
+  margin-left: 1px !important;
+  width: calc(100% - 1px) !important;
+}
+@media (max-width: 800px) {
+  .home-list-item,
+  .home-list-item.is-active,
+  .home-mobile-list-group .home-list-item {
+    padding-left: 2px !important;
+  }
+
+  .home-feature-content h1 {
+    margin-left: 5px !important;
+  }
+
+  .home-list-heading strong,
+  .home-list-copy strong {
+    margin-left: 2px !important;
+  }
+}
