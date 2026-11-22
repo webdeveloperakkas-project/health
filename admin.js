@@ -10,7 +10,7 @@
   const MEDIA_BUCKET = "everyday-atlas-media";
   const db = () => window.EA_SUPABASE;
   const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",entertainment:"Entertainment",health:"Health",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",hospitals:"Hospitals (legacy)"};
-  const placementLabels = {latest:"Latest",popular:"Popular",myChoice:"Favorites"};
+  const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
   let posts = [];
@@ -527,7 +527,7 @@
     if(!plainText(content)) return showToast("Please write the article content.");
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
-    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular or Favorites.");
+    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular, Trending or Favorites.");
     const selectingMyChoice=selectedPostTypes.includes("myChoice");
     const alreadyMyChoice=posts.filter(item=>item.id!==editingId && (Array.isArray(item.postTypes)?item.postTypes.includes("myChoice"):item.postType==="myChoice")).length;
     if(selectingMyChoice && alreadyMyChoice>=4) return showToast("Favorites can contain up to 4 selected items.");
