@@ -454,8 +454,8 @@
     const count = $("#featuredStoriesCount");
     if (!grid) return;
     // Keep the editorial selection in publication order, with up to 40 cards.
-    const items = posts.filter(post => post.featuredStories ?? post.featured).slice(0,40);
-    if (count) count.textContent = items.length + " / 40";
+    const items = posts.filter(post => post.featuredStories ?? post.featured).slice(0,20);
+    if (count) count.textContent = items.length + " / 20";
     const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
       (imageForPost(post) ? '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') +
       '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
