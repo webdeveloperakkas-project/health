@@ -3416,3 +3416,19 @@ img {
     margin-left: 2px !important;
   }
 }
+
+
+/* Mobile Latest/Popular cards: compact 70×65px thumbnails with a top-aligned three-line excerpt. */
+@media (max-width: 800px) {
+  .home-list-summary-row {
+    align-items: flex-start !important;
+  }
+
+  .home-list-thumb {
+    flex: 0 0 70px !important;
+    width: 70px !important;
+    min-width: 70px !important;
+    height: 65px !important;
+    aspect-ratio: auto !important;
+  }
+}
