@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=61" defer></script>
+<script src="script.js?v=62" defer></script>
 </head>
 
 
@@ -182,6 +182,18 @@ LATEST</div>
       <div class="trending-stories-list" id="trendingStoriesList" aria-live="polite">
         
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="trending-section" id="manualTrendingSection" aria-labelledby="manualTrendingTitle" hidden>
+  <div class="container">
+    <div class="trending-stories-card">
+      <div class="trending-stories-heading">
+        <h2 id="manualTrendingTitle">Trending</h2>
+        <span class="trending-period">EDITOR'S PICKS</span>
+      </div>
+      <div class="trending-stories-list" id="manualTrendingList" aria-live="polite"></div>
     </div>
   </div>
 </section>
