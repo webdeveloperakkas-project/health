@@ -265,9 +265,12 @@
     const latestItems = sortedByDate(posts.filter(post =>
       post !== excludePost && (post.postTypes || [post.postType || "latest"]).includes("latest")
     )).slice(0,10);
-    const popularItems = [...posts].filter(post =>
-      post !== excludePost && (post.postTypes || [post.postType || "latest"]).includes("popular")
-    ).sort((a,b) =>
+    const popularItems = [...posts].filter(post => {
+      const placements = post.postTypes || [post.postType || "latest"];
+      // The homepage's Popular rail only includes stories also selected for Latest.
+      // Popular-only stories remain inside their own category's Popular tab.
+      return post !== excludePost && placements.includes("popular") && placements.includes("latest");
+    }).sort((a,b) =>
       (Number(b.views)||0) - (Number(a.views)||0) ||
       (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) -
       (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)
@@ -413,10 +416,8 @@
       ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
     const placementMatches = post => {
       const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
-      // Category default Latest view includes every published post assigned
-      // to that category, regardless of homepage placement. Explicit Popular
-      // and Favorites tabs still filter to their selected placement.
-      if (activeCategory !== "home" && activePostType === "latest") return true;
+      // Both homepage and category feeds respect the editor's explicit placement.
+      // A Popular-only article belongs in its category's Popular tab, not Latest.
       return activePostType === "mostViewed" || placements.includes(activePostType);
     };
     const categoryPosts = posts
