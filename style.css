@@ -3150,3 +3150,29 @@ img {
     width: calc(100% - 4px) !important;
   }
 }
+
+
+/* Mobile: keep a 1px gap after Home and move the World News tab left. */
+@media (max-width: 800px) {
+  .category-tabs > .world-category-menu {
+    width: calc(100% + 3px) !important;
+    margin-left: -3px !important;
+  }
+
+  .category-tabs > .world-category-menu > .world-category-trigger {
+    box-sizing: border-box !important;
+    padding-left: 0 !important;
+    padding-right: 23px !important;
+    text-align: center !important;
+  }
+
+  .category-tabs > .world-category-menu > .world-category-trigger::after {
+    right: 3px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .category-tabs > .world-category-menu > .world-category-trigger {
+    padding-right: 21px !important;
+  }
+}
