@@ -14,7 +14,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=59" defer></script>
+<script src="script.js?v=60" defer></script>
 </head>
 
 
@@ -170,6 +170,24 @@ LATEST</div>
     </div>
     <div class="featured-stories-grid" id="featuredStoriesGrid"></div>
     <div class="featured-stories-footer"><button type="button" id="featuredStoriesViewAll">আরও বিস্তারিত পড়ুন <span>→</span></button></div>
+  </div>
+</section>
+
+<section class="trending-section" id="trendingSection" aria-labelledby="trendingStoriesTitle">
+  <div class="container">
+    <div class="trending-stories-card">
+      <div class="trending-stories-heading">
+        <div>
+          <span class="trending-eyebrow">GLOBAL SCOPE 24</span>
+          <h2 id="trendingStoriesTitle">Trending</h2>
+          <p id="trendingStoriesDescription">The 10 most-read stories in the last 7 days</p>
+        </div>
+        <span class="trending-period">7 DAYS · TOP 10</span>
+      </div>
+      <div class="trending-stories-list" id="trendingStoriesList" aria-live="polite">
+        <div class="trending-empty">Trending stories will appear here as views are recorded over the next 7 days.</div>
+      </div>
+    </div>
   </div>
 </section>
 </div>
