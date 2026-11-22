@@ -36,6 +36,10 @@ create table if not exists public.posts (
   status text not null default 'draft',
   scheduled_at timestamptz,
   excerpt text not null default '',
+  meta_title text not null default '',
+  meta_description text not null default '',
+  focus_keyword text not null default '',
+  related_keywords text[] not null default '{}'::text[],
   keywords text[] not null default '{}'::text[],
   video_url text not null default '',
   cover_url text not null default '',
@@ -46,6 +50,10 @@ create table if not exists public.posts (
 );
 
 alter table public.posts add column if not exists scheduled_at timestamptz;
+alter table public.posts add column if not exists meta_title text not null default '';
+alter table public.posts add column if not exists meta_description text not null default '';
+alter table public.posts add column if not exists focus_keyword text not null default '';
+alter table public.posts add column if not exists related_keywords text[] not null default '{}'::text[];
 alter table public.posts drop constraint if exists posts_status_check;
 alter table public.posts add constraint posts_status_check check (status in ('draft', 'scheduled', 'published'));
 
