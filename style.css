@@ -3150,6 +3150,14 @@ img {
   .container {
     width: calc(100% - 4px) !important;
   }
+
+  .main-column > .category-section ~ * {
+    box-sizing: border-box !important;
+    width: calc(100% - 6px) !important;
+    max-width: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 }
 
 
@@ -3344,7 +3352,8 @@ img {
 @media (max-width: 800px) {
   .main-column > .category-section ~ * {
     box-sizing: border-box !important;
-    width: calc(100% - 2px) !important;
+    /* Reduce each post-category section by 3px on both sides. */
+    width: calc(100% - 6px) !important;
     max-width: none !important;
     margin-left: auto !important;
     margin-right: auto !important;
