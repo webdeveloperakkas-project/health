@@ -16,6 +16,7 @@
   let posts = [];
   let editingId = null;
   let coverData = "";
+  let coverProvider = "";
   let currentKeywords = [];
   let cloudReady = false;
   let cloudLoading = false;
@@ -42,7 +43,7 @@
     const config=cloudinarySettings(),ready=!!(config.cloudName&&config.uploadPreset);
     if($("#cloudinaryCloudName"))$("#cloudinaryCloudName").value=config.cloudName||"";
     if($("#cloudinaryUploadPreset"))$("#cloudinaryUploadPreset").value=config.uploadPreset||"";
-    const status=$("#cloudinaryStatus");if(status){status.textContent=ready?"Cloudinary is ready. New images will upload to your Cloudinary account.":"Cloudinary is not configured. Images will use Supabase Storage.";status.classList.toggle("is-ready",ready);}
+    const status=$("#cloudinaryStatus");if(status){status.textContent=ready?"Cloudinary is configured and available. Choose Cloudinary or Supabase below the Cover Image uploader.":"Cloudinary is not configured. Select Supabase for cover-image uploads.";status.classList.toggle("is-ready",ready);}
   }
   $("#saveCloudinarySettings").addEventListener("click",()=>{
     const cloudName=$("#cloudinaryCloudName").value.trim(),uploadPreset=$("#cloudinaryUploadPreset").value.trim();
@@ -50,11 +51,13 @@
     localStorage.setItem("global-scope24-cloudinary",JSON.stringify({cloudName,uploadPreset}));updateCloudinaryStatus();showToast("Cloudinary settings saved in this browser.");
   });
   updateCloudinaryStatus();
-  async function uploadDataImage(dataUrl,postId){
+  async function uploadDataImage(dataUrl,postId,provider="") {
     if(!/^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/i.test(dataUrl))return dataUrl;
     const config=cloudinarySettings();
     const blob=await (await fetch(dataUrl)).blob();
-    if(config.cloudName&&config.uploadPreset){
+    const selectedProvider=provider||(config.cloudName&&config.uploadPreset?"cloudinary":"supabase");
+    if(selectedProvider==="cloudinary"){
+      if(!config.cloudName||!config.uploadPreset) throw new Error("Cloudinary is selected, but its Cloud Name or Unsigned Upload Preset is missing. Check Cloudinary Settings.");
       const form=new FormData();
       form.append("file",blob);form.append("upload_preset",config.uploadPreset);form.append("asset_folder","global-scope-24/articles/"+postId);
       const response=await fetch("https://api.cloudinary.com/v1_1/"+encodeURIComponent(config.cloudName)+"/image/upload",{method:"POST",body:form});
@@ -74,7 +77,7 @@
     let content=post.content||"";
     const dataUrls=[...new Set(content.match(/data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,[A-Za-z0-9+/=]+/gi)||[])];
     for(const dataUrl of dataUrls) content=content.split(dataUrl).join(await uploadDataImage(dataUrl,post.id));
-    const cover=post.cover?await uploadDataImage(post.cover,post.id):"";
+    const cover=post.cover?await uploadDataImage(post.cover,post.id,post.coverProvider||""):"";
     return {...post,content,cover};
   }
   async function savePostToCloud(post){
@@ -395,13 +398,13 @@
   }
   $("#coverUpload").addEventListener("change",event=>{
     const file=event.target.files[0]; if(!file) return;
-    readImage(file,data=>{coverData=data;renderCoverPreview();showToast("Cover image selected.");});
+    readImage(file,data=>{coverData=data;coverProvider=document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"supabase";renderCoverPreview();showToast("Cover image selected. It will upload to "+(coverProvider==="cloudinary"?"Cloudinary":"Supabase Storage")+" when you save the post.");});
   });
   $("#coverImageUrlBtn").addEventListener("click",()=>{
     const url=window.prompt("Paste a public cover image URL (https://...)");
     if(!url)return;
     if(!/^https:\/\//i.test(url))return showToast("Please use a public HTTPS image URL.");
-    coverData=url.trim();$("#coverUpload").value="";renderCoverPreview();showToast("Cover image URL added.");
+    coverData=url.trim();coverProvider="";$("#coverUpload").value="";renderCoverPreview();showToast("Cover image URL added.");
   });
   $("#coverImagePreview").addEventListener("click",event=>{
     if(event.target.closest("#removeCoverImage")){coverData="";$("#coverUpload").value="";renderCoverPreview();}
@@ -462,7 +465,7 @@
   function resetForm(){
     $("#postForm").reset(); syncCategorySubcategory(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
-    coverData=""; $("#coverUpload").value=""; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
+    coverData=""; coverProvider=""; $("#coverUpload").value=""; document.querySelector('input[name="coverStorageProvider"][value="supabase"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
   }
   function newPost(){
@@ -475,7 +478,7 @@
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
-    $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; renderCoverPreview();
+    $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
     
     $("#deleteCurrentBtn").hidden=false;
     $("#editorStatusText").textContent=post.status==="published"?"Published":post.status==="scheduled"?"Scheduled":"Draft";
@@ -520,7 +523,7 @@
     const post={
       id:editingId||id(),title,content,excerpt:$("#cardSummary").value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
-      videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
+      videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"supabase",views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null
     };
     const saveButton=$("#savePostBtn");
