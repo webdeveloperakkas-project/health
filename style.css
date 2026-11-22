@@ -3342,8 +3342,11 @@ img {
    Keep the category section itself and all desktop layouts unchanged. */
 @media (max-width: 800px) {
   .main-column > .category-section ~ * {
-    margin-left: 1px !important;
-    margin-right: 1px !important;
+    box-sizing: border-box !important;
+    width: calc(100% - 2px) !important;
+    max-width: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 
   /* Give the full-article title a precise 2px left inset. */
