@@ -2950,3 +2950,22 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 img {
   border-radius: 0 !important;
 }
+
+/* Mobile spacing alignment: Featured Stories and Trending sections. */
+@media (max-width: 800px) {
+  .featured-stories-card {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    border-radius: 0 !important;
+  }
+  .trending-stories-card {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    border-radius: 0 !important;
+  }
+  .featured-stories-section,
+  .trending-section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
