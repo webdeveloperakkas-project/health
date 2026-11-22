@@ -214,6 +214,7 @@
   const topAdSlot = $(".top-ad");
   const featuredStoriesSection = $("#featuredStoriesSection");
   const trendingSection = $("#trendingSection");
+  const manualTrendingSection = $("#manualTrendingSection");
   const aboutSection = $("#about");
 
   function sortedByDate(items) {
@@ -378,6 +379,23 @@
       : "";
   }
 
+  /* Manually curated Trending is independent from the automatic Most Read ranking. */
+  function renderManualTrendingStories() {
+    const list = $("#manualTrendingList");
+    const section = manualTrendingSection;
+    if (!list || !section) return;
+    const items = sortedByDate(posts.filter(post =>
+      (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("trending")
+    )).slice(0,10);
+    section.hidden = !items.length;
+    list.innerHTML = items.map((post,index) =>
+      '<button class="trending-story-link" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+      '<span class="trending-story-rank">' + String(index+1).padStart(2,"0") + '</span>' +
+      '<span class="trending-story-title">' + escapeHTML(post.title) + '</span>' +
+      '<span class="trending-story-arrow" aria-hidden="true">↗</span></button>'
+    ).join("");
+  }
+
   function renderArticleRecommendations() {
     return '<section class="article-below-lists" aria-label="More articles">' +
       '<div class="home-rail-card">' +
@@ -423,6 +441,7 @@
     if (articleSection) articleSection.hidden = true;
     if (featuredStoriesSection) featuredStoriesSection.hidden = true;
     if (trendingSection) trendingSection.hidden = true;
+    if (manualTrendingSection) manualTrendingSection.hidden = true;
     if (aboutSection) aboutSection.hidden = true;
     if (tickerSection) tickerSection.hidden = true;
     if (categorySection) categorySection.hidden = false;
@@ -437,6 +456,7 @@
   function render() {
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
     if (trendingSection) trendingSection.hidden = !isHomeLanding;
+    if (manualTrendingSection) manualTrendingSection.hidden = !isHomeLanding;
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
@@ -470,6 +490,7 @@
       renderHomeList();
       renderFeaturedStories();
       renderTrendingStories();
+      renderManualTrendingStories();
       renderMyChoice();
       return;
     }
@@ -898,6 +919,8 @@
           if (homeSection) homeSection.hidden = true;
           if (articleSection) articleSection.hidden = true;
           if (featuredStoriesSection) featuredStoriesSection.hidden = true;
+          if (manualTrendingSection) manualTrendingSection.hidden = true;
+          if (trendingSection) trendingSection.hidden = true;
           if (aboutSection) aboutSection.hidden = true;
           if (tickerSection) tickerSection.hidden = true;
         }
