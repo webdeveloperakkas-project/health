@@ -3212,3 +3212,24 @@ img {
     letter-spacing: -0.2px !important;
   }
 }
+
+
+/* Mobile: reclaim a little width from Health and give it to Entertainment. */
+@media (max-width: 800px) {
+  .category-tabs > .category-tab[data-category="health"] {
+    width: calc(100% - 10px) !important;
+    justify-self: start !important;
+    margin-left: 2px !important;
+  }
+
+  .category-tabs > .entertainment-category-menu {
+    width: calc(100% + 10px) !important;
+    justify-self: start !important;
+    position: relative !important;
+    z-index: 22 !important;
+  }
+
+  .category-tabs > .entertainment-category-menu > .entertainment-category-trigger {
+    width: 100% !important;
+  }
+}
