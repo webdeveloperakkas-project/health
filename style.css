@@ -2909,3 +2909,25 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   .featured-stories-grid .featured-story-category{font-size:8px}
   .featured-stories-grid .featured-story-copy time{font-size:9px}
 }
+
+
+/* Trending: editorial title-only ranking card, powered by the rolling 7-day view count. */
+.trending-section{padding:0 0 54px}
+.trending-stories-card{overflow:hidden;padding:25px 28px 23px;border:1px solid #dcebe6;border-radius:16px;background:linear-gradient(135deg,#f1f8f5 0%,#f7f9fc 55%,#fff8eb 100%);box-shadow:0 10px 30px rgba(21,57,67,.055)}
+.trending-stories-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 16px;padding-bottom:15px;border-bottom:1px solid rgba(21,57,67,.11)}
+.trending-eyebrow{color:#0b897d;font-size:10px;font-weight:900;letter-spacing:.16em}
+.trending-stories-heading h2{margin:4px 0 5px;color:#153943;font:850 clamp(23px,2.2vw,30px)/1.15 Manrope,sans-serif}
+.trending-stories-heading p{margin:0;color:#667b79;font-size:12px}
+.trending-period{flex:none;padding:8px 12px;border:1px solid #d6e9df;border-radius:30px;background:rgba(255,255,255,.78);color:#087c75;font-size:10px;font-weight:900;letter-spacing:.08em}
+.trending-stories-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 13px}
+.trending-story-link{display:flex;align-items:center;gap:13px;min-width:0;min-height:62px;padding:12px 14px;border:1px solid rgba(213,229,222,.95);border-radius:10px;background:rgba(255,255,255,.86);color:#183d43;text-align:left;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.trending-story-link:hover{transform:translateY(-2px);border-color:#8dc8b8;box-shadow:0 7px 18px rgba(21,57,67,.08)}
+.trending-story-rank{display:grid;place-items:center;flex:0 0 31px;width:31px;height:31px;border-radius:9px;background:#e3f1eb;color:#087c75;font:850 12px/1 Manrope,sans-serif}
+.trending-story-title{flex:1;min-width:0;color:#183d43;font:750 13px/1.45 Manrope,sans-serif}
+.trending-story-arrow{flex:none;color:#89a6a0;font-size:17px;transition:transform .18s ease,color .18s ease}
+.trending-story-link:hover .trending-story-arrow{transform:translate(2px,-2px);color:#087c75}
+.trending-empty{grid-column:1/-1;padding:22px 18px;border:1px dashed #cbded6;border-radius:10px;background:rgba(255,255,255,.6);color:#70817e;font-size:13px;text-align:center}
+.article-breadcrumb{display:flex;align-items:center;gap:9px;margin:0 auto 18px;color:#829390;font-size:12px}
+.article-breadcrumb a{color:#087c75;font-weight:750;text-decoration:none}
+.article-breadcrumb a:hover{text-decoration:underline}
+@media(max-width:800px){.trending-section{padding-bottom:35px}.trending-stories-card{padding:18px 14px 15px}.trending-stories-heading{align-items:flex-start}.trending-period{padding:7px 9px;font-size:9px}.trending-stories-list{grid-template-columns:1fr;gap:8px}.trending-story-link{min-height:56px;padding:10px 11px}.trending-story-title{font-size:12px}}
