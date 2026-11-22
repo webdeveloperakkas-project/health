@@ -102,3 +102,9 @@
 .editor-mode-switch>div{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
 .editor-mode-btn{white-space:nowrap}
 @media(max-width:600px){.editor-mode-switch{flex-direction:row;align-items:center;flex-wrap:wrap}.editor-mode-switch>span{flex:1 0 100%}.editor-mode-switch>div{width:100%;display:flex;flex-wrap:nowrap}.editor-mode-btn{flex:1;padding:7px 5px;font-size:9px}}
+
+
+/* Clear upload format guidance and Cloudinary readiness status. */
+.cover-recommended-size{line-height:1.65}
+.cloudinary-card .field-help{line-height:1.65}
+.cloudinary-status{line-height:1.55;overflow-wrap:anywhere}
