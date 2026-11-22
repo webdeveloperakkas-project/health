@@ -254,7 +254,7 @@
   function articleRoute(post, source = "") {
     const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",shortArticleId(post)].filter(Boolean);
     const path = siteBasePath() + parts.map(part => encodeURIComponent(part)).join("/") + "/";
-    return source === "trending" ? path + "?source=trending" : path;
+    return source === "most-read" ? path + "?source=most-read" : path;
   }
   function articleShareUrl(post) { return new URL(articleRoute(post),window.location.origin).toString(); }
   function shareButtons(post) {
@@ -373,9 +373,9 @@
       .filter(item => item.post)
       .slice(0,10);
     const title = $("#trendingStoriesTitle");
-    if (title) title.textContent = "Trending";
+    if (title) title.textContent = "Most Read";
     list.innerHTML = items.length
-      ? items.map((item,index) => '<button class="trending-story-link" type="button" data-open-post="' + posts.indexOf(item.post) + '" data-open-source="trending"><span class="trending-story-rank">' + String(index+1).padStart(2,"0") + '</span><span class="trending-story-title">' + escapeHTML(item.post.title) + '</span><span class="trending-story-arrow" aria-hidden="true">↗</span></button>').join("")
+      ? items.map((item,index) => '<button class="trending-story-link" type="button" data-open-post="' + posts.indexOf(item.post) + '" data-open-source="most-read"><span class="trending-story-rank">' + String(index+1).padStart(2,"0") + '</span><span class="trending-story-title">' + escapeHTML(item.post.title) + '</span><span class="trending-story-arrow" aria-hidden="true">↗</span></button>').join("")
       : "";
   }
 
@@ -401,8 +401,8 @@
     const subcategoryLabel = post.subcategory ? post.subcategory.replace(/-/g," ") : "";
     const paragraphs = sourceHtml;
     const articleSource = new URLSearchParams(window.location.search).get("source");
-    const breadcrumb = articleSource === "trending"
-      ? '<nav class="article-breadcrumb" aria-label="Breadcrumb"><a href="' + siteBasePath() + '">Home</a><span>›</span><span>Trending</span></nav>'
+    const breadcrumb = articleSource === "most-read"
+      ? '<nav class="article-breadcrumb" aria-label="Breadcrumb"><a href="' + siteBasePath() + '">Home</a><span>›</span><span>Most Read</span></nav>'
       : "";
     singleArticleView.innerHTML =
       '<article class="single-article container">' +
@@ -819,9 +819,9 @@
 
   async function refreshTrendingStories() {
     if (!publicSupabaseClient) return;
-    const {data,error} = await publicSupabaseClient.rpc("get_trending_posts");
+    const {data,error} = await publicSupabaseClient.rpc("get_most_read_posts");
     if (error) {
-      console.warn("Trending data is not available yet. Run supabase/trending_views.sql:",error.message);
+      console.warn("Most Read data is not available yet. Run supabase/most_read_views.sql:",error.message);
       trendingPosts = [];
     } else {
       trendingPosts = Array.isArray(data) ? data : [];
@@ -836,7 +836,7 @@
       p_visitor_id:getTrendingVisitorId()
     }).then(({error}) => {
       if (error) {
-        console.warn("Could not record trending view. Run supabase/trending_views.sql:",error.message);
+        console.warn("Could not record article view. Run supabase/most_read_views.sql:",error.message);
         return;
       }
       refreshTrendingStories();
