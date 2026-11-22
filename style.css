@@ -3233,3 +3233,12 @@ img {
     width: 100% !important;
   }
 }
+
+
+/* Mobile: extend Entertainment background left while keeping a 2px gap after Health. */
+@media (max-width: 800px) {
+  .category-tabs > .entertainment-category-menu {
+    width: calc(100% + 24px) !important;
+    margin-left: -14px !important;
+  }
+}
