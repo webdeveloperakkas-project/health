@@ -3369,3 +3369,9 @@ img {
     font-size: 18px !important;
   }
 }
+
+/* Homepage Latest/Popular card short descriptions: clear, dark 12px text. */
+.home-list-excerpt {
+  font-size: 12px !important;
+  color: #222222 !important;
+}
