@@ -28,19 +28,32 @@
     return {id:row.id,title:row.title,content:row.content_html||"",category:row.category==="beauty"?"lifestyle":row.category,
       subcategory:row.subcategory||"",language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
-      status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",keywords:row.keywords||[],videoUrl:row.video_url||"",
+      status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
       cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at};
   }
+  function cloudinarySettings(){try{return JSON.parse(localStorage.getItem("global-scope24-cloudinary")||"{}");}catch(_){return {};}}
+  function updateCloudinaryStatus(){
+    const config=cloudinarySettings(),ready=!!(config.cloudName&&config.uploadPreset);
+    if($("#cloudinaryCloudName"))$("#cloudinaryCloudName").value=config.cloudName||"";
+    if($("#cloudinaryUploadPreset"))$("#cloudinaryUploadPreset").value=config.uploadPreset||"";
+    const status=$("#cloudinaryStatus");if(status){status.textContent=ready?"Cloudinary is configured on this browser.":"Cloudinary is not configured yet.";status.classList.toggle("is-ready",ready);}
+  }
+  $("#saveCloudinarySettings").addEventListener("click",()=>{
+    const cloudName=$("#cloudinaryCloudName").value.trim(),uploadPreset=$("#cloudinaryUploadPreset").value.trim();
+    if(!/^[a-z0-9-]+$/i.test(cloudName)||!uploadPreset)return showToast("Enter a valid Cloudinary cloud name and unsigned upload preset.");
+    localStorage.setItem("global-scope24-cloudinary",JSON.stringify({cloudName,uploadPreset}));updateCloudinaryStatus();showToast("Cloudinary settings saved in this browser.");
+  });
+  updateCloudinaryStatus();
   async function uploadDataImage(dataUrl,postId){
-    if(!/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(dataUrl)) return dataUrl;
-    const response=await fetch(dataUrl);
-    const blob=await response.blob();
-    const ext=({ "image/jpeg":"jpg","image/png":"png","image/webp":"webp","image/gif":"gif" })[blob.type]||"jpg";
-    const path="articles/"+postId+"/"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8)+"."+ext;
-    const {error}=await db().storage.from(MEDIA_BUCKET).upload(path,blob,{contentType:blob.type,upsert:true});
-    if(error) throw error;
-    const {data}=db().storage.from(MEDIA_BUCKET).getPublicUrl(path);
-    return data.publicUrl;
+    if(!/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(dataUrl))return dataUrl;
+    const config=cloudinarySettings();
+    if(!config.cloudName||!config.uploadPreset)throw new Error("Set your Cloudinary cloud name and unsigned upload preset before uploading images.");
+    const blob=await (await fetch(dataUrl)).blob(),form=new FormData();
+    form.append("file",blob);form.append("upload_preset",config.uploadPreset);form.append("folder","global-scope-24/articles/"+postId);
+    const response=await fetch("https://api.cloudinary.com/v1_1/"+encodeURIComponent(config.cloudName)+"/image/upload",{method:"POST",body:form});
+    const result=await response.json();
+    if(!response.ok||!result.secure_url)throw new Error(result.error?.message||"Cloudinary image upload failed.");
+    return result.secure_url;
   }
   async function preparePostMedia(post){
     let content=post.content||"";
@@ -54,6 +67,7 @@
     const row={id:prepared.id,title:prepared.title,content_html:prepared.content,category:prepared.category,
       subcategory:prepared.subcategory||"",language:prepared.language||"en",post_types:prepared.postTypes||["latest"],
       featured_stories:!!prepared.featuredStories,status:prepared.status,scheduled_at:prepared.scheduledAt||null,excerpt:prepared.excerpt||"",
+      meta_title:prepared.metaTitle||"",meta_description:prepared.metaDescription||"",focus_keyword:prepared.focusKeyword||"",related_keywords:prepared.keywords||[],
       keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",
       views:Number(prepared.views)||0,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null};
     const {error}=await db().from("posts").upsert(row,{onConflict:"id"});
@@ -191,7 +205,7 @@
   });
   function readImage(file,callback){
     if(!file||!file.type.startsWith("image/")) return showToast("Please choose an image file.");
-    if(file.size>2*1024*1024) return showToast("Each image must be under 2 MB.");
+    if(file.size>10*1024*1024) return showToast("Each image must be under 10 MB.");
     const reader=new FileReader();
     reader.onload=()=>callback(String(reader.result));
     reader.onerror=()=>showToast("Could not read this image.");
@@ -199,12 +213,37 @@
   }
   $("#imageBtn").addEventListener("click",()=>$("#imageUpload").click());
   let selectedInlineFigure=null;
-  function cleanArticleHTML(){
+  let editorMode="visual";
+  function visualArticleHTML(){
     const clone=$("#articleEditor").cloneNode(true);
     clone.querySelectorAll(".cms-resize-handle").forEach(node=>node.remove());
     clone.querySelectorAll("figure.cms-image-frame").forEach(node=>{node.classList.remove("cms-image-frame","cms-image-active");node.removeAttribute("draggable");});
-    return clone.innerHTML.trim();
+    const raw=clone.innerHTML.trim();
+    return window.DOMPurify?DOMPurify.sanitize(raw,{USE_PROFILES:{html:true},ADD_ATTR:["target","style","width","height","loading"]}):raw;
   }
+  function cleanArticleHTML(){
+    const raw=editorMode==="html"?$("#articleHtmlEditor").value:visualArticleHTML();
+    return window.DOMPurify?DOMPurify.sanitize(raw,{USE_PROFILES:{html:true},ADD_ATTR:["target","style","width","height","loading"]}):raw;
+  }
+  function setEditorMode(mode){
+    const htmlMode=mode==="html";
+    if(htmlMode&&editorMode!=="html")$("#articleHtmlEditor").value=visualArticleHTML();
+    if(!htmlMode&&editorMode==="html")$("#articleEditor").innerHTML=$("#articleHtmlEditor").value||"<p></p>";
+    editorMode=htmlMode?"html":"visual";
+    $("#articleEditor").hidden=htmlMode;$("#articleHtmlEditor").hidden=!htmlMode;$("#visualToolbar").hidden=htmlMode;
+    $("#visualModeBtn").classList.toggle("active",!htmlMode);$("#htmlModeBtn").classList.toggle("active",htmlMode);
+    $("#visualModeBtn").setAttribute("aria-pressed",String(!htmlMode));$("#htmlModeBtn").setAttribute("aria-pressed",String(htmlMode));
+  }
+  $("#visualModeBtn").addEventListener("click",()=>setEditorMode("visual"));
+  $("#htmlModeBtn").addEventListener("click",()=>setEditorMode("html"));
+  $("#imageUrlBtn").addEventListener("click",()=>{
+    const url=window.prompt("Paste a public Cloudinary image URL (https://res.cloudinary.com/...)");
+    if(!url)return;
+    if(!/^https:\/\/res\.cloudinary\.com\//i.test(url))return showToast("Use a secure Cloudinary image URL.");
+    const snippet='<figure style="width:100%;margin:18px auto"><img src="'+safe(url)+'" alt="" style="display:block;width:100%;height:auto"></figure><p></p>';
+    if(editorMode==="html")$("#articleHtmlEditor").value+="\\n"+snippet;
+    else{$("#articleEditor").focus();document.execCommand("insertHTML",false,snippet);}
+  });
   function addResizeHandles(figure){
     figure.querySelectorAll(".cms-resize-handle").forEach(node=>node.remove());
     ["nw","ne","sw","se","e","w"].forEach(direction=>{
@@ -341,6 +380,9 @@
     if(remove){currentKeywords.splice(Number(remove.dataset.removeKeyword),1);renderKeywordChips();}
   });
 
+  function updateMetaDescriptionCount(){const field=$("#metaDescription"),count=$("#metaDescriptionCount");if(field&&count)count.textContent=field.value.length+" / 160 recommended characters";}
+  $("#metaDescription").addEventListener("input",updateMetaDescriptionCount);
+
   /* Form state and CRUD */
   function syncCategorySubcategory(){
     const category=$("#postCategory").value;
@@ -356,7 +398,7 @@
   $("#postStatus").addEventListener("change",syncScheduleFields);
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   function resetForm(){
-    $("#postForm").reset(); syncCategorySubcategory(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); syncCategorySubcategory(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; $("#coverUpload").value=""; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -367,7 +409,7 @@
   function editPost(postId){
     const post=posts.find(item=>item.id===postId); if(!post) return;
     editingId=postId; resetForm();
-    $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>"; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postTitle").value=post.title||""; $("#articleEditor").innerHTML=post.content||"<p></p>"; $("#articleHtmlEditor").value=post.content||""; setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en";
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
@@ -414,7 +456,7 @@
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
-      id:editingId||id(),title,content,category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
+      id:editingId||id(),title,content,excerpt:$("#cardSummary").value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null
