@@ -324,12 +324,19 @@
     const post = stories[homeFeaturedIndex];
     const index = posts.indexOf(post);
     const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
+    const publishedDate = Number(post.publishedTimestamp)
+      ? new Date(Number(post.publishedTimestamp))
+      : null;
+    const displayTime = publishedDate && !Number.isNaN(publishedDate.getTime())
+      ? publishedDate.toLocaleTimeString(activeLanguage || "en", { hour: "numeric", minute: "2-digit" })
+      : "";
+    const image = imageForPost(post);
     homeFeatured.innerHTML =
       '<div class="home-feature-slide">' +
-      (imageForPost(post) ? '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '" fetchpriority="high"></div>' : '') +
+      (image ? '<div class="home-feature-image" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"></div>' : '') +
       '<div class="home-feature-content">' +
       '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '">' + escapeHTML(post.title) + '</h1>' +
-      '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time></div></div></div>' +
+      '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + (displayTime ? ' · ' + escapeHTML(displayTime) : '') + '</time></div></div></div>' +
       '<div class="home-feature-navigation" aria-label="Main story navigation">' +
       '<button type="button" class="home-feature-arrow" data-home-feature="previous">' + labels.previous + '</button>' +
       '<div class="home-feature-pagination" aria-label="Choose a story">' + stories.map((story,i) => '<button type="button" class="home-feature-dot' + (i === homeFeaturedIndex ? ' active' : '') + '" data-home-feature-index="' + i + '" aria-label="Go to story ' + (i+1) + '" aria-current="' + (i === homeFeaturedIndex ? 'true' : 'false') + '"></button>').join("") + '</div>' +
