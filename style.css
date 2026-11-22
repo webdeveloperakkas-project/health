@@ -2894,3 +2894,17 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .featured-stories-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}
 .featured-stories-grid .featured-story-item{min-width:0;margin:0}
 @media(max-width:800px){.featured-stories-grid{grid-template-columns:1fr;gap:0}}
+
+
+/* Featured Stories: keep two cards side by side on every screen size. */
+.featured-stories-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px 18px!important}
+.featured-stories-grid .featured-story-item{min-width:0;margin:0}
+@media(max-width:800px){
+  .featured-stories-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .featured-stories-grid .featured-story-item{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-height:0;padding:8px;margin:0;border:1px solid #e8efec!important;border-radius:9px}
+  .featured-stories-grid .featured-story-thumb{display:block;width:100%;height:auto;aspect-ratio:16/10;flex:0 0 auto}
+  .featured-stories-grid .featured-story-copy{gap:4px}
+  .featured-stories-grid .featured-story-copy strong{font-size:12px;line-height:1.35}
+  .featured-stories-grid .featured-story-category{font-size:8px}
+  .featured-stories-grid .featured-story-copy time{font-size:9px}
+}
