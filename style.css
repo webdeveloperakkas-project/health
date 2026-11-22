@@ -3315,3 +3315,19 @@ img {
     transform: translateX(-1px) !important;
   }
 }
+
+
+/* Home is a navigation control, not a content category: show a compact house icon. */
+.category-tabs > .home-category-tab {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.category-tabs > .home-category-tab .home-tab-icon {
+  display: block;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+}
