@@ -36,7 +36,7 @@
     const config=cloudinarySettings(),ready=!!(config.cloudName&&config.uploadPreset);
     if($("#cloudinaryCloudName"))$("#cloudinaryCloudName").value=config.cloudName||"";
     if($("#cloudinaryUploadPreset"))$("#cloudinaryUploadPreset").value=config.uploadPreset||"";
-    const status=$("#cloudinaryStatus");if(status){status.textContent=ready?"Cloudinary is configured on this browser.":"Cloudinary is not configured yet.";status.classList.toggle("is-ready",ready);}
+    const status=$("#cloudinaryStatus");if(status){status.textContent=ready?"Cloudinary is configured on this browser.":"Cloudinary is optional. Images will use Supabase Storage until configured.";status.classList.toggle("is-ready",ready);}
   }
   $("#saveCloudinarySettings").addEventListener("click",()=>{
     const cloudName=$("#cloudinaryCloudName").value.trim(),uploadPreset=$("#cloudinaryUploadPreset").value.trim();
@@ -47,13 +47,22 @@
   async function uploadDataImage(dataUrl,postId){
     if(!/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(dataUrl))return dataUrl;
     const config=cloudinarySettings();
-    if(!config.cloudName||!config.uploadPreset)throw new Error("Set your Cloudinary cloud name and unsigned upload preset before uploading images.");
-    const blob=await (await fetch(dataUrl)).blob(),form=new FormData();
-    form.append("file",blob);form.append("upload_preset",config.uploadPreset);form.append("folder","global-scope-24/articles/"+postId);
-    const response=await fetch("https://api.cloudinary.com/v1_1/"+encodeURIComponent(config.cloudName)+"/image/upload",{method:"POST",body:form});
-    const result=await response.json();
-    if(!response.ok||!result.secure_url)throw new Error(result.error?.message||"Cloudinary image upload failed.");
-    return result.secure_url;
+    const blob=await (await fetch(dataUrl)).blob();
+    if(config.cloudName&&config.uploadPreset){
+      const form=new FormData();
+      form.append("file",blob);form.append("upload_preset",config.uploadPreset);form.append("folder","global-scope-24/articles/"+postId);
+      const response=await fetch("https://api.cloudinary.com/v1_1/"+encodeURIComponent(config.cloudName)+"/image/upload",{method:"POST",body:form});
+      const result=await response.json();
+      if(!response.ok||!result.secure_url)throw new Error(result.error?.message||"Cloudinary image upload failed.");
+      return result.secure_url;
+    }
+    const extension=(blob.type.split("/")[1]||"jpg").replace("jpeg","jpg");
+    const filePath="articles/"+postId+"/"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9)+"."+extension;
+    const {error}=await db().storage.from(MEDIA_BUCKET).upload(filePath,blob,{contentType:blob.type,upsert:false});
+    if(error)throw new Error("Image upload failed: "+error.message);
+    const {data}=db().storage.from(MEDIA_BUCKET).getPublicUrl(filePath);
+    if(!data?.publicUrl)throw new Error("Could not create a public image URL from Supabase Storage.");
+    return data.publicUrl;
   }
   async function preparePostMedia(post){
     let content=post.content||"";
@@ -205,7 +214,7 @@
   });
   function readImage(file,callback){
     if(!file||!file.type.startsWith("image/")) return showToast("Please choose an image file.");
-    if(file.size>10*1024*1024) return showToast("Each image must be under 10 MB.");
+    if(file.size>5*1024*1024) return showToast("Each image must be under 5 MB.");
     const reader=new FileReader();
     reader.onload=()=>callback(String(reader.result));
     reader.onerror=()=>showToast("Could not read this image.");
@@ -260,9 +269,9 @@
   $("#htmlModeBtn").addEventListener("click",()=>setEditorMode("html"));
   $("#formatHtmlBtn").addEventListener("click",()=>{$("#articleHtmlEditor").value=formatHTMLSource($("#articleHtmlEditor").value);showToast("HTML code formatted.");});
   $("#imageUrlBtn").addEventListener("click",()=>{
-    const url=window.prompt("Paste a public Cloudinary image URL (https://res.cloudinary.com/...)");
+    const url=window.prompt("Paste a public image URL (https://...)");
     if(!url)return;
-    if(!/^https:\/\/res\.cloudinary\.com\//i.test(url))return showToast("Use a secure Cloudinary image URL.");
+    if(!/^https:\/\//i.test(url))return showToast("Please use a public HTTPS image URL.");
     const snippet='<figure style="width:100%;margin:18px auto"><img src="'+safe(url)+'" alt="" style="display:block;width:100%;height:auto"></figure><p></p>';
     if(editorMode==="html")$("#articleHtmlEditor").value+="\\n"+snippet;
     else{$("#articleEditor").focus();document.execCommand("insertHTML",false,snippet);}
@@ -363,6 +372,12 @@
   $("#coverUpload").addEventListener("change",event=>{
     const file=event.target.files[0]; if(!file) return;
     readImage(file,data=>{coverData=data;renderCoverPreview();showToast("Cover image selected.");});
+  });
+  $("#coverImageUrlBtn").addEventListener("click",()=>{
+    const url=window.prompt("Paste a public cover image URL (https://...)");
+    if(!url)return;
+    if(!/^https:\/\//i.test(url))return showToast("Please use a public HTTPS image URL.");
+    coverData=url.trim();$("#coverUpload").value="";renderCoverPreview();showToast("Cover image URL added.");
   });
   $("#coverImagePreview").addEventListener("click",event=>{
     if(event.target.closest("#removeCoverImage")){coverData="";$("#coverUpload").value="";renderCoverPreview();}
