@@ -30,12 +30,18 @@
       status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
       cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at};
   }
-  function cloudinarySettings(){try{return JSON.parse(localStorage.getItem("global-scope24-cloudinary")||"{}");}catch(_){return {};}}
+  function cloudinarySettings(){
+    const defaults={cloudName:"r2lo6mql",uploadPreset:"global_scope24_upload"};
+    try{
+      const saved=JSON.parse(localStorage.getItem("global-scope24-cloudinary")||"{}");
+      return {cloudName:String(saved?.cloudName||defaults.cloudName),uploadPreset:String(saved?.uploadPreset||defaults.uploadPreset)};
+    }catch(_){return defaults;}
+  }
   function updateCloudinaryStatus(){
     const config=cloudinarySettings(),ready=!!(config.cloudName&&config.uploadPreset);
     if($("#cloudinaryCloudName"))$("#cloudinaryCloudName").value=config.cloudName||"";
     if($("#cloudinaryUploadPreset"))$("#cloudinaryUploadPreset").value=config.uploadPreset||"";
-    const status=$("#cloudinaryStatus");if(status){status.textContent=ready?"Cloudinary is configured on this browser.":"Cloudinary is optional. Images will use Supabase Storage until configured.";status.classList.toggle("is-ready",ready);}
+    const status=$("#cloudinaryStatus");if(status){status.textContent=ready?"Cloudinary is ready. New images will upload to your Cloudinary account.":"Cloudinary is not configured. Images will use Supabase Storage.";status.classList.toggle("is-ready",ready);}
   }
   $("#saveCloudinarySettings").addEventListener("click",()=>{
     const cloudName=$("#cloudinaryCloudName").value.trim(),uploadPreset=$("#cloudinaryUploadPreset").value.trim();
@@ -44,18 +50,18 @@
   });
   updateCloudinaryStatus();
   async function uploadDataImage(dataUrl,postId){
-    if(!/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(dataUrl))return dataUrl;
+    if(!/^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/i.test(dataUrl))return dataUrl;
     const config=cloudinarySettings();
     const blob=await (await fetch(dataUrl)).blob();
     if(config.cloudName&&config.uploadPreset){
       const form=new FormData();
-      form.append("file",blob);form.append("upload_preset",config.uploadPreset);form.append("folder","global-scope-24/articles/"+postId);
+      form.append("file",blob);form.append("upload_preset",config.uploadPreset);form.append("asset_folder","global-scope-24/articles/"+postId);
       const response=await fetch("https://api.cloudinary.com/v1_1/"+encodeURIComponent(config.cloudName)+"/image/upload",{method:"POST",body:form});
       const result=await response.json();
       if(!response.ok||!result.secure_url)throw new Error(result.error?.message||"Cloudinary image upload failed.");
       return result.secure_url;
     }
-    const extension=(blob.type.split("/")[1]||"jpg").replace("jpeg","jpg");
+    const extension=(blob.type.split("/")[1]||"jpg").replace("jpeg","jpg").replace("svg+xml","svg");
     const filePath="articles/"+postId+"/"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9)+"."+extension;
     const {error}=await db().storage.from(MEDIA_BUCKET).upload(filePath,blob,{contentType:blob.type,upsert:false});
     if(error)throw new Error("Image upload failed: "+error.message);
@@ -65,7 +71,7 @@
   }
   async function preparePostMedia(post){
     let content=post.content||"";
-    const dataUrls=[...new Set(content.match(/data:image\/(?:png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+/gi)||[])];
+    const dataUrls=[...new Set(content.match(/data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,[A-Za-z0-9+/=]+/gi)||[])];
     for(const dataUrl of dataUrls) content=content.split(dataUrl).join(await uploadDataImage(dataUrl,post.id));
     const cover=post.cover?await uploadDataImage(post.cover,post.id):"";
     return {...post,content,cover};
@@ -212,12 +218,30 @@
     else if(url) showToast("Please enter a valid http or https link.");
   });
   function readImage(file,callback){
-    if(!file||!file.type.startsWith("image/")) return showToast("Please choose an image file.");
-    if(file.size>5*1024*1024) return showToast("Each image must be under 5 MB.");
+    const allowedTypes=["image/jpeg","image/png","image/webp","image/gif","image/svg+xml"];
+    const extension=(file?.name||"").split(".").pop().toLowerCase();
+    const allowedExtensions=["jpg","jpeg","png","webp","gif","svg"];
+    if(!file||(!allowedTypes.includes(file.type)&&!allowedExtensions.includes(extension))){
+      return showToast("Supported formats: JPG, PNG, WebP, GIF and SVG icons.");
+    }
+    if(file.size>5*1024*1024) return showToast("Each image must be 5 MB or smaller.");
     const reader=new FileReader();
-    reader.onload=()=>callback(String(reader.result));
+    if(file.type==="image/svg+xml"||extension==="svg"){
+      reader.onload=()=>{
+        const raw=String(reader.result||"");
+        const sanitized=window.DOMPurify?DOMPurify.sanitize(raw,{USE_PROFILES:{svg:true,svgFilters:true}}):"";
+        if(!/<svg[\s>]/i.test(sanitized)) return showToast("This SVG is invalid or could not be safely cleaned.");
+        const bytes=new TextEncoder().encode(sanitized);
+        let binary="";
+        bytes.forEach(byte=>{binary+=String.fromCharCode(byte);});
+        callback("data:image/svg+xml;base64,"+btoa(binary));
+      };
+      reader.readAsText(file);
+    }else{
+      reader.onload=()=>callback(String(reader.result));
+      reader.readAsDataURL(file);
+    }
     reader.onerror=()=>showToast("Could not read this image.");
-    reader.readAsDataURL(file);
   }
   $("#imageBtn").addEventListener("click",()=>$("#imageUpload").click());
   let selectedInlineFigure=null;
