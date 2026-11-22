@@ -3321,10 +3321,14 @@ img {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  background: #E5F3ED !important;
-  color: #087C75 !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: #087C75 !important;
+  color: #FFFFFF !important;
 }
 .category-tabs > .home-category-tab .home-tab-icon {
   display: block;
