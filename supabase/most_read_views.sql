@@ -113,6 +113,6 @@ as $$
 $$;
 
 revoke all on function public.record_post_view(text, uuid) from public;
-revoke all on function public.get_trending_posts() from public;
 grant execute on function public.record_post_view(text, uuid) to anon, authenticated;
-grant execute on function public.get_trending_posts() to anon, authenticated;
+revoke all on function public.get_most_read_posts() from public;
+grant execute on function public.get_most_read_posts() to anon, authenticated;
