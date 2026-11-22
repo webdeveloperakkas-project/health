@@ -8,11 +8,11 @@
   <title>Global Scope 24 | Content Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=13">
+  <link rel="stylesheet" href="admin.css?v=14">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <script src="admin-auth.js?v=2" defer></script>
-  <script src="admin.js?v=24" defer></script>
+  <script src="admin.js?v=25" defer></script>
 </head>
 <body>
   <header class="admin-header">
@@ -103,7 +103,7 @@
             <div class="panel-card">
               <label class="field-label" for="postTitle">Post title</label>
               <input class="title-input" id="postTitle" maxlength="180" placeholder="Write a clear, helpful article title..." required>
-              <div class="editor-mode-switch"><span>Article editor</span><div><button type="button" class="editor-mode-btn active" id="visualModeBtn" aria-pressed="true">Visual Mode</button><button type="button" class="editor-mode-btn" id="htmlModeBtn" aria-pressed="false">HTML Mode</button><button type="button" class="editor-mode-btn format-html-btn" id="formatHtmlBtn" title="Format HTML with line breaks and indentation">Format Code</button></div></div>
+              
               <div class="editor-toolbar" id="visualToolbar" role="toolbar" aria-label="Text formatting">
                 <button type="button" data-command="formatBlock" data-value="h2">H2</button><button type="button" data-command="formatBlock" data-value="h3">H3</button><button type="button" data-command="formatBlock" data-value="p">¶</button><i></i>
                 <button type="button" data-command="bold"><b>B</b></button><button type="button" data-command="italic"><i>I</i></button><button type="button" data-command="underline"><u>U</u></button><button type="button" data-command="insertUnorderedList">• List</button><button type="button" id="linkBtn">↗ Link</button><i></i><button type="button" id="imageBtn">▧ Upload Image</button><button type="button" id="imageUrlBtn">Image URL</button><button type="button" id="videoBtn">▶ Video</button><button type="button" id="deleteInlineImageBtn" class="toolbar-delete-image" title="Delete selected article image">Delete Image</button>
@@ -116,6 +116,7 @@
 <label>Text position <select id="inlineImageCaptionPosition" class="text-input"><option value="center">Center</option><option value="top">Top</option><option value="bottom">Bottom</option></select></label>
 <small>Drag the image block up or down inside the article to change its position.</small></section>
 
+              <div class="editor-mode-switch"><span>Article editor</span><div><button type="button" class="editor-mode-btn active" id="visualModeBtn" aria-pressed="true">Visual Mode</button><button type="button" class="editor-mode-btn" id="htmlModeBtn" aria-pressed="false">HTML Mode</button><button type="button" class="editor-mode-btn format-html-btn" id="formatHtmlBtn" title="Format HTML with line breaks and indentation">Format Code</button></div></div>
               <div id="articleEditor" class="article-editor" contenteditable="true" data-placeholder="Start writing your article here..."><p></p></div>
               <textarea id="articleHtmlEditor" class="article-html-editor" spellcheck="false" aria-label="Article HTML source" hidden></textarea>
 
