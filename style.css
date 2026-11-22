@@ -2969,3 +2969,57 @@ img {
     padding-right: 0 !important;
   }
 }
+
+/* Main website mobile layout: widen Featured Stories and Trending content. */
+@media (max-width: 800px) {
+  .featured-stories-card {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  .featured-stories-grid {
+    gap: 8px !important;
+  }
+
+  .featured-stories-grid .featured-story-item {
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .featured-stories-grid .featured-story-copy {
+    width: 100%;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .featured-stories-grid .featured-story-copy strong {
+    display: block;
+    width: 100%;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .trending-section > .container {
+    width: 100%;
+    max-width: none;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .trending-stories-card {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  .trending-story-link {
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+    border-radius: 0 !important;
+  }
+
+  .trending-story-title {
+    width: 100%;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+}
