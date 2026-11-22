@@ -111,116 +111,6 @@
     ["headerDateDesktop","headerDateMobile"].forEach(id => { const el = $("#"+id); if (el) el.textContent = dateText; });
     ["headerTimeDesktop","headerTimeMobile"].forEach(id => { const el = $("#"+id); if (el) el.textContent = timeText; });
   }
-  function localizeText(value) {
-    const dictionary = window.EA_TRANSLATIONS && window.EA_TRANSLATIONS.content;
-    const entries = dictionary && dictionary[activeLanguage];
-    return entries && Object.prototype.hasOwnProperty.call(entries, String(value)) ? entries[String(value)] : String(value ?? "");
-  }
-  function localizeHtml(html) {
-    if (!html || activeLanguage === "en") return html || "";
-    const host = document.createElement("div");
-    host.innerHTML = html;
-    const dictionary = window.EA_TRANSLATIONS && window.EA_TRANSLATIONS.content;
-    const entries = dictionary && dictionary[activeLanguage];
-    if (!entries) return html;
-    const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(node => {
-      const source = node.nodeValue.trim();
-      if (Object.prototype.hasOwnProperty.call(entries, source)) {
-        const leading = node.nodeValue.match(/^\\s*/)?.[0] || "";
-        const trailing = node.nodeValue.match(/\\s*$/)?.[0] || "";
-        node.nodeValue = leading + entries[source] + trailing;
-      }
-    });
-    return host.innerHTML;
-  }
-
-  /* Bengali article translation: free MyMemory endpoint + per-browser cache. */
-  const BN_TRANSLATION_CACHE_PREFIX = "ea-bn-translation-v1:";
-  let currentArticlePost = null;
-  let articleTranslationRun = 0;
-  function translationHash(value) {
-    let hash = 2166136261;
-    for (let i = 0; i < value.length; i++) {
-      hash ^= value.charCodeAt(i);
-      hash = Math.imul(hash, 16777619);
-    }
-    return (hash >>> 0).toString(36);
-  }
-  function splitTranslationText(value) {
-    const encoder = new TextEncoder();
-    let sentences;
-    try {
-      sentences = [...new Intl.Segmenter("en", {granularity:"sentence"}).segment(value)].map(item => item.segment);
-    } catch (_) {
-      sentences = value.match(/[^.!?।]+[.!?।]+\\s*|[^.!?।]+$/gu) || [value];
-    }
-    const chunks = [];
-    sentences.forEach(sentence => {
-      if (encoder.encode(sentence).length <= 450) {
-        chunks.push(sentence);
-        return;
-      }
-      const words = sentence.match(/\\S+\\s*/gu) || [sentence];
-      let chunk = "";
-      words.forEach(word => {
-        if (chunk && encoder.encode(chunk + word).length > 450) {
-          chunks.push(chunk);
-          chunk = "";
-        }
-        chunk += word;
-      });
-      if (chunk) chunks.push(chunk);
-    });
-    return chunks;
-  }
-  async function translateBnSegment(source) {
-    const cacheKey = BN_TRANSLATION_CACHE_PREFIX + translationHash(source);
-    try {
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) return cached;
-    } catch (_) {}
-    const params = new URLSearchParams({q:source, langpair:"en|bn", mt:"1"});
-    const response = await fetch("https://api.mymemory.translated.net/get?" + params.toString(), {
-      method:"GET",
-      headers:{"Accept":"application/json"}
-    });
-    if (!response.ok) throw new Error("Translation service unavailable");
-    const data = await response.json();
-    const translated = data && data.responseData && data.responseData.translatedText;
-    if (!translated || Number(data.responseStatus) !== 200) throw new Error("No Bengali translation returned");
-    try { localStorage.setItem(cacheKey, translated); } catch (_) {}
-    return translated;
-  }
-  async function translateBnText(source) {
-    const chunks = splitTranslationText(source);
-    let translated = "";
-    for (const chunk of chunks) translated += await translateBnSegment(chunk);
-    return translated;
-  }
-  async function translateArticleHtmlToBengali(html, runId) {
-    const host = document.createElement("div");
-    host.innerHTML = html || "";
-    const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
-      if (node.nodeValue.trim() && !node.parentElement.closest("script,style,code,pre")) nodes.push(node);
-    }
-    for (const node of nodes) {
-      const original = node.nodeValue;
-      const leading = original.match(/^\\s*/)?.[0] || "";
-      const trailing = original.match(/\\s*$/)?.[0] || "";
-      const core = original.trim();
-      if (!core) continue;
-      const translated = await translateBnText(core);
-      if (runId !== articleTranslationRun) return null;
-      node.nodeValue = leading + translated + trailing;
-    }
-    return host.innerHTML;
-  }
   function applyLanguage(language) {
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
@@ -395,10 +285,10 @@
           ? new Date(stamp).toLocaleDateString(activeLanguage==="bn"?"bn-BD":activeLanguage==="hi"?"hi-IN":"en-US",{day:"numeric",month:"short",year:"numeric"}) + " · " + new Date(stamp).toLocaleTimeString(activeLanguage==="bn"?"bn-BD":activeLanguage==="hi"?"hi-IN":"en-US",{hour:"numeric",minute:"2-digit"})
           : String(post.date || "");
         return '<button class="home-list-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
-          '<span class="home-list-heading"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong></span>' +
+          '<span class="home-list-heading"><span class="home-list-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(post.title) + '</strong></span>' +
           '<span class="home-list-summary-row">' +
             (imageForPost(post) ? '<span class="home-list-thumb"><img src="' + escapeHTML(imageForPost(post)) + '" alt="" loading="lazy"></span>' : '') +
-            '<span class="home-list-excerpt">' + escapeHTML(localizeText(excerpt)) + '</span>' +
+            '<span class="home-list-excerpt">' + escapeHTML(excerpt) + '</span>' +
           '</span>' +
           '<time class="home-list-meta">' + escapeHTML(dateTime) + '</time>' +
         '</button>';
@@ -426,9 +316,9 @@
     const labels = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
     homeFeatured.innerHTML =
       '<div class="home-feature-slide">' +
-      (imageForPost(post) ? '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(localizeText(post.title)) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '" fetchpriority="high"></div>' : '') +
+      (imageForPost(post) ? '<div class="home-feature-image"><img src="' + imageForPost(post) + '" alt="' + escapeHTML(post.title) + '" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '" fetchpriority="high"></div>' : '') +
       '<div class="home-feature-content">' +
-      '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(localizeText(post.title)) + '">' + escapeHTML(localizeText(post.title)) + '</h1>' +
+      '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '">' + escapeHTML(post.title) + '</h1>' +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + '</time></div></div></div>' +
       '<div class="home-feature-navigation" aria-label="Main story navigation">' +
       '<button type="button" class="home-feature-arrow" data-home-feature="previous">' + labels.previous + '</button>' +
@@ -446,7 +336,7 @@
     }
     host.innerHTML = items.map(post => {
       const index = posts.indexOf(post), summary = post.excerpt || (post.body || []).join(" ").slice(0,120);
-      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '">' + (imageForPost(post) ? '<span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') + '<span class="my-choice-copy"><strong>' + escapeHTML(localizeText(post.title)) + '</strong>' + (summary ? '<small>' + escapeHTML(localizeText(summary).slice(0,120)) + '</small>' : '') + '</span></button></article>';
+      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '">' + (imageForPost(post) ? '<span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') + '<span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,120)) + '</small>' : '') + '</span></button></article>';
     }).join("");
   }
   function renderFeaturedStories() {
@@ -458,7 +348,7 @@
     if (count) count.textContent = items.length + " / 20";
     const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
       (imageForPost(post) ? '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') +
-      '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
+      '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(post.title) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
     grid.innerHTML = items.length ? items.map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Featured Stories / Editor’s Choice” when publishing an article.</div>';
     const viewAll = $("#featuredStoriesViewAll");
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredMore + ' <span>→</span>';
@@ -478,21 +368,19 @@
   function openArticleDetail(post) {
     if (!post || !singleArticleView) return;
     currentArticlePost = post;
-    const runId = ++articleTranslationRun;
     const rawSourceHtml = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
     const sourceHtml = window.DOMPurify ? DOMPurify.sanitize(rawSourceHtml,{USE_PROFILES:{html:true},ADD_ATTR:["target","style","width","height","loading"]}) : rawSourceHtml;
-    const isBengali = activeLanguage === "bn" && post.language !== "bn";
     const categoryLabel = categoryNames[post.category] || post.category || "Global Scope 24";
-    const subcategoryLabel = post.subcategory ? localizeText(post.subcategory.replace(/-/g," ")) : "";
-    const paragraphs = isBengali ? '<p class="article-translation-status" role="status">নিবন্ধটি বাংলায় অনুবাদ করা হচ্ছে…</p>' : localizeHtml(sourceHtml);
+    const subcategoryLabel = post.subcategory ? post.subcategory.replace(/-/g," ") : "";
+    const paragraphs = sourceHtml;
     singleArticleView.innerHTML =
       '<article class="single-article container">' +
         '<div class="single-article-heading">' +
           '<div class="single-article-category">' + escapeHTML(categoryLabel) + (subcategoryLabel ? ' <span>›</span> ' + escapeHTML(subcategoryLabel) : '') + '</div>' +
-          '<h1>' + escapeHTML(localizeText(post.title)) + '</h1>' +
+          '<h1>' + escapeHTML(post.title) + '</h1>' +
           '<div class="single-article-meta"><time>' + escapeHTML(post.date || "") + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</time></div>' +
         '</div>' +
-        (imageForPost(post) ? '<img class="single-article-cover" src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' : '') +
+        (imageForPost(post) ? '<img class="single-article-cover" src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(post.title) + '">' : '') +
         shareButtons(post) +
         '<div class="single-article-body" id="singleArticleBody">' + paragraphs + '</div>' +
       '</article>' +
@@ -507,22 +395,11 @@
     if (tickerSection) tickerSection.hidden = true;
     if (categorySection) categorySection.hidden = false;
     if (topAdSlot) topAdSlot.hidden = false;
-    document.title = localizeText(post.title) + " | Global Scope 24";
+    document.title = post.title + " | Global Scope 24";
     const description = String(post.metaDescription || post.excerpt || (post.contentHtml || "").replace(/<[^>]*>/g," ").replace(/\s+/g," ")).trim().slice(0,320);
-    if(post.metaTitle) document.title = localizeText(post.metaTitle) + " | Global Scope 24";
+    if(post.metaTitle) document.title = post.metaTitle + " | Global Scope 24";
     const descriptionTag = document.querySelector('meta[name="description"]');
     if (descriptionTag && description) descriptionTag.setAttribute("content",description);
-    if (isBengali) {
-      translateArticleHtmlToBengali(sourceHtml,runId).then(translatedHtml => {
-        if (translatedHtml === null || runId !== articleTranslationRun) return;
-        const body = $("#singleArticleBody");
-        if (body) body.innerHTML = translatedHtml;
-      }).catch(() => {
-        if (runId !== articleTranslationRun) return;
-        const body = $("#singleArticleBody");
-        if (body) body.innerHTML = sourceHtml + '<p class="article-translation-status" role="status">এই মুহূর্তে বাংলা অনুবাদ পাওয়া যাচ্ছে না। মূল ইংরেজি লেখা দেখানো হচ্ছে।</p>';
-      });
-    }
     window.scrollTo(0,0);
   }
   function render() {
@@ -564,8 +441,8 @@
       articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
     } else {
       articleList.innerHTML = visiblePosts.map((post,index) => {
-        const body = post.contentHtml ? localizeHtml(post.contentHtml) : (post.body || []).map(line => "<p>" + escapeHTML(localizeText(line)) + "</p>").join("");
-        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(localizeText(post.title)) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · GLOBAL SCOPE 24</div></article>';
+        const body = post.contentHtml ? post.contentHtml : (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · GLOBAL SCOPE 24</div></article>';
         return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
       }).join("");
     }
