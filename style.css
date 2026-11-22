@@ -3418,3 +3418,55 @@ img {
 }
 
 
+
+
+/* Homepage lead story: show the complete cover image above a separate clickable title. */
+.home-feature-image {
+  aspect-ratio: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  background: #f7faf8 !important;
+  cursor: pointer;
+}
+.home-feature-image::after {
+  display: none !important;
+}
+.home-feature-image img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+.home-feature-content {
+  display: block !important;
+  background: #fff !important;
+  padding-top: 13px !important;
+}
+.home-feature-content h1 {
+  margin: 0 0 8px !important;
+}
+.home-feature-meta {
+  display: flex !important;
+  justify-content: flex-start !important;
+  padding-left: 12px !important;
+  margin: 0 !important;
+}
+.home-feature-navigation {
+  justify-content: space-between !important;
+  padding-left: 28px !important;
+  padding-right: 28px !important;
+}
+@media (max-width: 800px) {
+  .home-feature-content {
+    padding: 12px 8px 14px !important;
+  }
+  .home-feature-meta {
+    padding-left: 12px !important;
+  }
+  .home-feature-navigation {
+    padding: 10px 26px 15px !important;
+    gap: 0 !important;
+  }
+}
