@@ -3253,9 +3253,9 @@ img {
 }
 
 
-/* Mobile: shift Travel 2px right to create a small gap after Entertainment. */
+/* Mobile: shift Travel 4px right to create a slightly wider gap after Entertainment. */
 @media (max-width: 800px) {
   .category-tabs > .category-tab[data-category="travel"] {
-    transform: translateX(2px) !important;
+    transform: translateX(4px) !important;
   }
 }
