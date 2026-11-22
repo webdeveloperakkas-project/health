@@ -304,8 +304,11 @@
   }
   let homeFeaturedIndex = 0;
   function renderHomeFeatured() {
-    // Newest story stays fixed on page load; navigation is always manual.
-    const stories = sortedByDate(posts);
+    // The main homepage slider contains only posts explicitly assigned to Latest.
+    // Popular-only posts must never enter this Latest feature.
+    const stories = sortedByDate(posts.filter(post =>
+      (post.postTypes || [post.postType || "latest"]).includes("latest")
+    ));
     if (!stories.length) {
       homeFeatured.innerHTML = '<div class="home-feature-empty">Your latest published story will appear here.</div>';
       return;
@@ -410,10 +413,8 @@
       ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
     const placementMatches = post => {
       const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
-      // Category pages are driven by category assignment, not homepage placement.
-      // Their default Latest view includes every post in that category; selecting
-      // Popular or Favorites still filters to the matching editorial placement.
-      if (activeCategory !== "home" && activePostType === "latest") return true;
+      // Category Latest shows only posts explicitly assigned to Latest.
+      // Popular and Favorites remain independent placement feeds.
       return activePostType === "mostViewed" || placements.includes(activePostType);
     };
     const categoryPosts = posts
