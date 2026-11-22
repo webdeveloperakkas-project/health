@@ -146,7 +146,7 @@
         const textNode = Array.from(button.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
         if (textNode) textNode.nodeValue = label;
         else button.insertBefore(document.createTextNode(label), button.firstChild);
-      } else {
+      } else if (button.dataset.category !== "home") {
         button.textContent = label;
       }
     });
