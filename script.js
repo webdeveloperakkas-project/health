@@ -214,6 +214,7 @@
   const categorySection = $("#categories");
   const topAdSlot = $(".top-ad");
   const featuredStoriesSection = $("#featuredStoriesSection");
+  const trendingSection = $("#trendingSection");
   const aboutSection = $("#about");
 
   function sortedByDate(items) {
@@ -426,6 +427,7 @@
     if (homeSection) homeSection.hidden = true;
     if (articleSection) articleSection.hidden = true;
     if (featuredStoriesSection) featuredStoriesSection.hidden = true;
+    if (trendingSection) trendingSection.hidden = true;
     if (aboutSection) aboutSection.hidden = true;
     if (tickerSection) tickerSection.hidden = true;
     if (categorySection) categorySection.hidden = false;
@@ -439,6 +441,7 @@
   }
   function render() {
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
+    if (trendingSection) trendingSection.hidden = !isHomeLanding;
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
