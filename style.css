@@ -3305,3 +3305,10 @@ img {
     padding-right: 17px !important;
   }
 }
+
+/* Mobile: move the Finance tab one small step left toward Travel. */
+@media (max-width: 800px) {
+  .category-tabs > .category-tab[data-category="finance"] {
+    transform: translateX(-1px) !important;
+  }
+}
