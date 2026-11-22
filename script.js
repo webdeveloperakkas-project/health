@@ -450,18 +450,16 @@
     }).join("");
   }
   function renderFeaturedStories() {
-    const section = $("#featuredStoriesSection");
-    const left = $("#featuredStoriesLeft");
-    const right = $("#featuredStoriesRight");
+    const grid = $("#featuredStoriesGrid");
     const count = $("#featuredStoriesCount");
-    if (!section || !left || !right) return;
-    const items = posts.filter(post => post.featuredStories ?? post.featured).slice(0,20);
-    if (count) count.textContent = items.length + " / 20";
+    if (!grid) return;
+    // Keep the editorial selection in publication order, with up to 40 cards.
+    const items = posts.filter(post => post.featuredStories ?? post.featured).slice(0,40);
+    if (count) count.textContent = items.length + " / 40";
     const renderItem = post => '<button class="featured-story-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
       (imageForPost(post) ? '<span class="featured-story-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') +
       '<span class="featured-story-copy"><span class="featured-story-category">' + escapeHTML(categoryNames[post.category] || "Global Scope 24") + '</span><strong>' + escapeHTML(localizeText(post.title)) + '</strong><time>' + escapeHTML(post.date) + '</time></span></button>';
-    left.innerHTML = items.length ? items.slice(0,10).map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Featured Stories / Editor’s Choice” when publishing an article.</div>';
-    right.innerHTML = items.slice(10,20).map(renderItem).join("");
+    grid.innerHTML = items.length ? items.map(renderItem).join("") : '<div class="featured-story-empty">No featured stories yet. Select “Featured Stories / Editor’s Choice” when publishing an article.</div>';
     const viewAll = $("#featuredStoriesViewAll");
     if (viewAll) viewAll.innerHTML = (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredMore + ' <span>→</span>';
   }
