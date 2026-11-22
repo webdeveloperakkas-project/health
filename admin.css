@@ -108,3 +108,15 @@
 .cover-recommended-size{line-height:1.65}
 .cloudinary-card .field-help{line-height:1.65}
 .cloudinary-status{line-height:1.55;overflow-wrap:anywhere}
+
+
+/* Explicit storage destination for each newly selected cover image. */
+.cover-storage-choice{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:0;padding:0;margin:10px 0 4px;min-width:0}
+.cover-storage-choice legend{grid-column:1/-1;padding:0;margin:0 0 2px;font-size:10px;font-weight:800;color:#607277}
+.cover-storage-option{display:flex;align-items:center;gap:8px;min-width:0;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}
+.cover-storage-option:has(input:checked){border-color:#159d92;background:#eff9f6;box-shadow:inset 0 0 0 1px #159d9230}
+.cover-storage-option input{width:16px;height:16px;margin:0;accent-color:var(--teal);flex:none}
+.cover-storage-option span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.cover-storage-option strong{font-size:11px;color:var(--navy)}
+.cover-storage-option small{font-size:9px;line-height:1.35;color:var(--muted)}
+@media(max-width:420px){.cover-storage-choice{grid-template-columns:1fr}}
