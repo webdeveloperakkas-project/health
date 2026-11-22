@@ -3280,3 +3280,28 @@ img {
     transform: translateX(-1px) !important;
   }
 }
+
+/* Bengali mobile: compact Sports and Lifestyle labels, aligned from the left edge with clear room for dropdown arrows. */
+@media (max-width: 800px) {
+  html[lang="bn"] .category-tabs > .sports-category-menu > .sports-category-trigger,
+  html[lang="bn"] .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
+    font-size: 13px !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+    padding-left: 0 !important;
+    padding-right: 19px !important;
+    white-space: nowrap !important;
+  }
+
+  .category-tabs > .sports-category-menu > .sports-category-trigger::after,
+  .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger::after {
+    right: 3px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  html[lang="bn"] .category-tabs > .sports-category-menu > .sports-category-trigger,
+  html[lang="bn"] .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
+    padding-right: 17px !important;
+  }
+}
