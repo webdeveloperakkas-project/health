@@ -413,8 +413,10 @@
       ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
     const placementMatches = post => {
       const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
-      // Category Latest shows only posts explicitly assigned to Latest.
-      // Popular and Favorites remain independent placement feeds.
+      // Category default Latest view includes every published post assigned
+      // to that category, regardless of homepage placement. Explicit Popular
+      // and Favorites tabs still filter to their selected placement.
+      if (activeCategory !== "home" && activePostType === "latest") return true;
       return activePostType === "mostViewed" || placements.includes(activePostType);
     };
     const categoryPosts = posts
