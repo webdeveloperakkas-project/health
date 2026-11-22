@@ -67,17 +67,46 @@ stable
 security definer
 set search_path = ''
 as $$
+  with recent_events as (
+    select
+      events.post_id,
+      count(*)::bigint as event_views,
+      max(events.viewed_at) as last_event_at
+    from public.post_view_events as events
+    where events.viewed_at >= now() - interval '7 days'
+    group by events.post_id
+  ),
+  ranked_posts as (
+    select
+      published_posts.id as post_id,
+      case
+        -- For a post published in the last seven days, its existing
+        -- lifetime views are necessarily within the same seven-day window.
+        -- greatest() prevents counting a new event twice if another
+        -- process also updates public.posts.views.
+        when coalesce(published_posts.published_at, published_posts.created_at)
+             >= now() - interval '7 days'
+          then greatest(
+            coalesce(published_posts.views, 0)::bigint,
+            coalesce(recent_events.event_views, 0)::bigint
+          )
+        else coalesce(recent_events.event_views, 0)::bigint
+      end as view_count,
+      greatest(
+        coalesce(recent_events.last_event_at, '-infinity'::timestamptz),
+        coalesce(published_posts.published_at, published_posts.created_at)
+      ) as last_viewed_at
+    from public.posts as published_posts
+    left join recent_events on recent_events.post_id = published_posts.id
+    where published_posts.status = 'published'
+  )
   select
-    events.post_id,
-    count(*)::bigint as view_count,
-    max(events.viewed_at) as last_viewed_at
-  from public.post_view_events as events
-  inner join public.posts as published_posts
-    on published_posts.id = events.post_id
-   and published_posts.status = 'published'
-  where events.viewed_at >= now() - interval '7 days'
-  group by events.post_id
-  order by count(*) desc, max(events.viewed_at) desc
+    ranked_posts.post_id,
+    ranked_posts.view_count,
+    ranked_posts.last_viewed_at
+  from ranked_posts
+  where ranked_posts.view_count > 0
+  order by ranked_posts.view_count desc, ranked_posts.last_viewed_at desc
   limit 10;
 $$;
 
