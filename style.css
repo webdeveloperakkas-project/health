@@ -2865,3 +2865,26 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .article-below-lists .home-rail-card{width:100%;max-width:none}
 .article-below-lists .home-list-panel{max-height:none;overflow:visible}
 @media(max-width:700px){.article-below-lists{width:calc(100% - 28px);margin-top:26px}}
+
+
+/* Homepage image frames: fixed dimensions, full image visible, crisp border. */
+.home-list-thumb,
+.home-feature-image,
+.home-category-image,
+.featured-story-thumb,
+.article-recommendation-image {
+  box-sizing: border-box;
+  border: 1px solid #dce6e2;
+  background: #f7faf8;
+}
+.home-list-thumb img,
+.home-feature-image img,
+.home-category-image img,
+.featured-story-thumb img,
+.article-recommendation-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
