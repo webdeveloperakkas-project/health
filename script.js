@@ -388,11 +388,9 @@
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("trending")
     ));
     section.hidden = !items.length;
-    list.innerHTML = items.map((post,index) =>
+    list.innerHTML = items.map(post =>
       '<button class="trending-story-link" type="button" data-open-post="' + posts.indexOf(post) + '">' +
-      '<span class="trending-story-rank">' + String(index+1).padStart(2,"0") + '</span>' +
-      '<span class="trending-story-title">' + escapeHTML(post.title) + '</span>' +
-      '<span class="trending-story-arrow" aria-hidden="true">↗</span></button>'
+      '<span class="trending-story-title">' + escapeHTML(post.title) + '</span></button>'
     ).join("");
   }
 
