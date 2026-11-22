@@ -2742,9 +2742,9 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   .home-list-summary-row { gap:12px; }
   .home-list-thumb {
     flex:0 0 130px;
-    width:126px;
-    height:76px;
-    aspect-ratio:1.65/1;
+    width:130px;
+    height:80px;
+    aspect-ratio:auto;
   }
   .home-list-excerpt { font-size:11px; line-height:1.5; -webkit-line-clamp:3; }
   .home-list-meta { font-size:9px; }
