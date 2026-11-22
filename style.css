@@ -3202,3 +3202,12 @@ img {
     letter-spacing: -0.8px !important;
   }
 }
+
+
+/* Mobile English: use one consistent compact 10px label size for all ten category tabs. */
+@media (max-width: 800px) {
+  html[lang="en"] .category-tabs .category-tab {
+    font-size: 10px !important;
+    letter-spacing: -0.2px !important;
+  }
+}
