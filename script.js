@@ -373,14 +373,10 @@
       .filter(item => item.post)
       .slice(0,10);
     const title = $("#trendingStoriesTitle");
-    const description = $("#trendingStoriesDescription");
-    if (title) title.textContent = activeLanguage === "bn" ? "ট্রেন্ডিং" : "Trending";
-    if (description) description.textContent = activeLanguage === "bn"
-      ? "গত ৭ দিনে সবচেয়ে বেশি পড়া ১০টি পোস্ট"
-      : "The 10 most-read stories in the last 7 days";
+    if (title) title.textContent = "Trending";
     list.innerHTML = items.length
       ? items.map((item,index) => '<button class="trending-story-link" type="button" data-open-post="' + posts.indexOf(item.post) + '" data-open-source="trending"><span class="trending-story-rank">' + String(index+1).padStart(2,"0") + '</span><span class="trending-story-title">' + escapeHTML(item.post.title) + '</span><span class="trending-story-arrow" aria-hidden="true">↗</span></button>').join("")
-      : '<div class="trending-empty">' + (activeLanguage === "bn" ? "গত ৭ দিনের ভিউ জমা হলে জনপ্রিয় পোস্টগুলো এখানে স্বয়ংক্রিয়ভাবে দেখা যাবে।" : "Trending stories will appear here as views are recorded over the next 7 days.") + '</div>';
+      : "";
   }
 
   function renderArticleRecommendations() {
