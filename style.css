@@ -3111,3 +3111,22 @@ img {
     margin-left: 2px !important;
   }
 }
+
+
+/* Mobile site-wide container: keep only a 1px outer gutter on each side. */
+@media (max-width: 800px) {
+  .container {
+    width: calc(100% - 2px) !important;
+    max-width: none;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* Also apply on phones using the browser's desktop-site layout mode. */
+@media (pointer: coarse) and (max-device-width: 600px) {
+  .container {
+    width: calc(100% - 2px) !important;
+    max-width: none;
+  }
+}
