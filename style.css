@@ -3072,3 +3072,42 @@ img {
     padding-right: 1px !important;
   }
 }
+
+
+/* Refine mobile category alignment and give story titles a small breathing gap. */
+@media (max-width: 800px) {
+  .category-tabs {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .category-tabs > .category-tab,
+  .category-tabs > .world-category-menu > .category-tab,
+  .category-tabs > .sports-category-menu > .category-tab,
+  .category-tabs > .entertainment-category-menu > .category-tab,
+  .category-tabs > .lifestyle-category-menu > .category-tab {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+    text-align: center !important;
+  }
+
+  .category-tabs > .category-tab:nth-child(4),
+  .category-tabs > .category-tab:nth-child(6),
+  .category-tabs > .category-tab:nth-child(8) {
+    width: 100% !important;
+    justify-self: stretch !important;
+  }
+
+  .home-feature-content h1 {
+    margin-left: 3px !important;
+  }
+
+  .home-list-heading strong,
+  .home-list-copy strong,
+  .article-list .post-card h2 {
+    margin-left: 2px !important;
+  }
+}
