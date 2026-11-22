@@ -3419,11 +3419,16 @@ img {
 
 
 
-/* Homepage lead story: show the complete cover image above a separate clickable title. */
+/* Homepage lead story: keep every cover inside one consistent 4:3 frame.
+   The desktop frame is 800x600px; on narrower screens it scales down
+   proportionally without changing its shape or cropping the image. */
 .home-feature-image {
-  aspect-ratio: auto !important;
+  box-sizing: border-box !important;
+  width: min(800px, calc(100% - 1px)) !important;
+  max-width: 800px !important;
+  aspect-ratio: 4 / 3 !important;
   height: auto !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   background: #f7faf8 !important;
   cursor: pointer;
 }
@@ -3433,7 +3438,7 @@ img {
 .home-feature-image img {
   display: block !important;
   width: 100% !important;
-  height: auto !important;
+  height: 100% !important;
   max-height: none !important;
   object-fit: contain !important;
   object-position: center !important;
