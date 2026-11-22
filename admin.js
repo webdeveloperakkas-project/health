@@ -303,7 +303,7 @@
     const textOnly=document.createElement("div");
     textOnly.innerHTML=source;
     textOnly.querySelectorAll("img,svg,video,iframe,audio,source,track,script,style,.cms-resize-handle").forEach(node=>node.remove());
-    const plainText=(textOnly.textContent||"").replace(/\\u00a0/g," ").replace(/\\s+/g," ").trim();
+    const plainText=(textOnly.textContent||"").replace(/\u00a0/g," ").replace(/\s+/g," ").trim();
     const byteSize=new TextEncoder().encode(plainText).length;
     const kb=(byteSize/1024).toFixed(2);
     $("#articleTextSizeValue").textContent=kb+" KB";
