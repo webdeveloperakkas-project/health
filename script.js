@@ -481,7 +481,8 @@
     if (!post || !singleArticleView) return;
     currentArticlePost = post;
     const runId = ++articleTranslationRun;
-    const sourceHtml = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+    const rawSourceHtml = post.contentHtml || (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
+    const sourceHtml = window.DOMPurify ? DOMPurify.sanitize(rawSourceHtml,{USE_PROFILES:{html:true},ADD_ATTR:["target","style","width","height","loading"]}) : rawSourceHtml;
     const isBengali = activeLanguage === "bn" && post.language !== "bn";
     const categoryLabel = categoryNames[post.category] || post.category || "Global Scope 24";
     const subcategoryLabel = post.subcategory ? localizeText(post.subcategory.replace(/-/g," ")) : "";
@@ -510,7 +511,8 @@
     if (categorySection) categorySection.hidden = false;
     if (topAdSlot) topAdSlot.hidden = false;
     document.title = localizeText(post.title) + " | Global Scope 24";
-    const description = (post.excerpt || (post.contentHtml || "").replace(/<[^>]*>/g," ").replace(/\s+/g," ")).trim().slice(0,155);
+    const description = String(post.metaDescription || post.excerpt || (post.contentHtml || "").replace(/<[^>]*>/g," ").replace(/\s+/g," ")).trim().slice(0,320);
+    if(post.metaTitle) document.title = localizeText(post.metaTitle) + " | Global Scope 24";
     const descriptionTag = document.querySelector('meta[name="description"]');
     if (descriptionTag && description) descriptionTag.setAttribute("content",description);
     if (isBengali) {
@@ -910,9 +912,9 @@
           featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
           publishedTimestamp:publishedDate.getTime(),
           date:publishedDate.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),
-          read:"",excerpt:row.excerpt||plain.slice(0,260),body:plain?[plain]:[],
+          read:"",excerpt:row.excerpt||plain.slice(0,260),metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",body:plain?[plain]:[],
           contentHtml,cover:row.cover_url||"",videoUrl:row.video_url||"",
-          keywords:Array.isArray(row.keywords)?row.keywords:[],views:Number(row.views)||0
+          keywords:Array.isArray(row.related_keywords)?row.related_keywords:(Array.isArray(row.keywords)?row.keywords:[]),views:Number(row.views)||0
         };
       });
       posts = cloudPosts;
