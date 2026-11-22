@@ -122,9 +122,12 @@
 @media(max-width:420px){.cover-storage-choice{grid-template-columns:1fr}}
 
 
-/* Live article text size indicator in the editor. */
-.article-text-size{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 0;padding:10px 13px;border:1px solid #dce9e4;border-radius:8px;background:#f6fbf9;color:var(--navy)}
-.article-text-size-label{font-size:10px;font-weight:800;color:#607277}
-.article-text-size strong{font:800 14px Manrope;color:#087c75;font-variant-numeric:tabular-nums}
-.article-text-size small{font-size:9px;color:#91a09e}
-@media(max-width:600px){.article-text-size{gap:7px}.article-text-size-label{flex-basis:100%}}
+/* Compact live article text-size meter aligned with the Article editor heading. */
+.editor-mode-switch{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.editor-mode-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0}
+.article-text-size{display:inline-flex;align-items:center;gap:6px;margin:0;padding:6px 10px;border:1px solid #dce9e4;border-radius:7px;background:#eff8f5;color:var(--navy);white-space:nowrap}
+.article-text-size strong{font:800 12px Manrope;color:#087c75;font-variant-numeric:tabular-nums}
+.article-text-size small{font-size:9px;color:#82938f}
+.editor-mode-buttons{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+@media(max-width:760px){.editor-mode-actions{width:100%;justify-content:space-between;flex-wrap:wrap}.editor-mode-buttons{flex:1}.editor-mode-buttons .editor-mode-btn{flex:1}}
+@media(max-width:420px){.editor-mode-actions{align-items:stretch}.article-text-size{align-self:flex-start}.editor-mode-buttons{width:100%}}
