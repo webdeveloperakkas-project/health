@@ -1,4 +1,0 @@
--- This migration has been superseded.
--- Please run supabase/most_read_views.sql in the Supabase SQL Editor.
--- It creates the rolling seven-day Most Read ranking and replaces the old
--- get_trending_posts() RPC with get_most_read_posts().
