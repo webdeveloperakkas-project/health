@@ -811,7 +811,10 @@
       }
       return id;
     } catch (_) {
-      return "00000000-0000-4000-8000-000000000001";
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, char => {
+        const random = Math.random() * 16 | 0;
+        return (char === "x" ? random : (random & 3 | 8)).toString(16);
+      });
     }
   }
 
