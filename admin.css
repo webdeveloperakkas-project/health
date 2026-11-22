@@ -131,3 +131,21 @@
 .editor-mode-buttons{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
 @media(max-width:760px){.editor-mode-actions{width:100%;justify-content:space-between;flex-wrap:wrap}.editor-mode-buttons{flex:1}.editor-mode-buttons .editor-mode-btn{flex:1}}
 @media(max-width:420px){.editor-mode-actions{align-items:stretch}.article-text-size{align-self:flex-start}.editor-mode-buttons{width:100%}}
+
+/* Post title field: use the full editor-card width without rounded corners. */
+.title-input {
+  width: calc(100% + 28px);
+  max-width: none;
+  margin-left: -14px;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 0 !important;
+}
+@media (max-width: 760px) {
+  .title-input {
+    width: calc(100% + 28px);
+    margin-left: -14px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
