@@ -619,13 +619,12 @@
   ========================================================= */
   Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger), .sidebar-category")).forEach(button => {
     button.addEventListener("click", () => {
-      /* Home is the fresh landing-page entry: reload with normal browser caching
-         so updated homepage content/state is re-initialized without cache-busting assets. */
+      /* Home always performs a full document navigation and requests a fresh page URL.
+         This resets in-page state and avoids reusing a cached homepage document. */
       if (button.dataset.category === "home") {
         try { window.history.scrollRestoration = "manual"; } catch (_) {}
-        window.scrollTo(0, 0);
-        /* Return from any nested article URL to the clean project homepage. */
-        window.location.href = siteBasePath();
+        const freshHomeUrl = siteBasePath() + "?refresh=" + Date.now();
+        window.location.replace(freshHomeUrl);
         return;
       }
       activeCategory = button.dataset.category;
@@ -866,7 +865,13 @@
     try {
       const client = window.supabase.createClient(
         "https://oxxnjxrunvhrfwxdvbsr.supabase.co",
-        "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY"
+        "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY",
+        {
+          global: {
+            // Always request fresh published content instead of relying on browser HTTP cache.
+            fetch: (url, options = {}) => fetch(url, { ...options, cache: "no-store" })
+          }
+        }
       );
       publicSupabaseClient = client;
       const [{data:rows,error:postsError},{data:headlineRows,error:headlinesError}] = await Promise.all([
