@@ -386,7 +386,7 @@
     if (!list || !section) return;
     const items = sortedByDate(posts.filter(post =>
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("trending")
-    )).slice(0,10);
+    ));
     section.hidden = !items.length;
     list.innerHTML = items.map((post,index) =>
       '<button class="trending-story-link" type="button" data-open-post="' + posts.indexOf(post) + '">' +
