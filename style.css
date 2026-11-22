@@ -2931,3 +2931,22 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .article-breadcrumb a{color:#087c75;font-weight:750;text-decoration:none}
 .article-breadcrumb a:hover{text-decoration:underline}
 @media(max-width:800px){.trending-section{padding-bottom:35px}.trending-stories-card{padding:18px 14px 15px}.trending-stories-heading{align-items:flex-start}.trending-period{padding:7px 9px;font-size:9px}.trending-stories-list{grid-template-columns:1fr;gap:8px}.trending-story-link{min-height:56px;padding:10px 11px}.trending-story-title{font-size:12px}}
+
+/* =========================================================
+   GLOBAL CARD & IMAGE CORNERS
+   Keep editorial cards and image frames perfectly square.
+   Small circular icons and interactive controls are unchanged.
+   ========================================================= */
+:where(
+  [class*="card"],
+  [class*="image"],
+  [class*="thumb"],
+  .single-article-cover,
+  .article-detail-image
+) {
+  border-radius: 0 !important;
+}
+
+img {
+  border-radius: 0 !important;
+}
