@@ -2867,7 +2867,7 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 @media(max-width:700px){.article-below-lists{width:calc(100% - 28px);margin-top:26px}}
 
 
-/* Homepage image frames: fixed dimensions, full image visible, crisp border. */
+/* Homepage image frames: fixed dimensions,full image visible, crisp border. */
 .home-list-thumb,
 .home-feature-image,
 .home-category-image,
