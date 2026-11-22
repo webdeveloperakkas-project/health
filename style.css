@@ -3372,6 +3372,6 @@ img {
 
 /* Homepage Latest/Popular card short descriptions: clear, dark 12px text. */
 .home-list-excerpt {
-  font-size: 12px !important;
+  font-size: 14px !important;
   color: #222222 !important;
 }
