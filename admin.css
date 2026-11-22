@@ -95,3 +95,10 @@
 @media(max-width:600px){.editor-mode-switch{align-items:flex-start;flex-direction:column}.editor-mode-switch>div{width:100%}.editor-mode-btn{flex:1}.article-html-editor{min-height:330px}}
 
 .format-html-btn{background:#fff3cf;color:#80631d;border-color:#ead59b}.format-html-btn:hover{background:#ffedb5}
+
+
+/* Keep the editor mode controls directly below the inline image layout panel. */
+.editor-mode-switch{margin:14px 0 0;border:1px solid #dce8e4;border-radius:9px;background:#f8fbfa;min-height:54px;padding:10px 13px}
+.editor-mode-switch>div{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.editor-mode-btn{white-space:nowrap}
+@media(max-width:600px){.editor-mode-switch{flex-direction:row;align-items:center;flex-wrap:wrap}.editor-mode-switch>span{flex:1 0 100%}.editor-mode-switch>div{width:100%;display:flex;flex-wrap:nowrap}.editor-mode-btn{flex:1;padding:7px 5px;font-size:9px}}
