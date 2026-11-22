@@ -497,7 +497,6 @@
         (imageForPost(post) ? '<img class="single-article-cover" src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(localizeText(post.title)) + '">' : '') +
         shareButtons(post) +
         '<div class="single-article-body" id="singleArticleBody">' + paragraphs + '</div>' +
-        (Array.isArray(post.keywords) && post.keywords.length ? '<div class="article-keywords" aria-label="Article topics">' + post.keywords.slice(0,12).map(word => '<span>#' + escapeHTML(String(word).replace(/\s+/g,'')) + '</span>').join('') + '</div>' : '') +
       '</article>' +
       renderArticleRecommendations();
     renderHomeList($("#articleHomeListPanel"), Array.from(document.querySelectorAll(".article-home-rail-tab")), post);
