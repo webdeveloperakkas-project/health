@@ -3094,3 +3094,34 @@ img {
     font-size: 10px;
   }
 }
+
+
+/* Compact More control: an icon-only final slot leaves room for another category. */
+.category-tabs .category-more-tab {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  padding: 0;
+}
+
+.category-tabs .more-category-icon {
+  display: block;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+}
+
+@media (max-width: 800px) {
+  .category-tabs .category-more-tab {
+    width: 38px;
+    min-width: 38px;
+    max-width: 38px;
+    min-height: 38px;
+  }
+
+  .category-tabs .more-category-icon {
+    width: 20px;
+    height: 20px;
+    flex-basis: 20px;
+  }
+}
