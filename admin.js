@@ -33,7 +33,7 @@
       subcategory:row.subcategory||"",language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
       status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
-      cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at};
+      cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at,sitemapSubmitted:!!row.sitemap_submitted,sitemapSubmittedAt:row.sitemap_submitted_at||null};
   }
   function cloudinarySettings(){
     const defaults={cloudName:"r2lo6mql",uploadPreset:"global_scope24_upload"};
@@ -177,14 +177,16 @@
     });
     return new Set([...latest.values()].map(item=>item.id));
   }
-  function postRows(items){
+  function postRows(items, options={}){
     if(!items.length) return '<div class="empty-table">No posts yet. Create your first article to get started.</div>';
     const mainSliderIds = latestPublishedByCategory();
-    return '<table><thead><tr><th>Article</th><th>Category</th><th>Placement</th><th>Status</th><th>Views</th><th>Actions</th></tr></thead><tbody>'+items.map(post=>{
+    return '<table><thead><tr>'+(options.selectable?'<th><input type="checkbox" id="draftSelectAll" aria-label="Select all drafts"></th>':'')+'<th>Article</th><th>Category</th><th>Placement</th><th>Status</th><th>Views</th><th>Actions</th></tr></thead><tbody>'+items.map(post=>{
       const date=new Date(post.updatedAt||post.createdAt).toLocaleDateString();
       const autoMain = mainSliderIds.has(post.id) ? ' · <span class="main-slider-badge">Main Home Page</span>' : '';
       const placementText = placementsFor(post).map(value=>placementLabels[value]).join(", ") || "—";
-      return '<tr><td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+(post.subcategory?' · '+safe(post.subcategory):'')+'</td><td>'+safe(placementText)+((post.featuredStories ?? post.featured)?" · Featured Stories":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions"><button class="small-btn" data-edit="'+safe(post.id)+'">Edit</button><button class="small-btn delete" data-delete="'+safe(post.id)+'">Delete</button></div></td></tr>';
+      const selector=options.selectable?'<td><input type="checkbox" class="draft-row-select" data-draft-select="'+safe(post.id)+'" aria-label="Select '+safe(post.title||"post")+'"></td>':'';
+      const menu='<details class="row-menu"><summary aria-label="More actions">•••</summary><div class="row-menu-pop"><button type="button" data-edit="'+safe(post.id)+'">Edit</button><button type="button" class="delete" data-delete="'+safe(post.id)+'">Delete</button></div></details>';
+      return '<tr>'+selector+'<td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+(post.subcategory?' · '+safe(post.subcategory):'')+'</td><td>'+safe(placementText)+((post.featuredStories ?? post.featured)?" · Featured Stories":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions">'+menu+'</div></td></tr>';
     }).join("")+'</tbody></table>';
   }
   function renderLists(){
@@ -198,14 +200,71 @@
     const scheduledBox=$("#allScheduled"); if(scheduledBox) scheduledBox.innerHTML=scheduled.length?postRows(scheduled):'<div class="empty-table">No scheduled posts yet.</div>';
     const draftQuery=($("#draftSearch")?.value||"").trim().toLowerCase();
     const drafts=[...posts].filter(post=>post.status==="draft"&&(!draftQuery||(post.title+" "+plainText(post.content)).toLowerCase().includes(draftQuery))).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
-    $("#allDrafts").innerHTML=drafts.length ? postRows(drafts) : '<div class="empty-table">No drafts yet. Save an article as Draft and it will appear here.</div>';
+    $("#allDrafts").innerHTML=drafts.length ? postRows(drafts,{selectable:true}) : '<div class="empty-table">No drafts yet. Save an article as Draft and it will appear here.</div>';
+    renderSeoList();
+  }
+
+  /* Secure publishing and manual sitemap approval. GitHub credentials stay in the Edge Function. */
+  async function invokePublishFunction(postIds, action="publish", include){
+    const {data:{session},error:sessionError}=await db().auth.getSession();
+    if(sessionError||!session?.access_token)throw new Error("Your admin session expired. Please sign in again.");
+    const response=await fetch("https://oxxnjxrunvhrfwxdvbsr.supabase.co/functions/v1/publish-post",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token,"apikey":db().supabaseKey||""},
+      body:JSON.stringify({action,postIds,include})
+    });
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.success)throw new Error(result.error||"The publishing service could not complete the request.");
+    return result;
+  }
+  async function refreshPostRows(){
+    const {data,error}=await db().from("posts").select("*").order("updated_at",{ascending:false});
+    if(error)throw error;
+    posts=(data||[]).map(fromDatabase);renderLists();
+  }
+  async function publishPosts(ids){
+    const unique=[...new Set(ids||[])];
+    if(!unique.length)return showToast("Select at least one draft to publish.");
+    const button=$("#publishSelectedBtn");if(button)button.disabled=true;
+    try{
+      for(let i=0;i<unique.length;i+=25){
+        await invokePublishFunction(unique.slice(i,i+25));
+      }
+      await refreshPostRows();
+      showToast(unique.length+" post(s) published. Sitemap was not changed.");
+      openView("posts");
+    }catch(error){showToast("Publishing stopped: "+(error.message||"Unknown error."));await refreshPostRows().catch(()=>{});}
+    finally{if(button)button.disabled=false;}
+  }
+  function renderSeoList(){
+    const host=$("#seoPostList");if(!host)return;
+    const published=posts.filter(post=>post.status==="published").sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+    if(!published.length){host.innerHTML='<div class="empty-table">No published posts are available for sitemap approval.</div>';return;}
+    host.innerHTML='<table><thead><tr><th>Select</th><th>Article</th><th>Sitemap status</th><th>Last updated</th></tr></thead><tbody>'+published.map(post=>{
+      const submitted=!!post.sitemapSubmitted;
+      const needsReview=submitted&&post.sitemapSubmittedAt&&new Date(post.updatedAt)>new Date(post.sitemapSubmittedAt);
+      const label=needsReview?"Update Required":submitted?"Submitted":"Not Submitted";
+      const badge=needsReview?"warning":submitted?"success":"muted";
+      return '<tr><td><input type="checkbox" data-sitemap-select="'+safe(post.id)+'" aria-label="Select '+safe(post.title)+'"></td><td class="table-title"><strong>'+safe(post.title)+'</strong><small>'+safe(categories[post.category]||post.category)+'</small></td><td><span class="seo-status '+badge+'">'+label+'</span></td><td>'+safe(new Date(post.updatedAt||post.createdAt).toLocaleDateString())+'</td></tr>';
+    }).join("")+'</tbody></table>';
+  }
+  async function updateSitemapSelection(include){
+    const ids=[...$("#seoPostList").querySelectorAll("[data-sitemap-select]:checked")].map(input=>input.dataset.sitemapSelect);
+    if(!ids.length)return showToast("Select at least one published post.");
+    const action=include?"add to":"remove from";
+    if(!window.confirm("Confirm "+action+" sitemap for "+ids.length+" selected post(s)?"))return;
+    try{
+      for(let i=0;i<ids.length;i+=25)await invokePublishFunction(ids.slice(i,i+25),"update_sitemap",include);
+      await refreshPostRows();
+      showToast("Sitemap updated. Search engines will decide when to crawl the URLs.");
+    }catch(error){showToast("Sitemap update failed: "+(error.message||"Unknown error."));}
   }
 
   /* View navigation */
   function openView(view){
     document.querySelectorAll(".view-panel").forEach(panel=>panel.classList.toggle("active",panel.id===view+"View"));
     document.querySelectorAll(".nav-item").forEach(button=>button.classList.toggle("active",button.dataset.view===view));
-    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"My Drafts",scheduled:"Scheduled Posts",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
+    $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"My Drafts",scheduled:"Scheduled Posts",seo:"SEO & Marketing",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
     if(view!=="editor") renderLists();
   }
   document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.view)));
@@ -213,6 +272,21 @@
   $("#newPostBtn").addEventListener("click",()=>newPost());
   $("#postSearch").addEventListener("input",renderLists);
   $("#draftSearch").addEventListener("input",renderLists);
+  $("#allDrafts").addEventListener("change",event=>{
+    if(event.target.id==="draftSelectAll"){
+      $("#allDrafts").querySelectorAll("[data-draft-select]").forEach(input=>input.checked=event.target.checked);
+    }
+  });
+  $("#publishSelectedBtn").addEventListener("click",()=>{
+    const ids=[...$("#allDrafts").querySelectorAll("[data-draft-select]:checked")].map(input=>input.dataset.draftSelect);
+    publishPosts(ids);
+  });
+  $("#publishAllBtn").addEventListener("click",()=>{
+    const ids=posts.filter(post=>post.status==="draft").map(post=>post.id);
+    if(ids.length&&window.confirm("Publish all "+ids.length+" drafts? Only these drafts will be published."))publishPosts(ids);
+  });
+  $("#seoAddSelectedBtn").addEventListener("click",()=>updateSitemapSelection(true));
+  $("#seoRemoveSelectedBtn").addEventListener("click",()=>updateSitemapSelection(false));
 
   /* Rich text editor toolbar */
   document.querySelectorAll("[data-command]").forEach(button=>button.addEventListener("click",()=>{
@@ -488,7 +562,7 @@
   $("#postSubcategory").addEventListener("change",updatePostUrlPreview);
   $("#postTitle").addEventListener("input",updatePostUrlPreview);
   function resetForm(){
-    $("#postForm").reset(); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); $("#postStatus").disabled=false; syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; coverProvider=""; $("#coverUpload").value=""; document.querySelector('input[name="coverStorageProvider"][value="supabase"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -501,7 +575,7 @@
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; updatePostUrlPreview(); $("#articleEditor").innerHTML=post.content||"<p></p>"; $("#articleHtmlEditor").value=post.content||""; setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en"; updatePostUrlPreview();
-    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status||"draft"; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
+    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status==="scheduled"?"scheduled":"draft"; $("#postStatus").disabled=post.status==="published"; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
     
@@ -541,7 +615,7 @@
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
-    const selectedStatus=$("#postStatus").value;
+    const selectedStatus=existing?.status==="published"?"published":$("#postStatus").value;
     const scheduledValue=getScheduleInputValue();
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
@@ -558,6 +632,9 @@
       const savedPost=await savePostToCloud(post);
       const previous=posts.findIndex(item=>item.id===savedPost.id);
       if(previous>=0) posts[previous]=savedPost; else posts.unshift(savedPost);
+      if(savedPost.status==="published"){
+        await invokePublishFunction([savedPost.id]);
+      }
     }catch(error){
       showToast("Could not save post: "+(error.message||"Database or image upload error."));
       return;
@@ -568,7 +645,7 @@
     renderLists();
     if(post.status==="draft"){ openView("drafts"); showToast("Draft saved securely to Supabase."); }
     else if(post.status==="scheduled"){ openView("scheduled"); showToast("Scheduled post saved. It will publish automatically when the scheduler runs."); }
-    else { openView("posts"); showToast("Article published successfully. It is now available across devices."); }
+    else { openView("posts"); showToast("Published article and its HTML page were updated. Sitemap approval remains separate."); }
     $("#pageTitle").textContent=post.status==="published"?"All Posts":post.status==="scheduled"?"Scheduled Posts":"My Drafts";
   });
 
