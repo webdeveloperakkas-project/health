@@ -695,6 +695,7 @@
     document.body.classList.remove("menu-open");
     menuToggle.setAttribute("aria-expanded", "false");
     menuToggle.setAttribute("aria-label", "Open categories");
+    if (moreCategoriesButton) moreCategoriesButton.setAttribute("aria-expanded", "false");
   };
   menuToggle.addEventListener("click", () => {
     const open = !menu.classList.contains("open");
@@ -702,6 +703,7 @@
     document.body.classList.toggle("menu-open", open);
     menuToggle.setAttribute("aria-expanded", String(open));
     menuToggle.setAttribute("aria-label", open ? "Close categories" : "Open categories");
+    if (moreCategoriesButton) moreCategoriesButton.setAttribute("aria-expanded", String(open));
   });
   menuClose.addEventListener("click", closeCategoryMenu);
   document.addEventListener("click", event => {
