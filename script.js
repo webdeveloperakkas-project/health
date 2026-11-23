@@ -38,7 +38,7 @@
      Section complete.
   ========================================================= */
   const categoryNames = {
-    home:"Home",world:"World News",tips:"Daily Tips",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
+    home:"Home",world:"World News",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
   };
   /* =========================================================
      04. LANGUAGE CONTENT
@@ -48,7 +48,7 @@
   const languageCopy = {
     en:{
       latest:"LATEST",categories:{
-        home:"Home",world:"World News",tips:"Daily Tips",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
+        home:"Home",world:"World News",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
       },stories:"LATEST STORIES",types:{
         latest:"Latest",popular:"Popular",mostViewed:"Most Viewed"
       },description:"Latest articles and useful information.",search:"Search articles...",sort:"NEWEST FIRST ↓",page:"Page",of:"of",articles:"Articles",empty:"No articles are published in this category yet.",about:"About",contact:"Contact",privacy:"Privacy",aboutTitle:"Clear information for a world of everyday questions.",aboutText:"Our articles are for general information and do not replace professional advice."
@@ -122,8 +122,12 @@
     document.querySelectorAll("#entertainmentSubmenu [data-entertainment-subcategory]").forEach(button=>{const key=button.dataset.entertainmentSubcategory;if(entertainmentLabels[key])button.textContent=entertainmentLabels[key];});
     const regionalLabels={en:{bangladesh:"Bangladesh",india:"India",pakistan:"Pakistan",asia:"Asia",europe:"Europe","middle-east":"Middle East"},bn:{bangladesh:"বাংলাদেশ",india:"ভারত",pakistan:"পাকিস্তান",asia:"এশিয়া",europe:"ইউরোপ","middle-east":"মধ্যপ্রাচ্য"},hi:{bangladesh:"बांग्लादेश",india:"भारत",pakistan:"पाकिस्तान",asia:"एशिया",europe:"यूरोप","middle-east":"मध्य पूर्व"},de:{bangladesh:"Bangladesch",india:"Indien",pakistan:"Pakistan",asia:"Asien",europe:"Europa","middle-east":"Naher Osten"},fr:{bangladesh:"Bangladesh",india:"Inde",pakistan:"Pakistan",asia:"Asie",europe:"Europe","middle-east":"Moyen-Orient"},es:{bangladesh:"Bangladés",india:"India",pakistan:"Pakistán",asia:"Asia",europe:"Europa","middle-east":"Oriente Medio"}}[activeLanguage]||{};
     document.querySelectorAll("#worldSubmenu [data-world-subcategory]").forEach(button=>{const key=button.dataset.worldSubcategory;if(regionalLabels[key])button.textContent=regionalLabels[key];});
-    const beautyLabels={en:"Beauty Care",bn:"রূপচর্চা",hi:"सौंदर्य देखभाल",de:"Schönheitspflege",fr:"Soins de beauté",es:"Cuidado de belleza"};
-    document.querySelectorAll("#lifestyleSubmenu [data-lifestyle-subcategory]").forEach(button=>button.textContent=beautyLabels[activeLanguage]||beautyLabels.en);
+    const lifestyleLabels={
+      "daily-tips":{en:"Daily Tips",bn:"দৈনন্দিন টিপস",hi:"दैनिक सुझाव",de:"Alltagstipps",fr:"Conseils quotidiens",es:"Consejos diarios"},
+      "health":{en:"Health",bn:"স্বাস্থ্য",hi:"स्वास्थ्य",de:"Gesundheit",fr:"Santé",es:"Salud"},
+      "beauty-care":{en:"Beauty Care",bn:"রূপচর্চা",hi:"सौंदर्य देखभाल",de:"Schönheitspflege",fr:"Soins de beauté",es:"Cuidado de belleza"}
+    };
+    document.querySelectorAll("#lifestyleSubmenu [data-lifestyle-subcategory]").forEach(button=>{const labels=lifestyleLabels[button.dataset.lifestyleSubcategory];if(labels)button.textContent=labels[activeLanguage]||labels.en;});
     document.documentElement.lang = activeLanguage;
     updateHeaderClock();
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
@@ -894,8 +898,8 @@
         const stamp = row.published_at || row.created_at || new Date().toISOString();
         const publishedDate = new Date(stamp);
         return {
-          cmsId:row.id,category:["beauty","health"].includes(row.category)?"lifestyle":row.category,
-           subcategory:row.subcategory||(row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",language:row.language||"en",
+          cmsId:row.id,category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
+           subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",language:row.language||"en",
           postType:(row.post_types||["latest"])[0]||"latest",
           postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
           featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
