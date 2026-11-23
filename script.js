@@ -236,17 +236,8 @@
     return String(value || "").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()
       .replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
   }
-  /* Stable, compact base-36 ID derived from the Supabase row ID. */
-  function shortArticleId(post) {
-    const source = String(post && (post.cmsId || post.id || post.title) || "article");
-    let hash = 14695981039346656037n;
-    for (let index = 0; index < source.length; index++) {
-      hash ^= BigInt(source.charCodeAt(index));
-      hash = BigInt.asUintN(64, hash * 1099511628211n);
-    }
-    return hash.toString(36).slice(0,10);
-  }
-  function articleSlug(post) { return routeSlug(post && post.title) || shortArticleId(post); }
+  /* Article URLs are generated exclusively from the article title. */
+  function articleSlug(post) { return routeSlug(post && post.title); }
   function categoryRouteSlug(post) { return routeSlug(categoryNames[post && post.category] || (post && post.category) || "articles"); }
   function siteBasePath() {
     /* GitHub Pages project site base. Keep this independent of the current article URL. */
@@ -797,16 +788,8 @@
   applyLanguage($("#languageSelect").value || "en");
   const routeParam = new URLSearchParams(window.location.search).get("route");
   if (routeParam) {
-    const rawParts = routeParam.split("?")[0].split("/").filter(Boolean).map(part => decodeURIComponent(part));
-    const idIndex = rawParts.map(part => /^[a-z0-9]{10}$/i.test(part)).lastIndexOf(true);
-    let routeParts = rawParts;
-    if (idIndex >= 1) {
-      const categorySlugs = new Set(["world-news","daily-tips","technology","sports","health","beauty","travel","finance","lifestyle"]);
-      const hasSubcategory = idIndex >= 2 && categorySlugs.has(rawParts[idIndex - 2]);
-      routeParts = rawParts.slice(hasSubcategory ? idIndex - 2 : idIndex - 1, idIndex + 1);
-    }
-    const cleanRoute = routeParts.join("/");
-    if (cleanRoute) history.replaceState(null,"",siteBasePath() + routeParts.map(part => encodeURIComponent(part)).join("/") + "/");
+    const routeParts = routeParam.split("?")[0].split("/").filter(Boolean).map(part => decodeURIComponent(part));
+    if (routeParts.length) history.replaceState(null,"",siteBasePath() + routeParts.map(part => encodeURIComponent(part)).join("/") + "/");
   }
   function requestedArticleRouteParts() {
     const routeParam = new URLSearchParams(window.location.search).get("route");
@@ -816,8 +799,6 @@
     return parts.slice(baseParts.length).map(part => decodeURIComponent(part));
   }
   function requestedArticleSlug() {
-    const legacy = new URLSearchParams(window.location.search).get("article");
-    if (legacy) return legacy;
     const parts = requestedArticleRouteParts();
     return parts.length >= 2 ? parts[parts.length - 1] : "";
   }
@@ -924,15 +905,14 @@
         const requestedParts = requestedArticleRouteParts();
         const requestedCategory = requestedParts[0] || "";
         const requestedSubcategory = requestedParts.length >= 3 ? requestedParts[1] : "";
-        const cloudArticle = posts.find(post => shortArticleId(post) === currentArticleSlug) ||
-          posts.find(post => {
-            const categoryMatches = [routeSlug(post.category),categoryRouteSlug(post)].includes(requestedCategory);
-            const subcategoryMatches = requestedParts.length >= 3
-              ? routeSlug(post.subcategory) === requestedSubcategory
-              : !post.subcategory;
-            return categoryMatches && subcategoryMatches && articleSlug(post) === currentArticleSlug;
-          }) ||
-          posts.find(post => articleSlug(post) === currentArticleSlug);
+        const cloudArticle = posts.find(post => {
+          const categoryMatches = [routeSlug(post.category),categoryRouteSlug(post)].includes(requestedCategory);
+          const subcategoryMatches = requestedParts.length >= 3
+            ? routeSlug(post.subcategory) === requestedSubcategory
+            : !post.subcategory;
+          return categoryMatches && subcategoryMatches && articleSlug(post) === currentArticleSlug;
+        }) ||
+        posts.find(post => articleSlug(post) === currentArticleSlug);
         if (cloudArticle) openArticleDetail(cloudArticle);
         else {
           document.title = "Article Not Found | Global Scope 24";
