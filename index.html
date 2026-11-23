@@ -10,11 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=138">
+<link rel="stylesheet" href="style.css?v=139">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=81" defer></script>
+<script src="script.js?v=82" defer></script>
 </head>
 
 
@@ -147,8 +147,20 @@ LATEST</div>
 </section>
 
 
-
-
+<section class="entertainment-slider-section" id="entertainmentSliderSection" aria-labelledby="entertainmentSliderTitle" hidden>
+  <div class="entertainment-slider-heading">
+    <div><span class="eyebrow">CULTURE &amp; ENTERTAINMENT</span><h2 id="entertainmentSliderTitle">Entertainment</h2></div>
+    <a href="#categories" class="entertainment-view-all">View All <span>→</span></a>
+  </div>
+  <div class="entertainment-slider-shell">
+    <button class="entertainment-slider-arrow" type="button" data-entertainment-move="previous" aria-label="Previous entertainment stories">‹</button>
+    <div class="entertainment-slider-viewport">
+      <div class="entertainment-slider-track" id="entertainmentSliderTrack"></div>
+    </div>
+    <button class="entertainment-slider-arrow" type="button" data-entertainment-move="next" aria-label="Next entertainment stories">›</button>
+  </div>
+  <div class="entertainment-slider-dots" id="entertainmentSliderDots" aria-label="Choose an entertainment story"></div>
+</section>
 
 <section class="article-section" id="articleFeed" aria-live="polite">
 <div class="feed-heading">
@@ -209,6 +221,28 @@ LATEST</div>
   </div>
 </section>
 
+
+<section class="home-category-sections" id="homeCategorySections" aria-label="Explore more categories">
+  <section class="home-category-widget home-category-world" id="homeWorldSection" aria-labelledby="homeWorldTitle" hidden>
+    <div class="home-category-heading"><div><span class="eyebrow">AROUND THE WORLD</span><h2 id="homeWorldTitle">World News</h2></div><button type="button" data-home-category-view="world">View All <span>→</span></button></div>
+    <div class="home-world-layout" id="homeWorldPosts"></div>
+  </section>
+
+  <section class="home-category-widget home-category-sports" id="homeSportsSection" aria-labelledby="homeSportsTitle" hidden>
+    <div class="home-category-heading"><div><span class="eyebrow">THE WORLD OF SPORT</span><h2 id="homeSportsTitle">Sports</h2></div><button type="button" data-home-category-view="sports">View All <span>→</span></button></div>
+    <div class="home-sports-grid" id="homeSportsPosts"></div>
+  </section>
+
+  <section class="home-category-widget home-category-tips" id="homeTipsSection" aria-labelledby="homeTipsTitle" hidden>
+    <div class="home-category-heading"><div><span class="eyebrow">IDEAS FOR EVERYDAY LIFE</span><h2 id="homeTipsTitle">Daily Tips</h2></div><button type="button" data-home-category-view="lifestyle" data-home-subcategory-view="daily-tips">View All <span>→</span></button></div>
+    <div class="home-tips-grid" id="homeTipsPosts"></div>
+  </section>
+
+  <section class="home-category-widget home-category-health" id="homeHealthSection" aria-labelledby="homeHealthTitle" hidden>
+    <div class="home-category-heading"><div><span class="eyebrow">HEALTH &amp; WELLBEING</span><h2 id="homeHealthTitle">Health</h2></div><button type="button" data-home-category-view="lifestyle" data-home-subcategory-view="health">View All <span>→</span></button></div>
+    <div class="home-health-layout" id="homeHealthPosts"></div>
+  </section>
+</section>
 
 </div>
 </div>
