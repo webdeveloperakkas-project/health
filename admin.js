@@ -10,7 +10,7 @@
   const MEDIA_BUCKET = "everyday-atlas-media";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY";
   const db = () => window.EA_SUPABASE;
-  const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",entertainment:"Entertainment",health:"Health",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",hospitals:"Hospitals (legacy)"};
+  const categories = {world:"World News",tips:"Daily Tips",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",hospitals:"Hospitals (legacy)"};
   const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
@@ -30,8 +30,8 @@
     catch(error){ return []; }
   }
   function fromDatabase(row){
-    return {id:row.id,title:row.title,content:row.content_html||"",category:row.category==="beauty"?"lifestyle":row.category,
-      subcategory:row.subcategory||"",language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
+    return {id:row.id,title:row.title,content:row.content_html||"",category:["beauty","health"].includes(row.category)?"lifestyle":row.category,
+      subcategory:row.subcategory||(row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
       status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
       cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at,sitemapSubmitted:!!row.sitemap_submitted,sitemapSubmittedAt:row.sitemap_submitted_at||null};
@@ -549,7 +549,7 @@
   /* Form state and CRUD */
   function syncCategorySubcategory(){
     const category=$("#postCategory").value;
-    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["beauty-care","Beauty Care"]]:[];
+    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["health","Health"],["beauty-care","Beauty Care"]]:[];
     const select=$("#postSubcategory"),previous=select.value;$("#categorySubcategoryField").hidden=!options.length;select.required=!!options.length;
     select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
     select.value=options.some(([value])=>value===previous)?previous:"";
@@ -576,7 +576,7 @@
     const post=posts.find(item=>item.id===postId); if(!post) return;
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; updatePostUrlPreview(); $("#articleEditor").innerHTML=post.content||"<p></p>"; $("#articleHtmlEditor").value=post.content||""; setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
-    $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en"; updatePostUrlPreview();
+    $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en"; updatePostUrlPreview();
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
