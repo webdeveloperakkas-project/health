@@ -3492,6 +3492,34 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   }
 }
 
+
+/* Header drawer submenu cards: white cards with black text.
+   Only affects the hamburger drawer, never the visible homepage category tabs. */
+.main-nav .sidebar-submenu button,
+.main-nav .sidebar-submenu button:hover,
+.main-nav .sidebar-submenu button.active {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border-color: #ffffff !important;
+}
+
+/* Increase only English and Bengali drawer subcategory text by 2px.
+   Hindi and all other languages retain their current sizes. */
+html[lang="bn"] .main-nav .sidebar-submenu button {
+  font-size: 16px !important;
+}
+html[lang="en"] .main-nav .sidebar-submenu button {
+  font-size: 15px !important;
+}
+@media (max-width: 800px) {
+  html[lang="bn"] .main-nav .sidebar-submenu button {
+    font-size: 15px !important;
+  }
+  html[lang="en"] .main-nav .sidebar-submenu button {
+    font-size: 14px !important;
+  }
+}
+
 /* Align the header category drawer directly with the header's bottom edge.
    Removes the previous 6–8px offset without changing the drawer layout. */
 .site-header .main-nav {
