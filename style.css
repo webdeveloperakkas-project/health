@@ -3258,3 +3258,20 @@ img {
     height: 6px;
   }
 }
+
+
+/* Fine alignment: shift only the four dropdown labels 1px left.
+   Slightly narrow Lifestyle's desktop tab so it fits beside Sports. */
+@media (min-width: 801px) {
+  .category-tabs .world-category-trigger,
+  .category-tabs .sports-category-trigger,
+  .category-tabs .lifestyle-category-trigger,
+  .category-tabs .entertainment-category-trigger {
+    text-indent: -1px;
+  }
+
+  .category-tabs .lifestyle-category-trigger {
+    padding-left: 8px !important;
+    padding-right: 18px !important;
+  }
+}
