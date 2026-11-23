@@ -325,13 +325,16 @@ Deno.serve(async (request: Request) => {
         { message: "Publish " + selectedPosts.length + " Global Scope 24 article(s)", tree: newTree.sha, parents: [oldCommitSha] },
       );
 
-      const publishIds = postIds.map((id) => '"' + id.replace(/["\\\\]/g, "") + '"').join(",");
-      await supabaseRequest(
-        "posts?id=in.(" + encodeURIComponent(publishIds) + ")",
-        serviceKey,
-        "PATCH",
-        { status: "published", published_at: publishTime, updated_at: publishTime },
-      );
+      const draftPosts = selectedPosts.filter((post: Record<string, any>) => post.status === "draft");
+      const draftIds = draftPosts.map((post: Record<string, any>) => '"' + String(post.id).replace(/["\\\\]/g, "") + '"').join(",");
+      if (draftIds) {
+        await supabaseRequest(
+          "posts?id=in.(" + encodeURIComponent(draftIds) + ")",
+          serviceKey,
+          "PATCH",
+          { status: "published", published_at: publishTime, updated_at: publishTime },
+        );
+      }
       try {
         await githubRequest(
           "/repos/" + owner + "/" + repo + "/git/refs/heads/" + encodeURIComponent(branch),
@@ -340,12 +343,14 @@ Deno.serve(async (request: Request) => {
           { sha: newCommit.sha, force: false },
         );
       } catch (gitError) {
-        await supabaseRequest(
-          "posts?id=in.(" + encodeURIComponent(publishIds) + ")",
-          serviceKey,
-          "PATCH",
-          { status: "draft", published_at: null, updated_at: new Date().toISOString() },
-        );
+        if (draftIds) {
+          await supabaseRequest(
+            "posts?id=in.(" + encodeURIComponent(draftIds) + ")",
+            serviceKey,
+            "PATCH",
+            { status: "draft", published_at: null, updated_at: new Date().toISOString() },
+          );
+        }
         throw gitError;
       }
       return jsonResponse(200, {
@@ -421,12 +426,14 @@ Deno.serve(async (request: Request) => {
           message: "Sitemap updated with manually approved published URLs. Search engines decide when to crawl and index them.",
         });
       } catch (sitemapError) {
-        await supabaseRequest(
-          "posts?id=in.(" + encodeURIComponent(idFilter) + ")",
-          serviceKey,
-          "PATCH",
-          { sitemap_submitted: !include, sitemap_submitted_at: include ? null : new Date().toISOString() },
-        );
+        for (const post of selectedPosts) {
+          await supabaseRequest(
+            "posts?id=eq." + encodeURIComponent(String(post.id)),
+            serviceKey,
+            "PATCH",
+            { sitemap_submitted: !!post.sitemap_submitted, sitemap_submitted_at: post.sitemap_submitted_at || null },
+          );
+        }
         throw sitemapError;
       }
     }
