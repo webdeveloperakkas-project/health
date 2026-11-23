@@ -2478,17 +2478,6 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 @media (pointer:coarse) and (max-device-width:600px){.header-main{height:86px!important;min-height:86px!important;}}
 @media(max-width:800px){.ticker-label{padding-left:12px!important;padding-right:12px!important;}}
 
-/* Category navigation: match the ticker text size while keeping all ten categories on one desktop row. */
-@media (min-width:801px){
-  .category-tabs{grid-template-columns:repeat(10,minmax(0,1fr))!important;gap:4px!important;}
-  .category-tab{padding:7px 0!important;font-size:18px!important;line-height:1.2!important;white-space:nowrap!important;letter-spacing:-.35px!important;}
-}
-@media (max-width:800px){
-  .category-tabs{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;}
-  .category-tab{padding:7px 0!important;font-size:16px!important;line-height:1.2!important;white-space:normal!important;letter-spacing:-.25px!important;}
-}
-@media (max-width:380px){.category-tab{font-size:14px!important;}}
-
 /* Sports category dropdown */
 .sports-category-menu,.entertainment-category-menu,.world-category-menu,.lifestyle-category-menu{position:relative;min-width:0;z-index:20;}
 .sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger{width:100%;height:100%;position:relative;padding-right:14px!important;}
@@ -2529,19 +2518,6 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
   transform:translateY(-68%) rotate(45deg)!important;transition:transform .18s ease!important;
 }
 .sports-category-trigger[aria-expanded="true"]::after,.entertainment-category-trigger[aria-expanded="true"]::after,.world-category-trigger[aria-expanded="true"]::after,.lifestyle-category-trigger[aria-expanded="true"]::after{transform:translateY(-30%) rotate(225deg)!important;}
-/* Restore the earlier compact mobile category sizing; desktop sizing stays independent. */
-@media(max-width:800px){
-  .category-tabs{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important;}
-  .category-tab{min-height:39px!important;padding:8px 3px!important;font-size:12px!important;line-height:1.3!important;font-weight:700!important;letter-spacing:0!important;white-space:normal!important;overflow-wrap:anywhere!important;}
-  .sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger{font-size:12px!important;padding:8px 19px 8px 2px!important;letter-spacing:0!important;white-space:nowrap!important;}
-  .sports-category-trigger::after,.entertainment-category-trigger::after,.world-category-trigger::after,.lifestyle-category-trigger::after{right:6px!important;width:7px!important;height:7px!important;border-width:2px!important;}
-}
-@media(max-width:380px){
-  .category-tab{font-size:11px!important;padding-left:1px!important;padding-right:1px!important;}
-  .sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger{font-size:11px!important;padding-right:17px!important;}
-  .sports-category-trigger::after,.entertainment-category-trigger::after,.world-category-trigger::after,.lifestyle-category-trigger::after{right:5px!important;width:6px!important;height:6px!important;}
-}
-
 /* Standalone bilingual information pages */
 .information-page{min-height:100vh;background:#f4f7f6;color:#20363a}.information-header{min-height:78px;padding:14px max(24px,calc((100% - 1320px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px;background:#fff;border-bottom:1px solid #dce7e3}.information-brand{font-size:24px;color:#183c42;text-decoration:none;white-space:nowrap}.information-brand b{color:#13a9a3}.information-actions{display:flex;align-items:center;gap:12px}.information-actions label{font-size:13px;color:#50666a}.information-actions select{min-height:38px;padding:6px 12px;border:1px solid #cbdad5;border-radius:8px;background:#fff;color:#183c42}.information-close{width:42px;height:42px;display:grid;place-items:center;border-radius:9px;background:#f4cf55;color:#172f33;text-decoration:none;font-size:32px;line-height:1}.information-main{width:min(920px,calc(100% - 36px));margin:34px auto 54px}.information-back{display:inline-flex;margin:0 0 18px;color:#137d78;text-decoration:none;font-size:14px;font-weight:700}.information-card{padding:clamp(24px,5vw,54px);background:#fff;border:1px solid #e0e9e5;border-radius:18px;box-shadow:0 12px 35px rgba(26,63,58,.06)}.information-card h1{margin:10px 0 26px;color:#173b40;font-size:clamp(28px,4vw,40px);line-height:1.2}.information-content{font-size:16px;line-height:1.85;color:#40565a}.information-content p{margin:0 0 18px}.information-updated{margin:28px 0 0;padding-top:16px;border-top:1px solid #e5ece8;color:#718184;font-size:12px}.information-footer{text-align:center;padding:22px;color:#718184;font-size:12px}@media(max-width:600px){.information-header{min-height:68px;padding:10px 14px}.information-brand{font-size:19px}.information-actions{gap:8px}.information-actions label{display:none}.information-actions select{min-height:36px;padding:5px 8px}.information-close{width:38px;height:38px;font-size:29px}.information-main{margin:22px auto 36px;width:calc(100% - 24px)}.information-card{padding:23px 19px;border-radius:13px}.information-content{font-size:14px;line-height:1.8}}
 
@@ -2556,32 +2532,6 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu{overflow:hidden;max-height:0;opacity:0;transform:translateY(-8px);transform-origin:top;transition:max-height .24s ease,opacity .2s ease,transform .24s ease;will-change:max-height,opacity,transform;}
 .sports-submenu.is-open,.entertainment-submenu.is-open,.world-submenu.is-open,.lifestyle-submenu.is-open{opacity:1;transform:translateY(0);}
 @media(max-width:800px){.world-category-trigger,.lifestyle-category-trigger{font-size:16px;padding:7px 17px 7px 1px!important;}.world-category-trigger::after,.lifestyle-category-trigger::after{right:5px;width:6px;height:6px;}}
-
-
-/* Desktop category tabs: allocate more room to longer labels and visually compact short labels. */
-@media (min-width:801px){
-  .category-tabs{
-    grid-template-columns:.78fr 1.28fr 1.22fr .86fr .88fr .78fr 1.48fr .78fr .82fr 1.18fr!important;
-    gap:4px!important;
-  }
-  .category-tabs > .category-tab:nth-child(4),
-  .category-tabs > .category-tab:nth-child(6),
-  .category-tabs > .category-tab:nth-child(8){
-    width:calc(100% - 14px)!important;
-    justify-self:center!important;
-  }
-}
-
-
-/* Mobile category tabs: compact the short labels without changing the five-column layout. */
-@media (max-width:800px){
-  .category-tabs > .category-tab:nth-child(4),
-  .category-tabs > .category-tab:nth-child(6),
-  .category-tabs > .category-tab:nth-child(8){
-    width:calc(100% - 10px)!important;
-    justify-self:center!important;
-  }
-}
 
 
 /* Homepage mobile layout: square two-column cards, six stories per tab. */
@@ -3113,217 +3063,6 @@ img {
 }
 
 
-/* Mobile site-wide container: keep only a 1px outer gutter on each side. */
-@media (max-width: 800px) {
-  .container {
-    width: calc(100% - 2px) !important;
-    max-width: none;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-}
-
-/* Also apply on phones using the browser's desktop-site layout mode. */
-@media (pointer: coarse) and (max-device-width: 600px) {
-  .container {
-    width: calc(100% - 2px) !important;
-    max-width: none;
-  }
-}
-
-
-/* Fine-tune mobile outer gutter and the Home/Travel category button backgrounds. */
-@media (max-width: 800px) {
-  .container {
-    width: calc(100% - 4px) !important;
-  }
-
-  .category-tabs > .category-tab[data-category="home"],
-  .category-tabs > .category-tab[data-category="travel"] {
-    width: calc(100% - 8px) !important;
-    justify-self: center !important;
-  }
-}
-
-@media (pointer: coarse) and (max-device-width: 600px) {
-  .container {
-    width: calc(100% - 4px) !important;
-  }
-
-  .main-column > .category-section ~ * {
-    box-sizing: border-box !important;
-    width: calc(100% - 6px) !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-}
-
-
-/* Mobile: keep a 1px gap after Home and move the World News tab left. */
-@media (max-width: 800px) {
-  .category-tabs > .world-category-menu {
-    width: calc(100% + 3px) !important;
-    margin-left: -3px !important;
-  }
-
-  .category-tabs > .world-category-menu > .world-category-trigger {
-    box-sizing: border-box !important;
-    padding-left: 0 !important;
-    padding-right: 19px !important;
-    text-align: center !important;
-  }
-
-  .category-tabs > .world-category-menu > .world-category-trigger::after {
-    right: 3px !important;
-  }
-}
-
-@media (max-width: 380px) {
-  .category-tabs > .world-category-menu > .world-category-trigger {
-    padding-right: 17px !important;
-  }
-}
-
-
-/* Mobile: slightly larger, tighter English labels for World News and Entertainment. */
-@media (max-width: 800px) {
-  .category-tabs > .world-category-menu > .world-category-trigger,
-  .category-tabs > .entertainment-category-menu > .entertainment-category-trigger {
-    box-sizing: border-box !important;
-    font-size: 14px !important;
-    font-stretch: condensed !important;
-    letter-spacing: -0.65px !important;
-    white-space: nowrap !important;
-    padding-left: 0 !important;
-  }
-
-  .category-tabs > .entertainment-category-menu > .entertainment-category-trigger {
-    padding-right: 17px !important;
-  }
-}
-
-@media (max-width: 380px) {
-  .category-tabs > .world-category-menu > .world-category-trigger,
-  .category-tabs > .entertainment-category-menu > .entertainment-category-trigger {
-    font-size: 14px !important;
-    letter-spacing: -0.8px !important;
-  }
-}
-
-
-/* Mobile English: use one consistent compact 10px label size for all ten category tabs. */
-@media (max-width: 800px) {
-  html[lang="en"] .category-tabs .category-tab {
-    font-size: 10px !important;
-    letter-spacing: -0.2px !important;
-  }
-}
-
-
-/* Mobile: reclaim a little width from Health and give it to Entertainment. */
-@media (max-width: 800px) {
-  .category-tabs > .category-tab[data-category="health"] {
-    width: calc(100% - 10px) !important;
-    justify-self: start !important;
-    margin-left: 2px !important;
-  }
-
-  .category-tabs > .entertainment-category-menu {
-    width: calc(100% + 10px) !important;
-    justify-self: start !important;
-    position: relative !important;
-    z-index: 22 !important;
-  }
-
-  .category-tabs > .entertainment-category-menu > .entertainment-category-trigger {
-    width: 100% !important;
-  }
-}
-
-
-/* Mobile: extend Entertainment background left while keeping a 2px gap after Health. */
-@media (max-width: 800px) {
-  .category-tabs > .entertainment-category-menu {
-    width: calc(100% + 24px) !important;
-    margin-left: -14px !important;
-  }
-}
-
-
-/* Mobile: keep Health unchanged and separate its background from Entertainment by 2px. */
-@media (max-width: 800px) {
-  .category-tabs > .entertainment-category-menu {
-    width: calc(100% + 22px) !important;
-    margin-left: -12px !important;
-  }
-}
-
-
-/* Mobile: shift Travel 4px right to create a slightly wider gap after Entertainment. */
-@media (max-width: 800px) {
-  .category-tabs > .category-tab[data-category="travel"] {
-    transform: translateX(4px) !important;
-  }
-}
-
-/* Bengali mobile category labels: set selected categories to 14px; leave Daily Tips and English unchanged. */
-@media (max-width: 800px) {
-  html[lang="bn"] .category-tabs > .category-tab[data-category="health"],
-  html[lang="bn"] .category-tabs > .category-tab[data-category="travel"],
-  html[lang="bn"] .category-tabs > .category-tab[data-category="finance"],
-  html[lang="bn"] .category-tabs > .category-tab[data-category="technology"],
-  html[lang="bn"] .category-tabs > .sports-category-menu > .sports-category-trigger,
-  html[lang="bn"] .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
-    font-size: 14px !important;
-  }
-
-  /* Move Sports left 2px and Lifestyle left 1px (slightly less). */
-  .category-tabs > .sports-category-menu {
-    transform: translateX(-2px) !important;
-  }
-
-  .category-tabs > .lifestyle-category-menu {
-    transform: translateX(-1px) !important;
-  }
-}
-
-/* Bengali mobile: compact Sports and Lifestyle labels, aligned from the left edge with clear room for dropdown arrows. */
-@media (max-width: 800px) {
-  html[lang="bn"] .category-tabs > .sports-category-menu > .sports-category-trigger {
-    font-size: 13px !important;
-  }
-
-  html[lang="bn"] .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
-    font-size: 12px !important;
-    box-sizing: border-box !important;
-    text-align: left !important;
-    padding-left: 0 !important;
-    padding-right: 19px !important;
-    white-space: nowrap !important;
-  }
-
-  .category-tabs > .sports-category-menu > .sports-category-trigger::after,
-  .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger::after {
-    right: 3px !important;
-  }
-}
-
-@media (max-width: 380px) {
-  html[lang="bn"] .category-tabs > .sports-category-menu > .sports-category-trigger,
-  html[lang="bn"] .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
-    padding-right: 17px !important;
-  }
-}
-
-/* Mobile: move the Finance tab one small step left toward Travel. */
-@media (max-width: 800px) {
-  .category-tabs > .category-tab[data-category="finance"] {
-    transform: translateX(-1px) !important;
-  }
-}
-
-
 /* Home is a navigation control, not a content category: show a compact house icon. */
 .category-tabs > .home-category-tab {
   display: inline-flex !important;
@@ -3473,4 +3212,51 @@ img {
     padding: 10px 26px 15px !important;
     gap: 0 !important;
   }
+}
+
+
+/* Global layout standard: centered content with consistent outer gutters. */
+.container {
+  width: min(var(--max), calc(100% - 64px));
+  max-width: var(--max);
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 800px) {
+  .container { width: calc(100% - 32px); }
+}
+@media (max-width: 480px) {
+  .container { width: calc(100% - 28px); }
+}
+
+/* Homepage category navigation: seven primary destinations plus More. */
+.category-tabs {
+  display: grid;
+  grid-template-columns: 36px repeat(6, minmax(0, 1fr)) minmax(64px, .8fr);
+  align-items: stretch;
+  gap: 8px;
+}
+.category-more-tab {
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f5f7f6;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.category-more-tab:hover,
+.category-more-tab[aria-expanded="true"] {
+  background: #e2f1ed;
+  border-color: #b9d9d1;
+  color: var(--teal-dark);
+}
+@media (max-width: 800px) {
+  .category-tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+  .category-tabs > .home-category-tab { width: 100%; min-width: 0; height: 36px; }
+  .category-more-tab { min-height: 36px; padding: 6px 8px; font-size: 12px; }
 }
