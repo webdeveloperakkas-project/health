@@ -310,6 +310,8 @@
     ).slice(0,10);
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!panel) return;
+    // Apply the compact image-and-title layout only to the homepage Popular rail.
+    panel.classList.toggle("is-popular", panel === homeListPanel && homeListType === "popular");
     if (!items.length) {
       panel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
     } else {
