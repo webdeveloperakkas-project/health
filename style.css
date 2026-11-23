@@ -3617,3 +3617,88 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     line-height:1.4;
   }
 }
+
+
+/* =========================================================
+   25. HOMEPAGE CATEGORY STRIP — ENTERTAINMENT SLIDER
+   Four desktop cards, one-step movement every three seconds.
+   ========================================================= */
+.entertainment-slider-section{padding:0 0 42px}
+.entertainment-slider-heading,.home-category-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 15px;padding-bottom:12px;border-bottom:1px solid #e6eeeb}
+.entertainment-slider-heading h2,.home-category-heading h2{margin:4px 0 0;color:var(--navy);font:850 clamp(21px,2vw,27px)/1.2 Manrope,sans-serif}
+.entertainment-view-all,.home-category-heading>button{display:inline-flex;align-items:center;gap:8px;padding:8px 0;border:0;background:transparent;color:var(--teal-dark);font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}
+.entertainment-slider-shell{display:flex;align-items:center;gap:10px}
+.entertainment-slider-arrow{flex:0 0 34px;width:34px;height:38px;border:1px solid #dce9e4;background:#fff;color:var(--navy);font-size:25px;line-height:1;cursor:pointer}
+.entertainment-slider-arrow:hover{background:var(--navy);color:#fff}
+.entertainment-slider-viewport{min-width:0;flex:1;overflow:hidden}
+.entertainment-slider-track{display:flex;gap:16px;transition:transform .55s ease;will-change:transform}
+.entertainment-slide{display:flex;flex:0 0 calc((100% - 48px)/4);min-width:0;flex-direction:column;gap:9px;padding:0;border:0;background:transparent;text-align:left;cursor:pointer}
+.entertainment-slide-image{display:block;width:100%;aspect-ratio:16/10;overflow:hidden;background:#eaf2ef}
+.entertainment-slide-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.entertainment-slide:hover .entertainment-slide-image img{transform:scale(1.035)}
+.entertainment-slide strong{display:-webkit-box;overflow:hidden;color:var(--navy);font:750 13px/1.45 Manrope,sans-serif;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.entertainment-slide:hover strong{color:var(--teal-dark)}
+.entertainment-slider-dots{display:flex;justify-content:center;gap:7px;margin-top:14px}
+.entertainment-slider-dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#cbd8d5;cursor:pointer}
+.entertainment-slider-dots button.active{width:20px;border-radius:8px;background:var(--teal)}
+.entertainment-slider-dots:empty{display:none}
+
+/* =========================================================
+   26. HOMEPAGE CATEGORY SECTIONS — DISTINCT EDITORIAL LAYOUTS
+   ========================================================= */
+.home-category-sections{display:flex;flex-direction:column;gap:38px;padding:8px 0 46px}
+.home-category-widget{min-width:0}
+.home-category-heading{margin-bottom:16px}
+.home-world-layout,.home-health-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.85fr);gap:22px;align-items:stretch}
+.home-category-card{display:flex;min-width:0;flex-direction:column;width:100%;padding:0;border:0;background:#fff;text-align:left;text-decoration:none;cursor:pointer}
+.home-category-image{display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#eaf2ef}
+.home-category-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.home-category-card:hover .home-category-image img{transform:scale(1.035)}
+.home-category-copy{display:flex;flex-direction:column;gap:5px;padding-top:9px}
+.home-category-card strong{color:var(--navy);font:750 15px/1.4 Manrope,sans-serif}
+.home-category-card:hover strong{color:var(--teal-dark)}
+.home-category-card small{color:#657a7b;font-size:12px;line-height:1.65}
+.home-world-main .home-category-image{aspect-ratio:16/9}
+.home-world-main .home-category-card strong,.home-world-main strong{font-size:clamp(17px,1.8vw,22px);line-height:1.35}
+.home-world-list,.home-health-side{display:flex;flex-direction:column;gap:13px}
+.home-world-small,.home-health-small{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;align-items:start;padding-bottom:12px;border-bottom:1px solid #e8efec}
+.home-world-small .home-category-image,.home-health-small .home-category-image{aspect-ratio:16/10}
+.home-world-small .home-category-copy,.home-health-small .home-category-copy{padding-top:1px}
+.home-world-small strong,.home-health-small strong{font-size:13px;line-height:1.4}
+.home-sports-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
+.home-sports-card .home-category-image{aspect-ratio:16/10}
+.home-sports-card strong{font-size:14px}
+.home-tips-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.home-tips-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:14px;align-items:start;padding:12px;border:1px solid #e5eeea;background:#fff}
+.home-tips-card .home-category-image{aspect-ratio:4/3}
+.home-tips-card .home-category-copy{padding-top:2px}
+.home-tips-card strong{font-size:15px}
+.home-health-main .home-category-image{aspect-ratio:4/3}
+.home-health-main strong{font-size:clamp(17px,1.7vw,21px)}
+.home-health-small .home-category-image{aspect-ratio:16/10}
+.home-health-small{grid-template-columns:108px minmax(0,1fr)}
+@media(max-width:1100px) and (min-width:801px){
+  .home-sports-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .home-world-layout,.home-health-layout{grid-template-columns:minmax(0,1.1fr) minmax(230px,.9fr);gap:16px}
+}
+@media(max-width:800px){
+  .entertainment-slider-section{padding-bottom:30px}
+  .entertainment-slider-heading,.home-category-heading{margin-bottom:12px;padding-bottom:10px}
+  .entertainment-slider-shell{gap:6px}
+  .entertainment-slider-arrow{flex-basis:27px;width:27px;height:34px;font-size:21px}
+  .entertainment-slider-track{gap:12px}
+  .entertainment-slide{flex-basis:100%}
+  .entertainment-slide strong{font-size:14px}
+  .home-category-sections{gap:30px;padding:2px 0 32px}
+  .home-world-layout,.home-health-layout{grid-template-columns:1fr;gap:14px}
+  .home-world-main .home-category-image{aspect-ratio:16/9}
+  .home-world-list,.home-health-side{gap:0}
+  .home-world-small,.home-health-small{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 0}
+  .home-world-small .home-category-image,.home-health-small .home-category-image{aspect-ratio:16/10}
+  .home-sports-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px}
+  .home-tips-grid{grid-template-columns:1fr;gap:12px}
+  .home-tips-card{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:0 0 12px;border:0;border-bottom:1px solid #e8efec}
+  .home-tips-card .home-category-image{aspect-ratio:16/10}
+  .home-tips-card strong{font-size:13px}
+  .home-category-card small{font-size:11px}
+}
