@@ -12,11 +12,13 @@
  * SUPABASE_URL and SUPABASE_ANON_KEY are provided by Supabase.
  * SUPABASE_SERVICE_ROLE_KEY is provided by the Supabase Edge Runtime.
  *
- * Request:
- *   POST { "postIds": ["post-id-1", "post-id-2"] }
+ * Requests:
+ *   POST { "action": "publish", "postIds": ["post-id-1", "post-id-2"] }
+ *   POST { "action": "update_sitemap", "postIds": ["post-id-1"], "include": true }
  *
- * Only authenticated admins in public.admin_users can publish.
- * Draft HTML files are committed together in one GitHub commit.
+ * Only authenticated admins in public.admin_users can use this function.
+ * Publishing writes article HTML only; sitemap.xml changes only after explicit approval.
+ * Sitemap approval can add or remove selected already-published URLs.
  */
 
 const corsHeaders = {
