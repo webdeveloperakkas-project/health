@@ -152,3 +152,24 @@
 
 /* Automatic category/title-based permalink preview in the article editor. */
 .slug-preview-field{margin:12px 0 15px;padding:11px;border:1px solid #dce9e5;border-radius:8px;background:#f7fbfa}.slug-preview-field .text-input{width:100%;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;color:#087c75;background:#fff}.slug-preview-field .field-help{overflow-wrap:anywhere}
+
+
+/* Draft bulk actions and manual SEO approval workflow. */
+.bulk-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0;padding:12px;background:#f6faf9;border:1px solid #e0ece8;border-radius:9px}
+.bulk-toolbar small{font-size:11px;color:#71817d;margin-left:auto}
+.bulk-toolbar button:disabled{opacity:.55;cursor:not-allowed}
+.row-menu{position:relative;display:inline-block}
+.row-menu summary{list-style:none;cursor:pointer;border:1px solid #dce7e3;border-radius:7px;padding:5px 9px;color:#35534d;font-weight:900;letter-spacing:1px}
+.row-menu summary::-webkit-details-marker{display:none}
+.row-menu-pop{position:absolute;right:0;top:calc(100% + 5px);z-index:5;min-width:112px;padding:5px;background:#fff;border:1px solid #dce7e3;border-radius:8px;box-shadow:0 8px 24px #1539431a}
+.row-menu-pop button{display:block;width:100%;padding:8px 10px;text-align:left;border:0;border-radius:5px;background:#fff;color:var(--navy);font-size:12px;cursor:pointer}
+.row-menu-pop button:hover{background:#f0f7f5}
+.row-menu-pop button.delete{color:#b42318}
+#allDrafts input[type="checkbox"],#seoPostList input[type="checkbox"]{width:16px;height:16px;accent-color:var(--teal);cursor:pointer}
+.seo-approval-note{display:flex;flex-direction:column;gap:4px;margin:14px 0;padding:13px 15px;border-left:3px solid var(--gold);background:#fffaf0;color:var(--navy);font-size:12px}
+.seo-approval-note span{color:#6e7d79;line-height:1.55}
+.seo-status{display:inline-flex;align-items:center;border-radius:20px;padding:5px 9px;font-size:10px;font-weight:800;white-space:nowrap}
+.seo-status.success{background:#e8f6ef;color:#187448}
+.seo-status.warning{background:#fff3d8;color:#946200}
+.seo-status.muted{background:#eef2f1;color:#64736f}
+#seoPostList table{min-width:650px}
