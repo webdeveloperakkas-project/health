@@ -30,7 +30,7 @@ const corsHeaders = {
 const CATEGORY_LABELS: Record<string, string> = {
   world: "World News",
   tips: "Daily Tips",
-  technology: "Technology",
+  technology: "Science & Technology",
   sports: "Sports",
   health: "Health",
   entertainment: "Entertainment",
@@ -106,7 +106,8 @@ function postPath(post: Record<string, any>): string {
     throw new Error("Unsupported or inactive category on post " + String(post.id));
   }
 
-  const parts = [makeSlug(categoryLabel)];
+  const stableCategoryPath = categoryKey === "technology" ? "technology" : makeSlug(categoryLabel);
+  const parts = [stableCategoryPath];
   if (String(post.subcategory || "").trim()) {
     parts.push(makeSlug(post.subcategory));
   }
