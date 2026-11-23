@@ -76,7 +76,7 @@
     },
     fr:{
       latest:"À LA UNE",categories:{
-        home:"Accueil",world:"Actualités",tips:"Conseils pratiques",technology:"Wissenschaft & Technologie",sports:"Sports",health:"Santé",entertainment:"Divertissement",travel:"Voyage",finance:"Finance",lifestyle:"Mode de vie"
+        home:"Accueil",world:"Actualités",tips:"Conseils pratiques",technology:"Science et technologie",sports:"Sports",health:"Santé",entertainment:"Divertissement",travel:"Voyage",finance:"Finance",lifestyle:"Mode de vie"
       },stories:"DERNIERS ARTICLES",types:{
         latest:"Récent",popular:"Populaire",mostViewed:"Les plus vus"
       },description:"Articles récents et informations utiles.",search:"Rechercher des articles...",sort:"PLUS RÉCENT ↓",page:"Page",of:"sur",articles:"Articles",empty:"Aucun article n’a encore été publié dans cette catégorie.",about:"À propos",contact:"Contact",privacy:"Confidentialité",aboutTitle:"Des informations claires pour les questions du quotidien.",aboutText:"Nos articles sont informatifs et ne remplacent pas un avis professionnel."
