@@ -3260,24 +3260,26 @@ img {
   }
 }
 
-/* Desktop dropdown tabs: left-align labels and reserve a precise chevron gap.
-   These are flex buttons, so text-indent cannot move their text reliably. */
+/* Desktop dropdown tabs: move labels 1px left and reserve visible space
+   between the final letter and the chevron. Override legacy width:100%. */
 @media (min-width: 801px) {
   .category-tabs .world-category-trigger,
   .category-tabs .sports-category-trigger,
   .category-tabs .lifestyle-category-trigger,
   .category-tabs .entertainment-category-trigger {
-    position: relative !important;
     display: inline-flex !important;
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
     justify-content: flex-start !important;
+    padding-left: 8px !important;
+    padding-right: 19px !important;
     text-indent: 0 !important;
-    padding-left: 9px !important;
-    padding-right: 16px !important;
   }
 
   .category-tabs .lifestyle-category-trigger {
     padding-left: 7px !important;
-    padding-right: 16px !important;
+    padding-right: 19px !important;
   }
 
   .category-tabs .world-category-trigger::after,
