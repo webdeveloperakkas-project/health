@@ -3575,3 +3575,55 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     margin: 0;
   }
 }
+
+
+/* Desktop only: compact the Trending / Most Read card in the right rail.
+   The original full-width layout remains intact on mobile. */
+@media (min-width:801px) {
+  .home-right #trendingSection {
+    width:100%;
+    padding:0;
+  }
+  .home-right #trendingSection > .container {
+    width:100%;
+    max-width:none;
+    margin:0;
+    padding:0;
+  }
+  .home-right #trendingSection .trending-stories-card {
+    padding:16px 13px 14px;
+    border-radius:12px;
+  }
+  .home-right #trendingSection .trending-stories-heading {
+    align-items:flex-start;
+    gap:8px;
+    margin-bottom:10px;
+    padding-bottom:10px;
+  }
+  .home-right #trendingSection .trending-stories-heading h2 {
+    font-size:18px;
+  }
+  .home-right #trendingSection .trending-period {
+    padding:6px 8px;
+    font-size:8px;
+    white-space:nowrap;
+  }
+  .home-right #trendingSection .trending-stories-list {
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+  .home-right #trendingSection .trending-story-link {
+    min-height:48px;
+    gap:8px;
+    padding:8px 9px;
+  }
+  .home-right #trendingSection .trending-story-rank {
+    flex-basis:25px;
+    width:25px;
+    height:25px;
+  }
+  .home-right #trendingSection .trending-story-title {
+    font-size:11px;
+    line-height:1.4;
+  }
+}
