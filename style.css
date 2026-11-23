@@ -3491,3 +3491,9 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     font-size: 12px !important;
   }
 }
+
+/* Align the header category drawer directly with the header's bottom edge.
+   Removes the previous 6–8px offset without changing the drawer layout. */
+.site-header .main-nav {
+  top: 100% !important;
+}
