@@ -233,8 +233,9 @@
     });
   }
   function routeSlug(value) {
-    return String(value || "").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()
-      .replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
+    /* Preserve Bengali vowel signs and other combining marks; NFC prevents broken Bengali slugs. */
+    return String(value || "").normalize("NFC").toLowerCase().trim()
+      .replace(/[^\p{L}\p{M}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
   }
   /* Article URLs are generated exclusively from the article title. */
   function articleSlug(post) { return routeSlug(post && post.title); }
