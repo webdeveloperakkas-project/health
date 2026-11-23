@@ -254,6 +254,7 @@
   let entertainmentSliderIndex = 0;
   let entertainmentSliderTimer = null;
   let entertainmentSliderItems = [];
+  let entertainmentSliderResizeBound = false;
 
   function entertainmentVisibleCount() {
     return window.matchMedia("(max-width: 800px)").matches ? 1 : 4;
@@ -279,6 +280,10 @@
     const track = $("#entertainmentSliderTrack");
     const dots = $("#entertainmentSliderDots");
     if (!section || !track || !dots) return;
+    if (!entertainmentSliderResizeBound) {
+      window.addEventListener("resize", renderEntertainmentSlider, {passive:true});
+      entertainmentSliderResizeBound = true;
+    }
     entertainmentSliderItems = sortedByDate(posts.filter(post =>
       post.category === "entertainment" && imageForPost(post)
     ));
@@ -620,6 +625,10 @@
     const entertainmentSection = $("#entertainmentSliderSection");
     const homeCategorySections = $("#homeCategorySections");
     if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding || !posts.some(post => post.category === "entertainment" && imageForPost(post));
+    if (!isHomeLanding && entertainmentSliderTimer) {
+      window.clearInterval(entertainmentSliderTimer);
+      entertainmentSliderTimer = null;
+    }
     if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
       ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
