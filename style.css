@@ -3422,3 +3422,15 @@ html[lang="hi"] .main-nav .sidebar-category,
 html[lang="hi"] .main-nav .sidebar-submenu button {
   font-family: "Noto Sans Devanagari", sans-serif;
 }
+
+/* Rotate the text-only submenu chevron when its section is expanded. */
+.main-nav .sidebar-submenu-toggle { font-size: 0 !important; }
+.main-nav .sidebar-submenu-toggle::before {
+  content: "⌄";
+  display: block;
+  font: 700 21px/1 "Manrope", sans-serif;
+  transition: transform .18s ease;
+}
+.main-nav .sidebar-submenu-toggle[aria-expanded="true"]::before {
+  transform: rotate(180deg);
+}
