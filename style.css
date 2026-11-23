@@ -3201,3 +3201,60 @@ img {
   .category-tabs .desktop-daily-tips-tab { display: none !important; }
   .category-tabs .add-category-tab { display: inline-flex !important; }
 }
+
+
+/* Category navigation fix: one matching dropdown chevron per category.
+   Keep the desktop row on a single line so Lifestyle stays beside Sports. */
+@media (min-width: 801px) {
+  .category-tabs {
+    flex-wrap: nowrap !important;
+    gap: 5px !important;
+  }
+
+  .category-tabs .category-tab {
+    padding-left: 9px;
+    padding-right: 20px;
+  }
+
+  .category-tabs > .home-category-tab {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* Replace older text-glyph arrows with one consistent CSS chevron. */
+.category-tabs .sports-category-trigger::after,
+.category-tabs .world-category-trigger::after,
+.category-tabs .lifestyle-category-trigger::after,
+.category-tabs .entertainment-category-trigger::after {
+  content: "" !important;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border: 0;
+  border-right: 1.8px solid currentColor;
+  border-bottom: 1.8px solid currentColor;
+  border-radius: 1px;
+  transform: translateY(-68%) rotate(45deg);
+  transition: transform .22s ease;
+}
+
+.category-tabs .sports-category-trigger[aria-expanded="true"]::after,
+.category-tabs .world-category-trigger[aria-expanded="true"]::after,
+.category-tabs .lifestyle-category-trigger[aria-expanded="true"]::after,
+.category-tabs .entertainment-category-trigger[aria-expanded="true"]::after {
+  transform: translateY(-25%) rotate(225deg);
+}
+
+@media (max-width: 800px) {
+  .category-tabs .sports-category-trigger::after,
+  .category-tabs .world-category-trigger::after,
+  .category-tabs .lifestyle-category-trigger::after,
+  .category-tabs .entertainment-category-trigger::after {
+    right: 6px;
+    width: 6px;
+    height: 6px;
+  }
+}
