@@ -3472,3 +3472,13 @@ html[lang="hi"] .main-nav .sidebar-submenu button {
     font-size: 13px;
   }
 }
+
+
+/* English category drawer typography: compact, headline-style lettering.
+   Keep the existing English font sizes unchanged. */
+html[lang="en"] .main-nav .sidebar-category,
+html[lang="en"] .main-nav .sidebar-submenu button {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.45px;
+}
