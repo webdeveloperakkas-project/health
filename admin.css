@@ -149,3 +149,6 @@
     padding-right: 0;
   }
 }
+
+/* Automatic category/title-based permalink preview in the article editor. */
+.slug-preview-field{margin:12px 0 15px;padding:11px;border:1px solid #dce9e5;border-radius:8px;background:#f7fbfa}.slug-preview-field .text-input{width:100%;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;color:#087c75;background:#fff}.slug-preview-field .field-help{overflow-wrap:anywhere}
