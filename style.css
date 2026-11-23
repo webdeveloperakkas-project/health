@@ -2974,6 +2974,7 @@ img {
 .category-tabs > .category-tab,
 .category-tabs > .world-category-menu,
 .category-tabs > .sports-category-menu,
+.category-tabs > .lifestyle-category-menu,
 .category-tabs > .entertainment-category-menu,
 .category-tabs > .category-more-tab {
   box-sizing: border-box;
@@ -3004,6 +3005,7 @@ img {
 
 .category-tabs > .world-category-menu,
 .category-tabs > .sports-category-menu,
+.category-tabs > .lifestyle-category-menu,
 .category-tabs > .entertainment-category-menu {
   display: flex;
   align-items: stretch;
@@ -3013,6 +3015,7 @@ img {
 
 .category-tabs > .world-category-menu > .category-tab,
 .category-tabs > .sports-category-menu > .category-tab,
+.category-tabs > .lifestyle-category-menu > .category-tab,
 .category-tabs > .entertainment-category-menu > .category-tab {
   flex: 0 0 auto;
 }
