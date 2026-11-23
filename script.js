@@ -620,6 +620,54 @@
   setupSubcategoryMenu(".world-category-trigger","#worldSubmenu","world","[data-world-subcategory]","data-world-subcategory");
   setupSubcategoryMenu(".lifestyle-category-trigger","#lifestyleSubmenu","lifestyle","[data-lifestyle-subcategory]","data-lifestyle-subcategory");
 
+  /* Category drawer: expand nested subcategories and select them without affecting the top category row. */
+  const categoryDrawer = $("#mainNav");
+  if (categoryDrawer) {
+    categoryDrawer.addEventListener("click", event => {
+      const toggle = event.target.closest(".sidebar-submenu-toggle");
+      if (toggle) {
+        event.preventDefault();
+        event.stopPropagation();
+        const submenu = document.getElementById(toggle.getAttribute("aria-controls"));
+        if (!submenu) return;
+        const willOpen = submenu.hidden;
+        categoryDrawer.querySelectorAll(".sidebar-submenu").forEach(panel => { panel.hidden = true; });
+        categoryDrawer.querySelectorAll(".sidebar-submenu-toggle").forEach(button => button.setAttribute("aria-expanded", "false"));
+        submenu.hidden = !willOpen;
+        toggle.setAttribute("aria-expanded", String(willOpen));
+        return;
+      }
+      const choice = event.target.closest("[data-sidebar-category][data-sidebar-subcategory]");
+      if (!choice) return;
+      event.preventDefault();
+      activeCategory = choice.dataset.sidebarCategory;
+      activeSubcategory = choice.dataset.sidebarSubcategory;
+      showHomeFeed = false;
+      showFeaturedFeed = false;
+      activePostType = "latest";
+      currentPage = 1;
+      searchTerm = "";
+      const searchInput = $("#siteSearch");
+      if (searchInput) searchInput.value = "";
+      document.querySelectorAll(".post-type-option").forEach(option => {
+        const selected = option.dataset.postType === activePostType;
+        option.classList.toggle("active", selected);
+        option.setAttribute("aria-pressed", String(selected));
+      });
+      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger), .sidebar-category").forEach(button => {
+        const selected = button.dataset.category === activeCategory && (!button.dataset.subcategory || button.dataset.subcategory === activeSubcategory);
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+      document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger").forEach(button => button.classList.toggle("active", button.dataset.category === activeCategory));
+      categoryDrawer.querySelectorAll(".sidebar-submenu button").forEach(button => button.classList.toggle("active", button === choice));
+      categoryDrawer.querySelectorAll(".sidebar-submenu").forEach(panel => { panel.hidden = true; });
+      categoryDrawer.querySelectorAll(".sidebar-submenu-toggle").forEach(button => button.setAttribute("aria-expanded", "false"));
+      closeCategoryMenu();
+      render();
+    });
+  }
+
   /* =========================================================
      09. CATEGORY NAVIGATION
      Purpose: Change category and reset the post-type filter.
