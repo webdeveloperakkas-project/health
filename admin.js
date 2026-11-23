@@ -8,6 +8,7 @@
   const $ = selector => document.querySelector(selector);
   const STORAGE_KEY = "everyday-atlas-cms-posts-v1";
   const MEDIA_BUCKET = "everyday-atlas-media";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY";
   const db = () => window.EA_SUPABASE;
   const categories = {world:"World News",tips:"Daily Tips",technology:"Technology",sports:"Sports",entertainment:"Entertainment",health:"Health",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",hospitals:"Hospitals (legacy)"};
   const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending",myChoice:"Favorites"};
@@ -90,7 +91,8 @@
       featured_stories:!!prepared.featuredStories,status:prepared.status,scheduled_at:prepared.scheduledAt||null,excerpt:prepared.excerpt||"",
       meta_title:prepared.metaTitle||"",meta_description:prepared.metaDescription||"",focus_keyword:prepared.focusKeyword||"",related_keywords:prepared.keywords||[],
       keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",
-      views:Number(prepared.views)||0,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null};
+      views:Number(prepared.views)||0,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null,
+      sitemap_submitted:!!prepared.sitemapSubmitted,sitemap_submitted_at:prepared.sitemapSubmittedAt||null};
     const {error}=await db().from("posts").upsert(row,{onConflict:"id"});
     if(error) throw error;
     return prepared;
@@ -210,7 +212,7 @@
     if(sessionError||!session?.access_token)throw new Error("Your admin session expired. Please sign in again.");
     const response=await fetch("https://oxxnjxrunvhrfwxdvbsr.supabase.co/functions/v1/publish-post",{
       method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token,"apikey":db().supabaseKey||""},
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token,"apikey":SUPABASE_PUBLISHABLE_KEY},
       body:JSON.stringify({action,postIds,include})
     });
     const result=await response.json().catch(()=>({}));
@@ -623,7 +625,8 @@
       id:editingId||id(),title,content,excerpt:$("#cardSummary").value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"supabase",views:existing?Number(existing.views)||0:0,
-      createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null
+      createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null,
+      sitemapSubmitted:existing?!!existing.sitemapSubmitted:false,sitemapSubmittedAt:existing?.sitemapSubmittedAt||null
     };
     const saveButton=$("#savePostBtn");
     saveButton.disabled=true;saveButton.textContent="Saving to Supabase…";
