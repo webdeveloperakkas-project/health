@@ -1020,59 +1020,6 @@ html[lang="hi"] .brand-name, html[lang="hi"] .feed-heading h1, html[lang="hi"] .
   font-size: 13px;
 }
 
-/* Category navigation sizing and responsive layout */
-@media (min-width: 801px) {
-  .category-tabs {
-    display: grid;
-    grid-template-columns: repeat(9, minmax(0, 1fr));
-    gap: 8px;
-    align-items: center;
-  }
-
-  .category-tab {
-    min-height: 42px;
-    padding: 9px 4px;
-    font-size: 14px;
-    line-height: 1.25;
-    font-weight: 700;
-    white-space: nowrap;
-    letter-spacing: 0;
-  }
-}
-
-@media (max-width: 800px) {
-  .category-tabs {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px;
-  }
-
-  .category-tab {
-    min-height: 39px;
-    padding: 8px 3px;
-    font-size: 12px;
-    line-height: 1.3;
-    font-weight: 700;
-    letter-spacing: 0;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-
-  .main-nav .sidebar-category {
-    font-size: 16px;
-    padding: 8px 5px;
-  }
-}
-
-@media (max-width: 380px) {
-  .category-tab {
-    font-size: 11px;
-    padding-left: 1px;
-    padding-right: 1px;
-  }
-}
-
-
 /* =========================================================
    16. FOOTER INFORMATION MODAL
    Purpose: Present site policies in an accessible, scrollable panel.
@@ -2023,19 +1970,6 @@ body.policy-open { overflow:hidden; }
   .desktop-sidebar {
     display:none !important;
   }
-  .category-tabs {
-    display:grid;
-    grid-template-columns:repeat(5,minmax(0,1fr));
-    gap:5px;
-  }
-  .category-tab {
-    min-height:39px;
-    padding:7px 2px;
-    font-size:10px;
-    line-height:1.25;
-    white-space:normal;
-    overflow-wrap:anywhere;
-  }
   .site-footer {
     padding:16px 0 14px;
   }
@@ -2500,24 +2434,6 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 }
 
 
-/* Sports navigation label and a clear dropdown chevron. */
-.sports-category-menu,.entertainment-category-menu{display:flex!important;align-items:stretch!important;width:100%!important;min-width:0!important;overflow:visible!important;}
-.sports-category-trigger,.entertainment-category-trigger{
-  display:flex!important;flex:1 1 auto!important;align-items:center!important;justify-content:center!important;
-  min-width:0!important;width:100%!important;height:100%!important;overflow:visible!important;
-  text-indent:0!important;visibility:visible!important;opacity:1!important;color:#425a60!important;
-  font-size:18px!important;font-weight:700!important;line-height:1.2!important;letter-spacing:-.35px!important;
-  padding:7px 20px 7px 2px!important;white-space:nowrap!important;
-}
-.sports-category-trigger.active,.entertainment-category-trigger.active,.world-category-trigger.active,.lifestyle-category-trigger.active{color:#fff!important;}
-.sports-category-trigger[aria-expanded="true"],.entertainment-category-trigger[aria-expanded="true"]{color:var(--teal-dark)!important;}
-.sports-category-trigger::after,.entertainment-category-trigger::after{
-  content:""!important;position:absolute!important;right:8px!important;top:50%!important;
-  width:8px!important;height:8px!important;border-right:2px solid currentColor!important;
-  border-bottom:2px solid currentColor!important;border-radius:1px!important;
-  transform:translateY(-68%) rotate(45deg)!important;transition:transform .18s ease!important;
-}
-.sports-category-trigger[aria-expanded="true"]::after,.entertainment-category-trigger[aria-expanded="true"]::after,.world-category-trigger[aria-expanded="true"]::after,.lifestyle-category-trigger[aria-expanded="true"]::after{transform:translateY(-30%) rotate(225deg)!important;}
 /* Standalone bilingual information pages */
 .information-page{min-height:100vh;background:#f4f7f6;color:#20363a}.information-header{min-height:78px;padding:14px max(24px,calc((100% - 1320px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px;background:#fff;border-bottom:1px solid #dce7e3}.information-brand{font-size:24px;color:#183c42;text-decoration:none;white-space:nowrap}.information-brand b{color:#13a9a3}.information-actions{display:flex;align-items:center;gap:12px}.information-actions label{font-size:13px;color:#50666a}.information-actions select{min-height:38px;padding:6px 12px;border:1px solid #cbdad5;border-radius:8px;background:#fff;color:#183c42}.information-close{width:42px;height:42px;display:grid;place-items:center;border-radius:9px;background:#f4cf55;color:#172f33;text-decoration:none;font-size:32px;line-height:1}.information-main{width:min(920px,calc(100% - 36px));margin:34px auto 54px}.information-back{display:inline-flex;margin:0 0 18px;color:#137d78;text-decoration:none;font-size:14px;font-weight:700}.information-card{padding:clamp(24px,5vw,54px);background:#fff;border:1px solid #e0e9e5;border-radius:18px;box-shadow:0 12px 35px rgba(26,63,58,.06)}.information-card h1{margin:10px 0 26px;color:#173b40;font-size:clamp(28px,4vw,40px);line-height:1.2}.information-content{font-size:16px;line-height:1.85;color:#40565a}.information-content p{margin:0 0 18px}.information-updated{margin:28px 0 0;padding-top:16px;border-top:1px solid #e5ece8;color:#718184;font-size:12px}.information-footer{text-align:center;padding:22px;color:#718184;font-size:12px}@media(max-width:600px){.information-header{min-height:68px;padding:10px 14px}.information-brand{font-size:19px}.information-actions{gap:8px}.information-actions label{display:none}.information-actions select{min-height:36px;padding:5px 8px}.information-close{width:38px;height:38px;font-size:29px}.information-main{margin:22px auto 36px;width:calc(100% - 24px)}.information-card{padding:23px 19px;border-radius:13px}.information-content{font-size:14px;line-height:1.8}}
 
@@ -2974,140 +2890,6 @@ img {
 }
 
 
-/* Consistent compact horizontal spacing across category tabs and story feeds. */
-@media (max-width: 800px) {
-  .category-tabs > .category-tab {
-    padding-left: 1px !important;
-    padding-right: 1px !important;
-    width: 100% !important;
-    justify-self: stretch !important;
-  }
-
-  .category-tabs > .world-category-menu,
-  .category-tabs > .sports-category-menu,
-  .category-tabs > .entertainment-category-menu,
-  .category-tabs > .lifestyle-category-menu {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  .world-category-trigger,
-  .sports-category-trigger,
-  .entertainment-category-trigger,
-  .lifestyle-category-trigger {
-    padding-left: 1px !important;
-    /* Keep enough room for the dropdown chevron. */
-  }
-
-  .article-list .post-card,
-  .home-list-item,
-  .home-list-item.is-active,
-  .home-mobile-list-group .home-list-item {
-    padding-left: 1px !important;
-    padding-right: 1px !important;
-  }
-
-  .home-rail-card {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-  }
-
-  .home-featured {
-    border-radius: 0 !important;
-  }
-
-  .home-feature-content,
-  .home-feature-navigation {
-    padding-left: 1px !important;
-    padding-right: 1px !important;
-  }
-}
-
-
-/* Refine mobile category alignment and give story titles a small breathing gap. */
-@media (max-width: 800px) {
-  .category-tabs {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .category-tabs > .category-tab,
-  .category-tabs > .world-category-menu > .category-tab,
-  .category-tabs > .sports-category-menu > .category-tab,
-  .category-tabs > .entertainment-category-menu > .category-tab,
-  .category-tabs > .lifestyle-category-menu > .category-tab {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    padding-left: 1px !important;
-    padding-right: 1px !important;
-    text-align: center !important;
-  }
-
-  .category-tabs > .category-tab:nth-child(4),
-  .category-tabs > .category-tab:nth-child(6),
-  .category-tabs > .category-tab:nth-child(8) {
-    width: 100% !important;
-    justify-self: stretch !important;
-  }
-
-  .home-feature-content h1 {
-    margin-left: 4px !important;
-  }
-
-  .home-list-heading strong,
-  .home-list-copy strong,
-  .article-list .post-card h2 {
-    margin-left: 2px !important;
-  }
-}
-
-
-/* Home is a navigation control, not a content category: show a compact house icon. */
-.category-tabs > .home-category-tab {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 36px !important;
-  min-width: 36px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  background: #087C75 !important;
-  color: #FFFFFF !important;
-}
-.category-tabs > .home-category-tab .home-tab-icon {
-  display: block;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-}
-
-
-/* Mobile-only spacing below the category section.
-   Keep the category section itself and all desktop layouts unchanged. */
-@media (max-width: 800px) {
-  .main-column > .category-section ~ * {
-    box-sizing: border-box !important;
-    /* Reduce each post-category section by 3px on both sides. */
-    width: calc(100% - 6px) !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  /* Give the full-article title a precise 2px left inset. */
-  .single-article-heading h1 {
-    padding-left: 2px !important;
-  }
-
-  /* Increase only the readable article body text by 2px on mobile. */
-  .single-article-body {
-    font-size: 18px !important;
-  }
-}
-
 /* Homepage Latest/Popular card short descriptions: clear, dark 12px text. */
 .home-list-excerpt {
   font-size: 14px !important;
@@ -3215,48 +2997,129 @@ img {
 }
 
 
-/* Global layout standard: centered content with consistent outer gutters. */
-.container {
-  width: min(var(--max), calc(100% - 64px));
-  max-width: var(--max);
-  margin-left: auto;
-  margin-right: auto;
-}
-@media (max-width: 800px) {
-  .container { width: calc(100% - 32px); }
-}
-@media (max-width: 480px) {
-  .container { width: calc(100% - 28px); }
-}
-
-/* Homepage category navigation: seven primary destinations plus More. */
+/* Homepage category navigation: one consistent sizing and spacing system. */
 .category-tabs {
   display: grid;
-  grid-template-columns: 36px repeat(6, minmax(0, 1fr)) minmax(64px, .8fr);
+  grid-template-columns: 36px repeat(6, minmax(0, 1fr)) minmax(72px, .8fr);
   align-items: stretch;
   gap: 8px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
-.category-more-tab {
+
+.category-tabs > .category-tab,
+.category-tabs > .world-category-menu,
+.category-tabs > .sports-category-menu,
+.category-tabs > .entertainment-category-menu,
+.category-tabs > .category-more-tab {
+  box-sizing: border-box;
+  width: 100%;
   min-width: 0;
-  min-height: 36px;
-  padding: 6px 12px;
+  min-height: 40px;
+}
+
+.category-tabs .category-tab,
+.category-tabs .category-more-tab {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 6px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.category-tabs > .world-category-menu,
+.category-tabs > .sports-category-menu,
+.category-tabs > .entertainment-category-menu {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  overflow: visible;
+}
+
+.category-tabs > .world-category-menu > .category-tab,
+.category-tabs > .sports-category-menu > .category-tab,
+.category-tabs > .entertainment-category-menu > .category-tab {
+  flex: 1 1 auto;
+}
+
+.category-tabs > .home-category-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 0;
+  background: #087C75;
+  color: #FFFFFF;
+}
+
+.category-tabs > .home-category-tab .home-tab-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+}
+
+.category-tabs .category-more-tab {
   border: 1px solid var(--line);
   border-radius: 4px;
   background: #f5f7f6;
   color: var(--navy);
-  font-size: 13px;
-  font-weight: 700;
   cursor: pointer;
   transition: background .18s, color .18s, border-color .18s;
 }
-.category-more-tab:hover,
-.category-more-tab[aria-expanded="true"] {
+
+.category-tabs .category-more-tab:hover,
+.category-tabs .category-more-tab[aria-expanded="true"] {
   background: #e2f1ed;
   border-color: #b9d9d1;
   color: var(--teal-dark);
 }
+
+/* Subcategory dropdown labels stay 2px smaller than their parent category. */
+.sports-submenu button,
+.entertainment-submenu button,
+.world-submenu button,
+.lifestyle-submenu button {
+  font-size: 12px;
+}
+
 @media (max-width: 800px) {
-  .category-tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
-  .category-tabs > .home-category-tab { width: 100%; min-width: 0; height: 36px; }
-  .category-more-tab { min-height: 36px; padding: 6px 8px; font-size: 12px; }
+  .category-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .category-tabs > .home-category-tab {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+  }
+
+  .category-tabs .category-tab,
+  .category-tabs .category-more-tab {
+    min-height: 40px;
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  .sports-submenu button,
+  .entertainment-submenu button,
+  .world-submenu button,
+  .lifestyle-submenu button {
+    font-size: 10px;
+  }
 }
