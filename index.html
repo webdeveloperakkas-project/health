@@ -10,11 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=125">
+<link rel="stylesheet" href="style.css?v=126">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=74" defer></script>
+<script src="script.js?v=75" defer></script>
 </head>
 
 
@@ -87,12 +87,14 @@ LATEST</div>
 <div class="category-tabs" role="group" aria-label="Article categories">
 <button class="category-tab home-category-tab active" data-category="home" type="button" aria-label="Home" title="Home" aria-pressed="true"><svg class="home-tab-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M3.5 10.5 12 3.5l8.5 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5M9.5 20v-6h5v6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 <div class="world-category-menu"><button class="category-tab world-category-trigger" data-category="world" type="button" aria-expanded="false" aria-haspopup="true">World News</button><div class="sports-submenu world-submenu" id="worldSubmenu" hidden><button type="button" data-world-subcategory="bangladesh">Bangladesh</button><button type="button" data-world-subcategory="india">India</button><button type="button" data-world-subcategory="pakistan">Pakistan</button><button type="button" data-world-subcategory="asia">Asia</button><button type="button" data-world-subcategory="europe">Europe</button><button type="button" data-world-subcategory="middle-east">Middle East</button></div></div>
-<button class="category-tab desktop-daily-tips-tab" data-category="tips" type="button" aria-pressed="false">Daily Tips</button>
+<button class="category-tab desktop-daily-tips-tab" data-category="lifestyle" data-subcategory="daily-tips" data-category-label="tips" type="button" aria-pressed="false">Daily Tips</button>
 <div class="sports-category-menu"><button class="category-tab sports-category-trigger" data-category="sports" type="button" aria-expanded="false" aria-haspopup="true">Sports</button><div class="sports-submenu" id="sportsSubmenu" hidden><button type="button" data-sports-subcategory="cricket">Cricket</button><button type="button" data-sports-subcategory="football">Football</button><button type="button" data-sports-subcategory="tennis">Tennis</button><button type="button" data-sports-subcategory="basketball">Basketball</button><button type="button" data-sports-subcategory="other-sports">Other</button></div></div>
 <div class="lifestyle-category-menu"><button class="category-tab lifestyle-category-trigger" data-category="lifestyle" type="button" aria-expanded="false" aria-haspopup="true">Lifestyle</button><div class="sports-submenu lifestyle-submenu" id="lifestyleSubmenu" hidden><button type="button" data-lifestyle-subcategory="daily-tips">Daily Tips</button><button type="button" data-lifestyle-subcategory="health">Health</button><button type="button" data-lifestyle-subcategory="beauty-care">Beauty Care</button></div></div>
 <button class="category-tab" data-category="technology" aria-pressed="false">Science &amp; Technology</button>
 
 <div class="entertainment-category-menu"><button class="category-tab entertainment-category-trigger" data-category="entertainment" type="button" aria-expanded="false" aria-haspopup="true">Entertainment</button><div class="sports-submenu entertainment-submenu" id="entertainmentSubmenu" hidden><button type="button" data-entertainment-subcategory="cinema">Cinema</button><button type="button" data-entertainment-subcategory="bollywood">Bollywood</button><button type="button" data-entertainment-subcategory="south-cinema">South Indian Cinema</button><button type="button" data-entertainment-subcategory="music">Music</button><button type="button" data-entertainment-subcategory="hollywood">Hollywood</button><button type="button" data-entertainment-subcategory="television">Television</button><button type="button" data-entertainment-subcategory="serial">TV Serials</button><button type="button" data-entertainment-subcategory="folk-art">Folk Culture</button></div></div>
+<button class="category-tab desktop-only-category-tab" data-category="travel" type="button" aria-pressed="false">Travel</button>
+<button class="category-tab desktop-only-category-tab" data-category="finance" type="button" aria-pressed="false">Finance</button>
 <button class="category-more-tab add-category-tab" id="moreCategoriesTab" type="button" aria-label="More" title="More" aria-haspopup="true" aria-expanded="false"><svg class="more-category-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
 </div>
 </section>
