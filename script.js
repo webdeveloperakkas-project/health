@@ -252,6 +252,30 @@
   const manualTrendingSection = $("#manualTrendingSection");
   const aboutSection = $("#about");
 
+  /* Keep the Trending / Most Read section in its original mobile position.
+     On desktop only, place it in the right rail directly below the AdSense slot. */
+  const trendingOriginalAnchor = document.createComment("Trending section original position");
+  if (trendingSection && trendingSection.parentNode) {
+    trendingSection.parentNode.insertBefore(trendingOriginalAnchor, trendingSection);
+  }
+  const trendingDesktopQuery = window.matchMedia("(min-width: 801px)");
+  function placeTrendingSectionForViewport() {
+    if (!trendingSection || !trendingOriginalAnchor.parentNode) return;
+    if (trendingDesktopQuery.matches) {
+      const rightRail = document.querySelector(".home-right");
+      const adSlot = rightRail && rightRail.querySelector(".home-ad-slot");
+      if (rightRail && adSlot) rightRail.insertBefore(trendingSection, adSlot.nextSibling);
+    } else {
+      trendingOriginalAnchor.parentNode.insertBefore(trendingSection, trendingOriginalAnchor.nextSibling);
+    }
+  }
+  placeTrendingSectionForViewport();
+  if (typeof trendingDesktopQuery.addEventListener === "function") {
+    trendingDesktopQuery.addEventListener("change", placeTrendingSectionForViewport);
+  } else if (typeof trendingDesktopQuery.addListener === "function") {
+    trendingDesktopQuery.addListener(placeTrendingSectionForViewport);
+  }
+
   function sortedByDate(items) {
     return [...items].sort((a,b) => {
       const aDate = Number(a.publishedTimestamp) || new Date(a.date).getTime() || 0;
