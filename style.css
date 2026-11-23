@@ -3527,24 +3527,22 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Desktop homepage Latest and Popular rails: show only the cover image and article title.
+/* Desktop homepage Latest and Popular rails: show the full title above its cover image.
    This is intentionally limited to the left homepage rail; mobile stays unchanged. */
 @media (min-width: 801px) {
   .home-left .home-list-panel.is-home-compact .home-list-item {
     display: grid !important;
-    grid-template-columns: 88px minmax(0, 1fr);
-    align-items: center;
-    column-gap: 12px;
-    row-gap: 0;
-    min-height: 88px;
-    padding: 10px 4px !important;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    row-gap: 8px;
+    padding: 12px 4px !important;
   }
 
   .home-left .home-list-panel.is-home-compact .home-list-heading {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1;
     display: block;
-    width: auto;
+    width: 100%;
     min-width: 0;
   }
 
@@ -3555,14 +3553,13 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   }
 
   .home-left .home-list-panel.is-home-compact .home-list-heading strong {
-    display: -webkit-box;
-    overflow: hidden;
+    display: block;
+    overflow: visible;
     margin: 0 !important;
     font-size: 13px;
-    line-height: 1.45;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    line-height: 1.5;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .home-left .home-list-panel.is-home-compact .home-list-summary-row {
@@ -3571,10 +3568,10 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 
   .home-left .home-list-panel.is-home-compact .home-list-thumb {
     grid-column: 1;
-    grid-row: 1;
-    width: 88px;
-    height: 68px;
-    min-width: 88px;
+    grid-row: 2;
+    width: 100%;
+    height: 132px;
+    min-width: 0;
     margin: 0;
   }
 }
