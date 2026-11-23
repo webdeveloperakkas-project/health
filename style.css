@@ -3527,10 +3527,10 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Desktop homepage Popular rail: show only the cover image and article title.
+/* Desktop homepage Latest and Popular rails: show only the cover image and article title.
    This is intentionally limited to the left homepage rail; mobile stays unchanged. */
 @media (min-width: 801px) {
-  .home-left .home-list-panel.is-popular .home-list-item {
+  .home-left .home-list-panel.is-home-compact .home-list-item {
     display: grid !important;
     grid-template-columns: 88px minmax(0, 1fr);
     align-items: center;
@@ -3540,7 +3540,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     padding: 10px 4px !important;
   }
 
-  .home-left .home-list-panel.is-popular .home-list-heading {
+  .home-left .home-list-panel.is-home-compact .home-list-heading {
     grid-column: 2;
     grid-row: 1;
     display: block;
@@ -3548,13 +3548,13 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     min-width: 0;
   }
 
-  .home-left .home-list-panel.is-popular .home-list-category,
-  .home-left .home-list-panel.is-popular .home-list-excerpt,
-  .home-left .home-list-panel.is-popular .home-list-meta {
+  .home-left .home-list-panel.is-home-compact .home-list-category,
+  .home-left .home-list-panel.is-home-compact .home-list-excerpt,
+  .home-left .home-list-panel.is-home-compact .home-list-meta {
     display: none !important;
   }
 
-  .home-left .home-list-panel.is-popular .home-list-heading strong {
+  .home-left .home-list-panel.is-home-compact .home-list-heading strong {
     display: -webkit-box;
     overflow: hidden;
     margin: 0 !important;
@@ -3565,11 +3565,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     line-clamp: 3;
   }
 
-  .home-left .home-list-panel.is-popular .home-list-summary-row {
+  .home-left .home-list-panel.is-home-compact .home-list-summary-row {
     display: contents;
   }
 
-  .home-left .home-list-panel.is-popular .home-list-thumb {
+  .home-left .home-list-panel.is-home-compact .home-list-thumb {
     grid-column: 1;
     grid-row: 1;
     width: 88px;
