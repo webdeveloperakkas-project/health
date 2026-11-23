@@ -3434,3 +3434,41 @@ html[lang="hi"] .main-nav .sidebar-submenu button {
 .main-nav .sidebar-submenu-toggle[aria-expanded="true"]::before {
   transform: rotate(180deg);
 }
+
+
+/* Bengali and Hindi only: slightly larger category labels in the menu drawer.
+   English and every other language retain their existing font sizes. */
+html[lang="bn"] .main-nav .sidebar-category[data-category="world"],
+html[lang="bn"] .main-nav .sidebar-category[data-category="technology"],
+html[lang="bn"] .main-nav .sidebar-category[data-category="sports"],
+html[lang="bn"] .main-nav .sidebar-category[data-category="entertainment"],
+html[lang="bn"] .main-nav .sidebar-category[data-category="lifestyle"],
+html[lang="hi"] .main-nav .sidebar-category[data-category="world"],
+html[lang="hi"] .main-nav .sidebar-category[data-category="technology"],
+html[lang="hi"] .main-nav .sidebar-category[data-category="sports"],
+html[lang="hi"] .main-nav .sidebar-category[data-category="entertainment"],
+html[lang="hi"] .main-nav .sidebar-category[data-category="lifestyle"] {
+  font-size: 16px;
+}
+html[lang="bn"] .main-nav .sidebar-submenu button,
+html[lang="hi"] .main-nav .sidebar-submenu button {
+  font-size: 14px;
+}
+@media (max-width: 800px) {
+  html[lang="bn"] .main-nav .sidebar-category[data-category="world"],
+  html[lang="bn"] .main-nav .sidebar-category[data-category="technology"],
+  html[lang="bn"] .main-nav .sidebar-category[data-category="sports"],
+  html[lang="bn"] .main-nav .sidebar-category[data-category="entertainment"],
+  html[lang="bn"] .main-nav .sidebar-category[data-category="lifestyle"],
+  html[lang="hi"] .main-nav .sidebar-category[data-category="world"],
+  html[lang="hi"] .main-nav .sidebar-category[data-category="technology"],
+  html[lang="hi"] .main-nav .sidebar-category[data-category="sports"],
+  html[lang="hi"] .main-nav .sidebar-category[data-category="entertainment"],
+  html[lang="hi"] .main-nav .sidebar-category[data-category="lifestyle"] {
+    font-size: 15px;
+  }
+  html[lang="bn"] .main-nav .sidebar-submenu button,
+  html[lang="hi"] .main-nav .sidebar-submenu button {
+    font-size: 13px;
+  }
+}
