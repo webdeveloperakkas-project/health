@@ -260,47 +260,23 @@ Deno.serve(async (request: Request) => {
     }
 
     const payload = await request.json();
+    const action = String(payload.action || "publish");
     const rawIds = Array.isArray(payload.postIds) ? payload.postIds : [];
     const postIds = [...new Set(rawIds.map((id: unknown) => String(id).trim()).filter(Boolean))];
+    if (postIds.length === 0) return jsonResponse(400, { error: "Select at least one post." });
+    if (postIds.length > 25) return jsonResponse(400, { error: "Process up to 25 posts per batch." });
 
-    if (postIds.length === 0) return jsonResponse(400, { error: "Select at least one post to publish." });
-    if (postIds.length > 25) return jsonResponse(400, { error: "Publish up to 25 posts per batch." });
-
-    const filter = postIds.map((id) => '"' + id.replace(/["\\]/g, "") + '"').join(",");
-    const posts = await supabaseRequest(
+    const filter = postIds.map((id) => '"' + id.replace(/["\\\\]/g, "") + '"').join(",");
+    const selectedPosts = await supabaseRequest(
       "posts?id=in.(" + encodeURIComponent(filter) + ")&select=*&limit=25",
       serviceKey,
     );
-
-    if (!Array.isArray(posts) || posts.length !== postIds.length) {
+    if (!Array.isArray(selectedPosts) || selectedPosts.length !== postIds.length) {
       return jsonResponse(404, { error: "One or more selected posts could not be found." });
     }
-    for (const post of posts) {
-      if (post.status !== "draft" && post.status !== "published") {
-        return jsonResponse(409, { error: "Only Draft or already Published posts can be published. Check: " + post.title });
-      }
-      if (!String(post.title || "").trim() || !String(post.content_html || "").trim()) {
-        return jsonResponse(422, { error: "A selected post is missing its title or article content." });
-      }
-      postPath(post); // Validate category and build the same route structure used by the website.
-    }
 
-    /* Include the selected posts in the sitemap before changing their status. */
-    const currentPublished = await supabaseRequest(
-      "posts?status=eq.published&select=id,title,category,subcategory,published_at,updated_at,created_at&order=published_at.desc&limit=5000",
-      serviceKey,
-    );
-    const sitemapPosts = new Map<string, Record<string, any>>();
-    for (const post of (currentPublished || [])) sitemapPosts.set(String(post.id), post);
-    const publishTime = new Date().toISOString();
-    for (const post of posts) {
-      sitemapPosts.set(String(post.id), { ...post, status: "published", published_at: post.published_at || publishTime, updated_at: publishTime });
-    }
-
-    /* Build article HTML and sitemap into one Git tree and one Git commit. */
     const [owner, repo] = repository.split("/");
     if (!owner || !repo) throw new Error("GITHUB_REPOSITORY must use owner/repository format.");
-
     const ref = await githubRequest(
       "/repos/" + owner + "/" + repo + "/git/ref/heads/" + encodeURIComponent(branch),
       githubToken,
@@ -311,81 +287,151 @@ Deno.serve(async (request: Request) => {
       githubToken,
     );
 
-    const treeEntries: Array<Record<string, unknown>> = posts.map((post: Record<string, any>) => ({
-      path: postPath(post) + "/index.html",
-      mode: "100644",
-      type: "blob",
-      content: articleHtml(post, siteUrl),
-    }));
-    treeEntries.push({
-      path: "sitemap.xml",
-      mode: "100644",
-      type: "blob",
-      content: buildSitemap(Array.from(sitemapPosts.values()), siteUrl),
-    });
-    treeEntries.push({
-      path: "robots.txt",
-      mode: "100644",
-      type: "blob",
-      content: "User-agent: *\nAllow: /\nSitemap: " + siteUrl + "/sitemap.xml\n",
-    });
+    if (action === "publish") {
+      for (const post of selectedPosts) {
+        if (post.status !== "draft" && post.status !== "published") {
+          return jsonResponse(409, { error: "Only Draft or already Published posts can be published. Check: " + post.title });
+        }
+        if (!String(post.title || "").trim() || !String(post.content_html || "").trim()) {
+          return jsonResponse(422, { error: "A selected post is missing its title or article content." });
+        }
+        postPath(post);
+      }
 
-    const newTree = await githubRequest(
-      "/repos/" + owner + "/" + repo + "/git/trees",
-      githubToken,
-      "POST",
-      { base_tree: oldCommit.tree.sha, tree: treeEntries },
-    );
-    const newCommit = await githubRequest(
-      "/repos/" + owner + "/" + repo + "/git/commits",
-      githubToken,
-      "POST",
-      {
-        message: "Publish " + posts.length + " Global Scope 24 article(s)",
-        tree: newTree.sha,
-        parents: [oldCommitSha],
-      },
-    );
+      const publishTime = new Date().toISOString();
+      const treeEntries: Array<Record<string, unknown>> = selectedPosts.map((post: Record<string, any>) => ({
+        path: postPath(post) + "/index.html",
+        mode: "100644",
+        type: "blob",
+        content: articleHtml({ ...post, published_at: post.published_at || publishTime }, siteUrl),
+      }));
+      treeEntries.push({
+        path: "robots.txt",
+        mode: "100644",
+        type: "blob",
+        content: "User-agent: *\\nAllow: /\\nSitemap: " + siteUrl + "/sitemap.xml\\n",
+      });
 
-    /* Mark records Published only after the GitHub content is ready.
-       If moving the Git ref fails, revert the database records to Draft. */
-    const publishIds = postIds.map((id) => '"' + id.replace(/["\\]/g, "") + '"').join(",");
-    await supabaseRequest(
-      "posts?id=in.(" + encodeURIComponent(publishIds) + ")",
-      serviceKey,
-      "PATCH",
-      { status: "published", published_at: publishTime, updated_at: publishTime },
-    );
-
-    try {
-      await githubRequest(
-        "/repos/" + owner + "/" + repo + "/git/refs/heads/" + encodeURIComponent(branch),
+      const newTree = await githubRequest(
+        "/repos/" + owner + "/" + repo + "/git/trees",
         githubToken,
-        "PATCH",
-        { sha: newCommit.sha, force: false },
+        "POST",
+        { base_tree: oldCommit.tree.sha, tree: treeEntries },
       );
-    } catch (gitError) {
+      const newCommit = await githubRequest(
+        "/repos/" + owner + "/" + repo + "/git/commits",
+        githubToken,
+        "POST",
+        { message: "Publish " + selectedPosts.length + " Global Scope 24 article(s)", tree: newTree.sha, parents: [oldCommitSha] },
+      );
+
+      const publishIds = postIds.map((id) => '"' + id.replace(/["\\\\]/g, "") + '"').join(",");
       await supabaseRequest(
         "posts?id=in.(" + encodeURIComponent(publishIds) + ")",
         serviceKey,
         "PATCH",
-        { status: "draft", published_at: null, updated_at: new Date().toISOString() },
+        { status: "published", published_at: publishTime, updated_at: publishTime },
       );
-      throw gitError;
+      try {
+        await githubRequest(
+          "/repos/" + owner + "/" + repo + "/git/refs/heads/" + encodeURIComponent(branch),
+          githubToken,
+          "PATCH",
+          { sha: newCommit.sha, force: false },
+        );
+      } catch (gitError) {
+        await supabaseRequest(
+          "posts?id=in.(" + encodeURIComponent(publishIds) + ")",
+          serviceKey,
+          "PATCH",
+          { status: "draft", published_at: null, updated_at: new Date().toISOString() },
+        );
+        throw gitError;
+      }
+      return jsonResponse(200, {
+        success: true,
+        action: "publish",
+        publishedCount: selectedPosts.length,
+        published: selectedPosts.map((post: Record<string, any>) => ({
+          id: post.id, title: post.title, path: postPath(post) + "/index.html",
+          url: siteUrl + "/" + postPath(post) + "/",
+        })),
+        commit: newCommit.sha,
+        message: "Article HTML committed. Sitemap was not changed; manual SEO approval is required.",
+      });
     }
 
-    return jsonResponse(200, {
-      success: true,
-      publishedCount: posts.length,
-      published: posts.map((post: Record<string, any>) => ({
-        id: post.id,
-        title: post.title,
-        path: postPath(post) + "/index.html",
-        url: siteUrl + "/" + postPath(post) + "/",
-      })),
-      commit: newCommit.sha,
-      message: "Articles and sitemap committed to GitHub. Cloudflare deployment is not triggered by this function.",
-    });
+    if (action === "update_sitemap") {
+      const include = payload.include === true;
+      for (const post of selectedPosts) {
+        if (post.status !== "published") {
+          return jsonResponse(409, { error: "Only published posts can be submitted to the sitemap: " + post.title });
+        }
+        postPath(post);
+      }
+
+      const idFilter = postIds.map((id) => '"' + id.replace(/["\\\\]/g, "") + '"').join(",");
+      await supabaseRequest(
+        "posts?id=in.(" + encodeURIComponent(idFilter) + ")",
+        serviceKey,
+        "PATCH",
+        { sitemap_submitted: include, sitemap_submitted_at: include ? new Date().toISOString() : null },
+      );
+
+      try {
+        const approvedPosts = await supabaseRequest(
+          "posts?status=eq.published&sitemap_submitted=eq.true&select=id,title,category,subcategory,published_at,updated_at,created_at&order=published_at.desc&limit=5000",
+          serviceKey,
+        );
+        const treeEntries: Array<Record<string, unknown>> = [{
+          path: "sitemap.xml",
+          mode: "100644",
+          type: "blob",
+          content: buildSitemap(Array.isArray(approvedPosts) ? approvedPosts : [], siteUrl),
+        }, {
+          path: "robots.txt",
+          mode: "100644",
+          type: "blob",
+          content: "User-agent: *\\nAllow: /\\nSitemap: " + siteUrl + "/sitemap.xml\\n",
+        }];
+        const newTree = await githubRequest(
+          "/repos/" + owner + "/" + repo + "/git/trees",
+          githubToken,
+          "POST",
+          { base_tree: oldCommit.tree.sha, tree: treeEntries },
+        );
+        const newCommit = await githubRequest(
+          "/repos/" + owner + "/" + repo + "/git/commits",
+          githubToken,
+          "POST",
+          { message: (include ? "Add approved URLs to" : "Remove URLs from") + " Global Scope 24 sitemap", tree: newTree.sha, parents: [oldCommitSha] },
+        );
+        await githubRequest(
+          "/repos/" + owner + "/" + repo + "/git/refs/heads/" + encodeURIComponent(branch),
+          githubToken,
+          "PATCH",
+          { sha: newCommit.sha, force: false },
+        );
+        return jsonResponse(200, {
+          success: true, action: "update_sitemap", include,
+          submittedCount: selectedPosts.length,
+          sitemapUrl: siteUrl + "/sitemap.xml",
+          approvedUrlCount: Array.isArray(approvedPosts) ? approvedPosts.length : 0,
+          commit: newCommit.sha,
+          message: "Sitemap updated with manually approved published URLs. Search engines decide when to crawl and index them.",
+        });
+      } catch (sitemapError) {
+        await supabaseRequest(
+          "posts?id=in.(" + encodeURIComponent(idFilter) + ")",
+          serviceKey,
+          "PATCH",
+          { sitemap_submitted: !include, sitemap_submitted_at: include ? null : new Date().toISOString() },
+        );
+        throw sitemapError;
+      }
+    }
+
+    return jsonResponse(400, { error: "Unsupported action. Use publish or update_sitemap." });
   } catch (error) {
     console.error("publish-post failed:", error);
     return jsonResponse(500, { error: error instanceof Error ? error.message : "Unexpected publishing error." });
