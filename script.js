@@ -894,8 +894,8 @@
         const stamp = row.published_at || row.created_at || new Date().toISOString();
         const publishedDate = new Date(stamp);
         return {
-          cmsId:row.id,category:row.category==="beauty"?"lifestyle":row.category,
-          subcategory:row.subcategory||"",title:row.title||"",language:row.language||"en",
+          cmsId:row.id,category:["beauty","health"].includes(row.category)?"lifestyle":row.category,
+           subcategory:row.subcategory||(row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",language:row.language||"en",
           postType:(row.post_types||["latest"])[0]||"latest",
           postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
           featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
