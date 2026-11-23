@@ -3412,7 +3412,6 @@ html[lang="hi"] .category-tabs .category-more-tab {
   .main-nav .sidebar-category,
   .main-nav .sidebar-submenu-toggle { min-height: 40px; font-size: 14px; }
   .main-nav .sidebar-submenu-toggle { flex-basis: 40px; width: 40px; }
-  .main-nav .sidebar-submenu button { font-size: 12px; }
 }
 html[lang="bn"] .main-nav .sidebar-category,
 html[lang="bn"] .main-nav .sidebar-submenu button {
@@ -3467,10 +3466,6 @@ html[lang="hi"] .main-nav .sidebar-submenu button {
   html[lang="hi"] .main-nav .sidebar-category[data-category="lifestyle"] {
     font-size: 15px;
   }
-  html[lang="bn"] .main-nav .sidebar-submenu button,
-  html[lang="hi"] .main-nav .sidebar-submenu button {
-    font-size: 13px;
-  }
 }
 
 
@@ -3481,4 +3476,17 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   font-family: "Manrope", sans-serif;
   font-weight: 800;
   letter-spacing: -0.45px;
+}
+
+/* Definitive mobile font sizes for the category drawer subcategories.
+   Keep the desktop typography and the top navigation dropdowns separate. */
+@media (max-width: 800px) {
+  html[lang="bn"] .main-nav .sidebar-submenu button,
+  html[lang="hi"] .main-nav .sidebar-submenu button {
+    font-size: 13px !important;
+  }
+
+  html[lang="en"] .main-nav .sidebar-submenu button {
+    font-size: 12px !important;
+  }
 }
