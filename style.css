@@ -2377,8 +2377,6 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 
 /* Sports category dropdown */
 .sports-category-menu,.entertainment-category-menu,.world-category-menu,.lifestyle-category-menu{position:relative;min-width:0;z-index:20;}
-.sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger{width:100%;height:100%;position:relative;padding-right:14px;}
-.sports-category-trigger::after,.entertainment-category-trigger::after,.world-category-trigger::after,.lifestyle-category-trigger::after{content:"▾";position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:.7em;}
 .sports-category-trigger[aria-expanded="true"],.entertainment-category-trigger[aria-expanded="true"],.world-category-trigger[aria-expanded="true"],.lifestyle-category-trigger[aria-expanded="true"]{background:#e2f1ed;color:var(--teal-dark);}
 .sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu{position:absolute;top:calc(100% + 6px);left:0;min-width:170px;width:max-content;max-width:220px;padding:6px;background:#fff;border:1px solid #dce7e4;border-radius:8px;box-shadow:0 10px 28px rgba(18,48,52,.18);display:flex;flex-direction:column;gap:2px;z-index:100;}
 .sports-submenu[hidden],.entertainment-submenu[hidden],.world-submenu[hidden],.lifestyle-submenu[hidden]{display:none!important;}
@@ -2402,9 +2400,8 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 
 
 /* Unified animated dropdowns for World News and Lifestyle, matching Sports. */
-.world-category-menu,.lifestyle-category-menu{position:relative;display:flex;align-items:stretch;min-width:0;width:100%;overflow:visible;z-index:21;}
-.world-category-trigger,.lifestyle-category-trigger{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;height:100%;white-space:nowrap;overflow:visible;color:#425a60;}
-.world-category-trigger::after,.lifestyle-category-trigger::after{content:"";position:absolute;right:8px;top:50%;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;border-radius:1px;transform:translateY(-68%) rotate(45deg);transition:transform .22s ease;}
+.world-category-menu,.lifestyle-category-menu{position:relative;display:flex;align-items:stretch;min-width:0;overflow:visible;z-index:21;}
+.world-category-trigger,.lifestyle-category-trigger{position:relative;display:flex;align-items:center;min-width:0;height:100%;white-space:nowrap;overflow:visible;color:#425a60;}
 .world-category-trigger[aria-expanded="true"]::after,.lifestyle-category-trigger[aria-expanded="true"]::after{transform:translateY(-25%) rotate(225deg);}
 .world-category-trigger[aria-expanded="true"],.lifestyle-category-trigger[aria-expanded="true"]{background:#e2f1ed;color:var(--teal-dark);}
 .sports-category-trigger[aria-expanded="true"]::after,.entertainment-category-trigger[aria-expanded="true"]::after{transform:translateY(-25%) rotate(225deg);}
@@ -2960,12 +2957,16 @@ img {
 }
 
 
-/* Homepage category navigation: Home is compact; category tabs size to their labels. */
+/* =========================================================
+   CATEGORY NAVIGATION — one authoritative responsive system
+   Desktop: show every main category in one row.
+   Mobile: keep the compact row and use the existing More drawer.
+========================================================= */
 .category-tabs {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   width: 100%;
   padding: 0;
   margin: 0;
@@ -2980,8 +2981,18 @@ img {
   box-sizing: border-box;
   flex: 0 0 auto;
   width: auto;
-  min-width: max-content;
+  min-width: 0;
   min-height: 40px;
+}
+
+.category-tabs > .world-category-menu,
+.category-tabs > .sports-category-menu,
+.category-tabs > .lifestyle-category-menu,
+.category-tabs > .entertainment-category-menu {
+  display: inline-flex;
+  align-items: stretch;
+  position: relative;
+  overflow: visible;
 }
 
 .category-tabs .category-tab,
@@ -2990,12 +3001,13 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
   width: auto;
-  min-width: max-content;
+  min-width: 0;
   min-height: 40px;
-  padding: 8px 16px;
+  padding: 8px 11px;
   font-family: "DM Sans", sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: 0;
@@ -3003,28 +3015,45 @@ img {
   white-space: nowrap;
 }
 
-.category-tabs > .world-category-menu,
-.category-tabs > .sports-category-menu,
-.category-tabs > .lifestyle-category-menu,
-.category-tabs > .entertainment-category-menu {
-  display: flex;
-  align-items: stretch;
-  position: relative;
-  overflow: visible;
-}
-
 .category-tabs > .world-category-menu > .category-tab,
 .category-tabs > .sports-category-menu > .category-tab,
 .category-tabs > .lifestyle-category-menu > .category-tab,
 .category-tabs > .entertainment-category-menu > .category-tab {
-  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  height: 40px;
+  justify-content: flex-start;
+  padding: 8px 19px 8px 8px;
+  text-align: left;
+}
+
+.category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
+  padding-left: 7px;
+  padding-right: 18px;
+}
+
+.category-tabs .category-tab[data-category="technology"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.category-tabs .desktop-daily-tips-tab {
+  display: inline-flex;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.category-tabs .desktop-only-category-tab {
+  display: inline-flex;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .category-tabs > .home-category-tab {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
+  flex: 0 0 40px;
   width: 40px;
   min-width: 40px;
   min-height: 40px;
@@ -3041,195 +3070,20 @@ img {
   flex: 0 0 21px;
 }
 
-.category-tabs .category-more-tab {
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: #f5f7f6;
-  color: var(--navy);
-  cursor: pointer;
-  transition: background .18s, color .18s, border-color .18s;
-}
-
-.category-tabs .category-more-tab:hover,
-.category-tabs .category-more-tab[aria-expanded="true"] {
-  background: #e2f1ed;
-  border-color: #b9d9d1;
-  color: var(--teal-dark);
-}
-
-/* Subcategory dropdown labels stay 2px smaller than their parent category. */
-.sports-submenu button,
-.entertainment-submenu button,
-.world-submenu button,
-.lifestyle-submenu button {
-  font-size: 12px;
-}
-
-@media (max-width: 800px) {
-  .category-tabs {
-    gap: 7px;
-  }
-
-  .category-tabs .category-tab,
-  .category-tabs .category-more-tab {
-    min-height: 38px;
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-
-  .category-tabs > .home-category-tab {
-    width: 38px;
-    min-width: 38px;
-    min-height: 38px;
-    padding: 0 7px;
-  }
-
-  .category-tabs > .home-category-tab .home-tab-icon {
-    width: 20px;
-    height: 20px;
-    flex-basis: 20px;
-  }
-
-  .sports-submenu button,
-  .entertainment-submenu button,
-  .world-submenu button,
-  .lifestyle-submenu button {
-    font-size: 10px;
-  }
-}
-
-
-/* Compact More control: an icon-only final slot leaves room for another category. */
-.category-tabs .category-more-tab {
-  width: 40px;
-  min-width: 40px;
-  max-width: 40px;
-  padding: 0;
-}
-
-.category-tabs .more-category-icon {
-  display: block;
-  width: 21px;
-  height: 21px;
-  flex: 0 0 21px;
-}
-
-@media (max-width: 800px) {
-  .category-tabs .category-more-tab {
-    width: 38px;
-    min-width: 38px;
-    max-width: 38px;
-    min-height: 38px;
-  }
-
-  .category-tabs .more-category-icon {
-    width: 20px;
-    height: 20px;
-    flex-basis: 20px;
-  }
-}
-
-/* Category navigation: increase label size while keeping Science & Technology compact. */
-.category-tabs .category-tab {
-  font-size: 16px;
-}
-.category-tabs .category-tab[data-category="technology"] {
-  padding-left: 8px;
-  padding-right: 8px;
-}
-@media (max-width: 800px) {
-  .category-tabs .category-tab {
-    font-size: 14px;
-  }
-  .category-tabs .category-tab[data-category="technology"] {
-    padding-left: 6px;
-    padding-right: 6px;
-  }
-}
-
-
-/* Category dropdown consistency and compact add/more control. */
 .category-tabs .sports-category-trigger,
 .category-tabs .world-category-trigger,
 .category-tabs .lifestyle-category-trigger,
 .category-tabs .entertainment-category-trigger {
-  padding-left: 15px;
-  padding-right: 14px;
-}
-.category-tabs .sports-category-trigger::after,
-.category-tabs .world-category-trigger::after,
-.category-tabs .lifestyle-category-trigger::after,
-.category-tabs .entertainment-category-trigger::after {
-  content: "▾";
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: .7em;
-  line-height: 1;
-}
-.category-tabs .add-category-tab {
-  width: 38px;
-  min-width: 38px;
-  height: 38px;
-  min-height: 38px;
-  padding: 0;
-  border: 0;
-  border-radius: 5px;
-  background: #e8b85b;
-  color: #fff;
-}
-.category-tabs .add-category-tab:hover,
-.category-tabs .add-category-tab[aria-expanded="true"] {
-  background: #dca943;
-  color: #fff;
-}
-.category-tabs .add-category-tab .more-category-icon {
-  width: 20px;
-  height: 20px;
-}
-@media (max-width: 800px) {
-  .category-tabs .add-category-tab { width: 36px; min-width: 36px; height: 36px; min-height: 36px; }
-  .category-tabs .add-category-tab .more-category-icon { width: 19px; height: 19px; }
+  position: relative;
 }
 
-
-/* Desktop keeps the full category row; compact plus control is mobile-only. */
-.category-tabs .desktop-daily-tips-tab { display: inline-flex; }
-.category-tabs .add-category-tab { display: none; }
-@media (max-width: 800px) {
-  .category-tabs .desktop-daily-tips-tab { display: none !important; }
-  .category-tabs .add-category-tab { display: inline-flex !important; }
-}
-
-
-/* Category navigation fix: one matching dropdown chevron per category.
-   Keep the desktop row on a single line so Lifestyle stays beside Sports. */
-@media (min-width: 801px) {
-  .category-tabs {
-    flex-wrap: nowrap !important;
-    gap: 5px !important;
-  }
-
-  .category-tabs .category-tab {
-    padding-left: 9px;
-    padding-right: 20px;
-  }
-
-  .category-tabs > .home-category-tab {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-}
-
-/* Replace older text-glyph arrows with one consistent CSS chevron. */
 .category-tabs .sports-category-trigger::after,
 .category-tabs .world-category-trigger::after,
 .category-tabs .lifestyle-category-trigger::after,
 .category-tabs .entertainment-category-trigger::after {
   content: "" !important;
   position: absolute;
-  right: 8px;
+  right: 7px;
   top: 50%;
   width: 7px;
   height: 7px;
@@ -3248,7 +3102,122 @@ img {
   transform: translateY(-25%) rotate(225deg);
 }
 
+.category-tabs .sports-category-trigger[aria-expanded="true"],
+.category-tabs .world-category-trigger[aria-expanded="true"],
+.category-tabs .lifestyle-category-trigger[aria-expanded="true"],
+.category-tabs .entertainment-category-trigger[aria-expanded="true"] {
+  background: #e2f1ed;
+  color: var(--teal-dark);
+}
+
+.category-tabs .category-more-tab {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f5f7f6;
+  color: var(--navy);
+  cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s;
+}
+
+.category-tabs .category-more-tab:hover,
+.category-tabs .category-more-tab[aria-expanded="true"] {
+  background: #e2f1ed;
+  border-color: #b9d9d1;
+  color: var(--teal-dark);
+}
+
+.category-tabs .more-category-icon {
+  display: block;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+}
+
+.category-tabs .add-category-tab {
+  display: none;
+}
+
+.sports-submenu button,
+.entertainment-submenu button,
+.world-submenu button,
+.lifestyle-submenu button {
+  font-size: 12px;
+}
+
+@media (min-width: 801px) {
+  .category-tabs {
+    flex-wrap: nowrap;
+    gap: 5px;
+  }
+
+  .category-tabs .category-tab {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .category-tabs > .home-category-tab {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .category-tabs > .world-category-menu > .category-tab,
+  .category-tabs > .sports-category-menu > .category-tab,
+  .category-tabs > .lifestyle-category-menu > .category-tab,
+  .category-tabs > .entertainment-category-menu > .category-tab {
+    padding-left: 8px;
+    padding-right: 19px;
+  }
+
+  .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
+    padding-left: 7px;
+    padding-right: 18px;
+  }
+}
+
 @media (max-width: 800px) {
+  .category-tabs {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .category-tabs .category-tab,
+  .category-tabs .category-more-tab {
+    min-height: 38px;
+    padding: 7px 10px;
+    font-size: 14px;
+  }
+
+  .category-tabs > .home-category-tab {
+    flex: 0 0 38px;
+    width: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0 7px;
+  }
+
+  .category-tabs > .home-category-tab .home-tab-icon {
+    width: 20px;
+    height: 20px;
+    flex-basis: 20px;
+  }
+
+  .category-tabs > .world-category-menu > .category-tab,
+  .category-tabs > .sports-category-menu > .category-tab,
+  .category-tabs > .lifestyle-category-menu > .category-tab,
+  .category-tabs > .entertainment-category-menu > .category-tab {
+    height: 38px;
+    padding: 7px 17px 7px 8px;
+  }
+
+  .category-tabs > .lifestyle-category-menu > .lifestyle-category-trigger {
+    padding-left: 7px;
+    padding-right: 17px;
+  }
+
   .category-tabs .sports-category-trigger::after,
   .category-tabs .world-category-trigger::after,
   .category-tabs .lifestyle-category-trigger::after,
@@ -3257,34 +3226,49 @@ img {
     width: 6px;
     height: 6px;
   }
-}
 
-/* Desktop dropdown tabs: move labels 1px left and reserve visible space
-   between the final letter and the chevron. Override legacy width:100%. */
-@media (min-width: 801px) {
-  .category-tabs .world-category-trigger,
-  .category-tabs .sports-category-trigger,
-  .category-tabs .lifestyle-category-trigger,
-  .category-tabs .entertainment-category-trigger {
+  .category-tabs .desktop-daily-tips-tab,
+  .category-tabs .desktop-only-category-tab {
+    display: none !important;
+  }
+
+  .category-tabs .category-more-tab {
+    width: 38px;
+    min-width: 38px;
+    max-width: 38px;
+    min-height: 38px;
+    padding: 0;
+  }
+
+  .category-tabs .more-category-icon {
+    width: 20px;
+    height: 20px;
+    flex-basis: 20px;
+  }
+
+  .category-tabs .add-category-tab {
     display: inline-flex !important;
-    width: auto !important;
-    min-width: 0 !important;
-    flex: 0 0 auto !important;
-    justify-content: flex-start !important;
-    padding-left: 8px !important;
-    padding-right: 19px !important;
-    text-indent: 0 !important;
+    width: 38px;
+    min-width: 38px;
+    max-width: 38px;
+    min-height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    background: #e8b85b;
+    color: #fff;
   }
 
-  .category-tabs .lifestyle-category-trigger {
-    padding-left: 7px !important;
-    padding-right: 19px !important;
+  .category-tabs .add-category-tab:hover,
+  .category-tabs .add-category-tab[aria-expanded="true"] {
+    background: #dca943;
+    color: #fff;
   }
 
-  .category-tabs .world-category-trigger::after,
-  .category-tabs .sports-category-trigger::after,
-  .category-tabs .lifestyle-category-trigger::after,
-  .category-tabs .entertainment-category-trigger::after {
-    right: 8px !important;
+  .sports-submenu button,
+  .entertainment-submenu button,
+  .world-submenu button,
+  .lifestyle-submenu button {
+    font-size: 10px;
   }
 }
