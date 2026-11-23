@@ -13,7 +13,7 @@
   const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
-  function makePostSlug(value){return String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"")||"article";}
+  function makePostSlug(value){return String(value||"").normalize("NFC").toLowerCase().trim().replace(/[^\p{L}\p{M}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"")||"article";}
   function updatePostUrlPreview(){const title=$("#postTitle")?.value||"",category=$("#postCategory")?.value||"",subcategory=$("#postSubcategory")?.value||"";const slug=makePostSlug(title);if($("#postSlugPreview"))$("#postSlugPreview").value=title.trim()?slug:"";const categoryPath=makePostSlug(categories[category]||category);const parts=[categoryPath,subcategory?makePostSlug(subcategory):"",slug].filter(Boolean);if($("#postUrlPreview"))$("#postUrlPreview").textContent=title.trim()?"/health/"+parts.join("/")+"/":"URL preview will appear after you enter a title.";}
 
   let posts = [];
