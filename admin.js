@@ -30,8 +30,8 @@
     catch(error){ return []; }
   }
   function fromDatabase(row){
-    return {id:row.id,title:row.title,content:row.content_html||"",category:["beauty","health"].includes(row.category)?"lifestyle":row.category,
-      subcategory:row.subcategory||(row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
+    return {id:row.id,title:row.title,content:row.content_html||"",category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
+      subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
       status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
       cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at,sitemapSubmitted:!!row.sitemap_submitted,sitemapSubmittedAt:row.sitemap_submitted_at||null};
@@ -549,7 +549,7 @@
   /* Form state and CRUD */
   function syncCategorySubcategory(){
     const category=$("#postCategory").value;
-    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["health","Health"],["beauty-care","Beauty Care"]]:[];
+    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["daily-tips","Daily Tips"],["health","Health"],["beauty-care","Beauty Care"]]:[];
     const select=$("#postSubcategory"),previous=select.value;$("#categorySubcategoryField").hidden=!options.length;select.required=!!options.length;
     select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
     select.value=options.some(([value])=>value===previous)?previous:"";
