@@ -3125,3 +3125,21 @@ img {
     flex-basis: 20px;
   }
 }
+
+/* Category navigation: increase label size while keeping Science & Technology compact. */
+.category-tabs .category-tab {
+  font-size: 16px;
+}
+.category-tabs .category-tab[data-category="technology"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+@media (max-width: 800px) {
+  .category-tabs .category-tab {
+    font-size: 14px;
+  }
+  .category-tabs .category-tab[data-category="technology"] {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
