@@ -3146,3 +3146,49 @@ img {
     padding-right: 6px;
   }
 }
+
+
+/* Category dropdown consistency and compact add/more control. */
+.category-tabs .sports-category-trigger,
+.category-tabs .world-category-trigger,
+.category-tabs .lifestyle-category-trigger,
+.category-tabs .entertainment-category-trigger {
+  padding-left: 15px;
+  padding-right: 14px;
+}
+.category-tabs .sports-category-trigger::after,
+.category-tabs .world-category-trigger::after,
+.category-tabs .lifestyle-category-trigger::after,
+.category-tabs .entertainment-category-trigger::after {
+  content: "▾";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: .7em;
+  line-height: 1;
+}
+.category-tabs .add-category-tab {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: #e8b85b;
+  color: #fff;
+}
+.category-tabs .add-category-tab:hover,
+.category-tabs .add-category-tab[aria-expanded="true"] {
+  background: #dca943;
+  color: #fff;
+}
+.category-tabs .add-category-tab .more-category-icon {
+  width: 20px;
+  height: 20px;
+}
+@media (max-width: 800px) {
+  .category-tabs .add-category-tab { width: 36px; min-width: 36px; height: 36px; min-height: 36px; }
+  .category-tabs .add-category-tab .more-category-icon { width: 19px; height: 19px; }
+}
