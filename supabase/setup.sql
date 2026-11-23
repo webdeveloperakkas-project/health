@@ -54,6 +54,8 @@ alter table public.posts add column if not exists meta_title text not null defau
 alter table public.posts add column if not exists meta_description text not null default '';
 alter table public.posts add column if not exists focus_keyword text not null default '';
 alter table public.posts add column if not exists related_keywords text[] not null default '{}'::text[];
+alter table public.posts add column if not exists sitemap_submitted boolean not null default false;
+alter table public.posts add column if not exists sitemap_submitted_at timestamptz;
 alter table public.posts drop constraint if exists posts_status_check;
 alter table public.posts add constraint posts_status_check check (status in ('draft', 'scheduled', 'published'));
 
@@ -61,6 +63,10 @@ create index if not exists posts_schedule_idx on public.posts (scheduled_at) whe
 
 create index if not exists posts_publication_idx
   on public.posts (status, published_at desc);
+
+create index if not exists posts_sitemap_approval_idx
+  on public.posts (published_at desc)
+  where status = 'published' and sitemap_submitted = true;
 create index if not exists posts_category_idx
   on public.posts (category, status);
 
