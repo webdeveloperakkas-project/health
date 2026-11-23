@@ -2960,11 +2960,11 @@ img {
 }
 
 
-/* Homepage category navigation: one consistent sizing and spacing system. */
+/* Homepage category navigation: Home is compact; category tabs size to their labels. */
 .category-tabs {
-  display: grid;
-  grid-template-columns: 36px repeat(6, minmax(0, 1fr)) minmax(72px, .8fr);
-  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   width: 100%;
   padding: 0;
@@ -2977,21 +2977,22 @@ img {
 .category-tabs > .entertainment-category-menu,
 .category-tabs > .category-more-tab {
   box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: max-content;
   min-height: 40px;
 }
 
 .category-tabs .category-tab,
 .category-tabs .category-more-tab {
   box-sizing: border-box;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-width: 0;
+  width: auto;
+  min-width: max-content;
   min-height: 40px;
-  padding: 8px 6px;
+  padding: 8px 16px;
   font-family: "DM Sans", sans-serif;
   font-size: 14px;
   font-weight: 700;
@@ -3013,27 +3014,28 @@ img {
 .category-tabs > .world-category-menu > .category-tab,
 .category-tabs > .sports-category-menu > .category-tab,
 .category-tabs > .entertainment-category-menu > .category-tab {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
 }
 
 .category-tabs > .home-category-tab {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-width: 0;
+  flex: 0 0 auto;
+  width: 40px;
+  min-width: 40px;
   min-height: 40px;
-  padding: 0;
-  border-radius: 0;
+  padding: 0 8px;
+  border-radius: 5px;
   background: #087C75;
   color: #FFFFFF;
 }
 
 .category-tabs > .home-category-tab .home-tab-icon {
   display: block;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
 }
 
 .category-tabs .category-more-tab {
@@ -3062,21 +3064,27 @@ img {
 
 @media (max-width: 800px) {
   .category-tabs {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 7px;
-  }
-
-  .category-tabs > .home-category-tab {
-    width: 100%;
-    min-width: 0;
-    min-height: 40px;
   }
 
   .category-tabs .category-tab,
   .category-tabs .category-more-tab {
-    min-height: 40px;
-    padding: 8px 4px;
+    min-height: 38px;
+    padding: 8px 12px;
     font-size: 12px;
+  }
+
+  .category-tabs > .home-category-tab {
+    width: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0 7px;
+  }
+
+  .category-tabs > .home-category-tab .home-tab-icon {
+    width: 20px;
+    height: 20px;
+    flex-basis: 20px;
   }
 
   .sports-submenu button,
