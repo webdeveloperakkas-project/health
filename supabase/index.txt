@@ -54,13 +54,14 @@ function jsonResponse(status: number, body: Record<string, unknown>) {
 }
 
 function escapeHtml(value: unknown): string {
-  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+  const entities: Record<string, string> = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#39;",
-  })[char] || char);
+  };
+  return String(value ?? "").replace(/[&<>"']/g, (char) => entities[char] || char);
 }
 
 /* Match the title/category slug rules already used by script.js and admin.js. */
