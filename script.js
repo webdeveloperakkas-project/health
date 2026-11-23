@@ -145,7 +145,7 @@
     footerLabels.forEach((link,index) => { if (footerText[index]) link.textContent = footerText[index]; });
     const aboutHeading = document.querySelector("#about h2");
     Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
-      const label = t.categories[button.dataset.category];
+      const label = t.categories[button.dataset.categoryLabel || button.dataset.category];
       if (!label) return;
       if (button.classList.contains("sidebar-category")) {
         const textNode = Array.from(button.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
@@ -244,7 +244,8 @@
   }
   /* Article URLs are generated exclusively from the article title. */
   function articleSlug(post) { return routeSlug(post && post.title); }
-  function categoryRouteSlug(post) { return routeSlug(categoryNames[post && post.category] || (post && post.category) || "articles"); }
+  const categoryPathSlugs = {technology:"technology"};
+  function categoryRouteSlug(post) { const key=post && post.category; return categoryPathSlugs[key] || routeSlug(categoryNames[key] || key || "articles"); }
   function siteBasePath() {
     /* GitHub Pages project site base. Keep this independent of the current article URL. */
     return "/health/";
@@ -483,7 +484,9 @@
     const start = (currentPage - 1) * pageSize;
     const visiblePosts = categoryPosts.slice(start, start + pageSize);
     const t = languageCopy[activeLanguage];
-    $("#activeCategoryTitle").textContent = showFeaturedFeed ? (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredStories : (t.categories[activeCategory] || "Home");
+    const activeSubcategoryButton = activeSubcategory ? Array.from(document.querySelectorAll("[data-sports-subcategory], [data-entertainment-subcategory], [data-world-subcategory], [data-lifestyle-subcategory]")).find(button => ["data-sports-subcategory","data-entertainment-subcategory","data-world-subcategory","data-lifestyle-subcategory"].some(attribute => button.getAttribute(attribute) === activeSubcategory)) : null;
+    const activeCategoryLabel = activeSubcategoryButton?.textContent.trim() || t.categories[activeCategory] || "Home";
+    $("#activeCategoryTitle").textContent = showFeaturedFeed ? (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredStories : activeCategoryLabel;
     $("#feedDescription").textContent = searchTerm
       ? "Search results in " + (t.categories[activeCategory] || "this category") + "."
        : (showFeaturedFeed ? (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredDescription : t.description);
@@ -604,7 +607,7 @@
       activeCategory=category;activeSubcategory=choice.getAttribute(dataAttribute)||"";showHomeFeed=false;showFeaturedFeed=false;activePostType="latest";
       document.querySelectorAll(".post-type-option").forEach(option=>{const selected=option.dataset.postType===activePostType;option.classList.toggle("active",selected);option.setAttribute("aria-pressed",String(selected));});
       currentPage=1;searchTerm="";const searchInput=$("#siteSearch");if(searchInput)searchInput.value="";
-      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger),.sidebar-category").forEach(card=>{const selected=card.dataset.category===category;card.classList.toggle("active",selected);card.setAttribute("aria-pressed",String(selected));});
+      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger),.sidebar-category").forEach(card=>{const selected=card.dataset.category===category && (!card.dataset.subcategory || card.dataset.subcategory===activeSubcategory);card.classList.toggle("active",selected);card.setAttribute("aria-pressed",String(selected));});
       document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger").forEach(item=>item.classList.toggle("active",item===trigger));
       submenu.querySelectorAll(dataSelector).forEach(item=>item.classList.toggle("active",item===choice));
       setOpen(false);render();
@@ -633,7 +636,7 @@
         return;
       }
       activeCategory = button.dataset.category;
-      activeSubcategory = "";
+      activeSubcategory = button.dataset.subcategory || "";
       const sportsMenuTrigger = document.querySelector(".sports-category-trigger");
       const sportsMenu = document.querySelector("#sportsSubmenu");
       const entertainmentMenuTrigger=document.querySelector(".entertainment-category-trigger");
@@ -658,7 +661,7 @@
       const searchInput = $("#siteSearch");
       if (searchInput) searchInput.value = "";
       Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(card => {
-        const selected = card.dataset.category === activeCategory;
+        const selected = card.dataset.category === activeCategory && (!card.dataset.subcategory || card.dataset.subcategory === activeSubcategory);
         card.classList.toggle("active", selected);
         card.setAttribute("aria-pressed", String(selected));
       });
