@@ -3006,11 +3006,11 @@ img {
   min-width: 0;
   min-height: 40px;
   padding: 8px 11px;
-  font-family: "DM Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
+  font-family: "Manrope", sans-serif;
+  font-size: 15px;
+  font-weight: 800;
   line-height: 1.25;
-  letter-spacing: 0;
+  letter-spacing: -0.35px;
   text-align: center;
   white-space: nowrap;
 }
@@ -3271,4 +3271,17 @@ img {
   .lifestyle-submenu button {
     font-size: 10px;
   }
+}
+
+
+/* Match category navigation typography to the site brand while preserving multilingual glyphs. */
+html[lang="bn"] .category-tabs .category-tab,
+html[lang="bn"] .category-tabs .category-more-tab {
+  font-family: "Hind Siliguri", "Noto Sans Bengali", sans-serif;
+  letter-spacing: 0;
+}
+html[lang="hi"] .category-tabs .category-tab,
+html[lang="hi"] .category-tabs .category-more-tab {
+  font-family: "Noto Sans Devanagari", "DM Sans", sans-serif;
+  letter-spacing: 0;
 }
