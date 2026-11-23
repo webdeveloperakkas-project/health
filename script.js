@@ -602,11 +602,17 @@
     if (pageLayout) pageLayout.classList.add("article-page-active");
     if (homeSection) homeSection.hidden = true;
     if (articleSection) articleSection.hidden = true;
-    if (featuredStoriesSection) featuredStoriesSection.hidden = true;
-    if (trendingSection) trendingSection.hidden = true;
-    if (manualTrendingSection) manualTrendingSection.hidden = true;
-    if (aboutSection) aboutSection.hidden = true;
-    if (tickerSection) tickerSection.hidden = true;
+    // Keep the shared site frame and the surrounding homepage sections visible
+    // while the selected article replaces only the central content area.
+    const entertainmentSection = $("#entertainmentSliderSection");
+    const homeCategorySections = $("#homeCategorySections");
+    if (entertainmentSection) entertainmentSection.hidden = true;
+    if (homeCategorySections) homeCategorySections.hidden = true;
+    if (featuredStoriesSection) featuredStoriesSection.hidden = false;
+    if (trendingSection) trendingSection.hidden = false;
+    if (manualTrendingSection) manualTrendingSection.hidden = false;
+    if (aboutSection) aboutSection.hidden = false;
+    if (tickerSection) tickerSection.hidden = false;
     if (categorySection) categorySection.hidden = false;
     if (topAdSlot) topAdSlot.hidden = false;
     document.title = post.title + " | Global Scope 24";
@@ -1180,11 +1186,17 @@
           if (pageLayout) pageLayout.classList.add("article-page-active");
           if (homeSection) homeSection.hidden = true;
           if (articleSection) articleSection.hidden = true;
-          if (featuredStoriesSection) featuredStoriesSection.hidden = true;
-          if (manualTrendingSection) manualTrendingSection.hidden = true;
-          if (trendingSection) trendingSection.hidden = true;
-          if (aboutSection) aboutSection.hidden = true;
-          if (tickerSection) tickerSection.hidden = true;
+          const entertainmentSection = $("#entertainmentSliderSection");
+          const homeCategorySections = $("#homeCategorySections");
+          if (entertainmentSection) entertainmentSection.hidden = true;
+          if (homeCategorySections) homeCategorySections.hidden = true;
+          if (featuredStoriesSection) featuredStoriesSection.hidden = false;
+          if (manualTrendingSection) manualTrendingSection.hidden = false;
+          if (trendingSection) trendingSection.hidden = false;
+          if (aboutSection) aboutSection.hidden = false;
+          if (tickerSection) tickerSection.hidden = false;
+          if (categorySection) categorySection.hidden = false;
+          if (topAdSlot) topAdSlot.hidden = false;
         }
       }
     } catch (error) {
