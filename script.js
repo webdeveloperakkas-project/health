@@ -246,13 +246,14 @@
     }
     return hash.toString(36).slice(0,10);
   }
-  function articleSlug(post) { return shortArticleId(post); }
+  function articleSlug(post) { return routeSlug(post && post.title) || shortArticleId(post); }
+  function categoryRouteSlug(post) { return routeSlug(categoryNames[post && post.category] || (post && post.category) || "articles"); }
   function siteBasePath() {
     /* GitHub Pages project site base. Keep this independent of the current article URL. */
     return "/health/";
   }
   function articleRoute(post, source = "") {
-    const parts = [routeSlug(post.category),post.subcategory ? routeSlug(post.subcategory) : "",shortArticleId(post)].filter(Boolean);
+    const parts = [categoryRouteSlug(post),post.subcategory ? routeSlug(post.subcategory) : "",articleSlug(post)].filter(Boolean);
     const path = siteBasePath() + parts.map(part => encodeURIComponent(part)).join("/") + "/";
     return source === "most-read" ? path + "?source=most-read" : path;
   }
@@ -807,16 +808,18 @@
     const cleanRoute = routeParts.join("/");
     if (cleanRoute) history.replaceState(null,"",siteBasePath() + routeParts.map(part => encodeURIComponent(part)).join("/") + "/");
   }
+  function requestedArticleRouteParts() {
+    const routeParam = new URLSearchParams(window.location.search).get("route");
+    if (routeParam) return routeParam.split("?")[0].split("/").filter(Boolean).map(part => decodeURIComponent(part));
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    const baseParts = siteBasePath().split("/").filter(Boolean);
+    return parts.slice(baseParts.length).map(part => decodeURIComponent(part));
+  }
   function requestedArticleSlug() {
     const legacy = new URLSearchParams(window.location.search).get("article");
     if (legacy) return legacy;
-    const routeParam = new URLSearchParams(window.location.search).get("route");
-    const routeParts = (routeParam || "").split("?")[0].split("/").filter(Boolean);
-    if (routeParts.length >= 2) return decodeURIComponent(routeParts[routeParts.length - 1]);
-    const parts = window.location.pathname.split("/").filter(Boolean);
-    const baseParts = siteBasePath().split("/").filter(Boolean);
-    const relative = parts.slice(baseParts.length);
-    return relative.length >= 2 ? decodeURIComponent(relative[relative.length-1]) : "";
+    const parts = requestedArticleRouteParts();
+    return parts.length >= 2 ? parts[parts.length - 1] : "";
   }
 
   function getTrendingVisitorId() {
@@ -918,8 +921,18 @@
       render();
       const currentArticleSlug = requestedArticleSlug();
       if (currentArticleSlug) {
+        const requestedParts = requestedArticleRouteParts();
+        const requestedCategory = requestedParts[0] || "";
+        const requestedSubcategory = requestedParts.length >= 3 ? requestedParts[1] : "";
         const cloudArticle = posts.find(post => shortArticleId(post) === currentArticleSlug) ||
-          posts.find(post => routeSlug(post.title) === currentArticleSlug);
+          posts.find(post => {
+            const categoryMatches = [routeSlug(post.category),categoryRouteSlug(post)].includes(requestedCategory);
+            const subcategoryMatches = requestedParts.length >= 3
+              ? routeSlug(post.subcategory) === requestedSubcategory
+              : !post.subcategory;
+            return categoryMatches && subcategoryMatches && articleSlug(post) === currentArticleSlug;
+          }) ||
+          posts.find(post => articleSlug(post) === currentArticleSlug);
         if (cloudArticle) openArticleDetail(cloudArticle);
         else {
           document.title = "Article Not Found | Global Scope 24";
