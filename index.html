@@ -10,11 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=127">
+<link rel="stylesheet" href="style.css?v=128">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=75" defer></script>
+<script src="script.js?v=76" defer></script>
 </head>
 
 
@@ -27,15 +27,26 @@
 <nav class="main-nav" id="mainNav" aria-label="Category menu">
 <div class="menu-top"><span class="menu-heading">EXPLORE CATEGORIES</span><button class="menu-close" id="menuClose" type="button" aria-label="Close categories">×</button></div>
 <div class="sidebar-categories">
-<button class="sidebar-category" data-category="home" type="button">Home<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-7h6v7"/></svg></span></button>
-<button class="sidebar-category" data-category="world" type="button">World News<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg></span></button>
-
-<button class="sidebar-category" data-category="technology" type="button">Science &amp; Technology<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 5h18v12H3z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></span></button>
-<button class="sidebar-category" data-category="sports" type="button">Sports<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a4 4 0 0 0 4 4"/><path d="M17 6h3v2a4 4 0 0 1-4 4"/></svg></span></button>
-<button class="sidebar-category" data-category="entertainment" type="button">Entertainment<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 4h16v16H4z"/><path d="m4 8 16-4M4 14l16-4M8 4l-2 4m8-4-2 4m8-4-2 4"/></svg></span></button>
-<button class="sidebar-category" data-category="travel" type="button">Travel<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4 20-7Z"/></svg></span></button>
-<button class="sidebar-category" data-category="finance" type="button">Finance<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 7h18v14H3z"/><path d="M3 7l2-4h14l2 4"/><path d="M16 14h5"/></svg></span></button>
-<button class="sidebar-category" data-category="lifestyle" type="button">Lifestyle<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20.8 3.2C12 3 4 7 4 14a7 7 0 0 0 7 7c7 0 11-8 9.8-17.8Z"/><path d="M3 21c3-5 7-9 13-13"/></svg></span></button>
+  <div class="sidebar-category-item"><button class="sidebar-category" data-category="home" type="button">Home</button></div>
+  <div class="sidebar-category-item">
+    <div class="sidebar-category-row"><button class="sidebar-category" data-category="world" type="button">World News</button><button class="sidebar-submenu-toggle" type="button" aria-label="Show World News subcategories" aria-expanded="false" aria-controls="sidebarWorldSubmenu">⌄</button></div>
+    <div class="sidebar-submenu" id="sidebarWorldSubmenu" hidden><button type="button" data-sidebar-category="world" data-sidebar-subcategory="bangladesh">Bangladesh</button><button type="button" data-sidebar-category="world" data-sidebar-subcategory="india">India</button><button type="button" data-sidebar-category="world" data-sidebar-subcategory="pakistan">Pakistan</button><button type="button" data-sidebar-category="world" data-sidebar-subcategory="asia">Asia</button><button type="button" data-sidebar-category="world" data-sidebar-subcategory="europe">Europe</button><button type="button" data-sidebar-category="world" data-sidebar-subcategory="middle-east">Middle East</button></div>
+  </div>
+  <div class="sidebar-category-item"><button class="sidebar-category" data-category="technology" type="button">Science &amp; Technology</button></div>
+  <div class="sidebar-category-item">
+    <div class="sidebar-category-row"><button class="sidebar-category" data-category="sports" type="button">Sports</button><button class="sidebar-submenu-toggle" type="button" aria-label="Show Sports subcategories" aria-expanded="false" aria-controls="sidebarSportsSubmenu">⌄</button></div>
+    <div class="sidebar-submenu" id="sidebarSportsSubmenu" hidden><button type="button" data-sidebar-category="sports" data-sidebar-subcategory="cricket">Cricket</button><button type="button" data-sidebar-category="sports" data-sidebar-subcategory="football">Football</button><button type="button" data-sidebar-category="sports" data-sidebar-subcategory="tennis">Tennis</button><button type="button" data-sidebar-category="sports" data-sidebar-subcategory="basketball">Basketball</button><button type="button" data-sidebar-category="sports" data-sidebar-subcategory="other-sports">Other</button></div>
+  </div>
+  <div class="sidebar-category-item">
+    <div class="sidebar-category-row"><button class="sidebar-category" data-category="entertainment" type="button">Entertainment</button><button class="sidebar-submenu-toggle" type="button" aria-label="Show Entertainment subcategories" aria-expanded="false" aria-controls="sidebarEntertainmentSubmenu">⌄</button></div>
+    <div class="sidebar-submenu" id="sidebarEntertainmentSubmenu" hidden><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="cinema">Cinema</button><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="bollywood">Bollywood</button><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="south-cinema">South Indian Cinema</button><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="music">Music</button><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="hollywood">Hollywood</button><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="television">Television</button><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="serial">TV Serials</button><button type="button" data-sidebar-category="entertainment" data-sidebar-subcategory="folk-art">Folk Culture</button></div>
+  </div>
+  <div class="sidebar-category-item"><button class="sidebar-category" data-category="travel" type="button">Travel</button></div>
+  <div class="sidebar-category-item"><button class="sidebar-category" data-category="finance" type="button">Finance</button></div>
+  <div class="sidebar-category-item">
+    <div class="sidebar-category-row"><button class="sidebar-category" data-category="lifestyle" type="button">Lifestyle</button><button class="sidebar-submenu-toggle" type="button" aria-label="Show Lifestyle subcategories" aria-expanded="false" aria-controls="sidebarLifestyleSubmenu">⌄</button></div>
+    <div class="sidebar-submenu" id="sidebarLifestyleSubmenu" hidden><button type="button" data-sidebar-category="lifestyle" data-sidebar-subcategory="daily-tips">Daily Tips</button><button type="button" data-sidebar-category="lifestyle" data-sidebar-subcategory="health">Health</button><button type="button" data-sidebar-category="lifestyle" data-sidebar-subcategory="beauty-care">Beauty Care</button></div>
+  </div>
 </div>
 <a href="#about">About Global Scope 24</a>
 </nav>
