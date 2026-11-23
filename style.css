@@ -3192,3 +3192,12 @@ img {
   .category-tabs .add-category-tab { width: 36px; min-width: 36px; height: 36px; min-height: 36px; }
   .category-tabs .add-category-tab .more-category-icon { width: 19px; height: 19px; }
 }
+
+
+/* Desktop keeps the full category row; compact plus control is mobile-only. */
+.category-tabs .desktop-daily-tips-tab { display: inline-flex; }
+.category-tabs .add-category-tab { display: none; }
+@media (max-width: 800px) {
+  .category-tabs .desktop-daily-tips-tab { display: none !important; }
+  .category-tabs .add-category-tab { display: inline-flex !important; }
+}
