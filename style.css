@@ -3525,3 +3525,56 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .site-header .main-nav {
   top: 100% !important;
 }
+
+
+/* Desktop homepage Popular rail: show only the cover image and article title.
+   This is intentionally limited to the left homepage rail; mobile stays unchanged. */
+@media (min-width: 801px) {
+  .home-left .home-list-panel.is-popular .home-list-item {
+    display: grid !important;
+    grid-template-columns: 88px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 0;
+    min-height: 88px;
+    padding: 10px 4px !important;
+  }
+
+  .home-left .home-list-panel.is-popular .home-list-heading {
+    grid-column: 2;
+    grid-row: 1;
+    display: block;
+    width: auto;
+    min-width: 0;
+  }
+
+  .home-left .home-list-panel.is-popular .home-list-category,
+  .home-left .home-list-panel.is-popular .home-list-excerpt,
+  .home-left .home-list-panel.is-popular .home-list-meta {
+    display: none !important;
+  }
+
+  .home-left .home-list-panel.is-popular .home-list-heading strong {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0 !important;
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  .home-left .home-list-panel.is-popular .home-list-summary-row {
+    display: contents;
+  }
+
+  .home-left .home-list-panel.is-popular .home-list-thumb {
+    grid-column: 1;
+    grid-row: 1;
+    width: 88px;
+    height: 68px;
+    min-width: 88px;
+    margin: 0;
+  }
+}
