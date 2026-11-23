@@ -3276,3 +3276,20 @@ img {
     padding-right: 18px !important;
   }
 }
+
+
+/* Final category-label spacing: leave a visible 1px gap before each chevron.
+   Tighten Lifestyle slightly more so it stays aligned beside Sports. */
+@media (min-width: 801px) {
+  .category-tabs .world-category-trigger,
+  .category-tabs .sports-category-trigger,
+  .category-tabs .lifestyle-category-trigger,
+  .category-tabs .entertainment-category-trigger {
+    text-indent: -2px;
+  }
+
+  .category-tabs .lifestyle-category-trigger {
+    padding-left: 7px !important;
+    padding-right: 16px !important;
+  }
+}
