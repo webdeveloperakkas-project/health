@@ -252,28 +252,28 @@
   const manualTrendingSection = $("#manualTrendingSection");
   const aboutSection = $("#about");
 
-  /* Keep the Trending / Most Read section in its original mobile position.
-     On desktop only, place it in the right rail directly below the AdSense slot. */
-  const trendingOriginalAnchor = document.createComment("Trending section original position");
-  if (trendingSection && trendingSection.parentNode) {
-    trendingSection.parentNode.insertBefore(trendingOriginalAnchor, trendingSection);
+  /* Keep Most Read in its original full-width position.
+     On desktop only, place the manually curated Trending section below AdSense. */
+  const manualTrendingOriginalAnchor = document.createComment("Manual Trending section original position");
+  if (manualTrendingSection && manualTrendingSection.parentNode) {
+    manualTrendingSection.parentNode.insertBefore(manualTrendingOriginalAnchor, manualTrendingSection);
   }
   const trendingDesktopQuery = window.matchMedia("(min-width: 801px)");
-  function placeTrendingSectionForViewport() {
-    if (!trendingSection || !trendingOriginalAnchor.parentNode) return;
+  function placeManualTrendingForViewport() {
+    if (!manualTrendingSection || !manualTrendingOriginalAnchor.parentNode) return;
     if (trendingDesktopQuery.matches) {
       const rightRail = document.querySelector(".home-right");
       const adSlot = rightRail && rightRail.querySelector(".home-ad-slot");
-      if (rightRail && adSlot) rightRail.insertBefore(trendingSection, adSlot.nextSibling);
+      if (rightRail && adSlot) rightRail.insertBefore(manualTrendingSection, adSlot.nextSibling);
     } else {
-      trendingOriginalAnchor.parentNode.insertBefore(trendingSection, trendingOriginalAnchor.nextSibling);
+      manualTrendingOriginalAnchor.parentNode.insertBefore(manualTrendingSection, manualTrendingOriginalAnchor.nextSibling);
     }
   }
-  placeTrendingSectionForViewport();
+  placeManualTrendingForViewport();
   if (typeof trendingDesktopQuery.addEventListener === "function") {
-    trendingDesktopQuery.addEventListener("change", placeTrendingSectionForViewport);
+    trendingDesktopQuery.addEventListener("change", placeManualTrendingForViewport);
   } else if (typeof trendingDesktopQuery.addListener === "function") {
-    trendingDesktopQuery.addListener(placeTrendingSectionForViewport);
+    trendingDesktopQuery.addListener(placeManualTrendingForViewport);
   }
 
   function sortedByDate(items) {
