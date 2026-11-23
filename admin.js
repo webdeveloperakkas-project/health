@@ -564,7 +564,7 @@
   $("#postSubcategory").addEventListener("change",updatePostUrlPreview);
   $("#postTitle").addEventListener("input",updatePostUrlPreview);
   function resetForm(){
-    $("#postForm").reset(); $("#postStatus").disabled=false; syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); $("#postStatus").disabled=false; $("#postStatus").querySelector('option[value="published"]')?.remove(); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; coverProvider=""; $("#coverUpload").value=""; document.querySelector('input[name="coverStorageProvider"][value="supabase"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -577,7 +577,7 @@
     editingId=postId; resetForm();
     $("#postTitle").value=post.title||""; updatePostUrlPreview(); $("#articleEditor").innerHTML=post.content||"<p></p>"; $("#articleHtmlEditor").value=post.content||""; setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"health"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en"; updatePostUrlPreview();
-    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); $("#postStatus").value=post.status==="scheduled"?"scheduled":"draft"; $("#postStatus").disabled=post.status==="published"; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
+    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
     
@@ -617,7 +617,7 @@
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
     const now=new Date().toISOString();
-    const selectedStatus=existing?.status==="published"?"published":$("#postStatus").value;
+    const selectedStatus=$("#postStatus").value;
     const scheduledValue=getScheduleInputValue();
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
