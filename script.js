@@ -128,6 +128,36 @@
       "beauty-care":{en:"Beauty Care",bn:"রূপচর্চা",hi:"सौंदर्य देखभाल",de:"Schönheitspflege",fr:"Soins de beauté",es:"Cuidado de belleza"}
     };
     document.querySelectorAll("#lifestyleSubmenu [data-lifestyle-subcategory]").forEach(button=>{const labels=lifestyleLabels[button.dataset.lifestyleSubcategory];if(labels)button.textContent=labels[activeLanguage]||labels.en;});
+    /* Localize only the hamburger header drawer subcategory cards.
+       The visible homepage category navigation is intentionally untouched. */
+    const drawerSubcategoryLabels = {
+      "bangladesh": { en: "Bangladesh", bn: "বাংলাদেশ" },
+      "india": { en: "India", bn: "ভারত" },
+      "pakistan": { en: "Pakistan", bn: "পাকিস্তান" },
+      "asia": { en: "Asia", bn: "এশিয়া" },
+      "europe": { en: "Europe", bn: "ইউরোপ" },
+      "middle-east": { en: "Middle East", bn: "মধ্যপ্রাচ্য" },
+      "cricket": { en: "Cricket", bn: "ক্রিকেট" },
+      "football": { en: "Football", bn: "ফুটবল" },
+      "tennis": { en: "Tennis", bn: "টেনিস" },
+      "basketball": { en: "Basketball", bn: "বাস্কেটবল" },
+      "other-sports": { en: "Other", bn: "অন্যান্য" },
+      "cinema": { en: "Cinema", bn: "সিনেমা" },
+      "bollywood": { en: "Bollywood", bn: "বলিউড" },
+      "south-cinema": { en: "South Indian Cinema", bn: "দক্ষিণ ভারতীয় সিনেমা" },
+      "music": { en: "Music", bn: "সংগীত" },
+      "hollywood": { en: "Hollywood", bn: "হলিউড" },
+      "television": { en: "Television", bn: "টেলিভিশন" },
+      "serial": { en: "TV Serials", bn: "টিভি সিরিয়াল" },
+      "folk-art": { en: "Folk Culture", bn: "লোকসংস্কৃতি" },
+      "daily-tips": { en: "Daily Tips", bn: "দৈনন্দিন টিপস" },
+      "health": { en: "Health", bn: "স্বাস্থ্য" },
+      "beauty-care": { en: "Beauty Care", bn: "রূপচর্চা" }
+    };
+    document.querySelectorAll(".main-nav .sidebar-submenu button[data-sidebar-subcategory]").forEach(button => {
+      const labels = drawerSubcategoryLabels[button.dataset.sidebarSubcategory];
+      if (labels) button.textContent = labels[activeLanguage] || labels.en;
+    });
     document.documentElement.lang = activeLanguage;
     updateHeaderClock();
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
