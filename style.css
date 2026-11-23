@@ -3259,36 +3259,30 @@ img {
   }
 }
 
-
-/* Fine alignment: shift only the four dropdown labels 1px left.
-   Slightly narrow Lifestyle's desktop tab so it fits beside Sports. */
+/* Desktop dropdown tabs: left-align labels and reserve a precise chevron gap.
+   These are flex buttons, so text-indent cannot move their text reliably. */
 @media (min-width: 801px) {
   .category-tabs .world-category-trigger,
   .category-tabs .sports-category-trigger,
   .category-tabs .lifestyle-category-trigger,
   .category-tabs .entertainment-category-trigger {
-    text-indent: -1px;
-  }
-
-  .category-tabs .lifestyle-category-trigger {
-    padding-left: 8px !important;
-    padding-right: 18px !important;
-  }
-}
-
-
-/* Final category-label spacing: leave a visible 1px gap before each chevron.
-   Tighten Lifestyle slightly more so it stays aligned beside Sports. */
-@media (min-width: 801px) {
-  .category-tabs .world-category-trigger,
-  .category-tabs .sports-category-trigger,
-  .category-tabs .lifestyle-category-trigger,
-  .category-tabs .entertainment-category-trigger {
-    text-indent: -2px;
+    position: relative !important;
+    display: inline-flex !important;
+    justify-content: flex-start !important;
+    text-indent: 0 !important;
+    padding-left: 9px !important;
+    padding-right: 16px !important;
   }
 
   .category-tabs .lifestyle-category-trigger {
     padding-left: 7px !important;
     padding-right: 16px !important;
+  }
+
+  .category-tabs .world-category-trigger::after,
+  .category-tabs .sports-category-trigger::after,
+  .category-tabs .lifestyle-category-trigger::after,
+  .category-tabs .entertainment-category-trigger::after {
+    right: 8px !important;
   }
 }
