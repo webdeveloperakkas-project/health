@@ -251,6 +251,104 @@
   const trendingSection = $("#trendingSection");
   const manualTrendingSection = $("#manualTrendingSection");
   const aboutSection = $("#about");
+  let entertainmentSliderIndex = 0;
+  let entertainmentSliderTimer = null;
+  let entertainmentSliderItems = [];
+
+  function entertainmentVisibleCount() {
+    return window.matchMedia("(max-width: 800px)").matches ? 1 : 4;
+  }
+
+  function updateEntertainmentSliderPosition() {
+    const track = $("#entertainmentSliderTrack");
+    const dots = $("#entertainmentSliderDots");
+    if (!track) return;
+    const slides = Array.from(track.children);
+    if (!slides.length) return;
+    const maxIndex = Math.max(0, slides.length - entertainmentVisibleCount());
+    entertainmentSliderIndex = Math.min(entertainmentSliderIndex, maxIndex);
+    track.style.transform = "translateX(-" + slides[entertainmentSliderIndex].offsetLeft + "px)";
+    if (dots) dots.querySelectorAll("button").forEach((dot, index) => {
+      dot.classList.toggle("active", index === entertainmentSliderIndex);
+      dot.setAttribute("aria-current", index === entertainmentSliderIndex ? "true" : "false");
+    });
+  }
+
+  function renderEntertainmentSlider() {
+    const section = $("#entertainmentSliderSection");
+    const track = $("#entertainmentSliderTrack");
+    const dots = $("#entertainmentSliderDots");
+    if (!section || !track || !dots) return;
+    entertainmentSliderItems = sortedByDate(posts.filter(post =>
+      post.category === "entertainment" && imageForPost(post)
+    ));
+    section.hidden = entertainmentSliderItems.length === 0;
+    if (!entertainmentSliderItems.length) {
+      track.innerHTML = "";
+      dots.innerHTML = "";
+      if (entertainmentSliderTimer) window.clearInterval(entertainmentSliderTimer);
+      entertainmentSliderTimer = null;
+      return;
+    }
+    const visibleCount = entertainmentVisibleCount();
+    const maxIndex = Math.max(0, entertainmentSliderItems.length - visibleCount);
+    entertainmentSliderIndex = Math.min(entertainmentSliderIndex, maxIndex);
+    track.innerHTML = entertainmentSliderItems.map(post => {
+      const index = posts.indexOf(post);
+      return '<button class="entertainment-slide" type="button" data-open-post="' + index + '">' +
+        '<span class="entertainment-slide-image"><img src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>' +
+        '<strong>' + escapeHTML(post.title) + '</strong></button>';
+    }).join("");
+    dots.innerHTML = Array.from({length:maxIndex + 1}, (_, index) =>
+      '<button type="button" data-entertainment-slide="' + index + '" aria-label="Go to entertainment slide ' + (index + 1) + '" aria-current="' + (index === entertainmentSliderIndex ? "true" : "false") + '"></button>'
+    ).join("");
+    section.querySelectorAll(".entertainment-slider-arrow").forEach(button => {
+      button.hidden = maxIndex === 0;
+    });
+    updateEntertainmentSliderPosition();
+    if (entertainmentSliderTimer) window.clearInterval(entertainmentSliderTimer);
+    entertainmentSliderTimer = maxIndex > 0 ? window.setInterval(() => {
+      entertainmentSliderIndex = entertainmentSliderIndex >= maxIndex ? 0 : entertainmentSliderIndex + 1;
+      updateEntertainmentSliderPosition();
+    }, 3000) : null;
+  }
+
+  function renderHomeCategorySections() {
+    const renderCard = (post, className, includeExcerpt = false) => {
+      const index = posts.indexOf(post);
+      const image = imageForPost(post);
+      const excerpt = String(post.excerpt || "").trim();
+      return '<button class="home-category-card ' + className + '" type="button" data-open-post="' + index + '">' +
+        (image ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-category-image home-category-image-empty"></span>') +
+        '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
+        (includeExcerpt && excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
+    };
+    const world = sortedByDate(posts.filter(post => post.category === "world")).slice(0,4);
+    const sports = sortedByDate(posts.filter(post => post.category === "sports")).slice(0,4);
+    const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips")).slice(0,2);
+    const health = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "health")).slice(0,4);
+
+    const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
+    if (worldSection && worldHost) {
+      worldSection.hidden = !world.length;
+      worldHost.innerHTML = world.length ? '<div class="home-world-lead">' + renderCard(world[0], "home-world-main") + '</div><div class="home-world-list">' + world.slice(1).map(post => renderCard(post, "home-world-small")).join("") + '</div>' : "";
+    }
+    const sportsSection = $("#homeSportsSection"), sportsHost = $("#homeSportsPosts");
+    if (sportsSection && sportsHost) {
+      sportsSection.hidden = !sports.length;
+      sportsHost.innerHTML = sports.map(post => renderCard(post, "home-sports-card")).join("");
+    }
+    const tipsSection = $("#homeTipsSection"), tipsHost = $("#homeTipsPosts");
+    if (tipsSection && tipsHost) {
+      tipsSection.hidden = !tips.length;
+      tipsHost.innerHTML = tips.map(post => renderCard(post, "home-tips-card", true)).join("");
+    }
+    const healthSection = $("#homeHealthSection"), healthHost = $("#homeHealthPosts");
+    if (healthSection && healthHost) {
+      healthSection.hidden = !health.length;
+      healthHost.innerHTML = health.length ? '<div class="home-health-lead">' + renderCard(health[0], "home-health-main") + '</div><div class="home-health-side">' + health.slice(1).map(post => renderCard(post, "home-health-small")).join("") + '</div>' : "";
+    }
+  }
 
   /* Keep Most Read in its original full-width position.
      On desktop only, place the manually curated Trending section below AdSense. */
@@ -519,6 +617,10 @@
     if (manualTrendingSection) manualTrendingSection.hidden = !isHomeLanding;
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
+    const entertainmentSection = $("#entertainmentSliderSection");
+    const homeCategorySections = $("#homeCategorySections");
+    if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding || !posts.some(post => post.category === "entertainment" && imageForPost(post));
+    if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
       ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
     const placementMatches = post => {
@@ -550,6 +652,8 @@
     if (isHomeLanding) {
       renderHomeFeatured();
       renderHomeList();
+      renderEntertainmentSlider();
+      renderHomeCategorySections();
       renderFeaturedStories();
       renderTrendingStories();
       renderManualTrendingStories();
@@ -613,6 +717,26 @@
     }
   });
   document.addEventListener("click", event => {
+    const entertainmentMove = event.target.closest("[data-entertainment-move]");
+    const entertainmentDot = event.target.closest("[data-entertainment-slide]");
+    if (entertainmentMove || entertainmentDot) {
+      const visibleCount = entertainmentVisibleCount();
+      const maxIndex = Math.max(0, entertainmentSliderItems.length - visibleCount);
+      if (entertainmentDot) entertainmentSliderIndex = Number(entertainmentDot.dataset.entertainmentSlide) || 0;
+      else entertainmentSliderIndex = entertainmentMove.dataset.entertainmentMove === "next"
+        ? (entertainmentSliderIndex >= maxIndex ? 0 : entertainmentSliderIndex + 1)
+        : (entertainmentSliderIndex <= 0 ? maxIndex : entertainmentSliderIndex - 1);
+      updateEntertainmentSliderPosition();
+    }
+    const categoryViewAll = event.target.closest("[data-home-category-view]");
+    if (categoryViewAll) {
+      const category = categoryViewAll.dataset.homeCategoryView;
+      const subcategory = categoryViewAll.dataset.homeSubcategoryView || "";
+      const target = subcategory
+        ? document.querySelector('.sidebar-submenu button[data-sidebar-category="' + category + '"][data-sidebar-subcategory="' + subcategory + '"]')
+        : document.querySelector('.sidebar-category[data-category="' + category + '"]');
+      if (target) target.click();
+    }
     const featureArrow = event.target.closest("[data-home-feature]");
     const featureDot = event.target.closest("[data-home-feature-index]");
     if (featureArrow || featureDot) {
