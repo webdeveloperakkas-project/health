@@ -306,7 +306,7 @@
         (includeExcerpt && excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
     };
     const world = sortedByDate(posts.filter(post => post.category === "world")).slice(0,4);
-    const sports = sortedByDate(posts.filter(post => post.category === "sports")).slice(0,4);
+    const sports = sortedByDate(posts.filter(post => post.category === "sports")).slice(0,8);
     const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips")).slice(0,2);
     const health = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "health")).slice(0,4);
 
@@ -318,7 +318,28 @@
     const sportsSection = $("#homeSportsSection"), sportsHost = $("#homeSportsPosts");
     if (sportsSection && sportsHost) {
       sportsSection.hidden = !sports.length;
-      sportsHost.innerHTML = sports.map(post => renderCard(post, "home-sports-card")).join("");
+      if (!sports.length) {
+        sportsHost.innerHTML = "";
+      } else {
+        const mainPost = sports[0];
+        const leftPosts = sports.slice(1,4);
+        const centerBottomPosts = sports.slice(4,6);
+        const rightPosts = sports.slice(6,8);
+        sportsHost.innerHTML =
+          '<div class="home-sports-left">' +
+            leftPosts.map(post => renderCard(post, "home-sports-left-card")).join("") +
+          '</div>' +
+          '<div class="home-sports-center">' +
+            renderCard(mainPost, "home-sports-main-card", true) +
+            '<div class="home-sports-bottom">' +
+              centerBottomPosts.map(post => renderCard(post, "home-sports-bottom-card")).join("") +
+            '</div>' +
+          '</div>' +
+          '<div class="home-sports-right">' +
+            rightPosts.map(post => renderCard(post, "home-sports-right-card")).join("") +
+            '<button class="home-sports-more" type="button" data-home-category-view="sports">More Details <span aria-hidden="true">→</span></button>' +
+          '</div>';
+      }
     }
     const tipsSection = $("#homeTipsSection"), tipsHost = $("#homeTipsPosts");
     if (tipsSection && tipsHost) {
@@ -735,9 +756,9 @@
         ? document.querySelector('.sidebar-submenu button[data-sidebar-category="' + category + '"][data-sidebar-subcategory="' + subcategory + '"]')
         : document.querySelector('.sidebar-category[data-category="' + category + '"]');
       if (target) target.click();
-      if (category === "entertainment") {
-        const entertainmentFeed = $("#articleFeed");
-        if (entertainmentFeed) entertainmentFeed.scrollIntoView({behavior:"smooth",block:"start"});
+      if (category === "entertainment" || category === "sports") {
+        const categoryFeed = $("#articleFeed");
+        if (categoryFeed) categoryFeed.scrollIntoView({behavior:"smooth",block:"start"});
       }
     }
     const featureArrow = event.target.closest("[data-home-feature]");
