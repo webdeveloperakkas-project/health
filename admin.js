@@ -565,7 +565,7 @@
   $("#postSubcategory").addEventListener("change",updatePostUrlPreview);
   $("#postTitle").addEventListener("input",updatePostUrlPreview);
   function resetForm(){
-    $("#postForm").reset(); $("#postStatus").disabled=false; $("#postStatus").querySelector('option[value="published"]')?.remove(); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); $("#postStatus").disabled=false; syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; coverProvider=""; $("#coverUpload").value=""; document.querySelector('input[name="coverStorageProvider"][value="supabase"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
