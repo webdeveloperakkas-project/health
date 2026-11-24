@@ -4451,3 +4451,25 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .latest-post-headline { font-size:14px; padding:10px 0; }
 }
 
+
+
+/* Desktop Latest Posts columns now follow the exact Hero column widths. */
+@media (min-width:801px) {
+  .latest-posts-section {
+    grid-template-columns:minmax(320px,1.15fr) minmax(0,1.65fr) minmax(235px,.9fr);
+    gap:20px;
+  }
+}
+
+@media (min-width:1240px) {
+  .latest-posts-section {
+    grid-template-columns:minmax(320px,1.15fr) 600px minmax(235px,.9fr);
+  }
+}
+
+@media (min-width:801px) and (max-width:1100px) {
+  .latest-posts-section {
+    grid-template-columns:minmax(245px,1.05fr) minmax(0,1.55fr) minmax(200px,.85fr);
+    gap:14px;
+  }
+}
