@@ -4047,6 +4047,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     transform:none;
   }
 
+  /* বাংলা নোট: ডেস্কটপ সাবমেনুর শেষ সাব-ক্যাটাগরি কার্ডের নিচে সবুজ ব্যাকগ্রাউন্ডের অতিরিক্ত উচ্চতা বাড়াতে বা কমাতে নিচের height এবং flex-basis-এর মান পরিবর্তন করতে হবে। বর্তমানে ৫px। */
   .category-tabs .sports-submenu::after,
   .category-tabs .entertainment-submenu::after,
   .category-tabs .world-submenu::after,
@@ -4058,6 +4059,21 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     margin-top:-5px;
     background:#087c75;
     pointer-events:none;
+  }
+
+  /* ডেস্কটপ Home আইকন ট্যাব: বাটনের উচ্চতা ৪৪px, প্রস্থ ৪৬px এবং আইকন ২৪px। */
+  .category-tabs > .home-category-tab {
+    flex:0 0 46px;
+    width:46px;
+    min-width:46px;
+    min-height:44px;
+    height:44px;
+  }
+
+  .category-tabs > .home-category-tab .home-tab-icon {
+    width:24px;
+    height:24px;
+    flex:0 0 24px;
   }
 
   .category-tabs .sports-submenu[hidden],
