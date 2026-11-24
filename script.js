@@ -735,6 +735,10 @@
         ? document.querySelector('.sidebar-submenu button[data-sidebar-category="' + category + '"][data-sidebar-subcategory="' + subcategory + '"]')
         : document.querySelector('.sidebar-category[data-category="' + category + '"]');
       if (target) target.click();
+      if (category === "entertainment") {
+        const entertainmentFeed = $("#articleFeed");
+        if (entertainmentFeed) entertainmentFeed.scrollIntoView({behavior:"smooth",block:"start"});
+      }
     }
     const featureArrow = event.target.closest("[data-home-feature]");
     const featureDot = event.target.closest("[data-home-feature-index]");
