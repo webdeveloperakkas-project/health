@@ -3616,28 +3616,44 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 
 
 /* =========================================================
-   25. HOMEPAGE CATEGORY STRIP — ENTERTAINMENT SLIDER
-   Four desktop cards, one-step movement every three seconds.
+   25. HOMEPAGE ENTERTAINMENT FEATURE
+   Main story on the left; six supporting stories in a 3-by-2 grid.
    ========================================================= */
-.entertainment-slider-section{padding:0 0 42px}
-.entertainment-slider-heading,.home-category-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 15px;padding-bottom:12px;border-bottom:1px solid #e6eeeb}
-.entertainment-slider-heading h2,.home-category-heading h2{margin:4px 0 0;color:var(--navy);font:850 clamp(21px,2vw,27px)/1.2 Manrope,sans-serif}
-.entertainment-view-all,.home-category-heading>button{display:inline-flex;align-items:center;gap:8px;padding:8px 0;border:0;background:transparent;color:var(--teal-dark);font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}
-.entertainment-slider-shell{display:flex;align-items:center;gap:10px}
-.entertainment-slider-arrow{flex:0 0 34px;width:34px;height:38px;border:1px solid #dce9e4;background:#fff;color:var(--navy);font-size:25px;line-height:1;cursor:pointer}
-.entertainment-slider-arrow:hover{background:var(--navy);color:#fff}
-.entertainment-slider-viewport{min-width:0;flex:1;overflow:hidden}
-.entertainment-slider-track{display:flex;gap:16px;transition:transform .55s ease;will-change:transform}
-.entertainment-slide{display:flex;flex:0 0 calc((100% - 48px)/4);min-width:0;flex-direction:column;gap:9px;padding:0;border:0;background:transparent;text-align:left;cursor:pointer}
-.entertainment-slide-image{display:block;width:100%;aspect-ratio:16/10;overflow:hidden;background:#eaf2ef}
-.entertainment-slide-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
-.entertainment-slide:hover .entertainment-slide-image img{transform:scale(1.035)}
-.entertainment-slide strong{display:-webkit-box;overflow:hidden;color:var(--navy);font:750 13px/1.45 Manrope,sans-serif;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.entertainment-slide:hover strong{color:var(--teal-dark)}
-.entertainment-slider-dots{display:flex;justify-content:center;gap:7px;margin-top:14px}
-.entertainment-slider-dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#cbd8d5;cursor:pointer}
-.entertainment-slider-dots button.active{width:20px;border-radius:8px;background:var(--teal)}
-.entertainment-slider-dots:empty{display:none}
+.entertainment-feature-section{margin:0 0 40px;padding:0 0 8px}
+.entertainment-feature-heading{display:flex;align-items:center;min-height:54px;padding:10px 18px;background:#159d92;border-left:5px solid #e8b85b}
+.entertainment-feature-heading h2{margin:0;color:#fff;font:850 clamp(21px,2vw,27px)/1.2 Manrope,"Hind Siliguri",sans-serif;letter-spacing:.01em}
+.entertainment-feature-down-arrow{height:27px;display:flex;align-items:center;justify-content:center;color:#9bb8b1;font-size:25px;line-height:1}
+.entertainment-feature-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.35fr);gap:20px;align-items:start}
+.entertainment-feature-lead{min-width:0}
+.entertainment-feature-main-post{display:flex;min-width:0;flex-direction:column;align-items:stretch}
+.entertainment-feature-main-open{display:flex;width:100%;min-width:0;flex-direction:column;gap:10px;padding:0;border:0;background:transparent;text-align:left;color:inherit;cursor:pointer}
+.entertainment-feature-main-image{display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#eaf2ef}
+.entertainment-feature-main-image img,.entertainment-feature-card-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.entertainment-feature-main-open:hover img,.entertainment-feature-card:hover img{transform:scale(1.035)}
+.entertainment-feature-main-open strong{color:var(--navy);font:800 clamp(19px,1.9vw,24px)/1.35 Manrope,"Hind Siliguri",sans-serif}
+.entertainment-feature-main-open:hover strong,.entertainment-feature-card:hover strong{color:var(--teal-dark)}
+.entertainment-feature-main-excerpt{margin:8px 0 0;color:#596e72;font-size:13px;line-height:1.7}
+.entertainment-feature-more{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin-top:13px;padding:9px 15px;border:0;border-radius:4px;background:#e8b85b;color:#173b40;font-size:12px;font-weight:800;cursor:pointer}
+.entertainment-feature-more:hover{background:#f1cd7d}
+.entertainment-feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px 13px;min-width:0}
+.entertainment-feature-card{display:flex;min-width:0;flex-direction:column;align-items:stretch;gap:8px;padding:0;border:0;background:transparent;text-align:left;color:inherit;cursor:pointer}
+.entertainment-feature-card-image{display:block;width:100%;aspect-ratio:16/10;overflow:hidden;background:#eaf2ef}
+.entertainment-feature-card strong{display:-webkit-box;overflow:hidden;color:var(--navy);font:750 13px/1.45 Manrope,"Hind Siliguri",sans-serif;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+@media(max-width:1100px) and (min-width:801px){
+  .entertainment-feature-layout{grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);gap:15px}
+  .entertainment-feature-grid{gap:14px 10px}
+  .entertainment-feature-card strong{font-size:12px}
+}
+@media(max-width:800px){
+  .entertainment-feature-section{margin-bottom:30px}
+  .entertainment-feature-heading{min-height:48px;padding:9px 13px}
+  .entertainment-feature-layout{grid-template-columns:1fr;gap:18px}
+  .entertainment-feature-main-open strong{font-size:19px}
+  .entertainment-feature-main-excerpt{font-size:12px}
+  .entertainment-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 12px}
+  .entertainment-feature-card strong{font-size:13px}
+  .entertainment-feature-more{margin-top:10px}
+}
 
 /* =========================================================
    26. HOMEPAGE CATEGORY SECTIONS — DISTINCT EDITORIAL LAYOUTS
