@@ -596,7 +596,7 @@
       panel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
     } else {
       panel.innerHTML = items.map(post => {
-        const plainExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\\s+/g," ").trim();
+        const plainExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\s+/g," ").trim();
         const excerpt = plainExcerpt.length > 210 ? plainExcerpt.slice(0,207).trimEnd() + "…" : plainExcerpt;
         const stamp = Number(post.publishedTimestamp) || new Date(post.date).getTime();
         const dateTime = Number.isFinite(stamp) && stamp > 0
