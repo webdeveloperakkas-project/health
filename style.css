@@ -4473,3 +4473,103 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     gap:14px;
   }
 }
+
+
+/* =========================================================
+   SCIENCE & TECHNOLOGY — HERO-HEIGHT THREE-COLUMN FEATURE
+   Three stories on each side; lead story and two compact cards in center.
+   ========================================================= */
+.science-tech-section{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  margin:0 0 42px;
+  padding:0 0 22px;
+  border-bottom:1px solid #e7eeeb;
+}
+.science-tech-heading{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin:0 0 16px;
+}
+.science-tech-title-block{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  flex:0 0 auto;
+}
+.science-tech-title-block h2{
+  margin:0;
+  padding:7px 14px;
+  border-radius:3px;
+  background:var(--teal-dark);
+  color:#fff;
+  font:800 18px/1.3 Manrope,"Hind Siliguri",sans-serif;
+}
+.science-tech-down-arrow{display:block;width:25px;height:13px;margin:5px auto 0}
+.science-tech-down-arrow svg{display:block;width:100%;height:100%;fill:none;stroke:var(--teal-dark);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.science-tech-heading-rule{height:1px;flex:1 1 auto;background:linear-gradient(90deg,#e8b85b,#e7eeeb)}
+.science-tech-layout{
+  display:grid;
+  grid-template-columns:minmax(0,.98fr) minmax(0,1.5fr) minmax(0,.98fr);
+  gap:20px;
+  flex:1 1 auto;
+  min-height:0;
+  align-items:stretch;
+}
+.science-tech-left,.science-tech-center,.science-tech-right{display:flex;min-width:0;min-height:0;flex-direction:column}
+.science-tech-left,.science-tech-right{justify-content:space-between;gap:10px}
+.science-tech-side-card{
+  display:grid;
+  grid-template-columns:minmax(88px,38%) minmax(0,1fr);
+  gap:11px;
+  align-items:start;
+  align-content:start;
+  flex:1 1 0;
+  min-height:0;
+  padding:0 0 9px;
+  border-bottom:1px solid #e8efec;
+}
+.science-tech-side-card .home-category-image{aspect-ratio:16/10}
+.science-tech-side-card .home-category-copy{padding-top:1px}
+.science-tech-side-card strong{font-size:14px;line-height:1.42}
+.science-tech-center{gap:10px}
+.science-tech-main-card{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;gap:7px}
+.science-tech-main-card .home-category-image{flex:1 1 auto;min-height:0;aspect-ratio:16/9}
+.science-tech-main-card strong{font-size:clamp(18px,1.65vw,22px);line-height:1.35}
+.science-tech-main-card .home-category-copy small{display:-webkit-box;overflow:hidden;margin-top:5px;color:#718187;font-size:13px;line-height:1.5;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.science-tech-bottom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;flex:0 0 auto}
+.science-tech-bottom-card{display:flex;min-width:0;flex-direction:column;gap:6px}
+.science-tech-bottom-card .home-category-image{aspect-ratio:16/9}
+.science-tech-bottom-card strong{font-size:13px;line-height:1.4}
+.science-tech-more{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  align-self:center;margin-top:auto;padding:8px 14px;border:0;border-radius:4px;
+  background:#e8b85b;color:#173b40;font-size:12px;font-weight:800;cursor:pointer
+}
+.science-tech-more:hover{background:#f1cd7d}
+@media (min-width:801px) and (max-width:1100px){
+  .science-tech-layout{grid-template-columns:minmax(0,1.05fr) minmax(0,1.55fr) minmax(0,.85fr);gap:14px}
+  .science-tech-side-card{grid-template-columns:minmax(76px,36%) minmax(0,1fr);gap:8px}
+  .science-tech-side-card strong{font-size:12px}
+  .science-tech-main-card strong{font-size:17px}
+  .science-tech-main-card .home-category-copy small{font-size:11px}
+  .science-tech-bottom-card strong{font-size:11px}
+  .science-tech-more{padding:7px 10px;font-size:11px}
+}
+@media(max-width:800px){
+  .science-tech-section{height:auto!important;margin-bottom:30px;padding-bottom:22px}
+  .science-tech-heading{margin-bottom:12px;gap:12px}
+  .science-tech-title-block h2{font-size:16px}
+  .science-tech-layout{grid-template-columns:minmax(0,1fr);gap:18px}
+  .science-tech-left,.science-tech-right{gap:12px}
+  .science-tech-side-card{grid-template-columns:130px minmax(0,1fr);gap:12px;flex:none;padding-bottom:10px}
+  .science-tech-side-card .home-category-image{aspect-ratio:16/10}
+  .science-tech-side-card strong{font-size:13px}
+  .science-tech-center{gap:11px}
+  .science-tech-main-card .home-category-image{aspect-ratio:16/9}
+  .science-tech-main-card strong{font-size:17px}
+  .science-tech-bottom-card strong{font-size:12px}
+  .science-tech-more{margin-top:2px}
+}
