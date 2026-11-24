@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=145">
+<link rel="stylesheet" href="style.css?v=146">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
@@ -105,17 +105,18 @@
 </section>
 
 
-<section class="latest-posts-section" id="latestPostsSection" aria-label="Latest posts" hidden>
+<section class="latest-posts-section" id="latestPostsSection" aria-label="সর্বশেষ" hidden>
+  <div class="latest-posts-heading">
+    <h2>সর্বশেষ</h2>
+    <span class="latest-posts-heading-rule" aria-hidden="true"></span>
+  </div>
   <div class="latest-posts-column latest-posts-visual-column">
-    <h2 class="latest-posts-column-heading">Latest in Pictures</h2>
     <div class="latest-posts-visual-grid" id="latestPostsVisual"></div>
   </div>
   <div class="latest-posts-column latest-posts-update-column">
-    <h2 class="latest-posts-column-heading">Latest Updates</h2>
     <div class="latest-posts-update-list" id="latestPostsUpdates"></div>
   </div>
   <div class="latest-posts-column latest-posts-headline-column">
-    <h2 class="latest-posts-column-heading">More Headlines</h2>
     <div class="latest-posts-headline-list" id="latestPostsHeadlines"></div>
   </div>
 </section>
