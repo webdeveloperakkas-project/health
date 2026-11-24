@@ -3876,3 +3876,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     font-size:18px !important;
   }
 }
+
+/* Increase the main Hero post description for better desktop readability.
+   Keep the existing mobile typography unchanged. */
+@media (min-width:801px) {
+  .home-featured .home-feature-description {
+    font-size:16px !important;
+  }
+}
