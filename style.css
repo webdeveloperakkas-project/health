@@ -4723,6 +4723,13 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 .category-editorial-card:hover img {transform:scale(1.035)}
 .category-editorial-image-empty {background:linear-gradient(135deg,#e8f1ed,#f8f2e6)}
+.category-editorial-placeholder {
+  cursor:default;
+  pointer-events:none;
+}
+.category-editorial-placeholder strong {
+  min-height:2.84em;
+}
 .category-editorial-card strong {
   display:block;margin-top:9px;color:var(--navy);
   font:750 17px/1.42 Manrope,"Hind Siliguri",sans-serif;overflow-wrap:anywhere;
