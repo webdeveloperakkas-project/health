@@ -4663,28 +4663,28 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Desktop shared alignment: the category navigation row defines the
-   exact left and right edges for the Hero and every article section below. */
+/* Desktop shared alignment: let the main content column define the
+   horizontal space while each section keeps its own independent height. */
 @media (min-width:801px) {
   .main-column > * {
     box-sizing:border-box;
-    width:100% !important;
-    max-width:none !important;
-    margin-left:0 !important;
-    margin-right:0 !important;
+    width:100%;
+    max-width:none;
+    margin-left:0;
+    margin-right:0;
   }
 
   .main-column > .home-feature-grid {
-    height:1020px !important;
-    min-height:1020px !important;
-    max-height:1020px !important;
+    height:1020px;
+    min-height:1020px;
+    max-height:1020px;
   }
 
-  /* Remove nested width limits from the two article-feed wrappers. */
+  /* Keep the article-feed wrapper in the same natural content width. */
   .main-column > .trending-section > .container {
-    width:100% !important;
-    max-width:none !important;
-    margin-left:0 !important;
-    margin-right:0 !important;
+    width:100%;
+    max-width:none;
+    margin-left:0;
+    margin-right:0;
   }
 }
