@@ -913,7 +913,7 @@
       renderMyChoice();
       return;
     }
-    /* Category and subcategory pages always render all eight editorial slots.
+    /* Category and subcategory pages always render all nine editorial slots.
        Missing posts become non-clickable placeholders so the layout never collapses. */
     const renderCategoryCard = (post, className) => {
       if (!post) {
