@@ -252,6 +252,29 @@
   const trendingSection = $("#trendingSection");
   const manualTrendingSection = $("#manualTrendingSection");
   const aboutSection = $("#about");
+
+  /* Desktop Latest Posts section matches the live rendered height of the Hero section. */
+  function syncLatestPostsSectionHeight() {
+    if (!latestPostsSection || !homeSection) return;
+    if (latestPostsSection.hidden || homeSection.hidden || !window.matchMedia("(min-width:801px)").matches) {
+      latestPostsSection.style.removeProperty("height");
+      return;
+    }
+    const heroHeight = homeSection.getBoundingClientRect().height;
+    if (heroHeight > 0) latestPostsSection.style.height = Math.ceil(heroHeight) + "px";
+  }
+
+  if (homeSection) {
+    if (typeof ResizeObserver === "function") {
+      const heroHeightObserver = new ResizeObserver(() => {
+        window.requestAnimationFrame(syncLatestPostsSectionHeight);
+      });
+      heroHeightObserver.observe(homeSection);
+    }
+    window.addEventListener("resize", syncLatestPostsSectionHeight, {passive:true});
+    window.addEventListener("load", syncLatestPostsSectionHeight, {once:true});
+  }
+
   function renderLatestPostsSection() {
     if (!latestPostsSection) return;
     const visualHost = $("#latestPostsVisual");
@@ -299,6 +322,9 @@
         '<span>' + escapeHTML(post.title) + '</span><span class="latest-post-headline-arrow" aria-hidden="true">›</span>' +
       '</button>'
     ).join("");
+
+    // Wait for the current Hero and Latest Posts cards to finish layout, then copy the Hero height.
+    window.requestAnimationFrame(syncLatestPostsSectionHeight);
   }
 
   function renderEntertainmentFeature() {
@@ -698,7 +724,10 @@
     if (trendingSection) trendingSection.hidden = !isHomeLanding;
     if (manualTrendingSection) manualTrendingSection.hidden = !isHomeLanding;
     homeSection.hidden = !isHomeLanding;
-    if (latestPostsSection) latestPostsSection.hidden = !isHomeLanding;
+    if (latestPostsSection) {
+      latestPostsSection.hidden = !isHomeLanding;
+      if (!isHomeLanding) latestPostsSection.style.removeProperty("height");
+    }
     articleSection.hidden = isHomeLanding;
     const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
