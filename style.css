@@ -4662,3 +4662,18 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     margin-left:5px !important;
   }
 }
+
+
+/* Desktop Hero outer frame: fixed maximum dimensions requested for the full three-column section. */
+@media (min-width:801px) {
+  .home-feature-grid {
+    box-sizing:border-box;
+    width:1250px;
+    max-width:100%;
+    height:1020px;
+    min-height:1020px;
+    max-height:1020px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
