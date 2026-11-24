@@ -3677,9 +3677,25 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-world-small .home-category-image,.home-health-small .home-category-image{aspect-ratio:16/10}
 .home-world-small .home-category-copy,.home-health-small .home-category-copy{padding-top:1px}
 .home-world-small strong,.home-health-small strong{font-size:13px;line-height:1.4}
-.home-sports-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
-.home-sports-card .home-category-image{aspect-ratio:16/10}
-.home-sports-card strong{font-size:14px}
+/* Sports desktop layout: the three left stories stretch to match the full center column. */
+.home-sports-layout{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.5fr) minmax(0,.98fr);gap:20px;align-items:stretch}
+.home-sports-left,.home-sports-center,.home-sports-right{display:flex;min-width:0;flex-direction:column}
+.home-sports-left{justify-content:space-between;gap:12px}
+.home-sports-left-card{display:grid;grid-template-columns:minmax(88px,38%) minmax(0,1fr);gap:11px;align-content:start;align-items:start;flex:1 1 0;padding:0 0 11px;border-bottom:1px solid #e8efec}
+.home-sports-left-card .home-category-image{aspect-ratio:16/10}
+.home-sports-left-card .home-category-copy{padding-top:1px}
+.home-sports-left-card strong{font-size:13px;line-height:1.4}
+.home-sports-center{gap:13px}
+.home-sports-main-card .home-category-image{aspect-ratio:16/9}
+.home-sports-main-card strong{font-size:clamp(18px,1.7vw,22px);line-height:1.35}
+.home-sports-bottom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.home-sports-bottom-card .home-category-image{aspect-ratio:16/10}
+.home-sports-bottom-card strong{font-size:13px;line-height:1.4}
+.home-sports-right{gap:13px}
+.home-sports-right-card .home-category-image{aspect-ratio:16/10}
+.home-sports-right-card strong{font-size:14px;line-height:1.4}
+.home-sports-more{display:inline-flex;align-items:center;justify-content:center;gap:8px;align-self:flex-start;margin-top:auto;padding:10px 14px;border:0;border-radius:4px;background:#e8b85b;color:#173b40;font-size:12px;font-weight:800;cursor:pointer}
+.home-sports-more:hover{background:#f1cd7d}
 .home-tips-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
 .home-tips-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:14px;align-items:start;padding:12px;border:1px solid #e5eeea;background:#fff}
 .home-tips-card .home-category-image{aspect-ratio:4/3}
@@ -3690,7 +3706,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-health-small .home-category-image{aspect-ratio:16/10}
 .home-health-small{grid-template-columns:108px minmax(0,1fr)}
 @media(max-width:1100px) and (min-width:801px){
-  .home-sports-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .home-world-layout,.home-health-layout{grid-template-columns:minmax(0,1.1fr) minmax(230px,.9fr);gap:16px}
 }
 @media(max-width:800px){
@@ -3707,7 +3722,16 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .home-world-list,.home-health-side{gap:0}
   .home-world-small,.home-health-small{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 0}
   .home-world-small .home-category-image,.home-health-small .home-category-image{aspect-ratio:16/10}
-  .home-sports-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px}
+  .home-sports-layout{grid-template-columns:1fr;gap:18px}
+  .home-sports-center{order:0}
+  .home-sports-left{order:1;gap:0}
+  .home-sports-right{order:2;gap:0}
+  .home-sports-left-card,.home-sports-right-card{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid #e8efec}
+  .home-sports-left-card .home-category-image,.home-sports-right-card .home-category-image{aspect-ratio:16/10}
+  .home-sports-left-card strong,.home-sports-right-card strong{font-size:13px}
+  .home-sports-bottom{gap:12px}
+  .home-sports-bottom-card strong{font-size:12px}
+  .home-sports-more{margin-top:12px}
   .home-tips-grid{grid-template-columns:1fr;gap:12px}
   .home-tips-card{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:0 0 12px;border:0;border-bottom:1px solid #e8efec}
   .home-tips-card .home-category-image{aspect-ratio:16/10}
