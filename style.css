@@ -3398,9 +3398,6 @@ html[lang="hi"] .category-tabs .category-more-tab {
 .main-nav .menu-close {
   border-radius: 0 !important;
 }
-@media (min-width: 801px) {
-  .main-nav { width: 310px; }
-}
 @media (max-width: 800px) {
   .main-nav {
     width: min(70vw, 520px) !important;
@@ -4003,25 +4000,49 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Desktop hamburger drawer: reuse the approved teal/yellow mobile design,
-   but stack every subcategory vertically for easier desktop browsing.
-   The existing menu buttons and JS interactions are shared unchanged. */
+/* Desktop hamburger drawer — single authoritative desktop rule set.
+   Mobile styling and mobile menu layout are intentionally untouched. */
 @media (min-width:801px) {
   .site-header .header-left {
     position:relative;
+    display:flex !important;
+    align-items:center;
+    gap:12px;
+  }
+
+  /* The desktop header previously hid this control in two separate rules. */
+  .site-header .header-left > .menu-toggle {
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 38px;
+    width:38px;
+    height:38px;
+    padding:0;
+    border:1px solid #087c75;
+    border-radius:4px;
+    background:#087c75;
+    color:#ffffff;
+    font-size:19px;
+    cursor:pointer;
+  }
+  .site-header .header-left > .menu-toggle[aria-expanded="true"] {
+    background:#066b65;
+    border-color:#066b65;
   }
 
   .site-header .main-nav {
-    position:absolute;
+    position:absolute !important;
     top:100% !important;
-    left:0;
-    right:auto;
-    z-index:100;
-    display:none;
+    left:0 !important;
+    right:auto !important;
+    z-index:1000;
+    display:none !important;
     flex-direction:column;
+    box-sizing:border-box;
     width:350px !important;
-    max-width:min(350px, calc(100vw - 40px));
-    max-height:calc(100vh - 100px);
+    max-width:calc(100vw - 40px);
+    max-height:calc(100vh - 110px);
     overflow-x:hidden;
     overflow-y:auto;
     overscroll-behavior:contain;
@@ -4032,9 +4053,8 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     background:#ffffff !important;
     box-shadow:0 16px 38px rgba(9,38,43,.18);
   }
-
   .site-header .main-nav.open {
-    display:flex;
+    display:flex !important;
   }
 
   .site-header .main-nav .menu-top {
@@ -4046,7 +4066,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     margin:0 0 13px;
     border-bottom:1px solid #e1ece8;
   }
-
   .site-header .main-nav .menu-heading {
     display:block;
     margin:0;
@@ -4055,7 +4074,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     font-weight:800;
     letter-spacing:.12em;
   }
-
   .site-header .main-nav .menu-close {
     display:grid;
     place-items:center;
@@ -4075,27 +4093,38 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     grid-template-columns:minmax(0,1fr) !important;
     gap:7px !important;
   }
-
   .site-header .main-nav .sidebar-category-item,
   .site-header .main-nav .sidebar-category-row {
+    display:flex;
     width:100%;
     min-width:0;
   }
-
   .site-header .main-nav .sidebar-category,
   .site-header .main-nav .sidebar-submenu-toggle {
     min-height:44px;
     font-size:15px;
   }
+  .site-header .main-nav .sidebar-category-row .sidebar-category {
+    flex:1 1 auto;
+    width:auto;
+  }
 
+  /* Desktop subcategories are a vertical list, not the mobile two-column grid. */
   .site-header .main-nav .sidebar-submenu {
+    display:grid;
     grid-template-columns:minmax(0,1fr) !important;
     gap:5px;
     padding:7px;
+    border:1px solid #e8b85b;
+    border-top:0;
     background:#e8b85b;
   }
-
+  .site-header .main-nav .sidebar-submenu[hidden] {
+    display:none !important;
+  }
   .site-header .main-nav .sidebar-submenu button {
+    display:block;
+    width:100%;
     min-height:38px;
     padding:8px 11px;
     background:#f5cf78 !important;
@@ -4103,7 +4132,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     font-size:14px;
     text-align:left;
   }
-
   .site-header .main-nav .sidebar-submenu button:hover,
   .site-header .main-nav .sidebar-submenu button.active {
     background:#ffffff !important;
