@@ -152,11 +152,8 @@ function articleHtml(post: Record<string, any>, siteUrl: string): string {
     '<body>\n' +
     '  <header class="site-header"><div class="header-main container">' +
     '<a class="brand" href="' + escapeHtml(homeUrl) + '"><span class="brand-name">Global <b>Scope 24</b></span></a>' +
-    '<a href="' + escapeHtml(homeUrl) + '" style="font-weight:700;color:#087c75;text-decoration:none">Home</a>' +
     '</div></header>\n' +
     '  <main class="single-article container">\n' +
-    '    <nav class="article-breadcrumb" aria-label="Breadcrumb"><a href="' + escapeHtml(homeUrl) + '">Home</a><span>›</span><span>' + escapeHtml(category) + '</span>' +
-    (subcategory ? '<span>›</span><span>' + escapeHtml(subcategory) + '</span>' : "") + '</nav>\n' +
     '    <article>\n' +
     '      <div class="single-article-heading">\n' +
     '        <div class="single-article-category">' + escapeHtml(category) +
