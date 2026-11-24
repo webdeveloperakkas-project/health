@@ -336,7 +336,7 @@
     const title = $("#scienceTechTitle");
     if (!section || !host) return;
 
-    const items = sortedByDate(posts.filter(post => post.category === "technology")).slice(0,9);
+    const items = sortedByDate(posts.filter(post => post.category === "technology" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,9);
     section.hidden = items.length === 0;
     if (!items.length) {
       host.innerHTML = "";
@@ -412,7 +412,7 @@
     if (!section || !leadHost || !gridHost) return;
 
     // Use the same published Supabase post collection as the other homepage sections.
-    const items = sortedByDate(posts.filter(post => post.category === "entertainment"));
+    const items = sortedByDate(posts.filter(post => post.category === "entertainment" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")));
     section.hidden = items.length === 0;
     if (!items.length) {
       leadHost.innerHTML = "";
@@ -459,9 +459,9 @@
         '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
         (includeExcerpt && excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
     };
-    const world = sortedByDate(posts.filter(post => post.category === "world")).slice(0,4);
-    const sports = sortedByDate(posts.filter(post => post.category === "sports")).slice(0,8);
-    const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips")).slice(0,2);
+    const world = sortedByDate(posts.filter(post => post.category === "world" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,4);
+    const sports = sortedByDate(posts.filter(post => post.category === "sports" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
+    const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,2);
 
     const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
     if (worldSection && worldHost) {
