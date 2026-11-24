@@ -4743,6 +4743,22 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:0 0 auto;
 }
 .category-editorial-bottom-card strong {font-size:15px}
+
+/* Remaining category posts continue below the editorial lead in four columns. */
+.category-more-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:26px 18px;
+  width:100%;
+  margin-top:30px;
+}
+.category-more-card .category-editorial-image {
+  aspect-ratio:16/10;
+}
+.category-more-card strong {
+  font-size:16px;
+  line-height:1.4;
+}
 @media (min-width:801px) and (max-width:1100px) {
   .category-editorial-grid {gap:14px;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr) minmax(0,1fr)}
   .category-editorial-card strong {font-size:14px}
