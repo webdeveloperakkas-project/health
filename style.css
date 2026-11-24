@@ -4035,13 +4035,13 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     width:max-content;
     min-width:210px;
     max-width:260px;
-    max-height:min(65vh,420px);
-    overflow-y:auto;
+    max-height:none;
+    overflow:visible;
     padding:8px;
     border:1px solid #087c75;
     border-top:3px solid #087c75;
     border-radius:0 0 7px 7px;
-    background:#e8b85b;
+    background:#087c75;
     box-shadow:0 12px 28px rgba(9,38,43,.18);
     opacity:1;
     transform:none;
@@ -4064,25 +4064,32 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     padding:8px 12px;
     border:1px solid transparent;
     border-radius:4px;
-    background:#f5cf78;
+    background:#ffffff;
     color:#171717;
     font:700 14px/1.35 "DM Sans",sans-serif;
     text-align:left;
     white-space:normal;
     cursor:pointer;
+    transition:background .16s ease,color .16s ease,border-color .16s ease;
   }
 
   .category-tabs .sports-submenu button:hover,
-  .category-tabs .sports-submenu button.active,
   .category-tabs .entertainment-submenu button:hover,
-  .category-tabs .entertainment-submenu button.active,
   .category-tabs .world-submenu button:hover,
-  .category-tabs .world-submenu button.active,
-  .category-tabs .lifestyle-submenu button:hover,
-  .category-tabs .lifestyle-submenu button.active {
-    border-color:#ffffff;
-    background:#ffffff;
+  .category-tabs .lifestyle-submenu button:hover {
+    border-color:#e8b85b;
+    background:#fff1cf;
     color:#111111;
+  }
+
+  .category-tabs .sports-submenu button.active,
+  .category-tabs .entertainment-submenu button.active,
+  .category-tabs .world-submenu button.active,
+  .category-tabs .lifestyle-submenu button.active {
+    border-color:#e8b85b;
+    background:#e8b85b;
+    color:#111111;
+    box-shadow:inset 0 0 0 1px rgba(8,124,117,.16);
   }
 
   html[lang="bn"] .category-tabs .sports-submenu button,
