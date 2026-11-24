@@ -4681,6 +4681,14 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     max-height:1020px;
   }
 
+  /* Every homepage content section after the Hero shares a fixed 980px height.
+     The category navigation and standalone article view are excluded. */
+  .main-column > section:not(#categories):not(#singleArticleView):not(#homeSection) {
+    height:980px;
+    min-height:980px;
+    max-height:980px;
+  }
+
   /* Keep the article-feed wrapper in the same natural content width. */
   .main-column > .trending-section > .container {
     width:100%;
