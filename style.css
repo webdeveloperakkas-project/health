@@ -3971,7 +3971,24 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     flex-wrap:nowrap;
     align-items:stretch;
     justify-content:space-between;
-    gap:clamp(4px, .55vw, 10px);
+    gap:3px;
+  }
+
+  .category-tabs .category-tab,
+  .category-tabs .category-more-tab {
+    min-height:46px;
+    padding-left:6px;
+    padding-right:6px;
+    font-size:21px !important;
+    letter-spacing:-0.4px;
+  }
+
+  .category-tabs > .world-category-menu > .category-tab,
+  .category-tabs > .sports-category-menu > .category-tab,
+  .category-tabs > .lifestyle-category-menu > .category-tab,
+  .category-tabs > .entertainment-category-menu > .category-tab {
+    padding-left:6px;
+    padding-right:17px;
   }
 
   .category-tabs > .category-tab,
