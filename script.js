@@ -211,7 +211,7 @@
   let activeSubcategory = "";
   let currentPage = 1;
   let activePostType = "latest";
-  const pageSize = 2;
+  const pageSize = 8; // Eight posts fill the shared category editorial layout.
   let searchTerm = "";
   const articleList = $("#articleList");
   const previousButton = $("#previousPage");
@@ -914,28 +914,38 @@
     if (!visiblePosts.length) {
       articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
     } else {
-      /* Category feeds show compact clickable story cards, never the full article body.
-         The complete article is rendered only after the reader selects a card. */
-      articleList.innerHTML = visiblePosts.map((post,index) => {
+      /* Category and subcategory pages share one editorial template.
+         This does not alter the homepage layout. */
+      const renderCategoryCard = (post, className) => {
+        if (!post) return "";
         const postIndex = posts.indexOf(post);
         const image = imageForPost(post);
-        const rawExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," "))
-          .replace(/\\s+/g," ").trim();
-        const excerpt = rawExcerpt.length > 260 ? rawExcerpt.slice(0,257).trimEnd() + "…" : rawExcerpt;
-        const stamp = Number(post.publishedTimestamp) || new Date(post.date).getTime();
-        const dateTime = Number.isFinite(stamp) && stamp > 0
-          ? new Date(stamp).toLocaleDateString(activeLanguage==="bn"?"bn-BD":activeLanguage==="hi"?"hi-IN":"en-US",{day:"numeric",month:"short",year:"numeric"})
-          : String(post.date || "");
-        const card = '<button class="home-list-item category-feed-item" type="button" data-open-post="' + postIndex + '">' +
-          '<span class="home-list-heading"><span class="home-list-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><strong>' + escapeHTML(post.title) + '</strong></span>' +
-          '<span class="home-list-summary-row">' +
-            (image ? '<span class="home-list-thumb"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '') +
-            (excerpt ? '<span class="home-list-excerpt">' + escapeHTML(excerpt) + '</span>' : '') +
-          '</span>' +
-          '<time class="home-list-meta">' + escapeHTML(dateTime) + '</time>' +
+        return '<button class="category-editorial-card ' + className + '" type="button" data-open-post="' + postIndex + '">' +
+          (image
+            ? '<span class="category-editorial-image"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>'
+            : '<span class="category-editorial-image category-editorial-image-empty"></span>') +
+          '<strong>' + escapeHTML(post.title) + '</strong>' +
         '</button>';
-        return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
-      }).join("");
+      };
+      const leftPosts = visiblePosts.slice(0,3);
+      const leadPost = visiblePosts[3];
+      const centerBottomPosts = visiblePosts.slice(4,6);
+      const rightPosts = visiblePosts.slice(6,8);
+      articleList.innerHTML =
+        '<div class="category-editorial-grid">' +
+          '<div class="category-editorial-side category-editorial-left">' +
+            leftPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
+          '</div>' +
+          '<div class="category-editorial-center">' +
+            (leadPost ? renderCategoryCard(leadPost,"category-editorial-lead-card") : '') +
+            '<div class="category-editorial-bottom">' +
+              centerBottomPosts.map(post => renderCategoryCard(post,"category-editorial-bottom-card")).join("") +
+            '</div>' +
+          '</div>' +
+          '<div class="category-editorial-side category-editorial-right">' +
+            rightPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
+          '</div>' +
+        '</div>';
     }
     $("#pageStatus").textContent = t.page + " " + currentPage + " " + t.of + " " + totalPages;
     previousButton.disabled = currentPage <= 1;
