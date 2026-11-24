@@ -815,7 +815,8 @@
         requestAnimationFrame(()=>{
           const styles = window.getComputedStyle(submenu);
           const borderHeight = (parseFloat(styles.borderTopWidth) || 0) + (parseFloat(styles.borderBottomWidth) || 0);
-          submenu.style.maxHeight = (submenu.scrollHeight + borderHeight) + "px";       });
+          submenu.style.maxHeight = (submenu.scrollHeight + borderHeight) + "px";
+        });
       }else{
         submenu.classList.remove("is-open");submenu.style.maxHeight=submenu.scrollHeight+"px";
         requestAnimationFrame(()=>{submenu.style.maxHeight="0px";});
