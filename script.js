@@ -858,6 +858,8 @@
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
     if (trendingSection) trendingSection.hidden = !isHomeLanding;
     if (manualTrendingSection) manualTrendingSection.hidden = !isHomeLanding;
+    // Featured Stories is a dedicated homepage section, not part of category feeds.
+    if (featuredStoriesSection) featuredStoriesSection.hidden = !isHomeLanding;
     homeSection.hidden = !isHomeLanding;
     if (latestPostsSection) {
       latestPostsSection.hidden = !isHomeLanding;
