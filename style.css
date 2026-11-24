@@ -4003,6 +4003,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 /* Desktop header: no hamburger/drawer. Subcategory menus belong to
    the main Category Navigation and open from their parent category. */
 @media (min-width:801px) {
+  /* ডেস্কটপ হেডার: সাইটের নাম ৪px, লোগো ৪px এবং হেডারের উচ্চতা ৩px বাড়ানো হয়েছে। */
+  .header-main { height:81px; }
+  .brand-mark { width:41px; height:41px; }
+  .brand-name { font-size:24px; }
+
   .site-header .header-left > .menu-toggle {
     display:none !important;
   }
