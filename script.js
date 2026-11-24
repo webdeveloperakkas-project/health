@@ -329,6 +329,82 @@
     window.requestAnimationFrame(syncLatestPostsSectionHeight);
   }
 
+  /* Science & Technology homepage feature: 3 left, 3 center, 3 right. */
+  function renderScienceTechSection() {
+    const section = $("#scienceTechSection");
+    const host = $("#scienceTechPosts");
+    const title = $("#scienceTechTitle");
+    if (!section || !host) return;
+
+    const items = sortedByDate(posts.filter(post => post.category === "technology")).slice(0,9);
+    section.hidden = items.length === 0;
+    if (!items.length) {
+      host.innerHTML = "";
+      return;
+    }
+
+    if (title) {
+      const language = languageCopy[activeLanguage] || languageCopy.en;
+      title.textContent = (language.categories && language.categories.technology) || "Science & Technology";
+    }
+
+    const renderScienceCard = (post, className, includeExcerpt = false) => {
+      const index = posts.indexOf(post);
+      const image = imageForPost(post);
+      const excerpt = String(post.excerpt || "").trim();
+      return '<button class="home-category-card ' + className + '" type="button" data-open-post="' + index + '">' +
+        (image ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-category-image home-category-image-empty"></span>') +
+        '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
+        (includeExcerpt && excerpt ? '<small>' + escapeHTML(excerpt.slice(0,150)) + '</small>' : '') +
+        '</span></button>';
+    };
+
+    const mainPost = items[0];
+    const leftPosts = items.slice(1,4);
+    const centerBottomPosts = items.slice(4,6);
+    const rightPosts = items.slice(6,9);
+
+    host.innerHTML =
+      '<div class="science-tech-left">' +
+        leftPosts.map(post => renderScienceCard(post, "science-tech-side-card")).join("") +
+      '</div>' +
+      '<div class="science-tech-center">' +
+        renderScienceCard(mainPost, "science-tech-main-card", true) +
+        '<div class="science-tech-bottom">' +
+          centerBottomPosts.map(post => renderScienceCard(post, "science-tech-bottom-card")).join("") +
+        '</div>' +
+        '<button class="science-tech-more" type="button" data-home-category-view="technology">আরও বিস্তারিত পড়ুন <span aria-hidden="true">→</span></button>' +
+      '</div>' +
+      '<div class="science-tech-right">' +
+        rightPosts.map(post => renderScienceCard(post, "science-tech-side-card")).join("") +
+      '</div>';
+
+    window.requestAnimationFrame(syncScienceTechSectionHeight);
+  }
+
+  /* Match the full Science & Technology section height to the homepage Hero on desktop. */
+  function syncScienceTechSectionHeight() {
+    const section = $("#scienceTechSection");
+    if (!section || !homeSection) return;
+    if (section.hidden || homeSection.hidden || !window.matchMedia("(min-width:801px)").matches) {
+      section.style.removeProperty("height");
+      return;
+    }
+    const heroHeight = homeSection.getBoundingClientRect().height;
+    if (heroHeight > 0) section.style.height = Math.ceil(heroHeight) + "px";
+  }
+
+  if (homeSection) {
+    if (typeof ResizeObserver === "function") {
+      const scienceTechHeightObserver = new ResizeObserver(() => {
+        window.requestAnimationFrame(syncScienceTechSectionHeight);
+      });
+      scienceTechHeightObserver.observe(homeSection);
+    }
+    window.addEventListener("resize", syncScienceTechSectionHeight, {passive:true});
+    window.addEventListener("load", syncScienceTechSectionHeight, {once:true});
+  }
+
   function renderEntertainmentFeature() {
     const section = $("#entertainmentFeatureSection");
     const leadHost = $("#entertainmentFeatureLead");
@@ -767,6 +843,7 @@
       renderHomeFeatured();
       renderHomeList();
       renderLatestPostsSection();
+      renderScienceTechSection();
       renderEntertainmentFeature();
       renderHomeCategorySections();
       renderFeaturedStories();
