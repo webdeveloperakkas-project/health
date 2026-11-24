@@ -492,11 +492,21 @@
       ? publishedDate.toLocaleTimeString(activeLanguage || "en", { hour: "numeric", minute: "2-digit" })
       : "";
     const image = imageForPost(post);
+    // Restore the lead story summary using the saved excerpt or readable article text.
+    const featurePlainText = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")))
+      .replace(/<[^>]*>/g," ")
+      .replace(/&nbsp;/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+    const featureExcerpt = featurePlainText.length > 320
+      ? featurePlainText.slice(0,317).trimEnd() + "…"
+      : featurePlainText;
     homeFeatured.innerHTML =
       '<div class="home-feature-slide">' +
       (image ? '<div class="home-feature-image" data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" fetchpriority="high"></div>' : '') +
       '<div class="home-feature-content">' +
       '<h1 data-open-post="' + index + '" role="button" tabindex="0" aria-label="Open article: ' + escapeHTML(post.title) + '">' + escapeHTML(post.title) + '</h1>' +
+      (featureExcerpt ? '<p class="home-feature-description">' + escapeHTML(featureExcerpt) + '</p>' : '') +
       '<div class="home-feature-meta"><time>' + escapeHTML(post.date) + (displayTime ? ' · ' + escapeHTML(displayTime) : '') + '</time></div></div></div>' +
       '<div class="home-feature-navigation" aria-label="Main story navigation">' +
       '<button type="button" class="home-feature-arrow" data-home-feature="previous">' + labels.previous + '</button>' +
