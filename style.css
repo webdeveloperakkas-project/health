@@ -3812,3 +3812,26 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .home-featured { grid-area:center; }
   .home-support-cards { display:none; }
 }
+
+/* Desktop main Hero image: standardize every uploaded lead image to a
+   maximum display frame of 600x340px. Smaller desktop columns scale down
+   proportionally; mobile keeps its separately approved image layout. */
+@media (min-width:801px) {
+  .home-featured .home-feature-image {
+    box-sizing:border-box !important;
+    display:block !important;
+    width:min(600px, 100%) !important;
+    max-width:600px !important;
+    height:auto !important;
+    aspect-ratio:30 / 17 !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    overflow:hidden !important;
+  }
+  .home-featured .home-feature-image img {
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+    object-position:center !important;
+  }
+}
