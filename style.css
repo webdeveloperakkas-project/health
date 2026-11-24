@@ -3857,3 +3857,15 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     padding-right:20px !important;
   }
 }
+
+/* Desktop homepage Latest/Popular cards: slightly larger, easier-to-read typography.
+   Mobile typography remains unchanged. */
+@media (min-width:801px) {
+  .home-left .home-list-panel.is-home-compact .home-list-heading strong {
+    font-size:16px !important;
+  }
+
+  .home-left .home-list-panel.is-home-compact .home-list-excerpt {
+    font-size:14px !important;
+  }
+}
