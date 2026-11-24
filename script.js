@@ -914,9 +914,26 @@
     if (!visiblePosts.length) {
       articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
     } else {
+      /* Category feeds show compact clickable story cards, never the full article body.
+         The complete article is rendered only after the reader selects a card. */
       articleList.innerHTML = visiblePosts.map((post,index) => {
-        const body = post.contentHtml ? post.contentHtml : (post.body || []).map(line => "<p>" + escapeHTML(line) + "</p>").join("");
-        const card = '<article class="post-card"><div class="post-topline"><span class="post-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><time class="post-date">' + escapeHTML(post.date) + '</time></div><h3>' + escapeHTML(post.title) + '</h3><div class="post-body">' + body + '</div><div class="post-readtime">' + escapeHTML(post.read) + ' · GLOBAL SCOPE 24</div></article>';
+        const postIndex = posts.indexOf(post);
+        const image = imageForPost(post);
+        const rawExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," "))
+          .replace(/\\s+/g," ").trim();
+        const excerpt = rawExcerpt.length > 260 ? rawExcerpt.slice(0,257).trimEnd() + "…" : rawExcerpt;
+        const stamp = Number(post.publishedTimestamp) || new Date(post.date).getTime();
+        const dateTime = Number.isFinite(stamp) && stamp > 0
+          ? new Date(stamp).toLocaleDateString(activeLanguage==="bn"?"bn-BD":activeLanguage==="hi"?"hi-IN":"en-US",{day:"numeric",month:"short",year:"numeric"})
+          : String(post.date || "");
+        const card = '<button class="home-list-item category-feed-item" type="button" data-open-post="' + postIndex + '">' +
+          '<span class="home-list-heading"><span class="home-list-category">' + escapeHTML((categoryNames[post.category] || "").toUpperCase()) + (post.subcategory ? " · " + escapeHTML(post.subcategory.toUpperCase()) : "") + '</span><strong>' + escapeHTML(post.title) + '</strong></span>' +
+          '<span class="home-list-summary-row">' +
+            (image ? '<span class="home-list-thumb"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '') +
+            (excerpt ? '<span class="home-list-excerpt">' + escapeHTML(excerpt) + '</span>' : '') +
+          '</span>' +
+          '<time class="home-list-meta">' + escapeHTML(dateTime) + '</time>' +
+        '</button>';
         return card + (index === 0 && visiblePosts.length > 1 ? '<div class="inline-ad" aria-label="Advertisement placement"><strong>ADVERTISEMENT</strong><span>In-article ad space</span></div>' : "");
       }).join("");
     }
