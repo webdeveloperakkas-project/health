@@ -4663,17 +4663,28 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Desktop Hero outer frame: enforce the agreed dimensions over earlier layout rules. */
+/* Desktop shared alignment: the category navigation row defines the
+   exact left and right edges for the Hero and every article section below. */
 @media (min-width:801px) {
-  .home-feature-grid {
-    box-sizing:border-box !important;
-    width:1250px !important;
-    max-width:1250px !important;
+  .main-column > * {
+    box-sizing:border-box;
+    width:100% !important;
+    max-width:none !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+
+  .main-column > .home-feature-grid {
     height:1020px !important;
     min-height:1020px !important;
     max-height:1020px !important;
-    margin-left:auto !important;
-    margin-right:auto !important;
-    overflow:hidden;
+  }
+
+  /* Remove nested width limits from the two article-feed wrappers. */
+  .main-column > .trending-section > .container {
+    width:100% !important;
+    max-width:none !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
   }
 }
