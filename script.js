@@ -807,8 +807,10 @@
       if (!isHomeLanding) latestPostsSection.style.removeProperty("height");
     }
     articleSection.hidden = isHomeLanding;
+    const scienceTechSection = $("#scienceTechSection");
     const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
+    if (scienceTechSection) scienceTechSection.hidden = !isHomeLanding;
     if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding;
     if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
