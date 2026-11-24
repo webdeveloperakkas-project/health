@@ -812,7 +812,7 @@
       if(open){
         document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu").forEach(menu=>{if(menu!==submenu){menu.classList.remove("is-open");menu.hidden=true;menu.style.maxHeight="0px";const other=menu.parentElement.querySelector("button[aria-expanded]");if(other)other.setAttribute("aria-expanded","false");}});
         submenu.hidden=false;submenu.style.maxHeight="0px";submenu.classList.add("is-open");
-        requestAnimationFrame(()=>{\n          const desktopExtra = window.matchMedia("(min-width:801px)").matches ? 0 : 0;\n          const styles = window.getComputedStyle(submenu);\n          const borderHeight = (parseFloat(styles.borderTopWidth) || 0) + (parseFloat(styles.borderBottomWidth) || 0);\n          submenu.style.maxHeight = (submenu.scrollHeight + borderHeight + desktopExtra) + "px";\n        });
+        requestAnimationFrame(()=>{\n          const desktopExtra = window.matchMedia("(min-width:801px)").matches ? 0 : 0;\n          const styles = window.getComputedStyle(submenu);\n          const borderHeight = (parseFloat(styles.borderTopWidth) || 0) + (parseFloat(styles.borderBottomWidth) || 0);\n          submenu.style.maxHeight = (submenu.scrollHeight + borderHeight) + "px";\n        });
       }else{
         submenu.classList.remove("is-open");submenu.style.maxHeight=submenu.scrollHeight+"px";
         requestAnimationFrame(()=>{submenu.style.maxHeight="0px";});
