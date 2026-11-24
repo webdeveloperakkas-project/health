@@ -241,6 +241,7 @@
 
   const pageLayout = $(".page-layout");
   const homeSection = $("#homeSection");
+  const latestPostsSection = $("#latestPostsSection");
   const articleSection = $("#articleFeed");
   const homeListPanel = $("#homeListPanel");
   const homeFeatured = $("#homeFeatured");
@@ -251,6 +252,55 @@
   const trendingSection = $("#trendingSection");
   const manualTrendingSection = $("#manualTrendingSection");
   const aboutSection = $("#about");
+  function renderLatestPostsSection() {
+    if (!latestPostsSection) return;
+    const visualHost = $("#latestPostsVisual");
+    const updateHost = $("#latestPostsUpdates");
+    const headlineHost = $("#latestPostsHeadlines");
+    if (!visualHost || !updateHost || !headlineHost) return;
+
+    // Show only published stories explicitly placed in Latest.
+    const latestItems = sortedByDate(posts.filter(post => {
+      const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
+      return placements.includes("latest");
+    }));
+    latestPostsSection.hidden = latestItems.length === 0;
+
+    const visualItems = latestItems.slice(0,4);
+    const updateItems = latestItems.slice(4,8);
+    const headlineItems = latestItems.slice(8,14);
+
+    visualHost.innerHTML = visualItems.map(post => {
+      const image = imageForPost(post);
+      return '<button class="latest-post-visual-card" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+        (image
+          ? '<span class="latest-post-visual-image"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>'
+          : '<span class="latest-post-visual-image latest-post-image-empty"></span>') +
+        '<strong>' + escapeHTML(post.title) + '</strong>' +
+      '</button>';
+    }).join("");
+
+    updateHost.innerHTML = updateItems.map(post => {
+      const image = imageForPost(post);
+      const rawSummary = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\s+/g," ").trim();
+      const summary = rawSummary.length > 118 ? rawSummary.slice(0,115).trimEnd() + "…" : rawSummary;
+      return '<button class="latest-post-update-row" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+        (image
+          ? '<span class="latest-post-update-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>'
+          : '<span class="latest-post-update-image latest-post-image-empty"></span>') +
+        '<span class="latest-post-update-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
+          (summary ? '<small>' + escapeHTML(summary) + '</small>' : '') +
+        '</span>' +
+      '</button>';
+    }).join("");
+
+    headlineHost.innerHTML = headlineItems.map(post =>
+      '<button class="latest-post-headline" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+        '<span>' + escapeHTML(post.title) + '</span><span class="latest-post-headline-arrow" aria-hidden="true">›</span>' +
+      '</button>'
+    ).join("");
+  }
+
   function renderEntertainmentFeature() {
     const section = $("#entertainmentFeatureSection");
     const leadHost = $("#entertainmentFeatureLead");
@@ -622,6 +672,7 @@
     singleArticleView.hidden = false;
     if (pageLayout) pageLayout.classList.add("article-page-active");
     if (homeSection) homeSection.hidden = true;
+    if (latestPostsSection) latestPostsSection.hidden = true;
     if (articleSection) articleSection.hidden = true;
     // Keep the shared site frame and the surrounding homepage sections visible
     // while the selected article replaces only the central content area.
@@ -647,6 +698,7 @@
     if (trendingSection) trendingSection.hidden = !isHomeLanding;
     if (manualTrendingSection) manualTrendingSection.hidden = !isHomeLanding;
     homeSection.hidden = !isHomeLanding;
+    if (latestPostsSection) latestPostsSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
     const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
@@ -683,6 +735,7 @@
     if (isHomeLanding) {
       renderHomeFeatured();
       renderHomeList();
+      renderLatestPostsSection();
       renderEntertainmentFeature();
       renderHomeCategorySections();
       renderFeaturedStories();
@@ -1198,6 +1251,7 @@
           singleArticleView.hidden = false;
           if (pageLayout) pageLayout.classList.add("article-page-active");
           if (homeSection) homeSection.hidden = true;
+          if (latestPostsSection) latestPostsSection.hidden = true;
           if (articleSection) articleSection.hidden = true;
           const entertainmentSection = $("#entertainmentFeatureSection");
           const homeCategorySections = $("#homeCategorySections");
