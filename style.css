@@ -2753,9 +2753,6 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 .trending-story-arrow{flex:none;color:#89a6a0;font-size:17px;transition:transform .18s ease,color .18s ease}
 .trending-story-link:hover .trending-story-arrow{transform:translate(2px,-2px);color:#087c75}
 .trending-empty{grid-column:1/-1;padding:22px 18px;border:1px dashed #cbded6;border-radius:10px;background:rgba(255,255,255,.6);color:#70817e;font-size:13px;text-align:center}
-.article-breadcrumb{display:flex;align-items:center;gap:9px;margin:0 auto 18px;color:#829390;font-size:12px}
-.article-breadcrumb a{color:#087c75;font-weight:750;text-decoration:none}
-.article-breadcrumb a:hover{text-decoration:underline}
 @media(max-width:800px){.trending-section{padding-bottom:35px}.trending-stories-card{padding:18px 14px 15px}.trending-stories-heading{align-items:flex-start}.trending-period{padding:7px 9px;font-size:9px}.trending-stories-list{grid-template-columns:1fr;gap:8px}.trending-story-link{min-height:56px;padding:10px 11px}.trending-story-title{font-size:12px}}
 
 /* =========================================================
