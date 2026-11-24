@@ -792,6 +792,18 @@
     if (descriptionTag && description) descriptionTag.setAttribute("content",description);
     window.scrollTo(0,0);
   }
+  /* Return from an open article to its category feed before another category is rendered. */
+  function closeArticleViewForCategoryNavigation() {
+    if (singleArticleView) singleArticleView.hidden = true;
+    if (pageLayout) pageLayout.classList.remove("article-page-active");
+    currentArticlePost = null;
+    history.replaceState({
+      globalScopeCategory:true,
+      category:activeCategory,
+      subcategory:activeSubcategory
+    }, "", siteBasePath());
+  }
+
   /* Open article content inside the existing site layout instead of navigating to a detached page. */
   function openArticleInCurrentLayout(post, source = "") {
     if (!post) return;
@@ -803,9 +815,36 @@
     searchTerm = "";
     currentPage = 1;
     render();
+    history.replaceState({
+      globalScopeCategory:true,
+      category:activeCategory,
+      subcategory:activeSubcategory
+    }, "", siteBasePath());
     history.pushState({globalScopeArticle:true}, "", articleRoute(post, source));
     openArticleDetail(post);
   }
+
+  /* Browser Back restores the category feed; Forward restores the selected article. */
+  window.addEventListener("popstate", event => {
+    if (event.state && event.state.globalScopeArticle) {
+      const slug = requestedArticleSlug();
+      const post = posts.find(item => articleSlug(item) === slug);
+      if (post) openArticleDetail(post);
+      return;
+    }
+    if (singleArticleView) singleArticleView.hidden = true;
+    if (pageLayout) pageLayout.classList.remove("article-page-active");
+    currentArticlePost = null;
+    if (event.state && event.state.globalScopeCategory) {
+      activeCategory = event.state.category || activeCategory;
+      activeSubcategory = event.state.subcategory || "";
+      showHomeFeed = false;
+      showFeaturedFeed = false;
+      activePostType = "latest";
+      currentPage = 1;
+    }
+    render();
+  });
 
   function render() {
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
@@ -985,6 +1024,7 @@
     trigger.addEventListener("click",event=>{event.stopPropagation();setOpen(submenu.hidden);});
     submenu.addEventListener("click",event=>{
       const choice=event.target.closest(dataSelector);if(!choice)return;
+      closeArticleViewForCategoryNavigation();
       activeCategory=category;activeSubcategory=choice.getAttribute(dataAttribute)||"";showHomeFeed=false;showFeaturedFeed=false;activePostType="latest";
       document.querySelectorAll(".post-type-option").forEach(option=>{const selected=option.dataset.postType===activePostType;option.classList.toggle("active",selected);option.setAttribute("aria-pressed",String(selected));});
       currentPage=1;searchTerm="";const searchInput=$("#siteSearch");if(searchInput)searchInput.value="";
@@ -1021,6 +1061,7 @@
       const choice = event.target.closest("[data-sidebar-category][data-sidebar-subcategory]");
       if (!choice) return;
       event.preventDefault();
+      closeArticleViewForCategoryNavigation();
       activeCategory = choice.dataset.sidebarCategory;
       activeSubcategory = choice.dataset.sidebarSubcategory;
       showHomeFeed = false;
@@ -1058,12 +1099,7 @@
     button.addEventListener("click", () => {
       /* Home always performs a full document navigation and requests a fresh page URL.
          This resets in-page state and avoids reusing a cached homepage document. */
-      if (button.dataset.category === "home") {
-        try { window.history.scrollRestoration = "manual"; } catch (_) {}
-        const freshHomeUrl = siteBasePath() + "?refresh=" + Date.now();
-        window.location.replace(freshHomeUrl);
-        return;
-      }
+      closeArticleViewForCategoryNavigation();
       activeCategory = button.dataset.category;
       activeSubcategory = button.dataset.subcategory || "";
       const sportsMenuTrigger = document.querySelector(".sports-category-trigger");
