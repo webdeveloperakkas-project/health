@@ -4695,3 +4695,57 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     margin-right:0;
   }
 }
+
+
+/* CATEGORY / SUBCATEGORY EDITORIAL VIEW — shared layout, separate from homepage. */
+.category-editorial-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.55fr) minmax(0,1fr);
+  gap:20px;
+  width:100%;
+  min-height:740px;
+  align-items:stretch;
+}
+.category-editorial-side,.category-editorial-center {
+  display:flex;flex-direction:column;min-width:0;min-height:0;
+}
+.category-editorial-side {justify-content:space-between;gap:16px}
+.category-editorial-card {
+  display:flex;flex-direction:column;min-width:0;padding:0 0 12px;
+  border:0;border-bottom:1px solid #e7eeeb;background:transparent;
+  color:var(--navy);text-align:left;cursor:pointer;
+}
+.category-editorial-card:hover strong {color:var(--teal-dark)}
+.category-editorial-image {
+  display:block;width:100%;overflow:hidden;aspect-ratio:16/10;background:#eaf2ef;
+}
+.category-editorial-image img {
+  display:block;width:100%;height:100%;object-fit:cover;transition:transform .3s ease;
+}
+.category-editorial-card:hover img {transform:scale(1.035)}
+.category-editorial-image-empty {background:linear-gradient(135deg,#e8f1ed,#f8f2e6)}
+.category-editorial-card strong {
+  display:block;margin-top:9px;color:var(--navy);
+  font:750 17px/1.42 Manrope,"Hind Siliguri",sans-serif;overflow-wrap:anywhere;
+}
+.category-editorial-lead-card {flex:1 1 auto;min-height:0;padding-bottom:14px}
+.category-editorial-lead-card .category-editorial-image {
+  flex:1 1 auto;min-height:300px;aspect-ratio:16/9;
+}
+.category-editorial-lead-card strong {font-size:clamp(21px,2vw,28px);line-height:1.35}
+.category-editorial-bottom {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:0 0 auto;
+}
+.category-editorial-bottom-card strong {font-size:15px}
+@media (min-width:801px) and (max-width:1100px) {
+  .category-editorial-grid {gap:14px;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr) minmax(0,1fr)}
+  .category-editorial-card strong {font-size:14px}
+  .category-editorial-lead-card strong {font-size:20px}
+}
+@media (max-width:800px) {
+  .category-editorial-grid {grid-template-columns:minmax(0,1fr);min-height:0;gap:20px}
+  .category-editorial-side {gap:14px}
+  .category-editorial-card strong {font-size:15px}
+  .category-editorial-lead-card .category-editorial-image {min-height:0}
+  .category-editorial-bottom {gap:12px}
+}
