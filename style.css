@@ -3881,6 +3881,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
    Keep the existing mobile typography unchanged. */
 @media (min-width:801px) {
   .home-featured .home-feature-description {
-    font-size:16px !important;
+    font-size:18px !important;
   }
 }
