@@ -4145,3 +4145,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     font-size:14px;
   }
 }
+
+/* ডেস্কটপ স্ক্রলিং বার: ১৮px শিরোনাম আরামসে বসানোর জন্য ব্যাকগ্রাউন্ডের উচ্চতা ৫৮px। */
+@media (min-width:801px) {
+  .latest-ticker {
+    height:58px !important;
+    min-height:58px !important;
+  }
+}
