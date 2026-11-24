@@ -3620,9 +3620,13 @@ html[lang="en"] .main-nav .sidebar-submenu button {
    Main story on the left; six supporting stories in a 3-by-2 grid.
    ========================================================= */
 .entertainment-feature-section{margin:0 0 40px;padding:0 0 8px}
-.entertainment-feature-heading{display:flex;align-items:center;min-height:54px;padding:10px 18px;background:#159d92;border-left:5px solid #e8b85b}
-.entertainment-feature-heading h2{margin:0;color:#fff;font:850 clamp(21px,2vw,27px)/1.2 Manrope,"Hind Siliguri",sans-serif;letter-spacing:.01em}
-.entertainment-feature-down-arrow{height:27px;display:flex;align-items:center;justify-content:center;color:#9bb8b1;font-size:25px;line-height:1}
+.entertainment-feature-heading{display:flex;align-items:flex-start;gap:15px;width:100%;min-height:0;margin:0 0 8px;padding:0;background:transparent;border:0}
+.entertainment-feature-title-block{display:flex;flex:0 0 auto;flex-direction:column;align-items:center}
+.entertainment-feature-heading h2{display:block;width:max-content;margin:0;padding:9px 17px 10px;border-left:4px solid #e8b85b;border-radius:2px;background:#159d92;color:#fff;font:850 clamp(21px,2vw,27px)/1.2 Manrope,"Hind Siliguri",sans-serif;letter-spacing:.01em}
+.entertainment-feature-down-arrow{display:flex;width:100%;height:22px;align-items:center;justify-content:center;margin-top:2px;color:#087c75}
+.entertainment-feature-down-arrow svg{display:block;width:23px;height:16px;overflow:visible}
+.entertainment-feature-down-arrow path{fill:none;stroke:currentColor;stroke-width:3.8;stroke-linecap:round;stroke-linejoin:round}
+.entertainment-feature-heading-rule{flex:1 1 auto;height:2px;min-width:24px;margin-top:23px;background:linear-gradient(90deg,#e8b85b 0%,#f1dfae 38%,#edf3ef 100%);border-radius:2px}
 .entertainment-feature-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.35fr);gap:20px;align-items:start}
 .entertainment-feature-lead{min-width:0}
 .entertainment-feature-main-post{display:flex;min-width:0;flex-direction:column;align-items:stretch}
@@ -3646,7 +3650,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 @media(max-width:800px){
   .entertainment-feature-section{margin-bottom:30px}
-  .entertainment-feature-heading{min-height:48px;padding:9px 13px}
+  .entertainment-feature-heading{gap:10px;margin-bottom:8px;padding:0}.entertainment-feature-heading h2{padding:8px 14px 9px;font-size:21px}.entertainment-feature-down-arrow{height:20px}.entertainment-feature-heading-rule{margin-top:20px}
   .entertainment-feature-layout{grid-template-columns:1fr;gap:18px}
   .entertainment-feature-main-open strong{font-size:19px}
   .entertainment-feature-main-excerpt{font-size:12px}
