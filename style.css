@@ -4001,3 +4001,123 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     min-width:0;
   }
 }
+
+
+/* Desktop hamburger drawer: reuse the approved teal/yellow mobile design,
+   but stack every subcategory vertically for easier desktop browsing.
+   The existing menu buttons and JS interactions are shared unchanged. */
+@media (min-width:801px) {
+  .site-header .header-left {
+    position:relative;
+  }
+
+  .site-header .main-nav {
+    position:absolute;
+    top:100% !important;
+    left:0;
+    right:auto;
+    z-index:100;
+    display:none;
+    flex-direction:column;
+    width:350px !important;
+    max-width:min(350px, calc(100vw - 40px));
+    max-height:calc(100vh - 100px);
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    padding:16px !important;
+    border:1px solid #e2ece7;
+    border-top:3px solid #087c75;
+    border-radius:0 0 8px 8px !important;
+    background:#ffffff !important;
+    box-shadow:0 16px 38px rgba(9,38,43,.18);
+  }
+
+  .site-header .main-nav.open {
+    display:flex;
+  }
+
+  .site-header .main-nav .menu-top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:0 0 12px;
+    margin:0 0 13px;
+    border-bottom:1px solid #e1ece8;
+  }
+
+  .site-header .main-nav .menu-heading {
+    display:block;
+    margin:0;
+    color:#087c75;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.12em;
+  }
+
+  .site-header .main-nav .menu-close {
+    display:grid;
+    place-items:center;
+    flex:0 0 34px;
+    width:34px;
+    height:34px;
+    border:1px solid #e8b85b;
+    border-radius:0 !important;
+    background:#fff1cf;
+    color:#183b3d;
+    font:700 24px/1 Arial,sans-serif;
+    cursor:pointer;
+  }
+
+  .site-header .main-nav .sidebar-categories {
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:7px !important;
+  }
+
+  .site-header .main-nav .sidebar-category-item,
+  .site-header .main-nav .sidebar-category-row {
+    width:100%;
+    min-width:0;
+  }
+
+  .site-header .main-nav .sidebar-category,
+  .site-header .main-nav .sidebar-submenu-toggle {
+    min-height:44px;
+    font-size:15px;
+  }
+
+  .site-header .main-nav .sidebar-submenu {
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:5px;
+    padding:7px;
+    background:#e8b85b;
+  }
+
+  .site-header .main-nav .sidebar-submenu button {
+    min-height:38px;
+    padding:8px 11px;
+    background:#f5cf78 !important;
+    color:#171717 !important;
+    font-size:14px;
+    text-align:left;
+  }
+
+  .site-header .main-nav .sidebar-submenu button:hover,
+  .site-header .main-nav .sidebar-submenu button.active {
+    background:#ffffff !important;
+    color:#111111 !important;
+    border-color:#ffffff !important;
+  }
+
+  .site-header .main-nav > a {
+    display:block;
+    margin-top:13px;
+    padding:12px 4px 2px;
+    border-top:1px solid #e1ece8;
+    color:#087c75;
+    font-size:13px;
+    font-weight:700;
+  }
+}
