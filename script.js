@@ -888,10 +888,8 @@
         if (activePostType === "mostViewed" || activePostType === "popular") return (Number(b.views)||0) - (Number(a.views)||0) || (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0);
         return (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0);
       });
-    const totalPages = Math.max(1, Math.ceil(categoryPosts.length / pageSize));
-    currentPage = Math.min(currentPage, totalPages);
-    const start = (currentPage - 1) * pageSize;
-    const visiblePosts = categoryPosts.slice(start, start + pageSize);
+    // Category landing pages show the nine fixed editorial slots plus every remaining post below.
+    const visiblePosts = categoryPosts;
     const t = languageCopy[activeLanguage];
     const activeSubcategoryButton = activeSubcategory ? Array.from(document.querySelectorAll("[data-sports-subcategory], [data-entertainment-subcategory], [data-world-subcategory], [data-lifestyle-subcategory]")).find(button => ["data-sports-subcategory","data-entertainment-subcategory","data-world-subcategory","data-lifestyle-subcategory"].some(attribute => button.getAttribute(attribute) === activeSubcategory)) : null;
     const activeCategoryLabel = activeSubcategoryButton?.textContent.trim() || t.categories[activeCategory] || "Home";
@@ -935,6 +933,7 @@
     const leadPost = visiblePosts[3] || null;
     const centerBottomPosts = [visiblePosts[4] || null, visiblePosts[5] || null];
     const rightPosts = [visiblePosts[6] || null, visiblePosts[7] || null, visiblePosts[8] || null];
+    const remainingPosts = visiblePosts.slice(9);
     articleList.innerHTML =
       '<div class="category-editorial-grid">' +
         '<div class="category-editorial-side category-editorial-left">' +
@@ -949,10 +948,15 @@
         '<div class="category-editorial-side category-editorial-right">' +
           rightPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
         '</div>' +
-      '</div>';
-    $("#pageStatus").textContent = t.page + " " + currentPage + " " + t.of + " " + totalPages;
-    previousButton.disabled = currentPage <= 1;
-    nextButton.disabled = currentPage >= totalPages;
+      '</div>' +
+      (remainingPosts.length
+        ? '<div class="category-more-grid">' +
+            remainingPosts.map(post => renderCategoryCard(post,"category-more-card")).join("") +
+          '</div>'
+        : '');
+    // All filtered category posts are shown together, so pagination is not needed here.
+    const pagination = document.querySelector(".pagination");
+    if (pagination) pagination.style.display = "none";
   }
 
   Array.from(document.querySelectorAll(".home-rail-tab")).forEach(button => button.addEventListener("click", () => {
