@@ -815,7 +815,7 @@
   /* Open article content inside the existing site layout instead of navigating to a detached page. */
   function openArticleInCurrentLayout(post, source = "") {
     if (!post) return;
-    activeCategory = post.category || "home";
+    activeCategory = post.category || activeCategory || "";
     activeSubcategory = post.subcategory || "";
     activePostType = "latest";
     showHomeFeed = false;
