@@ -792,6 +792,21 @@
     if (descriptionTag && description) descriptionTag.setAttribute("content",description);
     window.scrollTo(0,0);
   }
+  /* Open article content inside the existing site layout instead of navigating to a detached page. */
+  function openArticleInCurrentLayout(post, source = "") {
+    if (!post) return;
+    activeCategory = post.category || "home";
+    activeSubcategory = post.subcategory || "";
+    activePostType = "latest";
+    showHomeFeed = false;
+    showFeaturedFeed = false;
+    searchTerm = "";
+    currentPage = 1;
+    render();
+    history.pushState({globalScopeArticle:true}, "", articleRoute(post, source));
+    openArticleDetail(post);
+  }
+
   function render() {
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
     if (trendingSection) trendingSection.hidden = !isHomeLanding;
@@ -902,7 +917,7 @@
     if (articleTrigger && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
       const post = posts[Number(articleTrigger.dataset.openPost)];
-      if (post) window.location.assign(articleRoute(post, articleTrigger.dataset.openSource));
+      if (post) openArticleInCurrentLayout(post, articleTrigger.dataset.openSource);
     }
   });
   document.addEventListener("click", event => {
@@ -932,7 +947,7 @@
     const openButton = event.target.closest("[data-open-post]");
     if (openButton) {
       const post = posts[Number(openButton.dataset.openPost)];
-      if (post) window.location.assign(articleRoute(post, openButton.dataset.openSource));
+      if (post) openArticleInCurrentLayout(post, openButton.dataset.openSource);
     }
     const shareButton = event.target.closest("[data-share]");
     if (shareButton) {
