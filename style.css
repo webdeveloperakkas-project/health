@@ -4602,3 +4602,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .latest-posts-heading{margin-bottom:0;gap:12px}
   .latest-posts-heading h2{font-size:16px}
 }
+
+/* Mobile Latest/Popular list: align post edges with the homepage category posts. */
+@media (max-width:800px) {
+  .home-list-panel {
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+}
