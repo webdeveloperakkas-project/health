@@ -423,7 +423,7 @@
       '</div>';
   }
   function renderHomeList(panel = homeListPanel, tabs = Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab)")), excludePost = null) {
-    const desktopLimit = window.matchMedia("(min-width: 801px)").matches ? 3 : 10;
+    const desktopLimit = window.matchMedia("(min-width: 801px)").matches ? 4 : 10;
     const latestItems = sortedByDate(posts.filter(post =>
       post !== excludePost && (post.postTypes || [post.postType || "latest"]).includes("latest")
     )).slice(0,desktopLimit);
