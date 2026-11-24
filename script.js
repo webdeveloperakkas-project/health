@@ -1147,7 +1147,9 @@
       document.body.classList.remove("menu-open");
       if (toggle) { toggle.setAttribute("aria-expanded","false"); toggle.setAttribute("aria-label","Open categories"); }
       render();
-      // Keep the reader at the exact same scroll position when switching categories.
+      // Bring the newly selected category feed into view after closing any open article.
+      const categoryFeed = $("#articleFeed");
+      if (categoryFeed) categoryFeed.scrollIntoView({behavior:"smooth",block:"start"});
     });
   });
 
