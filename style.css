@@ -4061,19 +4061,19 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     pointer-events:none;
   }
 
-  /* ডেস্কটপ Home আইকন ট্যাব: বাটনের উচ্চতা ৪৪px, প্রস্থ ৪৬px এবং আইকন ২৪px। */
+  /* ডেস্কটপ Home আইকন ট্যাব: উচ্চতা ৪৪px অপরিবর্তিত; প্রস্থ ৪৮px ও আইকন ২৬px। */
   .category-tabs > .home-category-tab {
-    flex:0 0 46px;
-    width:46px;
-    min-width:46px;
+    flex:0 0 48px;
+    width:48px;
+    min-width:48px;
     min-height:44px;
     height:44px;
   }
 
   .category-tabs > .home-category-tab .home-tab-icon {
-    width:24px;
-    height:24px;
-    flex:0 0 24px;
+    width:26px;
+    height:26px;
+    flex:0 0 26px;
   }
 
   .category-tabs .sports-submenu[hidden],
