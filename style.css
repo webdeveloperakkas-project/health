@@ -3884,3 +3884,73 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     font-size:18px !important;
   }
 }
+
+/* Global Scope 24 article reading typography.
+   Keep article paragraphs calm and readable, while making in-article
+   headings and emphasized phrases stand out like the supplied sample. */
+.single-article-body {
+  font-family: inherit;
+  font-size:18px;
+  line-height:1.9;
+  color:#344c51;
+  letter-spacing:0;
+}
+.single-article-body p {
+  margin:0 0 22px;
+  font-size:inherit;
+  line-height:inherit;
+}
+.single-article-body h2 {
+  margin:32px 0 16px;
+  color:var(--navy);
+  font-size:27px;
+  line-height:1.4;
+  font-weight:800;
+}
+.single-article-body h3 {
+  margin:27px 0 13px;
+  color:var(--navy);
+  font-size:23px;
+  line-height:1.45;
+  font-weight:800;
+}
+.single-article-body h4 {
+  margin:23px 0 11px;
+  color:var(--navy);
+  font-size:20px;
+  line-height:1.5;
+  font-weight:800;
+}
+.single-article-body strong,
+.single-article-body b {
+  color:#263f45;
+  font-weight:800;
+}
+.single-article-body ul,
+.single-article-body ol {
+  margin:0 0 24px;
+  padding-left:28px;
+  line-height:1.85;
+}
+.single-article-body li { margin:0 0 9px; }
+.single-article-body a {
+  color:var(--teal-dark);
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+@media(max-width:700px) {
+  .single-article-body {
+    font-size:16px;
+    line-height:1.85;
+  }
+  .single-article-body p { margin-bottom:18px; }
+  .single-article-body h2 {
+    margin:27px 0 13px;
+    font-size:23px;
+  }
+  .single-article-body h3 {
+    margin:23px 0 11px;
+    font-size:20px;
+  }
+  .single-article-body h4 { font-size:18px; }
+}
