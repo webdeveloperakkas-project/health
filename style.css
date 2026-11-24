@@ -4153,3 +4153,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     min-height:58px !important;
   }
 }
+
+/* ডেস্কটপ স্ক্রলিং শিরোনামের ফন্ট ২৪px নির্দিষ্ট করা হলো। */
+@media (min-width:801px) {
+  .ticker-track span {
+    font-size:24px !important;
+    line-height:1.35 !important;
+  }
+}
