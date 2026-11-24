@@ -3954,3 +3954,33 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   }
   .single-article-body h4 { font-size:18px; }
 }
+
+
+/* Desktop category navigation spans the same full content width as the
+   homepage's three-column section; keep categories in one orderly row.
+   Existing tablet/mobile navigation rules remain unchanged. */
+@media (min-width:1101px) {
+  .category-section,
+  .category-tabs {
+    width:100%;
+    max-width:none;
+  }
+
+  .category-tabs {
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:stretch;
+    justify-content:space-between;
+    gap:clamp(4px, .55vw, 10px);
+  }
+
+  .category-tabs > .category-tab,
+  .category-tabs > .world-category-menu,
+  .category-tabs > .sports-category-menu,
+  .category-tabs > .lifestyle-category-menu,
+  .category-tabs > .entertainment-category-menu,
+  .category-tabs > .category-more-tab {
+    flex:0 1 auto;
+    min-width:0;
+  }
+}
