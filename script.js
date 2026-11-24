@@ -289,9 +289,11 @@
     }));
     latestPostsSection.hidden = latestItems.length === 0;
 
-    const visualItems = latestItems.slice(0,4);
-    const updateItems = latestItems.slice(4,8);
-    const headlineItems = latestItems.slice(8,14);
+    // Six photo cards on the left, four image-and-summary updates in the middle,
+    // and six text-only headlines on the right.
+    const visualItems = latestItems.slice(0,6);
+    const updateItems = latestItems.slice(6,10);
+    const headlineItems = latestItems.slice(10,16);
 
     visualHost.innerHTML = visualItems.map(post => {
       const image = imageForPost(post);
