@@ -913,42 +913,43 @@
       renderMyChoice();
       return;
     }
-    if (!visiblePosts.length) {
-      articleList.innerHTML = '<div class="empty-state">' + escapeHTML(t.empty) + '</div>';
-    } else {
-      /* Category and subcategory pages share one editorial template.
-         This does not alter the homepage layout. */
-      const renderCategoryCard = (post, className) => {
-        if (!post) return "";
-        const postIndex = posts.indexOf(post);
-        const image = imageForPost(post);
-        return '<button class="category-editorial-card ' + className + '" type="button" data-open-post="' + postIndex + '">' +
-          (image
-            ? '<span class="category-editorial-image"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>'
-            : '<span class="category-editorial-image category-editorial-image-empty"></span>') +
-          '<strong>' + escapeHTML(post.title) + '</strong>' +
-        '</button>';
-      };
-      const leftPosts = visiblePosts.slice(0,3);
-      const leadPost = visiblePosts[3];
-      const centerBottomPosts = visiblePosts.slice(4,6);
-      const rightPosts = visiblePosts.slice(6,8);
-      articleList.innerHTML =
-        '<div class="category-editorial-grid">' +
-          '<div class="category-editorial-side category-editorial-left">' +
-            leftPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
-          '</div>' +
-          '<div class="category-editorial-center">' +
-            (leadPost ? renderCategoryCard(leadPost,"category-editorial-lead-card") : '') +
-            '<div class="category-editorial-bottom">' +
-              centerBottomPosts.map(post => renderCategoryCard(post,"category-editorial-bottom-card")).join("") +
-            '</div>' +
-          '</div>' +
-          '<div class="category-editorial-side category-editorial-right">' +
-            rightPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
-          '</div>' +
+    /* Category and subcategory pages always render all eight editorial slots.
+       Missing posts become non-clickable placeholders so the layout never collapses. */
+    const renderCategoryCard = (post, className) => {
+      if (!post) {
+        return '<div class="category-editorial-card category-editorial-placeholder ' + className + '" aria-hidden="true">' +
+          '<span class="category-editorial-image category-editorial-image-empty"></span>' +
+          '<strong>&nbsp;</strong>' +
         '</div>';
-    }
+      }
+      const postIndex = posts.indexOf(post);
+      const image = imageForPost(post);
+      return '<button class="category-editorial-card ' + className + '" type="button" data-open-post="' + postIndex + '">' +
+        (image
+          ? '<span class="category-editorial-image"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>'
+          : '<span class="category-editorial-image category-editorial-image-empty"></span>') +
+        '<strong>' + escapeHTML(post.title) + '</strong>' +
+      '</button>';
+    };
+    const leftPosts = Array.from({length:3}, (_, index) => visiblePosts[index] || null);
+    const leadPost = visiblePosts[3] || null;
+    const centerBottomPosts = [visiblePosts[4] || null, visiblePosts[5] || null];
+    const rightPosts = [visiblePosts[6] || null, visiblePosts[7] || null, visiblePosts[8] || null];
+    articleList.innerHTML =
+      '<div class="category-editorial-grid">' +
+        '<div class="category-editorial-side category-editorial-left">' +
+          leftPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
+        '</div>' +
+        '<div class="category-editorial-center">' +
+          renderCategoryCard(leadPost,"category-editorial-lead-card") +
+          '<div class="category-editorial-bottom">' +
+            centerBottomPosts.map(post => renderCategoryCard(post,"category-editorial-bottom-card")).join("") +
+          '</div>' +
+        '</div>' +
+        '<div class="category-editorial-side category-editorial-right">' +
+          rightPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
+        '</div>' +
+      '</div>';
     $("#pageStatus").textContent = t.page + " " + currentPage + " " + t.of + " " + totalPages;
     previousButton.disabled = currentPage <= 1;
     nextButton.disabled = currentPage >= totalPages;
