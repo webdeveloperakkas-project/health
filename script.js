@@ -462,7 +462,6 @@
     const world = sortedByDate(posts.filter(post => post.category === "world")).slice(0,4);
     const sports = sortedByDate(posts.filter(post => post.category === "sports")).slice(0,8);
     const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips")).slice(0,2);
-    const health = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "health")).slice(0,4);
 
     const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
     if (worldSection && worldHost) {
@@ -499,11 +498,6 @@
     if (tipsSection && tipsHost) {
       tipsSection.hidden = !tips.length;
       tipsHost.innerHTML = tips.map(post => renderCard(post, "home-tips-card", true)).join("");
-    }
-    const healthSection = $("#homeHealthSection"), healthHost = $("#homeHealthPosts");
-    if (healthSection && healthHost) {
-      healthSection.hidden = !health.length;
-      healthHost.innerHTML = health.length ? '<div class="home-health-lead">' + renderCard(health[0], "home-health-main") + '</div><div class="home-health-side">' + health.slice(1).map(post => renderCard(post, "home-health-small")).join("") + '</div>' : "";
     }
   }
 
