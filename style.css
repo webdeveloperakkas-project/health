@@ -4206,3 +4206,144 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     line-height:1.35 !important;
   }
 }
+
+/* =========================================================
+   LATEST POSTS — THREE-COLUMN EDITORIAL STRIP
+   Four visual cards, four image-and-summary updates, headlines only.
+   ========================================================= */
+.latest-posts-section{
+  display:grid;
+  grid-template-columns:minmax(0,.95fr) minmax(0,1.35fr) minmax(0,.9fr);
+  gap:22px;
+  margin:0 0 42px;
+  padding:0 0 30px;
+  border-bottom:1px solid #e7eeeb;
+}
+.latest-posts-column{min-width:0}
+.latest-posts-column-heading{
+  margin:0 0 14px;
+  padding:0 0 9px;
+  border-bottom:2px solid #e7efec;
+  color:var(--navy);
+  font:800 16px/1.3 Manrope,"Hind Siliguri",sans-serif;
+}
+.latest-posts-visual-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px 12px;
+}
+.latest-post-visual-card{
+  display:flex;
+  min-width:0;
+  flex-direction:column;
+  gap:8px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+.latest-post-visual-image{
+  display:block;
+  width:100%;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  background:#eaf2ef;
+}
+.latest-post-visual-image img,.latest-post-update-image img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .3s ease;
+}
+.latest-post-visual-card:hover img,.latest-post-update-row:hover img{transform:scale(1.035)}
+.latest-post-image-empty{background:linear-gradient(135deg,#e8f1ed,#f8f2e6)}
+.latest-post-visual-card strong{
+  display:-webkit-box;
+  overflow:hidden;
+  color:var(--navy);
+  font:750 13px/1.45 Manrope,"Hind Siliguri",sans-serif;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+}
+.latest-post-visual-card:hover strong,.latest-post-update-row:hover strong,.latest-post-headline:hover span:first-child{color:var(--teal-dark)}
+.latest-posts-update-list{display:flex;flex-direction:column;gap:0}
+.latest-post-update-row{
+  display:grid;
+  grid-template-columns:112px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  width:100%;
+  padding:0 0 13px;
+  margin:0 0 13px;
+  border:0;
+  border-bottom:1px solid #edf1f0;
+  background:transparent;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+.latest-post-update-image{
+  display:block;
+  width:112px;
+  height:78px;
+  overflow:hidden;
+  background:#eaf2ef;
+}
+.latest-post-update-copy{display:flex;min-width:0;flex-direction:column;gap:5px}
+.latest-post-update-copy strong{
+  color:var(--navy);
+  font:750 13px/1.4 Manrope,"Hind Siliguri",sans-serif;
+}
+.latest-post-update-copy small{
+  display:-webkit-box;
+  overflow:hidden;
+  color:#718187;
+  font-size:11px;
+  line-height:1.55;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+}
+.latest-posts-headline-list{display:flex;flex-direction:column}
+.latest-post-headline{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:9px;
+  width:100%;
+  padding:11px 0;
+  border:0;
+  border-bottom:1px solid #edf1f0;
+  background:transparent;
+  color:var(--navy);
+  text-align:left;
+  font:700 13px/1.5 Manrope,"Hind Siliguri",sans-serif;
+  cursor:pointer;
+}
+.latest-post-headline-arrow{flex:0 0 auto;color:#b99a55;font-size:18px;line-height:1}
+@media(max-width:1100px) and (min-width:801px){
+  .latest-posts-section{grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr) minmax(0,.85fr);gap:14px}
+  .latest-posts-update-row{grid-template-columns:92px minmax(0,1fr);gap:9px}
+  .latest-post-update-image{width:92px;height:68px}
+  .latest-post-update-copy strong,.latest-post-headline{font-size:12px}
+  .latest-post-update-copy small{font-size:10px}
+  .latest-posts-column-heading{font-size:15px}
+}
+@media(max-width:800px){
+  .latest-posts-section{
+    grid-template-columns:minmax(0,1fr);
+    gap:22px;
+    margin-bottom:30px;
+    padding-bottom:22px;
+  }
+  .latest-posts-column-heading{margin-bottom:11px;font-size:15px}
+  .latest-posts-visual-grid{gap:13px 11px}
+  .latest-post-visual-card strong{font-size:12px}
+  .latest-post-update-row{grid-template-columns:130px minmax(0,1fr);gap:12px;padding-bottom:10px;margin-bottom:10px}
+  .latest-post-update-image{width:130px;height:80px}
+  .latest-post-update-copy strong{font-size:13px}
+  .latest-post-update-copy small{font-size:11px;-webkit-line-clamp:3}
+  .latest-post-headline{padding:10px 0;font-size:13px}
+}
