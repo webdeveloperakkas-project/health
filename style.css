@@ -4644,3 +4644,21 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     margin-left:3px !important;
   }
 }
+
+
+/* Mobile Latest/Popular: fine-tune text insets without moving the images or excerpts. */
+@media (max-width:800px) {
+  .home-list-heading .home-list-category {
+    margin-left:5px !important;
+  }
+  .home-list-heading strong {
+    box-sizing:border-box;
+    margin-left:5px !important;
+    margin-right:3px !important;
+  }
+  .home-list-meta {
+    box-sizing:border-box;
+    width:calc(100% - 5px) !important;
+    margin-left:5px !important;
+  }
+}
