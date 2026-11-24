@@ -4635,3 +4635,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     padding-right:0 !important;
   }
 }
+
+
+/* Mobile Latest/Popular: add a 3px left gap to post titles only. */
+@media (max-width:800px) {
+  .home-list-panel .home-list-copy strong {
+    margin-left:3px !important;
+  }
+}
