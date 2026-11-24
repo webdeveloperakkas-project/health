@@ -9,11 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=139">
+<link rel="stylesheet" href="style.css?v=140">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=83" defer></script>
+<script src="script.js?v=84" defer></script>
 </head>
 
 
@@ -71,25 +71,7 @@
 </header>
 
 <main>
-<section class="latest-ticker" aria-label="Latest updates">
-<div class="ticker-label">
-LATEST</div>
-<div class="ticker-window">
-<div class="ticker-track">
-<span>আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।</span>
-<i>✦</i>
-<span>চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি।</span>
-<i>✦</i>
-<span>ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে।</span>
-<i>✦</i>
-<span>আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।</span>
-<i>✦</i>
-<span>চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি।</span>
-<i>✦</i>
-<span>ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে।</span>
-</div>
-</div>
-</section>
+
 <div class="page-layout container">
 <div class="main-column">
 <section class="category-section" id="categories" aria-label="Choose a category">
@@ -122,19 +104,15 @@ LATEST</div>
 </section>
 
 
-<section class="entertainment-slider-section" id="entertainmentSliderSection" aria-labelledby="entertainmentSliderTitle" hidden>
-  <div class="entertainment-slider-heading">
-    <div><span class="eyebrow">CULTURE &amp; ENTERTAINMENT</span><h2 id="entertainmentSliderTitle">Entertainment</h2></div>
-    <a href="#categories" class="entertainment-view-all">View All <span>→</span></a>
+<section class="entertainment-feature-section" id="entertainmentFeatureSection" aria-labelledby="entertainmentFeatureTitle" hidden>
+  <div class="entertainment-feature-heading">
+    <h2 id="entertainmentFeatureTitle">Entertainment</h2>
   </div>
-  <div class="entertainment-slider-shell">
-    <button class="entertainment-slider-arrow" type="button" data-entertainment-move="previous" aria-label="Previous entertainment stories">‹</button>
-    <div class="entertainment-slider-viewport">
-      <div class="entertainment-slider-track" id="entertainmentSliderTrack"></div>
-    </div>
-    <button class="entertainment-slider-arrow" type="button" data-entertainment-move="next" aria-label="Next entertainment stories">›</button>
+  <div class="entertainment-feature-down-arrow" aria-hidden="true">⌄</div>
+  <div class="entertainment-feature-layout">
+    <div class="entertainment-feature-lead" id="entertainmentFeatureLead"></div>
+    <div class="entertainment-feature-grid" id="entertainmentFeatureGrid" aria-label="More entertainment stories"></div>
   </div>
-  <div class="entertainment-slider-dots" id="entertainmentSliderDots" aria-label="Choose an entertainment story"></div>
 </section>
 
 <section class="article-section" id="articleFeed" aria-live="polite">
