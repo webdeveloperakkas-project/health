@@ -755,13 +755,8 @@
     const categoryLabel = categoryNames[post.category] || post.category || "Global Scope 24";
     const subcategoryLabel = post.subcategory ? post.subcategory.replace(/-/g," ") : "";
     const paragraphs = sourceHtml;
-    const articleSource = new URLSearchParams(window.location.search).get("source");
-    const breadcrumb = articleSource === "most-read"
-      ? '<nav class="article-breadcrumb" aria-label="Breadcrumb"><a href="' + siteBasePath() + '">Home</a><span>›</span><span>Most Read</span></nav>'
-      : "";
     singleArticleView.innerHTML =
       '<article class="single-article container">' +
-        breadcrumb +
         '<div class="single-article-heading">' +
           '<div class="single-article-category">' + escapeHTML(categoryLabel) + (subcategoryLabel ? ' <span>›</span> ' + escapeHTML(subcategoryLabel) : '') + '</div>' +
           '<h1>' + escapeHTML(post.title) + '</h1>' +
