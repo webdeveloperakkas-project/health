@@ -4611,3 +4611,28 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     padding-right:0 !important;
   }
 }
+
+/* Mobile Latest/Popular: remove the rail's outer inset so post images
+   start at the same inner edge as the main Hero image. Keep tabs and button inset. */
+@media (max-width:800px) {
+  .home-rail-card {
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  .home-rail-heading,
+  .home-view-all {
+    margin-left:13px !important;
+    margin-right:13px !important;
+  }
+  .home-list-panel {
+    width:100% !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  .home-list-panel .home-list-item,
+  .home-list-panel .home-list-item.is-active,
+  .home-list-panel .home-mobile-list-group .home-list-item {
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+}
