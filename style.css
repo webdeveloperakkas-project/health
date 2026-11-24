@@ -3835,3 +3835,24 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     object-position:center !important;
   }
 }
+
+
+/* Desktop Main Hero card: match the outer card width to the approved
+   600px lead-image frame and align the headline with the image edges.
+   Keep the card height content-driven and leave mobile/support cards alone. */
+@media (min-width:801px) {
+  .home-center > .home-featured {
+    align-self:center;
+    width:min(600px, 100%);
+    max-width:600px;
+  }
+  .home-center > .home-featured .home-feature-image {
+    width:100% !important;
+    max-width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+  .home-center > .home-featured .home-feature-content {
+    padding:22px 0 20px;
+  }
+}
