@@ -4037,7 +4037,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     max-width:260px;
     max-height:none;
     overflow:visible;
-    padding:8px 8px 8px;
+    padding:8px 8px 0;
     border:1px solid #087c75;
     border-top:3px solid #087c75;
     border-radius:0 0 7px 7px;
@@ -4045,6 +4045,19 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     box-shadow:0 12px 28px rgba(9,38,43,.18);
     opacity:1;
     transform:none;
+  }
+
+  .category-tabs .sports-submenu::after,
+  .category-tabs .entertainment-submenu::after,
+  .category-tabs .world-submenu::after,
+  .category-tabs .lifestyle-submenu::after {
+    content:"";
+    display:block;
+    flex:0 0 5px;
+    height:5px;
+    margin-top:-5px;
+    background:#087c75;
+    pointer-events:none;
   }
 
   .category-tabs .sports-submenu[hidden],
