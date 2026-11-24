@@ -3862,10 +3862,10 @@ html[lang="en"] .main-nav .sidebar-submenu button {
    Mobile typography remains unchanged. */
 @media (min-width:801px) {
   .home-left .home-list-panel.is-home-compact .home-list-heading strong {
-    font-size:16px !important;
+    font-size:18px !important;
   }
 
   .home-left .home-list-panel.is-home-compact .home-list-excerpt {
-    font-size:14px !important;
+    font-size:16px !important;
   }
 }
