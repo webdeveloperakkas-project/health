@@ -245,78 +245,54 @@
   const homeListPanel = $("#homeListPanel");
   const homeFeatured = $("#homeFeatured");
   const singleArticleView = $("#singleArticleView");
-  const tickerSection = $(".latest-ticker");
   const categorySection = $("#categories");
   const topAdSlot = $(".top-ad");
   const featuredStoriesSection = $("#featuredStoriesSection");
   const trendingSection = $("#trendingSection");
   const manualTrendingSection = $("#manualTrendingSection");
   const aboutSection = $("#about");
-  let entertainmentSliderIndex = 0;
-  let entertainmentSliderTimer = null;
-  let entertainmentSliderItems = [];
-  let entertainmentSliderResizeBound = false;
+  function renderEntertainmentFeature() {
+    const section = $("#entertainmentFeatureSection");
+    const leadHost = $("#entertainmentFeatureLead");
+    const gridHost = $("#entertainmentFeatureGrid");
+    if (!section || !leadHost || !gridHost) return;
 
-  function entertainmentVisibleCount() {
-    return window.matchMedia("(max-width: 800px)").matches ? 1 : 4;
-  }
-
-  function updateEntertainmentSliderPosition() {
-    const track = $("#entertainmentSliderTrack");
-    const dots = $("#entertainmentSliderDots");
-    if (!track) return;
-    const slides = Array.from(track.children);
-    if (!slides.length) return;
-    const maxIndex = Math.max(0, slides.length - entertainmentVisibleCount());
-    entertainmentSliderIndex = Math.min(entertainmentSliderIndex, maxIndex);
-    track.style.transform = "translateX(-" + slides[entertainmentSliderIndex].offsetLeft + "px)";
-    if (dots) dots.querySelectorAll("button").forEach((dot, index) => {
-      dot.classList.toggle("active", index === entertainmentSliderIndex);
-      dot.setAttribute("aria-current", index === entertainmentSliderIndex ? "true" : "false");
-    });
-  }
-
-  function renderEntertainmentSlider() {
-    const section = $("#entertainmentSliderSection");
-    const track = $("#entertainmentSliderTrack");
-    const dots = $("#entertainmentSliderDots");
-    if (!section || !track || !dots) return;
-    if (!entertainmentSliderResizeBound) {
-      window.addEventListener("resize", renderEntertainmentSlider, {passive:true});
-      entertainmentSliderResizeBound = true;
-    }
-    entertainmentSliderItems = sortedByDate(posts.filter(post =>
-      post.category === "entertainment" && imageForPost(post)
-    ));
-    section.hidden = entertainmentSliderItems.length === 0;
-    if (!entertainmentSliderItems.length) {
-      track.innerHTML = "";
-      dots.innerHTML = "";
-      if (entertainmentSliderTimer) window.clearInterval(entertainmentSliderTimer);
-      entertainmentSliderTimer = null;
+    // Use the same published Supabase post collection as the other homepage sections.
+    const items = sortedByDate(posts.filter(post => post.category === "entertainment"));
+    section.hidden = items.length === 0;
+    if (!items.length) {
+      leadHost.innerHTML = "";
+      gridHost.innerHTML = "";
       return;
     }
-    const visibleCount = entertainmentVisibleCount();
-    const maxIndex = Math.max(0, entertainmentSliderItems.length - visibleCount);
-    entertainmentSliderIndex = Math.min(entertainmentSliderIndex, maxIndex);
-    track.innerHTML = entertainmentSliderItems.map(post => {
+
+    const lead = items[0];
+    const leadIndex = posts.indexOf(lead);
+    const leadImage = imageForPost(lead);
+    const leadExcerpt = String(lead.excerpt || "").trim();
+
+    leadHost.innerHTML =
+      '<article class="entertainment-feature-main-post">' +
+        '<button class="entertainment-feature-main-open" type="button" data-open-post="' + leadIndex + '">' +
+          (leadImage
+            ? '<span class="entertainment-feature-main-image"><img src="' + escapeHTML(leadImage) + '" alt="' + escapeHTML(lead.title) + '" loading="lazy"></span>'
+            : '<span class="entertainment-feature-main-image"></span>') +
+          '<strong>' + escapeHTML(lead.title) + '</strong>' +
+        '</button>' +
+        (leadExcerpt ? '<p class="entertainment-feature-main-excerpt">' + escapeHTML(leadExcerpt.slice(0,260)) + '</p>' : '') +
+        '<button class="entertainment-feature-more" type="button" data-home-category-view="entertainment">More Details <span aria-hidden="true">→</span></button>' +
+      '</article>';
+
+    gridHost.innerHTML = items.slice(1,7).map(post => {
       const index = posts.indexOf(post);
-      return '<button class="entertainment-slide" type="button" data-open-post="' + index + '">' +
-        '<span class="entertainment-slide-image"><img src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>' +
-        '<strong>' + escapeHTML(post.title) + '</strong></button>';
+      const image = imageForPost(post);
+      return '<button class="entertainment-feature-card" type="button" data-open-post="' + index + '">' +
+        (image
+          ? '<span class="entertainment-feature-card-image"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>'
+          : '<span class="entertainment-feature-card-image"></span>') +
+        '<strong>' + escapeHTML(post.title) + '</strong>' +
+      '</button>';
     }).join("");
-    dots.innerHTML = Array.from({length:maxIndex + 1}, (_, index) =>
-      '<button type="button" data-entertainment-slide="' + index + '" aria-label="Go to entertainment slide ' + (index + 1) + '" aria-current="' + (index === entertainmentSliderIndex ? "true" : "false") + '"></button>'
-    ).join("");
-    section.querySelectorAll(".entertainment-slider-arrow").forEach(button => {
-      button.hidden = maxIndex === 0;
-    });
-    updateEntertainmentSliderPosition();
-    if (entertainmentSliderTimer) window.clearInterval(entertainmentSliderTimer);
-    entertainmentSliderTimer = maxIndex > 0 ? window.setInterval(() => {
-      entertainmentSliderIndex = entertainmentSliderIndex >= maxIndex ? 0 : entertainmentSliderIndex + 1;
-      updateEntertainmentSliderPosition();
-    }, 3000) : null;
   }
 
   function renderHomeCategorySections() {
@@ -628,7 +604,7 @@
     if (articleSection) articleSection.hidden = true;
     // Keep the shared site frame and the surrounding homepage sections visible
     // while the selected article replaces only the central content area.
-    const entertainmentSection = $("#entertainmentSliderSection");
+    const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
     if (entertainmentSection) entertainmentSection.hidden = true;
     if (homeCategorySections) homeCategorySections.hidden = true;
@@ -636,7 +612,6 @@
     if (trendingSection) trendingSection.hidden = false;
     if (manualTrendingSection) manualTrendingSection.hidden = false;
     if (aboutSection) aboutSection.hidden = false;
-    if (tickerSection) tickerSection.hidden = false;
     if (categorySection) categorySection.hidden = false;
     if (topAdSlot) topAdSlot.hidden = false;
     document.title = post.title + " | Global Scope 24";
@@ -652,13 +627,9 @@
     if (manualTrendingSection) manualTrendingSection.hidden = !isHomeLanding;
     homeSection.hidden = !isHomeLanding;
     articleSection.hidden = isHomeLanding;
-    const entertainmentSection = $("#entertainmentSliderSection");
+    const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
-    if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding || !posts.some(post => post.category === "entertainment" && imageForPost(post));
-    if (!isHomeLanding && entertainmentSliderTimer) {
-      window.clearInterval(entertainmentSliderTimer);
-      entertainmentSliderTimer = null;
-    }
+    if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding;
     if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
       ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
@@ -691,7 +662,7 @@
     if (isHomeLanding) {
       renderHomeFeatured();
       renderHomeList();
-      renderEntertainmentSlider();
+      renderEntertainmentFeature();
       renderHomeCategorySections();
       renderFeaturedStories();
       renderTrendingStories();
@@ -756,17 +727,6 @@
     }
   });
   document.addEventListener("click", event => {
-    const entertainmentMove = event.target.closest("[data-entertainment-move]");
-    const entertainmentDot = event.target.closest("[data-entertainment-slide]");
-    if (entertainmentMove || entertainmentDot) {
-      const visibleCount = entertainmentVisibleCount();
-      const maxIndex = Math.max(0, entertainmentSliderItems.length - visibleCount);
-      if (entertainmentDot) entertainmentSliderIndex = Number(entertainmentDot.dataset.entertainmentSlide) || 0;
-      else entertainmentSliderIndex = entertainmentMove.dataset.entertainmentMove === "next"
-        ? (entertainmentSliderIndex >= maxIndex ? 0 : entertainmentSliderIndex + 1)
-        : (entertainmentSliderIndex <= 0 ? maxIndex : entertainmentSliderIndex - 1);
-      updateEntertainmentSliderPosition();
-    }
     const categoryViewAll = event.target.closest("[data-home-category-view]");
     if (categoryViewAll) {
       const category = categoryViewAll.dataset.homeCategoryView;
@@ -1214,7 +1174,7 @@
           if (pageLayout) pageLayout.classList.add("article-page-active");
           if (homeSection) homeSection.hidden = true;
           if (articleSection) articleSection.hidden = true;
-          const entertainmentSection = $("#entertainmentSliderSection");
+          const entertainmentSection = $("#entertainmentFeatureSection");
           const homeCategorySections = $("#homeCategorySections");
           if (entertainmentSection) entertainmentSection.hidden = true;
           if (homeCategorySections) homeCategorySections.hidden = true;
@@ -1222,7 +1182,6 @@
           if (manualTrendingSection) manualTrendingSection.hidden = false;
           if (trendingSection) trendingSection.hidden = false;
           if (aboutSection) aboutSection.hidden = false;
-          if (tickerSection) tickerSection.hidden = false;
           if (categorySection) categorySection.hidden = false;
           if (topAdSlot) topAdSlot.hidden = false;
         }
