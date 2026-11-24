@@ -357,7 +357,7 @@
   }
 
   /* Keep Most Read in its original full-width position.
-     On desktop only, place the manually curated Trending section below AdSense. */
+     On desktop only, place manually curated Trending above the right-rail AdSense slot. */
   const manualTrendingOriginalAnchor = document.createComment("Manual Trending section original position");
   if (manualTrendingSection && manualTrendingSection.parentNode) {
     manualTrendingSection.parentNode.insertBefore(manualTrendingOriginalAnchor, manualTrendingSection);
@@ -368,7 +368,7 @@
     if (trendingDesktopQuery.matches) {
       const rightRail = document.querySelector(".home-right");
       const adSlot = rightRail && rightRail.querySelector(".home-ad-slot");
-      if (rightRail && adSlot) rightRail.insertBefore(manualTrendingSection, adSlot.nextSibling);
+      if (rightRail && adSlot) rightRail.insertBefore(manualTrendingSection, adSlot);
     } else {
       manualTrendingOriginalAnchor.parentNode.insertBefore(manualTrendingSection, manualTrendingOriginalAnchor.nextSibling);
     }
@@ -423,9 +423,10 @@
       '</div>';
   }
   function renderHomeList(panel = homeListPanel, tabs = Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab)")), excludePost = null) {
+    const desktopLimit = window.matchMedia("(min-width: 801px)").matches ? 3 : 10;
     const latestItems = sortedByDate(posts.filter(post =>
       post !== excludePost && (post.postTypes || [post.postType || "latest"]).includes("latest")
-    )).slice(0,10);
+    )).slice(0,desktopLimit);
     const popularItems = [...posts].filter(post => {
       const placements = post.postTypes || [post.postType || "latest"];
       // The homepage's Popular rail only includes stories also selected for Latest.
@@ -435,7 +436,7 @@
       (Number(b.views)||0) - (Number(a.views)||0) ||
       (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) -
       (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)
-    ).slice(0,10);
+    ).slice(0,desktopLimit);
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!panel) return;
     // Apply the compact image-and-title layout to both homepage Latest and Popular tabs.
@@ -477,6 +478,7 @@
     ));
     if (!stories.length) {
       homeFeatured.innerHTML = '<div class="home-feature-empty">Your latest published story will appear here.</div>';
+      renderHomeSupportCards(null);
       return;
     }
     homeFeaturedIndex = ((homeFeaturedIndex % stories.length) + stories.length) % stories.length;
@@ -500,7 +502,18 @@
       '<button type="button" class="home-feature-arrow" data-home-feature="previous">' + labels.previous + '</button>' +
       '<div class="home-feature-pagination" aria-label="Choose a story">' + stories.map((story,i) => '<button type="button" class="home-feature-dot' + (i === homeFeaturedIndex ? ' active' : '') + '" data-home-feature-index="' + i + '" aria-label="Go to story ' + (i+1) + '" aria-current="' + (i === homeFeaturedIndex ? 'true' : 'false') + '"></button>').join("") + '</div>' +
       '<button type="button" class="home-feature-arrow" data-home-feature="next">' + labels.next + '</button></div>';
+    renderHomeSupportCards(post);
   }
+  function renderHomeSupportCards(featuredPost) {
+    const host = $("#homeSupportCards");
+    if (!host) return;
+    const stories = sortedByDate(posts.filter(post => post !== featuredPost && (post.postTypes || [post.postType || "latest"]).includes("latest"))).slice(0,2);
+    host.innerHTML = stories.map(post => {
+      const index = posts.indexOf(post), image = imageForPost(post);
+      return '<button class="home-support-card" type="button" data-open-post="' + index + '">' + (image ? '<span class="home-support-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-support-image home-support-image-empty"></span>') + '<strong>' + escapeHTML(post.title) + '</strong></button>';
+    }).join("");
+  }
+
   function renderMyChoice() {
     const section = $("#myChoiceSection"), host = $("#myChoiceList");
     if (!section || !host) return;
