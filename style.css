@@ -4347,3 +4347,107 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .latest-post-update-copy small{font-size:11px;-webkit-line-clamp:3}
   .latest-post-headline{padding:10px 0;font-size:13px}
 }
+
+/* Desktop Latest Posts typography and media now match the Hero's left Latest rail.
+   Hero reference: 18px story title, 16px summary, 108px thumbnail height,
+   and a light 1px separator. The left column receives two additional cards. */
+@media (min-width:801px) {
+  .latest-posts-section {
+    align-items:stretch;
+    gap:22px;
+    padding-bottom:18px;
+  }
+  .latest-posts-column {
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .latest-posts-column-heading {
+    margin-bottom:13px;
+    padding-bottom:9px;
+    border-bottom:1px solid #edf1f0;
+    font-size:18px;
+    line-height:1.4;
+  }
+  .latest-posts-visual-grid {
+    flex:1 1 auto;
+    grid-template-rows:repeat(3,minmax(0,1fr));
+    align-content:stretch;
+    gap:12px;
+    min-height:0;
+  }
+  .latest-post-visual-card {
+    height:100%;
+    min-height:0;
+    gap:8px;
+    padding:0 0 9px;
+    border-bottom:1px solid #edf1f0;
+  }
+  .latest-post-visual-image {
+    height:clamp(112px,13vh,145px);
+    aspect-ratio:auto;
+    border-radius:3px;
+  }
+  .latest-post-visual-card strong {
+    font-size:18px;
+    line-height:1.42;
+    -webkit-line-clamp:3;
+  }
+
+  .latest-posts-update-list {
+    flex:1 1 auto;
+    justify-content:space-between;
+    min-height:0;
+  }
+  .latest-post-update-row {
+    grid-template-columns:145px minmax(0,1fr);
+    flex:1 1 0;
+    gap:11px;
+    min-height:0;
+    padding:10px 0;
+    margin:0;
+    border-bottom:1px solid #edf1f0;
+  }
+  .latest-post-update-image {
+    width:145px;
+    height:108px;
+    border-radius:3px;
+  }
+  .latest-post-update-copy {
+    gap:6px;
+  }
+  .latest-post-update-copy strong {
+    font-size:18px;
+    line-height:1.42;
+  }
+  .latest-post-update-copy small {
+    font-size:16px;
+    line-height:1.5;
+    -webkit-line-clamp:3;
+  }
+
+  .latest-posts-headline-list {
+    flex:1 1 auto;
+    justify-content:space-between;
+    min-height:0;
+  }
+  .latest-post-headline {
+    flex:1 1 0;
+    align-items:center;
+    padding:13px 0;
+    border-bottom:1px solid #edf1f0;
+    font-size:16px;
+    line-height:1.5;
+  }
+}
+@media (min-width:801px) and (max-width:1100px) {
+  .latest-posts-section { gap:14px; }
+  .latest-post-visual-image { height:clamp(92px,11vh,118px); }
+  .latest-post-visual-card strong { font-size:16px; }
+  .latest-post-update-row { grid-template-columns:112px minmax(0,1fr); gap:9px; }
+  .latest-post-update-image { width:112px; height:84px; }
+  .latest-post-update-copy strong { font-size:16px; }
+  .latest-post-update-copy small { font-size:13px; }
+  .latest-post-headline { font-size:14px; padding:10px 0; }
+}
+
