@@ -211,7 +211,7 @@
   let activeSubcategory = "";
   let currentPage = 1;
   let activePostType = "latest";
-  const pageSize = 8; // Eight posts fill the shared category editorial layout.
+  const pageSize = 9; // Nine fixed slots fill the shared category editorial layout.
   let searchTerm = "";
   const articleList = $("#articleList");
   const previousButton = $("#previousPage");
