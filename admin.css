@@ -225,7 +225,7 @@
 }
 
 
-/* Keep the admin workspace close to the sidebar and use the freed width. */
+/* Keep the admin workspace left-aligned and leave the right side free. */
 @media(min-width:761px){
-  .main-area{max-width:none;width:100%;margin:0;padding:30px 18px 30px 6px}
+  .main-area{max-width:none;width:70%;margin:0;padding:30px 18px 30px 6px}
 }
