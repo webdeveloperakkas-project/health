@@ -99,21 +99,53 @@ Deno.serve(async (request) => {
       serialized,
     ].join("\n\n");
 
-    const geminiResponse = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json", temperature: 0.15 },
-        }),
-      },
-    );
-    const geminiData = await geminiResponse.json();
+    // Gemini can temporarily return 503 when a model is overloaded.
+    // Retry transient failures with exponential backoff, then try a lighter fallback model.
+    const requestGemini = async (model: string) => {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+      const maxAttempts = 3;
+
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json", temperature: 0.15 },
+          }),
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (response.ok) return { response, data, model };
+
+        const retryable = [408, 429, 500, 502, 503, 504].includes(response.status);
+        if (!retryable || attempt === maxAttempts - 1) {
+          return { response, data, model };
+        }
+
+        const delayMs = Math.min(1000 * (2 ** attempt), 4000) + Math.floor(Math.random() * 500);
+        console.warn(`Gemini ${model} returned ${response.status}; retrying in ${delayMs}ms (attempt ${attempt + 1}/${maxAttempts - 1}).`);
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+
+      throw new Error("Gemini retry loop ended unexpectedly");
+    };
+
+    let geminiResult = await requestGemini("gemini-3.8-flash");
+    if (!geminiResult.response.ok && [429, 500, 502, 503, 504].includes(geminiResult.response.status)) {
+      console.warn(`Primary Gemini model unavailable (${geminiResult.response.status}); trying fallback model gemini-3.5-flash-lite.`);
+      geminiResult = await requestGemini("gemini-3.5-flash-lite");
+    }
+
+    const geminiResponse = geminiResult.response;
+    const geminiData = geminiResult.data;
     if (!geminiResponse.ok) {
-      console.error("Gemini translation error:", geminiData);
-      return json({ error: "Translation provider request failed" }, 502);
+      console.error("Gemini translation error:", {
+        model: geminiResult.model,
+        httpStatus: geminiResponse.status,
+        providerError: geminiData?.error || geminiData,
+      });
+      return json({ error: "Translation provider is temporarily unavailable. Please try again." }, 503);
     }
 
     const outputText = geminiData?.candidates?.[0]?.content?.parts
