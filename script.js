@@ -314,7 +314,9 @@
           if (value && value.trim()) translatableAttributes.push({ element, attribute, value });
         });
       });
-      const pageKey = "page:" + location.pathname + location.search;
+      const pageKey = currentArticlePost && currentArticlePost.cmsId
+        ? "post:" + currentArticlePost.cmsId
+        : "page:" + location.pathname + location.search;
 
       // Keep requests below the Edge Function payload limit. Each chunk has
       // a stable route-and-index key and a source hash for automatic refresh.
