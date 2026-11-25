@@ -928,6 +928,23 @@
     const centerBottomPosts = [visiblePosts[4] || null, visiblePosts[5] || null];
     const rightPosts = [visiblePosts[6] || null, visiblePosts[7] || null, visiblePosts[8] || null];
     const remainingPosts = visiblePosts.slice(9);
+    const renderMobileCategoryPost = (post, index, isFirst = false) => {
+      if (!post) return "";
+      const postIndex = posts.indexOf(post);
+      const image = imageForPost(post);
+      const rawSummary = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\s+/g," ").trim();
+      const summary = rawSummary.length > 150 ? rawSummary.slice(0,147).trimEnd() + "…" : rawSummary;
+      return '<button class="category-mobile-post' + (isFirst ? ' category-mobile-lead' : ' category-mobile-list-item') + '" type="button" data-open-post="' + postIndex + '">' +
+        (image
+          ? '<span class="category-mobile-image"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>'
+          : '<span class="category-mobile-image category-editorial-image-empty"></span>') +
+        '<span class="category-mobile-copy">' +
+          (isFirst ? '' : '<small class="category-mobile-number">' + String(index + 1).padStart(2,"0") + '</small>') +
+          '<strong>' + escapeHTML(post.title) + '</strong>' +
+          (summary ? '<span class="category-mobile-summary">' + escapeHTML(summary) + '</span>' : '') +
+        '</span>' +
+      '</button>';
+    };
     articleList.innerHTML =
       '<div class="category-editorial-grid">' +
         '<div class="category-editorial-side category-editorial-left">' +
@@ -947,7 +964,13 @@
         ? '<div class="category-more-grid">' +
             remainingPosts.map(post => renderCategoryCard(post,"category-more-card")).join("") +
           '</div>'
-        : '');
+        : '') +
+      '<div class="category-mobile-layout">' +
+        (visiblePosts.length ? renderMobileCategoryPost(visiblePosts[0],0,true) : '') +
+        (visiblePosts.length > 1
+          ? '<div class="category-mobile-list">' + visiblePosts.slice(1).map((post,index) => renderMobileCategoryPost(post,index + 1)).join("") + '</div>'
+          : '') +
+      '</div>';
     // All filtered category posts are shown together, so pagination is not needed here.
     const pagination = document.querySelector(".pagination");
     if (pagination) pagination.style.display = "none";
