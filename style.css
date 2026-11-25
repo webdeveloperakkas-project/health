@@ -4637,7 +4637,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .science-tech-more{margin-top:14px}
 }
 
-Latest Posts uses one shared section heading, matching Science & Technology. */
+/* Latest Posts uses one shared section heading, matching Science & Technology. */
 .latest-posts-heading{
   grid-column:1 / -1;
   display:flex;
