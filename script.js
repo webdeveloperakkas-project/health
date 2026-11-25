@@ -459,7 +459,7 @@
         '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
         (includeExcerpt && excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
     };
-    const world = sortedByDate(posts.filter(post => post.category === "world" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,4);
+    const world = sortedByDate(posts.filter(post => post.category === "world" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")));
     const sports = sortedByDate(posts.filter(post => post.category === "sports" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
     const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,2);
 
