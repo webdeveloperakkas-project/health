@@ -236,3 +236,56 @@
 @media(min-width:1181px){
   .editor-grid{grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:18px}
 }
+
+
+/* Warm yellow and purple navigation theme with clear hover and active states. */
+@media(min-width:761px){
+  .sidebar{
+    background:linear-gradient(180deg,#fff9e8 0%,#f7f0ff 52%,#f2edff 100%);
+    border-right:1px solid #e6d8fb;
+    box-shadow:5px 0 22px rgba(91,54,140,.06);
+  }
+  .side-label{
+    color:#8052a8;
+    letter-spacing:1.7px;
+    font-size:9px;
+    padding:0 11px 10px;
+  }
+  .side-spaced{margin-top:25px}
+  .nav-item{
+    position:relative;
+    color:#65448b;
+    border:1px solid transparent;
+    border-radius:10px;
+    padding:11px 12px;
+    gap:12px;
+    transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+  }
+  .nav-item>span{color:inherit;font-weight:750}
+  .nav-item:hover{
+    background:linear-gradient(100deg,#fff0b8 0%,#f0e4ff 100%);
+    color:#59318a;
+    border-color:#e2c9ff;
+    box-shadow:0 5px 13px rgba(106,67,153,.12);
+    transform:translateX(3px);
+  }
+  .nav-item.active{
+    background:linear-gradient(100deg,#ffe28a 0%,#e8d4ff 100%);
+    color:#51277f;
+    border-color:#d7b8f5;
+    box-shadow:0 5px 14px rgba(106,67,153,.15),inset 3px 0 0 #9b63d4;
+  }
+  .nav-item.active:hover{transform:translateX(3px)}
+  .sidebar-footer{
+    color:#65448b;
+    border-top:1px solid #e4d5f5;
+    padding-top:12px;
+    right:16px;
+  }
+  .sidebar-footer span{color:#9277ad}
+}
+@media(max-width:760px){
+  .sidebar{background:linear-gradient(100deg,#fff8e3,#f4edff);border-bottom-color:#e6d8fb}
+  .nav-item{color:#65448b;border:1px solid transparent;transition:background .18s ease,color .18s ease,border-color .18s ease}
+  .nav-item:hover,.nav-item.active{background:linear-gradient(100deg,#ffe9a9,#eadcff);color:#51277f;border-color:#dfc7f7}
+}
