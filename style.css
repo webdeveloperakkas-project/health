@@ -4759,13 +4759,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     max-height:1020px;
   }
 
-  /* Homepage sections after the Hero keep their agreed 980px height.
-     Category feeds and standalone article views grow naturally with their content. */
-  .main-column > section:not(#categories):not(#singleArticleView):not(#homeSection):not(#articleFeed) {
-    height:980px;
-    min-height:980px;
-    max-height:980px;
-  }
+  /* Homepage sections now grow naturally with their content. */
 
   /* Keep the article-feed wrapper in the same natural content width. */
   .main-column > .trending-section > .container {
