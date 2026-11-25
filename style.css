@@ -3697,13 +3697,13 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-editorial-list .home-category-copy{padding-top:1px}
 .home-editorial-list .home-category-copy strong{font-size:15px;line-height:1.45}
 .home-editorial-empty-main{width:100%;aspect-ratio:16/9;background:#f1f4f3;border:1px solid #e5ece9}
-.home-post-gallery-slider{position:relative;display:block;width:100%;height:auto;aspect-ratio:16/5;margin-top:20px;overflow:hidden;background:#f1f4f3}
+.home-post-gallery-slider{position:relative;display:block;width:100%;height:270px;margin-top:20px;overflow:hidden;background:#f7f9f8}
 .home-post-gallery-slider.is-empty{min-height:170px}
-.home-post-gallery-track{--gallery-step:calc(20% + 2px);display:flex;align-items:center;width:100%;height:100%;gap:10px;transition:transform .55s ease;will-change:transform}
-.home-post-gallery-slide{position:relative;display:flex;flex:0 0 calc((100% - 40px)/5);width:calc((100% - 40px)/5);height:100%;min-width:0;align-items:center;justify-content:center;margin:0;padding:8px 0;overflow:visible;background:transparent}
-.home-post-gallery-slide img{display:block;width:100%;height:100%;max-height:100%;object-fit:cover;aspect-ratio:16/9;border-radius:3px;transition:transform .45s ease,box-shadow .45s ease}
-.home-post-gallery-slide.is-center{z-index:2}
-.home-post-gallery-slide.is-center img{transform:scale(1.12);box-shadow:0 7px 20px #102d3633}
+.home-post-gallery-track{--gallery-step:calc(20% + 2.8px);display:flex;align-items:stretch;width:100%;height:100%;gap:14px;transition:transform .6s ease;will-change:transform}
+.home-post-gallery-slide{position:relative;display:flex;flex:0 0 calc((100% - 56px)/5);width:calc((100% - 56px)/5);height:100%;min-width:0;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:8px;margin:0;padding:8px;background:#fff;border:1px solid #e5ece9;border-radius:5px;overflow:hidden;box-shadow:0 2px 8px #102d3610}
+.home-post-gallery-slide img{display:block;width:100%;height:auto;flex:0 0 auto;aspect-ratio:4/3;object-fit:cover;border-radius:3px;transition:box-shadow .35s ease}
+.home-post-gallery-slide figcaption{display:-webkit-box;min-width:0;overflow:hidden;color:#183943;font-size:13px;font-weight:650;line-height:1.35;text-align:left;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.home-post-gallery-slide.is-center{z-index:2;transform:scale(1.035);box-shadow:0 5px 16px #102d3620}
 .home-post-gallery-slide.is-empty{background:#f1f4f3}
 .home-post-gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;display:flex;align-items:center;justify-content:center;width:38px;height:46px;border:0;border-radius:3px;background:#102d36c9;color:#fff;font-size:34px;line-height:1;cursor:pointer}
 .home-post-gallery-arrow:hover{background:#087c74}
@@ -3751,19 +3751,16 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .home-category-sections{gap:30px;padding:2px 0 32px}
   .home-world-layout,.home-health-layout{grid-template-columns:1fr;gap:14px}
   .home-editorial-top{grid-template-columns:1fr;gap:14px}
-  .home-post-gallery-slider{aspect-ratio:16/9;margin-top:14px}
-  .home-post-gallery-slider.is-empty{min-height:150px}
-  .home-post-gallery-track{--gallery-step:calc(20% + 1.2px);gap:6px}
-  .home-post-gallery-slide{flex-basis:calc((100% - 24px)/5);width:calc((100% - 24px)/5);padding:6px 0}
-  .home-post-gallery-slide.is-center img{transform:scale(1.1)}
+  .home-post-gallery-slider{height:230px;margin-top:14px}
+  .home-post-gallery-slider.is-empty{min-height:145px}
+  .home-post-gallery-track{--gallery-step:calc(20% + 1.6px);gap:8px}
+  .home-post-gallery-slide{flex-basis:calc((100% - 32px)/5);width:calc((100% - 32px)/5);gap:5px;padding:5px}
+  .home-post-gallery-slide img{aspect-ratio:4/3}
+  .home-post-gallery-slide figcaption{font-size:10px;line-height:1.25}
+  .home-post-gallery-slide.is-center{transform:scale(1.025)}
   .home-post-gallery-arrow{width:30px;height:36px;font-size:25px}
   .home-post-gallery-arrow.is-prev{left:5px}
   .home-post-gallery-arrow.is-next{right:5px}
-  .home-editorial-list{gap:0}
-  .home-editorial-list .home-world-small{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid #e8efec}
-  .home-editorial-list .home-category-copy strong{font-size:13px}
-  .home-post-gallery-slider{margin-top:14px}
-  .home-post-gallery-slide{aspect-ratio:16/9}
   .home-world-main .home-category-image{aspect-ratio:16/9}
   .home-world-list,.home-health-side{gap:0}
   .home-world-small,.home-health-small{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 0}
