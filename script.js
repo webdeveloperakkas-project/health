@@ -1157,7 +1157,30 @@
   setupSubcategoryMenu(".entertainment-category-trigger","#entertainmentSubmenu","entertainment","[data-entertainment-subcategory]","data-entertainment-subcategory");
   /* World News submenu selections filter the homepage section in place. */
   const worldSubmenu = $("#worldSubmenu");
-  if (worldSubmenu) {
+  const worldTrigger = $(".world-category-trigger");
+  if (worldSubmenu && worldTrigger) {
+    worldTrigger.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const willOpen = worldSubmenu.hidden;
+      worldSubmenu.hidden = !willOpen;
+      worldSubmenu.classList.toggle("is-open", willOpen);
+      worldTrigger.setAttribute("aria-expanded", String(willOpen));
+    });
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".world-category-menu") && !worldSubmenu.hidden) {
+        worldSubmenu.hidden = true;
+        worldSubmenu.classList.remove("is-open");
+        worldTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !worldSubmenu.hidden) {
+        worldSubmenu.hidden = true;
+        worldSubmenu.classList.remove("is-open");
+        worldTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
     worldSubmenu.addEventListener("click", event => {
       const choice = event.target.closest("[data-world-subcategory]");
       if (!choice) return;
