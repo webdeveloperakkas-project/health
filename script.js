@@ -467,7 +467,8 @@
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
     ));
     const sports = sortedByDate(posts.filter(post => post.category === "sports" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
-    const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips" && (Array    const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
+    const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
+    const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
     const worldTitle = $("#homeWorldTitle");
     if (worldSection && worldHost) {
       worldSection.hidden = !world.length && !activeHomeWorldSubcategory;
