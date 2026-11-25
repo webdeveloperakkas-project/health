@@ -920,7 +920,7 @@
     const items = trendingPosts
       .map(item => ({...item, post:posts.find(post => String(post.cmsId) === String(item.post_id))}))
       .filter(item => item.post)
-      .slice(0,10);
+      .slice(0,14);
     const title = $("#trendingStoriesTitle");
     if (title) title.textContent = "Most Read";
     list.innerHTML = items.length
