@@ -211,6 +211,8 @@
   let activeSubcategory = "";
   // Homepage World News filtering is independent of category-page navigation.
   let activeHomeWorldSubcategory = "";
+  // Homepage Lifestyle filtering is independent of category-page navigation.
+  let activeHomeLifestyleSubcategory = "";
   let currentPage = 1;
   let activePostType = "latest";
   const pageSize = 9; // Nine fixed slots fill the shared category editorial layout.
@@ -466,6 +468,11 @@
       (!activeHomeWorldSubcategory || post.subcategory === activeHomeWorldSubcategory) &&
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
     ));
+    const lifestyle = sortedByDate(posts.filter(post =>
+      post.category === "lifestyle" &&
+      (!activeHomeLifestyleSubcategory || post.subcategory === activeHomeLifestyleSubcategory) &&
+      (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
+    ));
     const sports = sortedByDate(posts.filter(post => post.category === "sports" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
     const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
     const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
@@ -483,6 +490,21 @@
       if (worldTitle) worldTitle.textContent = "বিশ্ব সংবাদ";
       worldHost.innerHTML = world.length
         ? '<div class="home-world-lead">' + renderCard(world[0], "home-world-main") + '</div><div class="home-world-list">' + world.slice(1).map(post => renderCard(post, "home-world-small")).join("") + '</div>'
+        : '<div class="home-world-empty">No posts available</div>';
+    }
+    const lifestyleSection = $("#homeLifestyleSection"), lifestyleHost = $("#homeLifestylePosts");
+    const lifestyleSelect = $("#homeLifestyleSubcategorySelect");
+    if (lifestyleSection && lifestyleHost) {
+      lifestyleSection.hidden = !lifestyle.length && !activeHomeLifestyleSubcategory;
+      const lifestyleButtons = Array.from(document.querySelectorAll("#lifestyleSubmenu [data-lifestyle-subcategory]"));
+      if (lifestyleSelect) {
+        const selectedValue = activeHomeLifestyleSubcategory;
+        lifestyleSelect.innerHTML = '<option value="">Select Subcategory</option>' +
+          lifestyleButtons.map(button => '<option value="' + escapeHTML(button.dataset.lifestyleSubcategory) + '">' + escapeHTML(button.textContent.trim()) + '</option>').join("");
+        lifestyleSelect.value = selectedValue;
+      }
+      lifestyleHost.innerHTML = lifestyle.length
+        ? '<div class="home-world-lead">' + renderCard(lifestyle[0], "home-world-main") + '</div><div class="home-world-list">' + lifestyle.slice(1).map(post => renderCard(post, "home-world-small")).join("") + '</div>'
         : '<div class="home-world-empty">No posts available</div>';
     }
     const sportsSection = $("#homeSportsSection"), sportsHost = $("#homeSportsPosts");
@@ -1218,7 +1240,22 @@
       renderHomeCategorySections();
     });
   }
-  setupSubcategoryMenu(".lifestyle-category-trigger","#lifestyleSubmenu","lifestyle","[data-lifestyle-subcategory]","data-lifestyle-subcategory");
+  const homeLifestyleSelect = $("#homeLifestyleSubcategorySelect");
+  if (homeLifestyleSelect) {
+    homeLifestyleSelect.addEventListener("change", () => {
+      activeHomeLifestyleSubcategory = homeLifestyleSelect.value || "";
+      const lifestyleSubmenu = $("#lifestyleSubmenu");
+      if (lifestyleSubmenu) {
+        lifestyleSubmenu.querySelectorAll("[data-lifestyle-subcategory]").forEach(item => {
+          const selected = item.dataset.lifestyleSubcategory === activeHomeLifestyleSubcategory;
+          item.classList.toggle("active", selected);
+          item.setAttribute("aria-pressed", String(selected));
+        });
+      }
+      renderHomeCategorySections();
+    });
+  }
+    setupSubcategoryMenu(".lifestyle-category-trigger","#lifestyleSubmenu","lifestyle","[data-lifestyle-subcategory]","data-lifestyle-subcategory");
 
   /* Category drawer: expand nested subcategories and select them without affecting the top category row. */
   const categoryDrawer = $("#mainNav");
