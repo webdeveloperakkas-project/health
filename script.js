@@ -453,16 +453,116 @@
     }).join("");
   }
 
-  function renderHomeCategorySections() {
-    const renderCard = (post, className, includeExcerpt = false) => {
+  // Read all images already stored with the article (cover + inline article images).
+  // The existing Cloudinary / Supabase upload workflow remains unchanged.
+  function imagesForHomeGallery(post) {
+    const images = [];
+    const cover = imageForPost(post);
+    if (cover) images.push(cover);
+
+    const articleHtml = [
+      post && post.contentHtml,
+      post && post.content,
+      Array.isArray(post && post.body) ? post.body.join(" ") : ""
+    ].filter(Boolean).join(" ");
+
+    const imageTags = articleHtml.match(/<img\\b[^>]*>/gi) || [];
+    imageTags.forEach(tag => {
+      const match = tag.match(/\\bsrc\\s*=\\s*(["'])(.*?)\\1/i);
+      if (!match || !match[2]) return;
+      const src = match[2].trim();
+      if (/^https?:\\/\\//i.test(src) && !images.includes(src)) images.push(src);
+    });
+    return images;
+  }
+
+  function renderHomeEditorialSection(items, host, sectionKey) {
+    if (!host) return;
+    const previousTimer = host.__galleryTimer;
+    if (previousTimer) window.clearInterval(previousTimer);
+    host.__galleryTimer = null;
+
+    if (!items.length) {
+      host.innerHTML = '<div class="home-world-empty">No posts available</div>';
+      return;
+    }
+
+    const mainPost = items[0];
+    const sidePosts = items.slice(1);
+    const mainIndex = posts.indexOf(mainPost);
+    const mainImage = imageForPost(mainPost);
+    const excerpt = String(mainPost.excerpt || "").trim();
+    const galleryImages = imagesForHomeGallery(mainPost);
+
+    const mainCard =
+      '<button class="home-category-card home-world-main" type="button" data-open-post="' + mainIndex + '">' +
+        (mainImage
+          ? '<span class="home-category-image"><img src="' + escapeHTML(mainImage) + '" alt="' + escapeHTML(mainPost.title) + '" loading="lazy"></span>'
+          : '<span class="home-category-image home-category-image-empty"></span>') +
+        '<span class="home-category-copy"><strong>' + escapeHTML(mainPost.title) + '</strong>' +
+        (excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span>' +
+      '</button>';
+
+    const sideList = sidePosts.map(post => {
       const index = posts.indexOf(post);
       const image = imageForPost(post);
-      const excerpt = String(post.excerpt || "").trim();
-      return '<button class="home-category-card ' + className + '" type="button" data-open-post="' + index + '">' +
-        (image ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-category-image home-category-image-empty"></span>') +
-        '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
-        (includeExcerpt && excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
+      return '<button class="home-category-card home-world-small" type="button" data-open-post="' + index + '">' +
+        (image
+          ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>'
+          : '<span class="home-category-image home-category-image-empty"></span>') +
+        '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong></span>' +
+      '</button>';
+    }).join("");
+
+    const gallery = galleryImages.length
+      ? '<div class="home-post-gallery-slider" data-home-gallery="' + sectionKey + '" aria-label="More images from this article">' +
+          '<div class="home-post-gallery-track">' +
+            galleryImages.map((src, index) =>
+              '<figure class="home-post-gallery-slide' + (index === 0 ? ' is-active' : '') + '" data-gallery-slide="' + index + '"' + (index ? ' hidden' : '') + '>' +
+                '<img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — image ' + (index + 1) + '" loading="lazy">' +
+              '</figure>'
+            ).join("") +
+          '</div>' +
+          (galleryImages.length > 1
+            ? '<button class="home-post-gallery-arrow is-prev" type="button" data-gallery-step="-1" aria-label="Previous image">‹</button>' +
+              '<span class="home-post-gallery-count" aria-live="polite">1 / ' + galleryImages.length + '</span>' +
+              '<button class="home-post-gallery-arrow is-next" type="button" data-gallery-step="1" aria-label="Next image">›</button>'
+            : '') +
+        '</div>'
+      : "";
+
+    host.innerHTML =
+      '<div class="home-editorial-top">' +
+        '<div class="home-editorial-lead">' + mainCard + '</div>' +
+        '<div class="home-editorial-list">' + sideList + '</div>' +
+      '</div>' +
+      gallery;
+
+    const slider = host.querySelector(".home-post-gallery-slider");
+    if (!slider || galleryImages.length < 2) return;
+
+    let activeIndex = 0;
+    const slides = Array.from(slider.querySelectorAll("[data-gallery-slide]"));
+    const count = slider.querySelector(".home-post-gallery-count");
+    const showSlide = nextIndex => {
+      activeIndex = (nextIndex + slides.length) % slides.length;
+      slides.forEach((slide, index) => {
+        slide.hidden = index !== activeIndex;
+        slide.classList.toggle("is-active", index === activeIndex);
+      });
+      if (count) count.textContent = (activeIndex + 1) + " / " + slides.length;
     };
+
+    slider.onclick = event => {
+      const control = event.target.closest("[data-gallery-step]");
+      if (!control) return;
+      event.preventDefault();
+      showSlide(activeIndex + Number(control.dataset.galleryStep || 0));
+    };
+    host.__galleryTimer = window.setInterval(() => showSlide(activeIndex + 1), 3500);
+  }
+
+  function renderHomeCategorySections() {
     const world = sortedByDate(posts.filter(post =>
       post.category === "world" &&
       (!activeHomeWorldSubcategory || post.subcategory === activeHomeWorldSubcategory) &&
@@ -473,8 +573,15 @@
       (!activeHomeLifestyleSubcategory || post.subcategory === activeHomeLifestyleSubcategory) &&
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
     ));
-    const sports = sortedByDate(posts.filter(post => post.category === "sports" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
-    const tips = sortedByDate(posts.filter(post => post.category === "lifestyle" && post.subcategory === "daily-tips" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,8);
+    const sports = sortedByDate(posts.filter(post =>
+      post.category === "sports" &&
+      (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
+    )).slice(0,8);
+    const tips = sortedByDate(posts.filter(post =>
+      post.category === "lifestyle" && post.subcategory === "daily-tips" &&
+      (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
+    )).slice(0,8);
+
     const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
     const worldTitle = $("#homeWorldTitle");
     if (worldSection && worldHost) {
@@ -488,10 +595,9 @@
         worldSelect.value = selectedValue;
       }
       if (worldTitle) worldTitle.textContent = "বিশ্ব সংবাদ";
-      worldHost.innerHTML = world.length
-        ? '<div class="home-world-lead">' + renderCard(world[0], "home-world-main") + '</div><div class="home-world-list">' + world.slice(1).map(post => renderCard(post, "home-world-small")).join("") + '</div>'
-        : '<div class="home-world-empty">No posts available</div>';
+      renderHomeEditorialSection(world, worldHost, "world");
     }
+
     const lifestyleSection = $("#homeLifestyleSection"), lifestyleHost = $("#homeLifestylePosts");
     const lifestyleSelect = $("#homeLifestyleSubcategorySelect");
     if (lifestyleSection && lifestyleHost) {
@@ -503,40 +609,27 @@
           lifestyleButtons.map(button => '<option value="' + escapeHTML(button.dataset.lifestyleSubcategory) + '">' + escapeHTML(button.textContent.trim()) + '</option>').join("");
         lifestyleSelect.value = selectedValue;
       }
-      lifestyleHost.innerHTML = lifestyle.length
-        ? '<div class="home-world-lead">' + renderCard(lifestyle[0], "home-world-main") + '</div><div class="home-world-list">' + lifestyle.slice(1).map(post => renderCard(post, "home-world-small")).join("") + '</div>'
-        : '<div class="home-world-empty">No posts available</div>';
+      renderHomeEditorialSection(lifestyle, lifestyleHost, "lifestyle");
     }
+
     const sportsSection = $("#homeSportsSection"), sportsHost = $("#homeSportsPosts");
     if (sportsSection && sportsHost) {
       sportsSection.hidden = !sports.length;
-      if (!sports.length) {
-        sportsHost.innerHTML = "";
-      } else {
-        const mainPost = sports[0];
-        const leftPosts = sports.slice(1,4);
-        const centerBottomPosts = sports.slice(4,6);
-        const rightPosts = sports.slice(6,8);
-        sportsHost.innerHTML =
-          '<div class="home-sports-left">' +
-            leftPosts.map(post => renderCard(post, "home-sports-left-card")).join("") +
-          '</div>' +
-          '<div class="home-sports-center">' +
-            renderCard(mainPost, "home-sports-main-card", true) +
-            '<div class="home-sports-bottom">' +
-              centerBottomPosts.map(post => renderCard(post, "home-sports-bottom-card")).join("") +
-            '</div>' +
-          '</div>' +
-          '<div class="home-sports-right">' +
-            rightPosts.map(post => renderCard(post, "home-sports-right-card")).join("") +
-            '<button class="home-sports-more" type="button" data-home-category-view="sports">More Details <span aria-hidden="true">→</span></button>' +
-          '</div>';
-      }
+      renderHomeEditorialSection(sports, sportsHost, "sports");
     }
+
     const tipsSection = $("#homeTipsSection"), tipsHost = $("#homeTipsPosts");
     if (tipsSection && tipsHost) {
       tipsSection.hidden = !tips.length;
-      tipsHost.innerHTML = tips.map(post => renderCard(post, "home-tips-card", true)).join("");
+      tipsHost.innerHTML = tips.map(post => {
+        const index = posts.indexOf(post);
+        const image = imageForPost(post);
+        const excerpt = String(post.excerpt || "").trim();
+        return '<button class="home-category-card home-tips-card" type="button" data-open-post="' + index + '">' +
+          (image ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-category-image home-category-image-empty"></span>') +
+          '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
+          (excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
+      }).join("");
     }
   }
 
