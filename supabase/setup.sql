@@ -30,7 +30,9 @@ create table if not exists public.posts (
   content_html text not null default '',
   category text not null,
   subcategory text not null default '',
-  language text not null default 'en',
+  language text not null default 'bn',
+  translations jsonb not null default '{}'::jsonb,
+  post_languages text[] not null default array['bn']::text[],
   post_types text[] not null default array['latest']::text[],
   featured_stories boolean not null default false,
   status text not null default 'draft',
@@ -49,6 +51,8 @@ create table if not exists public.posts (
   published_at timestamptz
 );
 
+alter table public.posts add column if not exists translations jsonb not null default '{}'::jsonb;
+alter table public.posts add column if not exists post_languages text[] not null default array['bn']::text[];
 alter table public.posts add column if not exists scheduled_at timestamptz;
 alter table public.posts add column if not exists meta_title text not null default '';
 alter table public.posts add column if not exists meta_description text not null default '';
