@@ -4814,3 +4814,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 @media (min-width:801px) {
   .category-mobile-layout {display:none}
 }
+
+/* Square outer edges for the site header and the top AdSense placement. */
+.site-header,
+.site-header .header-main,
+.top-ad,
+.top-ad .ad-slot {
+  border-radius: 0 !important;
+}
