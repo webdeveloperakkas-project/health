@@ -1084,7 +1084,17 @@
     const visiblePosts = categoryPosts;
     const t = languageCopy[activeLanguage];
     const activeSubcategoryButton = activeSubcategory ? Array.from(document.querySelectorAll("[data-sports-subcategory], [data-entertainment-subcategory], [data-world-subcategory], [data-lifestyle-subcategory]")).find(button => ["data-sports-subcategory","data-entertainment-subcategory","data-world-subcategory","data-lifestyle-subcategory"].some(attribute => button.getAttribute(attribute) === activeSubcategory)) : null;
-    const activeCategoryLabel = activeSubcategoryButton?.textContent.trim() || t.categories[activeCategory] || "Home";
+    const activeCategoryLabel = activeSubcategoryButton?.textContent.trim() || activeSubcategory.replace(/-/g," ") || t.categories[activeCategory] || "Home";
+    const feedEyebrow = $("#articleFeed .eyebrow");
+    if (feedEyebrow) {
+      const mainCategoryLabel = t.categories[activeCategory] || activeCategory;
+      const categoryBreadcrumb = activeSubcategory
+        ? mainCategoryLabel + " / " + activeCategoryLabel
+        : mainCategoryLabel;
+      feedEyebrow.textContent = isHomeLanding
+        ? t.stories
+        : (showFeaturedFeed ? (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredStories : categoryBreadcrumb);
+    }
     $("#activeCategoryTitle").textContent = showFeaturedFeed ? (extendedUiCopy[activeLanguage] || extendedUiCopy.en).featuredStories : activeCategoryLabel;
     $("#feedDescription").textContent = searchTerm
       ? "Search results in " + (t.categories[activeCategory] || "this category") + "."
