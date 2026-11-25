@@ -293,8 +293,8 @@
     }));
     latestPostsSection.hidden = latestItems.length === 0;
 
-    // Six photo cards on the left, four image-and-summary updates in the middle,
-    // and six text-only headlines on the right.
+    // Latest section only: six image cards on the left, four image-and-summary
+    // updates in the middle, and six image cards on the right.
     const visualItems = latestItems.slice(0,6);
     const updateItems = latestItems.slice(6,10);
     const headlineItems = latestItems.slice(10,16);
@@ -323,11 +323,15 @@
       '</button>';
     }).join("");
 
-    headlineHost.innerHTML = headlineItems.map(post =>
-      '<button class="latest-post-headline" type="button" data-open-post="' + posts.indexOf(post) + '">' +
-        '<span>' + escapeHTML(post.title) + '</span><span class="latest-post-headline-arrow" aria-hidden="true">›</span>' +
-      '</button>'
-    ).join("");
+    headlineHost.innerHTML = headlineItems.map(post => {
+      const image = imageForPost(post);
+      return '<button class="latest-post-visual-card" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+        (image
+          ? '<span class="latest-post-visual-image"><img src="' + escapeHTML(image) + '" alt="' + escapeHTML(post.title) + '" loading="lazy"></span>'
+          : '<span class="latest-post-visual-image latest-post-image-empty"></span>') +
+        '<strong>' + escapeHTML(post.title) + '</strong>' +
+      '</button>';
+    }).join("");
 
     // Wait for the current Hero and Latest Posts cards to finish layout, then copy the Hero height.
     window.requestAnimationFrame(syncLatestPostsSectionHeight);
