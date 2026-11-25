@@ -246,6 +246,136 @@
     render();
   }
   /* =========================================================
+     05A. FULL-PAGE TRANSLATION
+     Translates rendered page text through the Supabase Edge Function.
+     The Edge Function stores translations once and reuses them later.
+  ========================================================= */
+  const TRANSLATION_FUNCTION_URL = "https://oxxnjxrunvhrfwxdvbsr.supabase.co/functions/v1/translate-content";
+  const TRANSLATION_PUBLIC_KEY = "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY";
+  let pageTranslationBusy = false;
+  let pageTranslationQueued = false;
+  let pageTranslationObserver = null;
+  let pageTranslationTimer = null;
+
+  async function translationHash(value) {
+    const bytes = new TextEncoder().encode(value);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function requestCachedTranslation(cacheKey, language, content) {
+    const serialized = JSON.stringify(content);
+    const sourceHash = await translationHash(serialized);
+    const response = await fetch(TRANSLATION_FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: TRANSLATION_PUBLIC_KEY
+      },
+      body: JSON.stringify({ cacheKey, language, sourceHash, content })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.translated) {
+      throw new Error(result.error || "Translation request failed");
+    }
+    return result.translated;
+  }
+
+  async function translateRenderedPage(language = activeLanguage) {
+    if (!language || language === "en") return;
+    if (pageTranslationBusy) {
+      pageTranslationQueued = true;
+      return;
+    }
+    pageTranslationBusy = true;
+    try {
+      const excluded = "SCRIPT,STYLE,NOSCRIPT,TEXTAREA,INPUT,SELECT,OPTION,SVG,CODE";
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const text = node.nodeValue || "";
+          const parent = node.parentElement;
+          if (!parent || !text.trim() || parent.closest(excluded)) return NodeFilter.FILTER_REJECT;
+          if (parent.closest("[data-no-translate]")) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      const originalTexts = nodes.map(node => node.nodeValue);
+      const pageTitle = document.title || "";
+      const descriptionTag = document.querySelector('meta[name="description"]');
+      const metaDescription = descriptionTag?.getAttribute("content") || "";
+      const pageKey = "page:" + location.pathname + location.search;
+
+      // Keep requests below the Edge Function payload limit. Each chunk has
+      // a stable route-and-index key and a source hash for automatic refresh.
+      const chunks = [];
+      let chunk = [];
+      let chunkLength = 0;
+      originalTexts.forEach((value, index) => {
+        const length = value.length + 20;
+        if (chunk.length && chunkLength + length > 26000) {
+          chunks.push(chunk);
+          chunk = [];
+          chunkLength = 0;
+        }
+        chunk.push({ index, text: value });
+        chunkLength += length;
+      });
+      if (chunk.length) chunks.push(chunk);
+
+      for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
+        const items = chunks[chunkIndex];
+        const content = {
+          texts: items.map(item => item.text),
+          ...(chunkIndex === 0 ? { pageTitle, metaDescription } : {})
+        };
+        const translated = await requestCachedTranslation(
+          pageKey + ":part:" + chunkIndex,
+          language,
+          content
+        );
+        if (Array.isArray(translated.texts)) {
+          items.forEach((item, localIndex) => {
+            const node = nodes[item.index];
+            if (node && node.nodeValue === item.text && typeof translated.texts[localIndex] === "string") {
+              node.nodeValue = translated.texts[localIndex];
+            }
+          });
+        }
+        if (chunkIndex === 0) {
+          if (typeof translated.pageTitle === "string" && document.title === pageTitle) {
+            document.title = translated.pageTitle;
+          }
+          if (descriptionTag && typeof translated.metaDescription === "string" &&
+              descriptionTag.getAttribute("content") === metaDescription) {
+            descriptionTag.setAttribute("content", translated.metaDescription);
+          }
+        }
+      }
+    } catch (error) {
+      console.warn("Full-page translation is not available yet:", error.message);
+    } finally {
+      pageTranslationBusy = false;
+      if (pageTranslationQueued) {
+        pageTranslationQueued = false;
+        window.clearTimeout(pageTranslationTimer);
+        pageTranslationTimer = window.setTimeout(() => translateRenderedPage(activeLanguage), 180);
+      }
+    }
+  }
+
+  function watchRenderedPageForTranslation() {
+    if (pageTranslationObserver || !document.body) return;
+    pageTranslationObserver = new MutationObserver(() => {
+      if (activeLanguage === "en") return;
+      window.clearTimeout(pageTranslationTimer);
+      pageTranslationTimer = window.setTimeout(() => translateRenderedPage(activeLanguage), 220);
+    });
+    pageTranslationObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  /* =========================================================
      06. PAGE STATE
      Purpose: Remember selected category, post type, search and page.
      Section complete.
@@ -1688,9 +1818,16 @@
      Section complete.
   ========================================================= */
   $("#languageSelect").addEventListener("change", event => {
-    try { localStorage.setItem("ea-language", event.target.value); } catch (_) {}
-    applyLanguage(event.target.value);
+    const selectedLanguage = event.target.value;
+    try { localStorage.setItem("ea-language", selectedLanguage); } catch (_) {}
+    applyLanguage(selectedLanguage);
     if (currentArticlePost) openArticleDetail(currentArticlePost);
+    if (selectedLanguage === "en") {
+      // Reload the original page to remove any previously applied translations.
+      window.location.reload();
+      return;
+    }
+    translateRenderedPage(selectedLanguage);
   });
   try {
     const savedLanguage = localStorage.getItem("ea-language");
@@ -1820,6 +1957,8 @@
         track.innerHTML = [...escaped,...escaped].join("");
       }
       render();
+      watchRenderedPageForTranslation();
+      if (activeLanguage !== "en") await translateRenderedPage(activeLanguage);
       const currentArticleSlug = requestedArticleSlug();
       if (currentArticleSlug) {
         const requestedParts = requestedArticleRouteParts();
@@ -1859,5 +1998,6 @@
     }
   }
   loadSharedPublishedContent();
+  watchRenderedPageForTranslation();
 
 })();
