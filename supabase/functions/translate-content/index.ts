@@ -2,8 +2,6 @@
 // The Gemini API key and Supabase service-role key are server-side secrets only.
 const allowedOrigins = new Set([
   "https://webdeveloperakkas-project.github.io",
-  "http://localhost:5500",
-  "http://127.0.0.1:5500",
 ]);
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://webdeveloperakkas-project.github.io",
