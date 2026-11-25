@@ -123,14 +123,6 @@
     document.querySelectorAll("#entertainmentSubmenu [data-entertainment-subcategory]").forEach(button=>{const key=button.dataset.entertainmentSubcategory;if(entertainmentLabels[key])button.textContent=entertainmentLabels[key];});
     const regionalLabels={en:{bangladesh:"Bangladesh",india:"India",pakistan:"Pakistan",asia:"Asia",europe:"Europe","middle-east":"Middle East"},bn:{bangladesh:"বাংলাদেশ",india:"ভারত",pakistan:"পাকিস্তান",asia:"এশিয়া",europe:"ইউরোপ","middle-east":"মধ্যপ্রাচ্য"},hi:{bangladesh:"बांग्लादेश",india:"भारत",pakistan:"पाकिस्तान",asia:"एशिया",europe:"यूरोप","middle-east":"मध्य पूर्व"},de:{bangladesh:"Bangladesch",india:"Indien",pakistan:"Pakistan",asia:"Asien",europe:"Europa","middle-east":"Naher Osten"},fr:{bangladesh:"Bangladesh",india:"Inde",pakistan:"Pakistan",asia:"Asie",europe:"Europe","middle-east":"Moyen-Orient"},es:{bangladesh:"Bangladés",india:"India",pakistan:"Pakistán",asia:"Asia",europe:"Europa","middle-east":"Oriente Medio"}}[activeLanguage]||{};
     document.querySelectorAll("#worldSubmenu [data-world-subcategory]").forEach(button=>{const key=button.dataset.worldSubcategory;if(regionalLabels[key])button.textContent=regionalLabels[key];});
-    /* Mirror the World News subcategories from the main category navigation. */
-    const homeWorldSelect = $("#homeWorldSubcategory");
-    const worldNavigationItems = Array.from(document.querySelectorAll("#worldSubmenu [data-world-subcategory]"));
-    if (homeWorldSelect) {
-      const selectedValue = homeWorldSelect.value;
-      homeWorldSelect.innerHTML = '<option value="">সাবক্যাটাগরি নির্বাচন করুন</option>' + worldNavigationItems.map(button => '<option value="' + button.dataset.worldSubcategory + '">' + button.textContent + '</option>').join("");
-      homeWorldSelect.value = selectedValue;
-    }
     const lifestyleLabels={
       "daily-tips":{en:"Daily Tips",bn:"দৈনন্দিন টিপস",hi:"दैनिक सुझाव",de:"Alltagstipps",fr:"Conseils quotidiens",es:"Consejos diarios"},
       "health":{en:"Health",bn:"স্বাস্থ্য",hi:"स्वास्थ्य",de:"Gesundheit",fr:"Santé",es:"Salud"},
