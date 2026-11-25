@@ -337,14 +337,18 @@
     window.requestAnimationFrame(syncLatestPostsSectionHeight);
   }
 
-  /* Science & Technology homepage feature: 3 left, 3 center, 3 right. */
+  /* Science & Technology homepage section: 18 uniform image-and-summary list posts. */
   function renderScienceTechSection() {
     const section = $("#scienceTechSection");
     const host = $("#scienceTechPosts");
     const title = $("#scienceTechTitle");
     if (!section || !host) return;
 
-    const items = sortedByDate(posts.filter(post => post.category === "technology" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest"))).slice(0,9);
+    const items = sortedByDate(posts.filter(post =>
+      post.category === "technology" &&
+      (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
+    )).slice(0,18);
+
     section.hidden = items.length === 0;
     if (!items.length) {
       host.innerHTML = "";
@@ -356,35 +360,42 @@
       title.textContent = (language.categories && language.categories.technology) || "Science & Technology";
     }
 
-    const renderScienceCard = (post, className, includeExcerpt = false) => {
+    const renderScienceList = post => {
       const index = posts.indexOf(post);
       const image = imageForPost(post);
-      const excerpt = String(post.excerpt || "").trim();
-      return '<button class="home-category-card ' + className + '" type="button" data-open-post="' + index + '">' +
-        (image ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-category-image home-category-image-empty"></span>') +
-        '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
-        (includeExcerpt && excerpt ? '<small>' + escapeHTML(excerpt.slice(0,150)) + '</small>' : '') +
-        '</span></button>';
+      const rawSummary = String(
+        post.excerpt ||
+        post.contentHtml ||
+        post.content ||
+        (Array.isArray(post.body) ? post.body.join(" ") : "")
+      ).replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/\\s+/g, " ").trim();
+      const summary = rawSummary.length > 170 ? rawSummary.slice(0,167).trimEnd() + "…" : rawSummary;
+
+      return '<button class="home-category-card science-tech-list-card" type="button" data-open-post="' + index + '">' +
+        (image
+          ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>'
+          : '<span class="home-category-image home-category-image-empty"></span>') +
+        '<span class="home-category-copy">' +
+          '<strong>' + escapeHTML(post.title) + '</strong>' +
+          (summary ? '<small>' + escapeHTML(summary) + '</small>' : '') +
+        '</span>' +
+      '</button>';
     };
 
-    const mainPost = items[0];
-    const leftPosts = items.slice(1,4);
-    const centerBottomPosts = items.slice(4,6);
-    const rightPosts = items.slice(6,9);
+    const leftPosts = items.slice(0,6);
+    const middlePosts = items.slice(6,12);
+    const rightPosts = items.slice(12,18);
 
     host.innerHTML =
-      '<div class="science-tech-left">' +
-        leftPosts.map(post => renderScienceCard(post, "science-tech-side-card")).join("") +
+      '<div class="science-tech-list-column science-tech-left">' +
+        leftPosts.map(renderScienceList).join("") +
       '</div>' +
-      '<div class="science-tech-center">' +
-        renderScienceCard(mainPost, "science-tech-main-card", true) +
-        '<div class="science-tech-bottom">' +
-          centerBottomPosts.map(post => renderScienceCard(post, "science-tech-bottom-card")).join("") +
-        '</div>' +
-        '<button class="science-tech-more" type="button" data-home-category-view="technology">আরও বিস্তারিত পড়ুন <span aria-hidden="true">→</span></button>' +
+      '<div class="science-tech-list-column science-tech-middle">' +
+        middlePosts.map(renderScienceList).join("") +
       '</div>' +
-      '<div class="science-tech-right">' +
-        rightPosts.map(post => renderScienceCard(post, "science-tech-side-card")).join("") +
+      '<div class="science-tech-list-column science-tech-right">' +
+        rightPosts.map(renderScienceList).join("") +
+        '<button class="science-tech-more" type="button" data-home-category-view="technology">আরও বিস্তারিত পড়ুন <span aria-hidden="true">→</span></button>' +
       '</div>';
 
     window.requestAnimationFrame(syncScienceTechSectionHeight);
