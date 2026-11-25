@@ -3664,7 +3664,8 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-category-sections{display:flex;flex-direction:column;gap:38px;padding:8px 0 46px}
 .home-category-widget{min-width:0}
 .home-category-heading{margin-bottom:16px}
-.home-world-layout,.home-health-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.85fr);gap:22px;align-items:stretch}
+.home-world-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:22px;align-items:stretch}
+.home-health-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.85fr);gap:22px;align-items:stretch}
 .home-category-card{display:flex;min-width:0;flex-direction:column;width:100%;padding:0;border:0;background:#fff;text-align:left;text-decoration:none;cursor:pointer}
 .home-category-image{display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#eaf2ef}
 .home-category-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
@@ -3676,10 +3677,12 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-world-main .home-category-image{aspect-ratio:16/9}
 .home-world-main .home-category-card strong,.home-world-main strong{font-size:clamp(17px,1.8vw,22px);line-height:1.35}
 .home-world-list,.home-health-side{display:flex;flex-direction:column;gap:13px}
-.home-world-small,.home-health-small{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;align-items:start;padding-bottom:12px;border-bottom:1px solid #e8efec}
+.home-world-small{display:grid;grid-template-columns:136px minmax(0,1fr);gap:12px;align-items:start;padding-bottom:12px;border-bottom:1px solid #e8efec}
+.home-health-small{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;align-items:start;padding-bottom:12px;border-bottom:1px solid #e8efec}
 .home-world-small .home-category-image,.home-health-small .home-category-image{aspect-ratio:16/10}
 .home-world-small .home-category-copy,.home-health-small .home-category-copy{padding-top:1px}
-.home-world-small strong,.home-health-small strong{font-size:13px;line-height:1.4}
+.home-world-small strong{font-size:14px;line-height:1.45}
+.home-health-small strong{font-size:13px;line-height:1.4}
 /* Sports desktop layout: the three left stories stretch to match the full center column. */
 .home-sports-layout{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.5fr) minmax(0,.98fr);gap:20px;align-items:stretch}
 .home-sports-left,.home-sports-center,.home-sports-right{display:flex;min-width:0;flex-direction:column}
