@@ -419,14 +419,23 @@
     const section = $("#entertainmentFeatureSection");
     const leadHost = $("#entertainmentFeatureLead");
     const gridHost = $("#entertainmentFeatureGrid");
-    if (!section || !leadHost || !gridHost) return;
+    const sliderHost = $("#entertainmentImageSlider");
+    if (!section || !leadHost || !gridHost || !sliderHost) return;
 
-    // Use the same published Supabase post collection as the other homepage sections.
-    const items = sortedByDate(posts.filter(post => post.category === "entertainment" && (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")));
+    // Use the latest published Entertainment posts from the existing Supabase collection.
+    const items = sortedByDate(posts.filter(post =>
+      post.category === "entertainment" &&
+      (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
+    ));
     section.hidden = items.length === 0;
+
+    if (sliderHost.__entertainmentTimer) window.clearInterval(sliderHost.__entertainmentTimer);
+    sliderHost.__entertainmentTimer = null;
+
     if (!items.length) {
       leadHost.innerHTML = "";
       gridHost.innerHTML = "";
+      sliderHost.innerHTML = "";
       return;
     }
 
@@ -435,19 +444,21 @@
     const leadImage = imageForPost(lead);
     const leadExcerpt = String(lead.excerpt || "").trim();
 
+    // Main story: image on the left, title and short text on the right.
     leadHost.innerHTML =
       '<article class="entertainment-feature-main-post">' +
         '<button class="entertainment-feature-main-open" type="button" data-open-post="' + leadIndex + '">' +
           (leadImage
             ? '<span class="entertainment-feature-main-image"><img src="' + escapeHTML(leadImage) + '" alt="' + escapeHTML(lead.title) + '" loading="lazy"></span>'
             : '<span class="entertainment-feature-main-image"></span>') +
-          '<strong>' + escapeHTML(lead.title) + '</strong>' +
+          '<span class="entertainment-feature-main-copy"><strong>' + escapeHTML(lead.title) + '</strong>' +
+          (leadExcerpt ? '<span class="entertainment-feature-main-excerpt">' + escapeHTML(leadExcerpt.slice(0,260)) + '</span>' : '') +
+          '</span>' +
         '</button>' +
-        (leadExcerpt ? '<p class="entertainment-feature-main-excerpt">' + escapeHTML(leadExcerpt.slice(0,260)) + '</p>' : '') +
-        '<button class="entertainment-feature-more" type="button" data-home-category-view="entertainment">More Details <span aria-hidden="true">→</span></button>' +
       '</article>';
 
-    gridHost.innerHTML = items.slice(1,7).map(post => {
+    // Three supporting stories appear side by side beneath the main story.
+    gridHost.innerHTML = items.slice(1,4).map(post => {
       const index = posts.indexOf(post);
       const image = imageForPost(post);
       return '<button class="entertainment-feature-card" type="button" data-open-post="' + index + '">' +
@@ -457,6 +468,37 @@
         '<strong>' + escapeHTML(post.title) + '</strong>' +
       '</button>';
     }).join("");
+
+    // Cycle through unique cover images from the same Entertainment posts.
+    const sliderImages = items.map(post => ({
+      src: imageForPost(post),
+      title: String(post.title || "Entertainment")
+    })).filter((item, index, all) =>
+      item.src && all.findIndex(other => other.src === item.src) === index
+    );
+
+    if (!sliderImages.length) {
+      sliderHost.innerHTML = '<div class="entertainment-image-slider-empty" aria-hidden="true"></div>';
+      return;
+    }
+
+    let activeImage = 0;
+    const paintSlider = () => {
+      const image = sliderImages[activeImage];
+      sliderHost.innerHTML =
+        '<figure class="entertainment-image-slider-frame">' +
+          '<img src="' + escapeHTML(image.src) + '" alt="' + escapeHTML(image.title) + '" loading="lazy">' +
+          '<figcaption>' + escapeHTML(image.title) + '</figcaption>' +
+        '</figure>';
+    };
+    paintSlider();
+
+    if (sliderImages.length > 1) {
+      sliderHost.__entertainmentTimer = window.setInterval(() => {
+        activeImage = (activeImage + 1) % sliderImages.length;
+        paintSlider();
+      }, 3000);
+    }
   }
 
   // Read all images already stored with the article (cover + inline article images).
