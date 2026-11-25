@@ -1,10 +1,10 @@
 // Global Scope 24 — on-demand translation with persistent cache.
 // The Gemini API key and Supabase service-role key are server-side secrets only.
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+const allowedOrigins = new Set([
+  "https://webdeveloperakkas-project.github.io",
+  "http://localhost:5500",
+  "http://127.0.0.1:5500",
+]);
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -19,6 +19,14 @@ const sha256 = async (value: string) => {
 };
 
 Deno.serve(async (request) => {
+  const origin = request.headers.get("origin") || "";
+  if (origin && !allowedOrigins.has(origin)) return new Response("Origin not allowed", { status: 403 });
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": origin || "https://webdeveloperakkas-project.github.io",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
@@ -36,7 +44,14 @@ Deno.serve(async (request) => {
     if (serialized.length > 45000) return json({ error: "Content is too large for one translation request" }, 413);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const secretKeysRaw = Deno.env.get("SUPABASE_SECRET_KEYS");
+    let serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!serviceKey && secretKeysRaw) {
+      try {
+        const secretKeys = JSON.parse(secretKeysRaw);
+        serviceKey = secretKeys.service_role || secretKeys.serviceRole || "";
+      } catch (_) {}
+    }
     const geminiKey = Deno.env.get("GEMINI_API_KEY");
     if (!supabaseUrl || !serviceKey || !geminiKey) {
       return json({ error: "Translation service is not configured" }, 500);
