@@ -4854,34 +4854,41 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Homepage World News: Bengali teal heading and category-driven subcategory filter. */
+/* Homepage World News heading with an in-section subcategory selector. */
 .home-world-heading{
   display:flex;
   align-items:center;
-  flex-wrap:wrap;
-  gap:12px 18px;
+  gap:12px;
   margin:0 0 16px;
-  padding:13px 18px;
-  background:var(--teal-dark);
-  color:#fff;
+  padding:0 0 12px;
+  border-bottom:1px solid #e7eeeb;
 }
 .home-world-heading h2{
-  margin:0 auto 0 0;
-  color:#fff;
+  flex:0 0 auto;
+  margin:0;
+  color:var(--teal-dark);
   font-size:clamp(19px,2vw,25px);
   font-weight:800;
   line-height:1.25;
 }
+.home-world-heading .science-tech-heading-rule{
+  height:1px;
+  flex:1 1 auto;
+  min-width:12px;
+  background:linear-gradient(90deg,#e8b85b,#e7eeeb);
+}
 .home-world-filter-label{
-  color:#fff;
+  flex:0 0 auto;
+  color:var(--muted);
   font-size:13px;
   font-weight:700;
 }
 .home-world-subcategory{
-  min-width:190px;
-  max-width:100%;
+  flex:0 0 190px;
+  min-width:150px;
+  max-width:240px;
   padding:9px 34px 9px 12px;
-  border:1px solid rgba(255,255,255,.65);
+  border:1px solid var(--line);
   border-radius:3px;
   background:#fff;
   color:var(--navy);
@@ -4889,12 +4896,12 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   cursor:pointer;
 }
 @media(max-width:600px){
-  .home-world-heading{gap:9px;padding:12px}
-  .home-world-heading h2{width:100%;margin:0}
+  .home-world-heading{gap:8px;flex-wrap:wrap;padding-bottom:10px}
+  .home-world-heading h2{font-size:17px}
+  .home-world-heading .science-tech-heading-rule{min-width:0}
   .home-world-filter-label{font-size:12px}
-  .home-world-subcategory{flex:1;min-width:0}
+  .home-world-subcategory{flex:1 1 145px;min-width:0;max-width:none}
 }
-
 
 /* Empty state for a selected World News subcategory with no published posts. */
 .home-world-empty{grid-column:1/-1;padding:26px 18px;border:1px solid var(--line);background:#fafcfb;color:var(--muted);font-size:14px;text-align:center}
