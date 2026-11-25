@@ -111,16 +111,16 @@
 
   // Only the three editorial languages are available in the header selector.
   const supportedLanguages = [
-    {code:"bn",flag:"🇧🇩",label:"বাংলা",locale:"bn-BD"},
-    {code:"en",flag:"🇺🇸",label:"English",locale:"en-US"},
-    {code:"hi",flag:"🇮🇳",label:"हिन्दी",locale:"hi-IN"}
+    {code:"bn",label:"বাংলা",locale:"bn-BD"},
+    {code:"en",label:"English",locale:"en-US"},
+    {code:"hi",label:"हिन्दी",locale:"hi-IN"}
   ];
   const languageSelect = $("#languageSelect");
   if (languageSelect) {
     languageSelect.replaceChildren(...supportedLanguages.map(language => {
       const option = document.createElement("option");
       option.value = language.code;
-      option.textContent = language.flag + "  " + language.label + " (" + language.code.toUpperCase() + ")";
+      option.textContent = language.label + " (" + language.code.toUpperCase() + ")";
       return option;
     }));
     // Slightly widen the existing selector on desktop, without enlarging it on mobile.
