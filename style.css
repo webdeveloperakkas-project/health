@@ -3692,7 +3692,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-editorial-lead .home-category-copy{padding-top:10px}
 .home-editorial-lead .home-category-copy strong{font-size:clamp(18px,1.8vw,24px);line-height:1.35}
 .home-editorial-list{display:flex;flex-direction:column;gap:12px}
-.home-editorial-list .home-world-small{display:grid;grid-template-columns:136px minmax(0,1fr);gap:13px;padding-bottom:12px}
+.home-editorial-list .home-world-small{display:grid;grid-template-columns:180px minmax(0,1fr);gap:13px;padding-bottom:12px}
 .home-editorial-list .home-category-image{aspect-ratio:16/9}
 .home-editorial-list .home-category-copy{padding-top:1px}
 .home-editorial-list .home-category-copy strong{font-size:18px;line-height:1.45}
