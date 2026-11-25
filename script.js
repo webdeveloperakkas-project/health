@@ -109,23 +109,11 @@
     extendedUiCopy[code] = extendedUiCopy.en;
   });
 
-  // Fifteen supported languages, each shown with a compact country flag.
+  // Only the three editorial languages are available in the header selector.
   const supportedLanguages = [
-    {code:"en",flag:"🇺🇸",label:"English",locale:"en-US"},
     {code:"bn",flag:"🇧🇩",label:"বাংলা",locale:"bn-BD"},
-    {code:"hi",flag:"🇮🇳",label:"हिन्दी",locale:"hi-IN"},
-    {code:"ar",flag:"🇸🇦",label:"العربية",locale:"ar-SA"},
-    {code:"ur",flag:"🇵🇰",label:"اردو",locale:"ur-PK"},
-    {code:"es",flag:"🇪🇸",label:"Español",locale:"es-ES"},
-    {code:"pt",flag:"🇧🇷",label:"Português",locale:"pt-BR"},
-    {code:"fr",flag:"🇫🇷",label:"Français",locale:"fr-FR"},
-    {code:"zh",flag:"🇨🇳",label:"简体中文",locale:"zh-CN"},
-    {code:"ja",flag:"🇯🇵",label:"日本語",locale:"ja-JP"},
-    {code:"ko",flag:"🇰🇷",label:"한국어",locale:"ko-KR"},
-    {code:"id",flag:"🇮🇩",label:"Indonesia",locale:"id-ID"},
-    {code:"de",flag:"🇩🇪",label:"Deutsch",locale:"de-DE"},
-    {code:"ru",flag:"🇷🇺",label:"Русский",locale:"ru-RU"},
-    {code:"tr",flag:"🇹🇷",label:"Türkçe",locale:"tr-TR"}
+    {code:"en",flag:"🇺🇸",label:"English",locale:"en-US"},
+    {code:"hi",flag:"🇮🇳",label:"हिन्दी",locale:"hi-IN"}
   ];
   const languageSelect = $("#languageSelect");
   if (languageSelect) {
