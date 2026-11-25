@@ -4246,7 +4246,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 
 /* =========================================================
    LATEST POSTS — THREE-COLUMN EDITORIAL STRIP
-   Four visual cards, four image-and-summary updates, headlines only.
+   Six visual cards left, four image-and-summary updates middle, six visual cards right.
    ========================================================= */
 .latest-posts-section{
   display:grid;
