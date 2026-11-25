@@ -223,3 +223,9 @@
 @media(max-width:520px){
   .article-details-grid{grid-template-columns:minmax(0,1fr)}
 }
+
+
+/* Keep the admin workspace close to the sidebar and use the freed width. */
+@media(min-width:761px){
+  .main-area{max-width:none;width:100%;margin:0;padding:30px 18px 30px 6px}
+}
