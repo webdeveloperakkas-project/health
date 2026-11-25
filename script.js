@@ -1277,119 +1277,170 @@
   });
 
   
-  function setupSubcategoryMenu(triggerSelector,submenuSelector,category,dataSelector,dataAttribute){
-    const trigger=document.querySelector(triggerSelector),submenu=document.querySelector(submenuSelector);if(!trigger||!submenu)return;
-    const setOpen=open=>{
-      if(open){
-        document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu").forEach(menu=>{if(menu!==submenu){menu.classList.remove("is-open");menu.hidden=true;menu.style.maxHeight="0px";const other=menu.parentElement.querySelector("button[aria-expanded]");if(other)other.setAttribute("aria-expanded","false");}});
-        submenu.hidden=false;submenu.style.maxHeight="0px";submenu.classList.add("is-open");
-        requestAnimationFrame(()=>{
-          const styles = window.getComputedStyle(submenu);
-          const borderHeight = (parseFloat(styles.borderTopWidth) || 0) + (parseFloat(styles.borderBottomWidth) || 0);
-          submenu.style.maxHeight = (submenu.scrollHeight + borderHeight) + "px";
-        });
-      }else{
-        submenu.classList.remove("is-open");submenu.style.maxHeight=submenu.scrollHeight+"px";
-        requestAnimationFrame(()=>{submenu.style.maxHeight="0px";});
-        window.setTimeout(()=>{if(!submenu.classList.contains("is-open"))submenu.hidden=true;},240);
-      }
-      trigger.setAttribute("aria-expanded",String(open));
-    };
-    trigger.addEventListener("click",event=>{event.stopPropagation();setOpen(submenu.hidden);});
-    submenu.addEventListener("click",event=>{
-      const choice=event.target.closest(dataSelector);if(!choice)return;
-      closeArticleViewForCategoryNavigation();
-      activeCategory=category;activeSubcategory=choice.getAttribute(dataAttribute)||"";showHomeFeed=false;showFeaturedFeed=false;activePostType="latest";
-      saveCurrentCategoryHistoryState();
-      document.querySelectorAll(".post-type-option").forEach(option=>{const selected=option.dataset.postType===activePostType;option.classList.toggle("active",selected);option.setAttribute("aria-pressed",String(selected));});
-      currentPage=1;searchTerm="";const searchInput=$("#siteSearch");if(searchInput)searchInput.value="";
-      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger),.sidebar-category").forEach(card=>{const selected=card.dataset.category===category && (!card.dataset.subcategory || card.dataset.subcategory===activeSubcategory);card.classList.toggle("active",selected);card.setAttribute("aria-pressed",String(selected));});
-      document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger").forEach(item=>item.classList.toggle("active",item===trigger));
-      submenu.querySelectorAll(dataSelector).forEach(item=>item.classList.toggle("active",item===choice));
-      setOpen(false);render();
+  /*
+   * Shared route for top navigation, dropdowns, and the mobile category drawer.
+   * Homepage section selectors remain independent section filters.
+   */
+  function navigateToCategory(category, subcategory = "") {
+    if (!category) return;
+    closeArticleViewForCategoryNavigation();
+    activeCategory = category;
+    activeSubcategory = subcategory || "";
+    showHomeFeed = false;
+    showFeaturedFeed = false;
+    activePostType = "latest";
+    currentPage = 1;
+    searchTerm = "";
+    saveCurrentCategoryHistoryState();
+
+    const searchInput = $("#siteSearch");
+    if (searchInput) searchInput.value = "";
+    document.querySelectorAll(".post-type-option").forEach(option => {
+      const selected = option.dataset.postType === activePostType;
+      option.classList.toggle("active", selected);
+      option.setAttribute("aria-pressed", String(selected));
     });
-    document.addEventListener("click",event=>{if(!event.target.closest("." + trigger.parentElement.classList[0])&&!submenu.hidden)setOpen(false);});
-    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!submenu.hidden)setOpen(false);});
-  }
-  setupSubcategoryMenu(".sports-category-trigger","#sportsSubmenu","sports","[data-sports-subcategory]","data-sports-subcategory");
-  setupSubcategoryMenu(".entertainment-category-trigger","#entertainmentSubmenu","entertainment","[data-entertainment-subcategory]","data-entertainment-subcategory");
-  /* World News submenu selections filter the homepage section in place. */
-  const worldSubmenu = $("#worldSubmenu");
-  const worldTrigger = $(".world-category-trigger");
-  if (worldSubmenu && worldTrigger) {
-    worldTrigger.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      const willOpen = worldSubmenu.hidden;
-      worldSubmenu.hidden = !willOpen;
-      worldSubmenu.classList.toggle("is-open", willOpen);
-      worldTrigger.setAttribute("aria-expanded", String(willOpen));
+
+    document.querySelectorAll(".category-tab, .sidebar-category").forEach(button => {
+      const selected = button.dataset.category === activeCategory &&
+        (button.dataset.subcategory || "") === activeSubcategory;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
     });
-    document.addEventListener("click", event => {
-      if (!event.target.closest(".world-category-menu") && !worldSubmenu.hidden) {
-        worldSubmenu.hidden = true;
-        worldSubmenu.classList.remove("is-open");
-        worldTrigger.setAttribute("aria-expanded", "false");
-      }
-    });
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && !worldSubmenu.hidden) {
-        worldSubmenu.hidden = true;
-        worldSubmenu.classList.remove("is-open");
-        worldTrigger.setAttribute("aria-expanded", "false");
-      }
-    });
-    const homeWorldSelect = $("#homeWorldSubcategorySelect");
-    if (homeWorldSelect) {
-      homeWorldSelect.addEventListener("change", () => {
-        activeHomeWorldSubcategory = homeWorldSelect.value || "";
-        worldSubmenu.querySelectorAll("[data-world-subcategory]").forEach(item => {
-          const selected = item.dataset.worldSubcategory === activeHomeWorldSubcategory;
+
+    document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger")
+      .forEach(trigger => {
+        const selected = trigger.dataset.category === activeCategory;
+        trigger.classList.toggle("active", selected);
+        trigger.setAttribute("aria-expanded", "false");
+      });
+
+    document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu")
+      .forEach(menu => {
+        menu.classList.remove("is-open");
+        menu.hidden = true;
+        menu.style.maxHeight = "0px";
+        menu.querySelectorAll("button").forEach(item => {
+          const attribute = Array.from(item.attributes).find(attr => attr.name.endsWith("-subcategory"));
+          const selected = Boolean(attribute && attribute.value === activeSubcategory);
           item.classList.toggle("active", selected);
           item.setAttribute("aria-pressed", String(selected));
         });
-        renderHomeCategorySections();
       });
+
+    const drawer = $("#mainNav");
+    if (drawer) {
+      drawer.querySelectorAll(".sidebar-submenu").forEach(panel => { panel.hidden = true; });
+      drawer.querySelectorAll(".sidebar-submenu-toggle").forEach(toggle => toggle.setAttribute("aria-expanded", "false"));
+      drawer.querySelectorAll(".sidebar-submenu button").forEach(button => {
+        const selected = button.dataset.sidebarCategory === activeCategory &&
+          (button.dataset.sidebarSubcategory || "") === activeSubcategory;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+      drawer.classList.remove("open");
     }
-    worldSubmenu.addEventListener("click", event => {
-      const choice = event.target.closest("[data-world-subcategory]");
+    document.body.classList.remove("menu-open");
+    const menuToggle = $("#menuToggle");
+    if (menuToggle) {
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open categories");
+    }
+
+    render();
+    const categoryFeed = $("#articleFeed");
+    if (categoryFeed) categoryFeed.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function setupSubcategoryMenu(triggerSelector, submenuSelector, category, dataSelector, dataAttribute) {
+    const trigger = document.querySelector(triggerSelector);
+    const submenu = document.querySelector(submenuSelector);
+    if (!trigger || !submenu) return;
+
+    const setOpen = open => {
+      if (open) {
+        document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu")
+          .forEach(menu => {
+            if (menu === submenu) return;
+            menu.classList.remove("is-open");
+            menu.hidden = true;
+            menu.style.maxHeight = "0px";
+            const otherTrigger = menu.parentElement.querySelector("button[aria-expanded]");
+            if (otherTrigger) otherTrigger.setAttribute("aria-expanded", "false");
+          });
+        submenu.hidden = false;
+        submenu.style.maxHeight = "0px";
+        submenu.classList.add("is-open");
+        requestAnimationFrame(() => {
+          const styles = window.getComputedStyle(submenu);
+          const borderHeight = (parseFloat(styles.borderTopWidth) || 0) +
+            (parseFloat(styles.borderBottomWidth) || 0);
+          submenu.style.maxHeight = (submenu.scrollHeight + borderHeight) + "px";
+        });
+      } else {
+        submenu.classList.remove("is-open");
+        submenu.style.maxHeight = submenu.scrollHeight + "px";
+        requestAnimationFrame(() => { submenu.style.maxHeight = "0px"; });
+        window.setTimeout(() => {
+          if (!submenu.classList.contains("is-open")) submenu.hidden = true;
+        }, 240);
+      }
+      trigger.setAttribute("aria-expanded", String(open));
+    };
+
+    trigger.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(submenu.hidden);
+    });
+    submenu.addEventListener("click", event => {
+      const choice = event.target.closest(dataSelector);
       if (!choice) return;
       event.preventDefault();
       event.stopPropagation();
-      activeHomeWorldSubcategory = choice.dataset.worldSubcategory || "";
-      const homeWorldSelect = $("#homeWorldSubcategorySelect");
-      if (homeWorldSelect) homeWorldSelect.value = activeHomeWorldSubcategory;
-      worldSubmenu.querySelectorAll("[data-world-subcategory]").forEach(item => {
-        const selected = item === choice;
+      navigateToCategory(category, choice.getAttribute(dataAttribute) || "");
+    });
+    document.addEventListener("click", event => {
+      if (!event.target.closest("." + trigger.parentElement.classList[0]) && !submenu.hidden) setOpen(false);
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !submenu.hidden) setOpen(false);
+    });
+  }
+
+  setupSubcategoryMenu(".world-category-trigger", "#worldSubmenu", "world", "[data-world-subcategory]", "data-world-subcategory");
+  setupSubcategoryMenu(".sports-category-trigger", "#sportsSubmenu", "sports", "[data-sports-subcategory]", "data-sports-subcategory");
+  setupSubcategoryMenu(".entertainment-category-trigger", "#entertainmentSubmenu", "entertainment", "[data-entertainment-subcategory]", "data-entertainment-subcategory");
+  setupSubcategoryMenu(".lifestyle-category-trigger", "#lifestyleSubmenu", "lifestyle", "[data-lifestyle-subcategory]", "data-lifestyle-subcategory");
+
+  // Homepage dropdowns filter only their own homepage sections.
+  const homeWorldSelect = $("#homeWorldSubcategorySelect");
+  if (homeWorldSelect) {
+    homeWorldSelect.addEventListener("change", () => {
+      activeHomeWorldSubcategory = homeWorldSelect.value || "";
+      document.querySelectorAll("#worldSubmenu [data-world-subcategory]").forEach(item => {
+        const selected = item.dataset.worldSubcategory === activeHomeWorldSubcategory;
         item.classList.toggle("active", selected);
         item.setAttribute("aria-pressed", String(selected));
       });
-      const trigger = $(".world-category-trigger");
-      if (trigger) trigger.classList.add("active");
-      worldSubmenu.classList.remove("is-open");
-      worldSubmenu.hidden = true;
-      if (trigger) trigger.setAttribute("aria-expanded", "false");
       renderHomeCategorySections();
     });
   }
+
   const homeLifestyleSelect = $("#homeLifestyleSubcategorySelect");
   if (homeLifestyleSelect) {
     homeLifestyleSelect.addEventListener("change", () => {
       activeHomeLifestyleSubcategory = homeLifestyleSelect.value || "";
-      const lifestyleSubmenu = $("#lifestyleSubmenu");
-      if (lifestyleSubmenu) {
-        lifestyleSubmenu.querySelectorAll("[data-lifestyle-subcategory]").forEach(item => {
-          const selected = item.dataset.lifestyleSubcategory === activeHomeLifestyleSubcategory;
-          item.classList.toggle("active", selected);
-          item.setAttribute("aria-pressed", String(selected));
-        });
-      }
+      document.querySelectorAll("#lifestyleSubmenu [data-lifestyle-subcategory]").forEach(item => {
+        const selected = item.dataset.lifestyleSubcategory === activeHomeLifestyleSubcategory;
+        item.classList.toggle("active", selected);
+        item.setAttribute("aria-pressed", String(selected));
+      });
       renderHomeCategorySections();
     });
   }
-    setupSubcategoryMenu(".lifestyle-category-trigger","#lifestyleSubmenu","lifestyle","[data-lifestyle-subcategory]","data-lifestyle-subcategory");
 
-  /* Category drawer: expand nested subcategories and select them without affecting the top category row. */
+  /* Mobile category drawer uses the same category route. */
   const categoryDrawer = $("#mainNav");
   if (categoryDrawer) {
     categoryDrawer.addEventListener("click", event => {
@@ -1407,98 +1458,18 @@
         return;
       }
       const choice = event.target.closest("[data-sidebar-category][data-sidebar-subcategory]");
-      if (!choice) return;
-      event.preventDefault();
-      if (choice.dataset.sidebarCategory === "world") {
-        activeHomeWorldSubcategory = choice.dataset.sidebarSubcategory || "";
-        const worldChoice = document.querySelector('#worldSubmenu [data-world-subcategory="' + activeHomeWorldSubcategory + '"]');
-        if (worldChoice) worldChoice.click();
-        categoryDrawer.classList.remove("open");
-        const menuToggle = $("#menuToggle");
-        if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
-        return;
+      if (choice) {
+        event.preventDefault();
+        navigateToCategory(choice.dataset.sidebarCategory, choice.dataset.sidebarSubcategory || "");
       }
-      closeArticleViewForCategoryNavigation();
-      activeCategory = choice.dataset.sidebarCategory;
-      activeSubcategory = choice.dataset.sidebarSubcategory;
-      saveCurrentCategoryHistoryState();
-      showHomeFeed = false;
-      showFeaturedFeed = false;
-      activePostType = "latest";
-      currentPage = 1;
-      searchTerm = "";
-      const searchInput = $("#siteSearch");
-      if (searchInput) searchInput.value = "";
-      document.querySelectorAll(".post-type-option").forEach(option => {
-        const selected = option.dataset.postType === activePostType;
-        option.classList.toggle("active", selected);
-        option.setAttribute("aria-pressed", String(selected));
-      });
-      document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger), .sidebar-category").forEach(button => {
-        const selected = button.dataset.category === activeCategory && (!button.dataset.subcategory || button.dataset.subcategory === activeSubcategory);
-        button.classList.toggle("active", selected);
-        button.setAttribute("aria-pressed", String(selected));
-      });
-      document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger").forEach(button => button.classList.toggle("active", button.dataset.category === activeCategory));
-      categoryDrawer.querySelectorAll(".sidebar-submenu button").forEach(button => button.classList.toggle("active", button === choice));
-      categoryDrawer.querySelectorAll(".sidebar-submenu").forEach(panel => { panel.hidden = true; });
-      categoryDrawer.querySelectorAll(".sidebar-submenu-toggle").forEach(button => button.setAttribute("aria-expanded", "false"));
-      closeCategoryMenu();
-      render();
     });
   }
 
-  /* =========================================================
-     09. CATEGORY NAVIGATION
-     Purpose: Change category and reset the post-type filter.
-     Section complete.
-  ========================================================= */
-  Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger), .sidebar-category")).forEach(button => {
-    button.addEventListener("click", () => {
-      /* Home always performs a full document navigation and requests a fresh page URL.
-         This resets in-page state and avoids reusing a cached homepage document. */
-      closeArticleViewForCategoryNavigation();
-      activeCategory = button.dataset.category;
-      activeSubcategory = button.dataset.subcategory || "";
-      saveCurrentCategoryHistoryState();
-      const sportsMenuTrigger = document.querySelector(".sports-category-trigger");
-      const sportsMenu = document.querySelector("#sportsSubmenu");
-      const entertainmentMenuTrigger=document.querySelector(".entertainment-category-trigger");
-      const entertainmentMenu=document.querySelector("#entertainmentSubmenu");
-      const worldMenuTrigger=document.querySelector(".world-category-trigger"),worldMenu=document.querySelector("#worldSubmenu");
-      const lifestyleMenuTrigger=document.querySelector(".lifestyle-category-trigger"),lifestyleMenu=document.querySelector("#lifestyleSubmenu");
-      if (sportsMenuTrigger) sportsMenuTrigger.classList.toggle("active", activeCategory === "sports");
-      if (sportsMenuTrigger) sportsMenuTrigger.setAttribute("aria-expanded", "false");
-      if (sportsMenu) sportsMenu.hidden = true;
-      if (sportsMenu) sportsMenu.querySelectorAll("[data-sports-subcategory]").forEach(item => item.classList.remove("active"));
-      if(entertainmentMenuTrigger)entertainmentMenuTrigger.classList.toggle("active",activeCategory==="entertainment");
-      if(entertainmentMenuTrigger)entertainmentMenuTrigger.setAttribute("aria-expanded","false");
-      if(entertainmentMenu)entertainmentMenu.hidden=true;
-      if(entertainmentMenu)entertainmentMenu.querySelectorAll("[data-entertainment-subcategory]").forEach(item=>item.classList.remove("active"));
-      [[worldMenuTrigger,worldMenu],[lifestyleMenuTrigger,lifestyleMenu]].forEach(([trigger,menu])=>{if(trigger){trigger.classList.toggle("active",trigger.dataset.category===activeCategory);trigger.setAttribute("aria-expanded","false");}if(menu){menu.hidden=true;menu.querySelectorAll("button").forEach(item=>item.classList.remove("active"));}});
-      showHomeFeed = false;
-      showFeaturedFeed = false;
-      activePostType = "latest";
-      Array.from(document.querySelectorAll(".post-type-option")).forEach(option => { const selected = option.dataset.postType === activePostType; option.classList.toggle("active", selected); option.setAttribute("aria-pressed", String(selected)); });
-      currentPage = 1;
-      searchTerm = "";
-      const searchInput = $("#siteSearch");
-      if (searchInput) searchInput.value = "";
-      Array.from(document.querySelectorAll(".category-tab:not(.sports-category-trigger), .sidebar-category")).forEach(card => {
-        const selected = card.dataset.category === activeCategory && (!card.dataset.subcategory || card.dataset.subcategory === activeSubcategory);
-        card.classList.toggle("active", selected);
-        card.setAttribute("aria-pressed", String(selected));
-      });
-      const menu = $("#mainNav");
-      const toggle = $("#menuToggle");
-      if (menu) menu.classList.remove("open");
-      document.body.classList.remove("menu-open");
-      if (toggle) { toggle.setAttribute("aria-expanded","false"); toggle.setAttribute("aria-label","Open categories"); }
-      render();
-      // Bring the newly selected category feed into view after closing any open article.
-      const categoryFeed = $("#articleFeed");
-      if (categoryFeed) categoryFeed.scrollIntoView({behavior:"smooth",block:"start"});
-    });
+  /* Main category tabs and sidebar category names use the same route. */
+  document.querySelectorAll(
+    ".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger), .sidebar-category"
+  ).forEach(button => {
+    button.addEventListener("click", () => navigateToCategory(button.dataset.category, button.dataset.subcategory || ""));
   });
 
   /* =========================================================
