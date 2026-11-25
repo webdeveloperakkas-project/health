@@ -519,7 +519,7 @@
       Array.from({ length: visibleGallerySlots }, (_, slot) => {
         const imageIndex = galleryImages.length ? (galleryCenterIndex + slot - 2 + galleryImages.length * 10) % galleryImages.length : -1;
         const image = imageIndex >= 0 ? galleryImages[imageIndex] : null;
-        return '<figure class="home-post-gallery-slide' + (slot === 2 ? ' is-center' : '') + (src ? '' : ' is-empty') + '" data-gallery-slot="' + slot + '">' +
+        return '<figure class="home-post-gallery-slide' + (slot === 2 ? ' is-center' : '') + (image ? '' : ' is-empty') + '" data-gallery-slot="' + slot + '">' +
           (image ? '<img src="' + escapeHTML(image.src) + '" alt="' + escapeHTML(image.title) + '" loading="lazy"><figcaption>' + escapeHTML(image.title) + '</figcaption>' : '') +
           '</figure>';
       }).join("") +
