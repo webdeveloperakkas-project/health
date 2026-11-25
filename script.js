@@ -347,7 +347,7 @@
     const items = sortedByDate(posts.filter(post =>
       post.category === "technology" &&
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
-    )).slice(0,18);
+    )).slice(0,16);
 
     section.hidden = items.length === 0;
     if (!items.length) {
@@ -382,16 +382,13 @@
       '</button>';
     };
 
-    const leftPosts = items.slice(0,6);
-    const middlePosts = items.slice(6,12);
-    const rightPosts = items.slice(12,18);
+    const leftPosts = items.slice(0,8);
+    
+    const rightPosts = items.slice(8,16);
 
     host.innerHTML =
       '<div class="science-tech-list-column science-tech-left">' +
         leftPosts.map(renderScienceList).join("") +
-      '</div>' +
-      '<div class="science-tech-list-column science-tech-middle">' +
-        middlePosts.map(renderScienceList).join("") +
       '</div>' +
       '<div class="science-tech-list-column science-tech-right">' +
         rightPosts.map(renderScienceList).join("") +
@@ -401,16 +398,10 @@
     window.requestAnimationFrame(syncScienceTechSectionHeight);
   }
 
-  /* Match the full Science & Technology section height to the homepage Hero on desktop. */
+  /* Let the two eight-post lists determine their natural section height. */
   function syncScienceTechSectionHeight() {
     const section = $("#scienceTechSection");
-    if (!section || !homeSection) return;
-    if (section.hidden || homeSection.hidden || !window.matchMedia("(min-width:801px)").matches) {
-      section.style.removeProperty("height");
-      return;
-    }
-    const heroHeight = homeSection.getBoundingClientRect().height;
-    if (heroHeight > 0) section.style.height = Math.ceil(heroHeight) + "px";
+    if (section) section.style.removeProperty("height");
   }
 
   if (homeSection) {
