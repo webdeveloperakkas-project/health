@@ -466,12 +466,12 @@
       Array.isArray(post && post.body) ? post.body.join(" ") : ""
     ].filter(Boolean).join(" ");
 
-    const imageTags = articleHtml.match(/<img\\b[^>]*>/gi) || [];
+    const imageTags = articleHtml.match(/<img\b[^>]*>/gi) || [];
     imageTags.forEach(tag => {
-      const match = tag.match(/\\bsrc\\s*=\\s*(["'])(.*?)\\1/i);
+      const match = tag.match(/\\bsrc\s*=\\s*(["'])(.*?)\\1/i);
       if (!match || !match[2]) return;
       const src = match[2].trim();
-      if (/^https?:\\/\\//i.test(src) && !images.includes(src)) images.push(src);
+      if (/^https?:\/\//i.test(src) && !images.includes(src)) images.push(src);
     });
     return images;
   }
