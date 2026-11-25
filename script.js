@@ -472,12 +472,15 @@
     const worldTitle = $("#homeWorldTitle");
     if (worldSection && worldHost) {
       worldSection.hidden = !world.length && !activeHomeWorldSubcategory;
-      if (worldTitle) {
-        const selectedButton = activeHomeWorldSubcategory
-          ? document.querySelector('#worldSubmenu [data-world-subcategory="' + activeHomeWorldSubcategory + '"]')
-          : null;
-        worldTitle.textContent = "বিশ্ব সংবাদ" + (selectedButton ? " / " + selectedButton.textContent.trim() : "");
+      const worldSelect = $("#homeWorldSubcategorySelect");
+      const worldButtons = Array.from(document.querySelectorAll("#worldSubmenu [data-world-subcategory]"));
+      if (worldSelect) {
+        const selectedValue = activeHomeWorldSubcategory;
+        worldSelect.innerHTML = '<option value="">Select Subcategory</option>' +
+          worldButtons.map(button => '<option value="' + escapeHTML(button.dataset.worldSubcategory) + '">' + escapeHTML(button.textContent.trim()) + '</option>').join("");
+        worldSelect.value = selectedValue;
       }
+      if (worldTitle) worldTitle.textContent = "বিশ্ব সংবাদ";
       worldHost.innerHTML = world.length
         ? '<div class="home-world-lead">' + renderCard(world[0], "home-world-main") + '</div><div class="home-world-list">' + world.slice(1).map(post => renderCard(post, "home-world-small")).join("") + '</div>'
         : '<div class="home-world-empty">No posts available</div>';
@@ -1182,12 +1185,26 @@
         worldTrigger.setAttribute("aria-expanded", "false");
       }
     });
+    const homeWorldSelect = $("#homeWorldSubcategorySelect");
+    if (homeWorldSelect) {
+      homeWorldSelect.addEventListener("change", () => {
+        activeHomeWorldSubcategory = homeWorldSelect.value || "";
+        worldSubmenu.querySelectorAll("[data-world-subcategory]").forEach(item => {
+          const selected = item.dataset.worldSubcategory === activeHomeWorldSubcategory;
+          item.classList.toggle("active", selected);
+          item.setAttribute("aria-pressed", String(selected));
+        });
+        renderHomeCategorySections();
+      });
+    }
     worldSubmenu.addEventListener("click", event => {
       const choice = event.target.closest("[data-world-subcategory]");
       if (!choice) return;
       event.preventDefault();
       event.stopPropagation();
       activeHomeWorldSubcategory = choice.dataset.worldSubcategory || "";
+      const homeWorldSelect = $("#homeWorldSubcategorySelect");
+      if (homeWorldSelect) homeWorldSelect.value = activeHomeWorldSubcategory;
       worldSubmenu.querySelectorAll("[data-world-subcategory]").forEach(item => {
         const selected = item === choice;
         item.classList.toggle("active", selected);
