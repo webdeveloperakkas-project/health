@@ -771,6 +771,8 @@
     // while the selected article replaces only the central content area.
     const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
+    const worldNewsSection = $("#homeWorldSection");
+    if (worldNewsSection) worldNewsSection.hidden = true;
     if (entertainmentSection) entertainmentSection.hidden = true;
     if (homeCategorySections) homeCategorySections.hidden = true;
     if (featuredStoriesSection) featuredStoriesSection.hidden = false;
@@ -880,6 +882,8 @@
     const scienceTechSection = $("#scienceTechSection");
     const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
+    const worldNewsSection = $("#homeWorldSection");
+    if (worldNewsSection) worldNewsSection.hidden = !isHomeLanding;
     if (scienceTechSection) scienceTechSection.hidden = !isHomeLanding;
     if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding;
     if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
