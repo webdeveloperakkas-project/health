@@ -159,6 +159,8 @@
       const labels = drawerSubcategoryLabels[button.dataset.sidebarSubcategory];
       if (labels) button.textContent = labels[activeLanguage] || labels.en;
     });
+    const sportsHomeTitle = document.querySelector("#homeSportsTitle");
+    if (sportsHomeTitle) sportsHomeTitle.textContent = t.categories.sports;
     document.documentElement.lang = activeLanguage;
     updateHeaderClock();
     document.querySelectorAll(".home-rail-tab[data-home-list]").forEach(button => { button.textContent = ui[button.dataset.homeList] || button.textContent; });
