@@ -1054,7 +1054,13 @@
     const entertainmentSection = $("#entertainmentFeatureSection");
     const homeCategorySections = $("#homeCategorySections");
     const worldNewsSection = $("#homeWorldSection");
+    const lifestyleHomeSection = $("#homeLifestyleSection");
+    const sportsHomeSection = $("#homeSportsSection");
     if (worldNewsSection) worldNewsSection.hidden = !isHomeLanding;
+    // These two homepage sections sit outside #homeCategorySections,
+    // so hide them explicitly whenever a category or subcategory feed is open.
+    if (lifestyleHomeSection) lifestyleHomeSection.hidden = !isHomeLanding;
+    if (sportsHomeSection) sportsHomeSection.hidden = !isHomeLanding;
     if (scienceTechSection) scienceTechSection.hidden = !isHomeLanding;
     if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding;
     if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
