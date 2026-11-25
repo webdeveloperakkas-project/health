@@ -368,7 +368,7 @@
         post.contentHtml ||
         post.content ||
         (Array.isArray(post.body) ? post.body.join(" ") : "")
-      ).replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/\\s+/g, " ").trim();
+      ).replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
       const summary = rawSummary.length > 170 ? rawSummary.slice(0,167).trimEnd() + "…" : rawSummary;
 
       return '<button class="home-category-card science-tech-list-card" type="button" data-open-post="' + index + '">' +
