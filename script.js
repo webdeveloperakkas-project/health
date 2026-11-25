@@ -496,7 +496,7 @@
     const excerpt = String(mainPost.excerpt || "").trim();
     // Collect available images from the posts in this homepage section.
     // Five image slots are always shown; additional images move through the slider one at a time.
-    const galleryImages = Array.from(new Set(items.flatMap(post => imagesForHomeGallery(post))));
+    const galleryImages = items.flatMap(post => imagesForHomeGallery(post).map(src => ({ src, title: post.title || "Article image" }))).filter((image, index, all) => all.findIndex(item => item.src === image.src) === index);
 
     const mainCard =
       '<button class="home-category-card home-world-main" type="button" data-open-post="' + mainIndex + '">' +
@@ -518,9 +518,9 @@
       '<div class="home-post-gallery-track">' +
       Array.from({ length: visibleGallerySlots }, (_, slot) => {
         const imageIndex = galleryImages.length ? (galleryCenterIndex + slot - 2 + galleryImages.length * 10) % galleryImages.length : -1;
-        const src = imageIndex >= 0 ? galleryImages[imageIndex] : "";
+        const image = imageIndex >= 0 ? galleryImages[imageIndex] : null;
         return '<figure class="home-post-gallery-slide' + (slot === 2 ? ' is-center' : '') + (src ? '' : ' is-empty') + '" data-gallery-slot="' + slot + '">' +
-          (src ? '<img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — gallery image" loading="lazy">' : '') +
+          (image ? '<img src="' + escapeHTML(image.src) + '" alt="' + escapeHTML(image.title) + '" loading="lazy"><figcaption>' + escapeHTML(image.title) + '</figcaption>' : '') +
           '</figure>';
       }).join("") +
       '</div>' +
@@ -536,10 +536,10 @@
     let pendingDirection = 0;
 
     const setSlideImage = (slide, imageIndex) => {
-      const src = galleryImages[(imageIndex + galleryImages.length) % galleryImages.length];
+      const image = galleryImages[(imageIndex + galleryImages.length) % galleryImages.length];
       slide.classList.remove("is-empty", "is-center");
       slide.dataset.imageIndex = String((imageIndex + galleryImages.length) % galleryImages.length);
-      slide.innerHTML = '<img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — gallery image" loading="lazy">';
+      slide.innerHTML = '<img src="' + escapeHTML(image.src) + '" alt="' + escapeHTML(image.title) + '" loading="lazy"><figcaption>' + escapeHTML(image.title) + '</figcaption>';
     };
     const markCenterSlide = () => {
       Array.from(track.children).forEach((slide, index) => {
@@ -558,7 +558,8 @@
       track.style.transform = direction > 0 ? "translateX(calc(-1 * var(--gallery-step)))" : "translateX(var(--gallery-step))";
     };
     track.addEventListener("transitionend", event => {
-      if (event.propertyName !== "transform") return;
+      // Ignore bubbled transform events from the center image; only the track ends a slide move.
+      if (event.target !== track || event.propertyName !== "transform") return;
       const direction = Number(track.dataset.direction || 1);
       const slides = Array.from(track.children);
       if (direction > 0) {
