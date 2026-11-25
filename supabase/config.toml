@@ -1,0 +1,5 @@
+# Supabase Edge Function configuration.
+# The translation endpoint is public to site visitors; the function validates
+# request shape and allowed browser origins and keeps all provider secrets server-side.
+[functions.translate-content]
+verify_jwt = false
