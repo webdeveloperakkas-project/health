@@ -998,28 +998,33 @@
     if (pagination) pagination.style.display = "none";
   }
 
-  Array.from(document.querySelectorAll(".home-rail-tab")).forEach(button => button.addEventListener("click", () => {
-    homeListType = button.dataset.homeList;
-    homeListIndex = 0;
-    const articleList = button.classList.contains("article-home-rail-tab");
-    const categoryList = button.classList.contains("category-home-rail-tab");
-    const panel = articleList ? $("#articleHomeListPanel") : categoryList ? $("#categoryHomeListPanel") : homeListPanel;
-    const tabs = articleList
-      ? Array.from(document.querySelectorAll(".article-home-rail-tab"))
-      : categoryList
-        ? Array.from(document.querySelectorAll(".category-home-rail-tab"))
-        : Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab):not(.category-home-rail-tab)"));
-    renderHomeList(panel, tabs, articleList ? currentArticlePost : null);
-  }));
-  $("#categoryHomeViewAll")?.addEventListener("click", () => {
-    showFeaturedFeed = false;
-    activeCategory = "home";
-    activeSubcategory = "";
-    activePostType = homeListType === "popular" ? "popular" : "latest";
-    showHomeFeed = true;
-    currentPage = 1;
-    render();
-    $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+  /* Delegated controls also cover the category and article rails created dynamically. */
+  document.addEventListener("click", event => {
+    const button = event.target.closest(".home-rail-tab");
+    if (button) {
+      homeListType = button.dataset.homeList;
+      homeListIndex = 0;
+      const articleList = button.classList.contains("article-home-rail-tab");
+      const categoryList = button.classList.contains("category-home-rail-tab");
+      const panel = articleList ? $("#articleHomeListPanel") : categoryList ? $("#categoryHomeListPanel") : homeListPanel;
+      const tabs = articleList
+        ? Array.from(document.querySelectorAll(".article-home-rail-tab"))
+        : categoryList
+          ? Array.from(document.querySelectorAll(".category-home-rail-tab"))
+          : Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab):not(.category-home-rail-tab)"));
+      renderHomeList(panel, tabs, articleList ? currentArticlePost : null);
+      return;
+    }
+    if (event.target.closest("#categoryHomeViewAll")) {
+      showFeaturedFeed = false;
+      activeCategory = "home";
+      activeSubcategory = "";
+      activePostType = homeListType === "popular" ? "popular" : "latest";
+      showHomeFeed = true;
+      currentPage = 1;
+      render();
+      $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+    }
   });
   $("#homeViewAll").addEventListener("click", () => {
     showFeaturedFeed = false;
