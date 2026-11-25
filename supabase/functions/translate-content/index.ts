@@ -77,6 +77,19 @@ Deno.serve(async (request) => {
       return json({ translated: cachedRows[0].translated_content, cached: true });
     }
 
+    // Limit cache-miss generation per visitor to protect the free Gemini quota.
+    const forwardedIp = request.headers.get("cf-connecting-ip") ||
+      request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+    const clientKey = await sha256(forwardedIp);
+    const rateResponse = await fetch(`${supabaseUrl}/rest/v1/rpc/check_translation_rate_limit`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ p_client_key: clientKey, p_limit: 30 }),
+    });
+    if (!rateResponse.ok || await rateResponse.json() !== true) {
+      return json({ error: "Translation limit reached. Please try again shortly." }, 429);
+    }
+
     const prompt = [
       "You are the professional localization engine for Global Scope 24.",
       `Translate every human-readable value into language code "${language}".`,
