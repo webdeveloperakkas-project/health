@@ -4885,7 +4885,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   border-radius:3px;
   background:#fff;
   color:var(--navy);
-  font:600 13px/1.3 inherit;
+  font:600 13px/1.3 Manrope,sans-serif;
   cursor:pointer;
 }
 @media(max-width:600px){
