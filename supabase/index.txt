@@ -76,29 +76,6 @@ function makeSlug(value: unknown): string {
     .replace(/^-+|-+$/g, "") || "article";
 }
 
-function safeArticleHtml(value: unknown): string {
-  let html = String(value ?? "");
-  html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, "");
-  html = html.replace(/<object\b[^>]*>[\s\S]*?<\/object\s*>/gi, "");
-  html = html.replace(/<embed\b[^>]*>/gi, "");
-  html = html.replace(/\s+on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
-  html = html.replace(/\s+(href|src)\s*=\s*(["'])\s*javascript:[\s\S]*?\2/gi, ' $1="#"');
-  html = html.replace(/\s+srcdoc\s*=\s*("[^"]*"|'[^']*')/gi, "");
-  return html;
-}
-
-function formatDate(value: string | null | undefined): string {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  }).format(date);
-}
-
 function postPath(post: Record<string, any>): string {
   const categoryKey = String(post.category || "");
   const categoryLabel = CATEGORY_LABELS[categoryKey];
@@ -113,55 +90,6 @@ function postPath(post: Record<string, any>): string {
   }
   parts.push(makeSlug(post.title));
   return parts.join("/");
-}
-
-function articleHtml(post: Record<string, any>, siteUrl: string): string {
-  const path = postPath(post);
-  const canonical = siteUrl + "/" + path + "/";
-  const title = String(post.meta_title || post.title || "Global Scope 24");
-  const description = String(post.meta_description || post.excerpt || "");
-  const language = LANGUAGE_LABELS[String(post.language || "en")] ? String(post.language || "en") : "en";
-  const category = CATEGORY_LABELS[String(post.category)] || "Global Scope 24";
-  const subcategory = String(post.subcategory || "").replace(/-/g, " ");
-  const publishedAt = post.published_at || post.updated_at || post.created_at || "";
-  const cover = String(post.cover_url || "");
-  const body = safeArticleHtml(post.content_html || "");
-
-  return '<!doctype html>\n' +
-    '<html lang="' + escapeHtml(language) + '">\n' +
-    '<head>\n' +
-    '  <meta charset="utf-8">\n' +
-    '  <meta name="viewport" content="width=device-width, initial-scale=1">\n' +
-    '  <meta name="theme-color" content="#153943">\n' +
-    '  <title>' + escapeHtml(title) + ' | Global Scope 24</title>\n' +
-    '  <meta name="description" content="' + escapeHtml(description) + '">\n' +
-    '  <link rel="canonical" href="' + escapeHtml(canonical) + '">\n' +
-    '  <meta property="og:type" content="article">\n' +
-    '  <meta property="og:site_name" content="Global Scope 24">\n' +
-    '  <meta property="og:title" content="' + escapeHtml(title) + '">\n' +
-    '  <meta property="og:description" content="' + escapeHtml(description) + '">\n' +
-    '  <meta property="og:url" content="' + escapeHtml(canonical) + '">\n' +
-    (cover ? '  <meta property="og:image" content="' + escapeHtml(cover) + '">\n' : "") +
-    '  <meta name="twitter:card" content="' + (cover ? "summary_large_image" : "summary") + '">\n' +
-    '  <link rel="preconnect" href="https://fonts.googleapis.com">\n' +
-    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
-    '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n' +
-    '  <link rel="stylesheet" href="' + escapeHtml(siteUrl + "/style.css?v=110") + '">\n' +
-    '</head>\n' +
-    '<body>\n' +
-    '  <main class="single-article container">\n' +
-    '    <article>\n' +
-    '      <div class="single-article-heading">\n' +
-    '        <div class="single-article-category">' + escapeHtml(category) +
-    (subcategory ? ' <span>›</span> ' + escapeHtml(subcategory) : "") + '</div>\n' +
-    '        <h1>' + escapeHtml(post.title) + '</h1>\n' +
-    '        <div class="single-article-meta"><time datetime="' + escapeHtml(publishedAt) + '">' + escapeHtml(formatDate(publishedAt)) + '</time></div>\n' +
-    '      </div>\n' +
-    (cover ? '      <img class="single-article-cover" src="' + escapeHtml(cover) + '" alt="' + escapeHtml(post.title) + '" loading="eager">\n' : "") +
-    '      <div class="single-article-body">' + body + '</div>\n' +
-    '    </article>\n' +
-    '  </main>\n' +
-    '</body>\n</html>\n';
 }
 
 async function supabaseRequest(path: string, serviceKey: string, method = "GET", body?: unknown) {
