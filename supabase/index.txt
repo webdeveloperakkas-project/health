@@ -294,11 +294,13 @@ Deno.serve(async (request: Request) => {
       }
 
       const publishTime = new Date().toISOString();
+      // Articles are rendered by the main SPA through 404.html fallback.
+      // Remove any legacy standalone article HTML for the selected posts; never generate new ones.
       const treeEntries: Array<Record<string, unknown>> = selectedPosts.map((post: Record<string, any>) => ({
         path: postPath(post) + "/index.html",
         mode: "100644",
         type: "blob",
-        content: articleHtml({ ...post, published_at: post.published_at || publishTime }, siteUrl),
+        sha: null,
       }));
       treeEntries.push({
         path: "robots.txt",
@@ -317,7 +319,7 @@ Deno.serve(async (request: Request) => {
         "/repos/" + owner + "/" + repo + "/git/commits",
         githubToken,
         "POST",
-        { message: "Publish " + selectedPosts.length + " Global Scope 24 article(s)", tree: newTree.sha, parents: [oldCommitSha] },
+        { message: "Publish Global Scope 24 posts without standalone article pages", tree: newTree.sha, parents: [oldCommitSha] },
       );
 
       const draftPosts = selectedPosts.filter((post: Record<string, any>) => post.status === "draft");
@@ -357,7 +359,7 @@ Deno.serve(async (request: Request) => {
           url: siteUrl + "/" + postPath(post) + "/",
         })),
         commit: newCommit.sha,
-        message: "Article HTML committed. Sitemap was not changed; manual SEO approval is required.",
+        message: "Posts published to Supabase. Article URLs use the main site fallback; no standalone article HTML was generated. Sitemap was not changed.",
       });
     }
 
