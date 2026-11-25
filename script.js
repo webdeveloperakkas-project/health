@@ -103,8 +103,49 @@
      Purpose: Apply the selected language to interface controls.
      Section complete.
   ========================================================= */
+  // The Gemini translation layer will provide full dynamic translations for these languages.
+  // Until it is deployed, keep existing interface copy available as a safe fallback.
+  ["ar","ur","pt","zh","ja","ko","id","ru","tr"].forEach(code => {
+    languageCopy[code] = languageCopy.en;
+    extendedUiCopy[code] = extendedUiCopy.en;
+  });
+
+  // Fifteen supported languages, each shown with a compact country flag.
+  const supportedLanguages = [
+    {code:"en",flag:"🇺🇸",label:"English",locale:"en-US"},
+    {code:"bn",flag:"🇧🇩",label:"বাংলা",locale:"bn-BD"},
+    {code:"hi",flag:"🇮🇳",label:"हिन्दी",locale:"hi-IN"},
+    {code:"ar",flag:"🇸🇦",label:"العربية",locale:"ar-SA"},
+    {code:"ur",flag:"🇵🇰",label:"اردو",locale:"ur-PK"},
+    {code:"es",flag:"🇪🇸",label:"Español",locale:"es-ES"},
+    {code:"pt",flag:"🇧🇷",label:"Português",locale:"pt-BR"},
+    {code:"fr",flag:"🇫🇷",label:"Français",locale:"fr-FR"},
+    {code:"zh",flag:"🇨🇳",label:"简体中文",locale:"zh-CN"},
+    {code:"ja",flag:"🇯🇵",label:"日本語",locale:"ja-JP"},
+    {code:"ko",flag:"🇰🇷",label:"한국어",locale:"ko-KR"},
+    {code:"id",flag:"🇮🇩",label:"Indonesia",locale:"id-ID"},
+    {code:"de",flag:"🇩🇪",label:"Deutsch",locale:"de-DE"},
+    {code:"ru",flag:"🇷🇺",label:"Русский",locale:"ru-RU"},
+    {code:"tr",flag:"🇹🇷",label:"Türkçe",locale:"tr-TR"}
+  ];
+  const languageSelect = $("#languageSelect");
+  if (languageSelect) {
+    languageSelect.replaceChildren(...supportedLanguages.map(language => {
+      const option = document.createElement("option");
+      option.value = language.code;
+      option.textContent = language.flag + "  " + language.label + " (" + language.code.toUpperCase() + ")";
+      return option;
+    }));
+    // Slightly widen the existing selector on desktop, without enlarging it on mobile.
+    const sizeLanguageControl = () => {
+      languageSelect.style.minWidth = window.matchMedia("(min-width: 801px)").matches ? "158px" : "auto";
+    };
+    sizeLanguageControl();
+    window.addEventListener("resize", sizeLanguageControl, {passive:true});
+  }
+
   let activeLanguage = "en";
-  const dateLocales = {en:"en-US",bn:"bn-BD",hi:"hi-IN",de:"de-DE",fr:"fr-FR",es:"es-ES"};
+  const dateLocales = Object.fromEntries(supportedLanguages.map(language => [language.code, language.locale]));
   function updateHeaderClock() {
     const now = new Date();
     const locale = dateLocales[activeLanguage] || "en-US";
