@@ -494,7 +494,9 @@
     const mainIndex = posts.indexOf(mainPost);
     const mainImage = imageForPost(mainPost);
     const excerpt = String(mainPost.excerpt || "").trim();
-    const galleryImages = imagesForHomeGallery(mainPost);
+    // Collect available images from the posts in this homepage section.
+    // Five image slots are always shown; additional images move through the slider one at a time.
+    const galleryImages = Array.from(new Set(items.flatMap(post => imagesForHomeGallery(post))));
 
     const mainCard =
       '<button class="home-category-card home-world-main" type="button" data-open-post="' + mainIndex + '">' +
@@ -510,36 +512,42 @@
         '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong></span></button>';
     }).join("");
 
-    const gallery = galleryImages.length
-      ? '<div class="home-post-gallery-slider" data-home-gallery="' + sectionKey + '" aria-label="More images from this article"><div class="home-post-gallery-track">' +
-          galleryImages.map((src, index) => '<figure class="home-post-gallery-slide' + (index === 0 ? ' is-active' : '') + '" data-gallery-slide="' + index + '"' + (index ? ' hidden' : '') + '><img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — image ' + (index + 1) + '" loading="lazy"></figure>').join("") +
-        '</div>' +
-        (galleryImages.length > 1 ? '<button class="home-post-gallery-arrow is-prev" type="button" data-gallery-step="-1" aria-label="Previous image">‹</button><span class="home-post-gallery-count" aria-live="polite">1 / ' + galleryImages.length + '</span><button class="home-post-gallery-arrow is-next" type="button" data-gallery-step="1" aria-label="Next image">›</button>' : '') +
-        '</div>'
-      : '<div class="home-post-gallery-slider is-empty" data-home-gallery="' + sectionKey + '" aria-label="Article image slider"></div>';
+    const visibleGallerySlots = 5;
+    const gallerySlots = Array.from({ length: visibleGallerySlots }, (_, index) => {
+      const src = galleryImages[index];
+      return src
+        ? '<figure class="home-post-gallery-slide" data-gallery-slide="' + index + '"><img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — image ' + (index + 1) + '" loading="lazy"></figure>'
+        : '<div class="home-post-gallery-slide is-empty" data-gallery-slide="' + index + '" aria-hidden="true"></div>';
+    });
+    const canMoveGallery = galleryImages.length > visibleGallerySlots;
+    const gallery = '<div class="home-post-gallery-slider' + (galleryImages.length ? '' : ' is-empty') + '" data-home-gallery="' + sectionKey + '" aria-label="Article image slider">' +
+      '<div class="home-post-gallery-track">' + gallerySlots.join("") + '</div>' +
+      (canMoveGallery ? '<button class="home-post-gallery-arrow is-prev" type="button" data-gallery-step="-1" aria-label="Previous images">‹</button><span class="home-post-gallery-count" aria-live="polite">1–5 / ' + galleryImages.length + '</span><button class="home-post-gallery-arrow is-next" type="button" data-gallery-step="1" aria-label="Next images">›</button>' : '') +
+      '</div>';
 
     host.innerHTML = '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="home-editorial-list">' + sideList + '</div></div>' + gallery;
 
     const slider = host.querySelector(".home-post-gallery-slider");
-    if (!slider || galleryImages.length < 2) return;
+    if (!slider || !canMoveGallery) return;
     let activeIndex = 0;
-    const slides = Array.from(slider.querySelectorAll("[data-gallery-slide]"));
+    const track = slider.querySelector(".home-post-gallery-track");
     const count = slider.querySelector(".home-post-gallery-count");
-    const showSlide = nextIndex => {
-      activeIndex = (nextIndex + slides.length) % slides.length;
-      slides.forEach((slide, index) => {
-        slide.hidden = index !== activeIndex;
-        slide.classList.toggle("is-active", index === activeIndex);
-      });
-      if (count) count.textContent = (activeIndex + 1) + " / " + slides.length;
+    const maxIndex = galleryImages.length - visibleGallerySlots;
+    const showGalleryPosition = nextIndex => {
+      activeIndex = Math.max(0, Math.min(maxIndex, nextIndex));
+      track.style.transform = 'translateX(-' + (activeIndex * 20) + '%)';
+      if (count) count.textContent = (activeIndex + 1) + '–' + (activeIndex + visibleGallerySlots) + ' / ' + galleryImages.length;
     };
     slider.onclick = event => {
       const control = event.target.closest("[data-gallery-step]");
       if (!control) return;
       event.preventDefault();
-      showSlide(activeIndex + Number(control.dataset.galleryStep || 0));
+      const step = Number(control.dataset.galleryStep || 0);
+      showGalleryPosition(activeIndex + step > maxIndex ? 0 : activeIndex + step < 0 ? maxIndex : activeIndex + step);
     };
-    host.__galleryTimer = window.setInterval(() => showSlide(activeIndex + 1), 3500);
+    host.__galleryTimer = window.setInterval(() => {
+      showGalleryPosition(activeIndex >= maxIndex ? 0 : activeIndex + 1);
+    }, 3500);
   }
 
   function renderHomeCategorySections() {
