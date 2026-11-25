@@ -2899,14 +2899,13 @@ img {
 
 
 
-/* Homepage lead story: keep every cover inside one consistent 4:3 frame.
-   The desktop frame is 800x600px; on narrower screens it scales down
-   proportionally without changing its shape or cropping the image. */
+/* Homepage lead story: use the standard YouTube 16:9 thumbnail ratio.
+   The frame scales proportionally on mobile and desktop without cropping. */
 .home-feature-image {
   box-sizing: border-box !important;
   width: min(800px, calc(100% - 1px)) !important;
   max-width: 800px !important;
-  aspect-ratio: 4 / 3 !important;
+  aspect-ratio: 16 / 9 !important;
   height: auto !important;
   overflow: hidden !important;
   background: #f7faf8 !important;
@@ -3852,9 +3851,8 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .home-support-cards { display:none; }
 }
 
-/* Desktop main Hero image: standardize every uploaded lead image to a
-   maximum display frame of 600x340px. Smaller desktop columns scale down
-   proportionally; mobile keeps its separately approved image layout. */
+/* Desktop main Hero image: use the same 16:9 frame as the mobile Hero.
+   Smaller desktop columns scale down proportionally without cropping. */
 @media (min-width:801px) {
   .home-featured .home-feature-image {
     box-sizing:border-box !important;
@@ -3862,7 +3860,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     width:min(600px, 100%) !important;
     max-width:600px !important;
     height:auto !important;
-    aspect-ratio:30 / 17 !important;
+    aspect-ratio:16 / 9 !important;
     margin-left:auto !important;
     margin-right:auto !important;
     overflow:hidden !important;
