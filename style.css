@@ -4765,9 +4765,53 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .category-editorial-lead-card strong {font-size:20px}
 }
 @media (max-width:800px) {
-  .category-editorial-grid {grid-template-columns:minmax(0,1fr);min-height:0;gap:20px}
-  .category-editorial-side {gap:14px}
-  .category-editorial-card strong {font-size:15px}
-  .category-editorial-lead-card .category-editorial-image {min-height:0}
-  .category-editorial-bottom {gap:12px}
+  /* Mobile category pages: one homepage-style opening article, then a numbered vertical list.
+     The desktop editorial grid remains untouched above this breakpoint. */
+  .category-editorial-grid,
+  .category-more-grid {display:none}
+  .category-mobile-layout {display:block;width:100%}
+  .category-mobile-post {
+    display:flex;width:100%;min-width:0;padding:0;border:0;background:transparent;
+    color:var(--navy);text-align:left;text-decoration:none;cursor:pointer;
+  }
+  .category-mobile-lead {
+    display:block;padding-bottom:19px;border-bottom:1px solid #e7eeeb;
+  }
+  .category-mobile-lead .category-mobile-image {
+    display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#eaf2ef;
+  }
+  .category-mobile-image img {
+    display:block;width:100%;height:100%;object-fit:cover;
+  }
+  .category-mobile-lead .category-mobile-copy {display:block;padding-top:12px}
+  .category-mobile-copy strong {
+    display:block;color:var(--navy);font:750 20px/1.38 Manrope,"Hind Siliguri",sans-serif;
+    overflow-wrap:anywhere;
+  }
+  .category-mobile-lead .category-mobile-summary {
+    display:-webkit-box;margin-top:7px;color:#5e7075;font-size:13px;line-height:1.7;
+    -webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .category-mobile-list {display:flex;flex-direction:column}
+  .category-mobile-list-item {
+    align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #e7eeeb;
+  }
+  .category-mobile-list-item .category-mobile-image {
+    display:block;flex:0 0 130px;width:130px;height:80px;overflow:hidden;background:#eaf2ef;
+  }
+  .category-mobile-copy {flex:1;min-width:0}
+  .category-mobile-list-item .category-mobile-copy strong {
+    font-size:14px;line-height:1.4;
+  }
+  .category-mobile-number {
+    display:block;margin-bottom:3px;color:var(--teal-dark);font-size:9px;
+    font-weight:800;letter-spacing:.1em;
+  }
+  .category-mobile-summary {
+    display:-webkit-box;margin-top:4px;color:#687a7d;font-size:11px;line-height:1.5;
+    -webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  }
+}
+@media (min-width:801px) {
+  .category-mobile-layout {display:none}
 }
