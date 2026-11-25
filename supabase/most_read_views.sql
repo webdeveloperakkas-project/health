@@ -109,7 +109,7 @@ as $$
   from ranked_posts
   where ranked_posts.view_count > 0
   order by ranked_posts.view_count desc, ranked_posts.last_viewed_at desc
-  limit 10;
+  limit 14;
 $$;
 
 revoke all on function public.record_post_view(text, uuid) from public;
