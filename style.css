@@ -5027,7 +5027,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     gap:10px;
     padding:10px 11px;
     border:1px solid rgba(255,255,255,.9);
-    border-radius:8px !important;
+    border-radius:0 !important;
     background:#fff;
     color:#111;
     box-shadow:0 2px 5px rgba(0,0,0,.07);
