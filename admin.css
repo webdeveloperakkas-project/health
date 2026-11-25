@@ -225,9 +225,9 @@
 }
 
 
-/* Keep the admin workspace left-aligned and leave the right side free. */
+/* Use all space after the fixed navigation; keep a 6px menu-to-content gap. */
 @media(min-width:761px){
-  .main-area{max-width:none;width:70%;margin:0;padding:30px 18px 30px 6px}
+  .main-area{max-width:none;width:100%;margin:0;padding:30px 18px 30px 6px}
 }
 
 
