@@ -513,41 +513,85 @@
     }).join("");
 
     const visibleGallerySlots = 5;
-    const gallerySlots = Array.from({ length: visibleGallerySlots }, (_, index) => {
-      const src = galleryImages[index];
-      return src
-        ? '<figure class="home-post-gallery-slide" data-gallery-slide="' + index + '"><img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — image ' + (index + 1) + '" loading="lazy"></figure>'
-        : '<div class="home-post-gallery-slide is-empty" data-gallery-slide="' + index + '" aria-hidden="true"></div>';
-    });
-    const canMoveGallery = galleryImages.length > visibleGallerySlots;
-    const gallery = '<div class="home-post-gallery-slider' + (galleryImages.length ? '' : ' is-empty') + '" data-home-gallery="' + sectionKey + '" aria-label="Article image slider">' +
-      '<div class="home-post-gallery-track">' + gallerySlots.join("") + '</div>' +
-      (canMoveGallery ? '<button class="home-post-gallery-arrow is-prev" type="button" data-gallery-step="-1" aria-label="Previous images">‹</button><span class="home-post-gallery-count" aria-live="polite">1–5 / ' + galleryImages.length + '</span><button class="home-post-gallery-arrow is-next" type="button" data-gallery-step="1" aria-label="Next images">›</button>' : '') +
+    let galleryCenterIndex = 0;
+    const gallery = '<div class="home-post-gallery-slider' + (galleryImages.length ? '' : ' is-empty') + '" data-home-gallery="' + sectionKey + '" aria-label="Article image carousel">' +
+      '<div class="home-post-gallery-track">' +
+      Array.from({ length: visibleGallerySlots }, (_, slot) => {
+        const imageIndex = galleryImages.length ? (galleryCenterIndex + slot - 2 + galleryImages.length * 10) % galleryImages.length : -1;
+        const src = imageIndex >= 0 ? galleryImages[imageIndex] : "";
+        return '<figure class="home-post-gallery-slide' + (slot === 2 ? ' is-center' : '') + (src ? '' : ' is-empty') + '" data-gallery-slot="' + slot + '">' +
+          (src ? '<img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — gallery image" loading="lazy">' : '') +
+          '</figure>';
+      }).join("") +
+      '</div>' +
+      (galleryImages.length > 1 ? '<button class="home-post-gallery-arrow is-prev" type="button" data-gallery-step="-1" aria-label="Previous images">‹</button><button class="home-post-gallery-arrow is-next" type="button" data-gallery-step="1" aria-label="Next images">›</button>' : '') +
       '</div>';
 
     host.innerHTML = '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="home-editorial-list">' + sideList + '</div></div>' + gallery;
 
     const slider = host.querySelector(".home-post-gallery-slider");
-    if (!slider || !canMoveGallery) return;
-    let activeIndex = 0;
+    if (!slider || galleryImages.length < 2) return;
     const track = slider.querySelector(".home-post-gallery-track");
-    const count = slider.querySelector(".home-post-gallery-count");
-    const maxIndex = galleryImages.length - visibleGallerySlots;
-    const showGalleryPosition = nextIndex => {
-      activeIndex = Math.max(0, Math.min(maxIndex, nextIndex));
-      track.style.transform = 'translateX(-' + (activeIndex * 20) + '%)';
-      if (count) count.textContent = (activeIndex + 1) + '–' + (activeIndex + visibleGallerySlots) + ' / ' + galleryImages.length;
+    let isAnimating = false;
+    let pendingDirection = 0;
+
+    const setSlideImage = (slide, imageIndex) => {
+      const src = galleryImages[(imageIndex + galleryImages.length) % galleryImages.length];
+      slide.classList.remove("is-empty", "is-center");
+      slide.dataset.imageIndex = String((imageIndex + galleryImages.length) % galleryImages.length);
+      slide.innerHTML = '<img src="' + escapeHTML(src) + '" alt="' + escapeHTML(mainPost.title) + ' — gallery image" loading="lazy">';
     };
+    const markCenterSlide = () => {
+      Array.from(track.children).forEach((slide, index) => {
+        slide.classList.toggle("is-center", index === 2);
+        slide.dataset.gallerySlot = String(index);
+      });
+    };
+    const moveGallery = direction => {
+      if (isAnimating) {
+        pendingDirection = direction;
+        return;
+      }
+      isAnimating = true;
+      track.dataset.direction = String(direction);
+      track.style.transition = "transform .55s ease";
+      track.style.transform = direction > 0 ? "translateX(calc(-20% - 10px))" : "translateX(calc(20% + 10px))";
+    };
+    track.addEventListener("transitionend", event => {
+      if (event.propertyName !== "transform") return;
+      const direction = Number(track.dataset.direction || 1);
+      const slides = Array.from(track.children);
+      if (direction > 0) {
+        const first = slides.shift();
+        track.appendChild(first);
+        galleryCenterIndex = (galleryCenterIndex + 1) % galleryImages.length;
+        setSlideImage(track.lastElementChild, galleryCenterIndex + 2);
+      } else {
+        const last = slides.pop();
+        track.insertBefore(last, track.firstElementChild);
+        galleryCenterIndex = (galleryCenterIndex - 1 + galleryImages.length) % galleryImages.length;
+        setSlideImage(track.firstElementChild, galleryCenterIndex - 2);
+      }
+      track.style.transition = "none";
+      track.style.transform = "translateX(0)";
+      markCenterSlide();
+      track.offsetHeight;
+      track.style.transition = "transform .55s ease";
+      isAnimating = false;
+      if (pendingDirection) {
+        const nextDirection = pendingDirection;
+        pendingDirection = 0;
+        moveGallery(nextDirection);
+      }
+    });
+
     slider.onclick = event => {
       const control = event.target.closest("[data-gallery-step]");
       if (!control) return;
       event.preventDefault();
-      const step = Number(control.dataset.galleryStep || 0);
-      showGalleryPosition(activeIndex + step > maxIndex ? 0 : activeIndex + step < 0 ? maxIndex : activeIndex + step);
+      moveGallery(Number(control.dataset.galleryStep || 0));
     };
-    host.__galleryTimer = window.setInterval(() => {
-      showGalleryPosition(activeIndex >= maxIndex ? 0 : activeIndex + 1);
-    }, 3500);
+    host.__galleryTimer = window.setInterval(() => moveGallery(1), 3500);
   }
 
   function renderHomeCategorySections() {
