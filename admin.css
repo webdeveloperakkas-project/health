@@ -173,3 +173,25 @@
 .seo-status.warning{background:#fff3d8;color:#946200}
 .seo-status.muted{background:#eef2f1;color:#64736f}
 #seoPostList table{min-width:650px}
+
+
+/* Three-language article authoring */
+.post-title-group{display:grid;gap:7px;margin-bottom:17px}
+.post-title-group .field-label{margin-top:5px}
+.post-title-group .title-input{width:100%;max-width:none;margin:0;padding:10px 12px;border:1px solid var(--line)!important;border-radius:7px!important;font-size:15px}
+.post-title-group .translated-title-input{background:#fbfdfc}
+.article-language-tabs{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 10px;padding:9px;background:#f5faf8;border:1px solid #dce9e5;border-radius:9px}
+.article-language-tab{border:1px solid #dce8e4;background:#fff;color:#607477;border-radius:7px;padding:8px 15px;font-size:11px;font-weight:800}
+.article-language-tab.active{background:#087c75;border-color:#087c75;color:#fff}
+.article-language-hint{margin-left:auto;color:#82938f;font-size:10px}
+.post-languages-fieldset{display:grid;gap:7px;margin:12px 0 15px;padding:12px;border:1px solid #dce9e5;border-radius:9px;background:#f8fbfa;min-width:0}
+.post-languages-fieldset legend{padding:0 4px}
+.post-languages-fieldset legend small{display:block;color:#879693;font-size:10px;font-weight:500;line-height:1.45;margin-top:3px}
+.post-language-option{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}
+.post-language-option:has(input:checked){border-color:#159d92;background:#eff9f6}
+.post-language-option input{width:16px;height:16px;accent-color:var(--teal);flex:none}
+.post-language-option span{display:flex;flex-direction:column;gap:1px}
+.post-language-option strong{font-size:11px;color:var(--navy)}
+.post-language-option small{font-size:9px;color:var(--muted)}
+.post-languages-fieldset .field-help{margin:2px 0 0;font-size:10px}
+@media(max-width:600px){.article-language-hint{flex-basis:100%;margin-left:0}.article-language-tab{flex:1}}
