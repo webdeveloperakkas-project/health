@@ -4584,14 +4584,14 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   padding-top:0;
 }
 .science-tech-list-card strong{
-  font-size:15px;
+  font-size:18px;
   line-height:1.4;
 }
 .science-tech-list-card small{
   display:-webkit-box;
   overflow:hidden;
   color:#657a7b;
-  font-size:12px;
+  font-size:16px;
   line-height:1.55;
   -webkit-line-clamp:3;
   -webkit-box-orient:vertical;
@@ -4616,8 +4616,8 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 @media (min-width:801px) and (max-width:1100px){
   .science-tech-layout{column-gap:22px}
   .science-tech-list-card{grid-template-columns:minmax(100px,34%) minmax(0,1fr);gap:10px}
-  .science-tech-list-card strong{font-size:13px}
-  .science-tech-list-card small{font-size:11px;-webkit-line-clamp:3}
+  .science-tech-list-card strong{font-size:18px}
+  .science-tech-list-card small{font-size:16px;-webkit-line-clamp:3}
 }
 @media(max-width:800px){
   .science-tech-section{height:auto!important;margin-bottom:30px;padding-bottom:22px}
