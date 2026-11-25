@@ -555,7 +555,7 @@
       isAnimating = true;
       track.dataset.direction = String(direction);
       track.style.transition = "transform .55s ease";
-      track.style.transform = direction > 0 ? "translateX(calc(-20% - 10px))" : "translateX(calc(20% + 10px))";
+      track.style.transform = direction > 0 ? "translateX(calc(-1 * var(--gallery-step)))" : "translateX(var(--gallery-step))";
     };
     track.addEventListener("transitionend", event => {
       if (event.propertyName !== "transform") return;
