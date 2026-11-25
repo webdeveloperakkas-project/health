@@ -3683,6 +3683,28 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-world-small .home-category-copy,.home-health-small .home-category-copy{padding-top:1px}
 .home-world-small strong{font-size:14px;line-height:1.45}
 .home-health-small strong{font-size:13px;line-height:1.4}
+/* Shared homepage editorial layout: 45% lead, 55% latest list, full-width image gallery. */
+.home-editorial-top{display:grid;grid-template-columns:minmax(0,45fr) minmax(0,55fr);gap:22px;align-items:start}
+.home-editorial-lead,.home-editorial-list{min-width:0}
+.home-editorial-lead .home-category-card{height:100%}
+.home-editorial-lead .home-category-image{aspect-ratio:16/9}
+.home-editorial-lead .home-category-copy{padding-top:10px}
+.home-editorial-lead .home-category-copy strong{font-size:clamp(18px,1.8vw,24px);line-height:1.35}
+.home-editorial-list{display:flex;flex-direction:column;gap:12px}
+.home-editorial-list .home-world-small{grid-template-columns:136px minmax(0,1fr);gap:13px;padding-bottom:12px}
+.home-editorial-list .home-category-image{aspect-ratio:16/10}
+.home-editorial-list .home-category-copy{padding-top:1px}
+.home-editorial-list .home-category-copy strong{font-size:15px;line-height:1.45}
+.home-post-gallery-slider{position:relative;width:100%;margin-top:20px;overflow:hidden;background:#102d36}
+.home-post-gallery-track{width:100%}
+.home-post-gallery-slide{width:100%;height:auto;aspect-ratio:16/7;margin:0;background:#102d36}
+.home-post-gallery-slide[hidden]{display:none}
+.home-post-gallery-slide img{display:block;width:100%;height:100%;object-fit:cover}
+.home-post-gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:42px;height:48px;border:0;border-radius:3px;background:#102d36c9;color:#fff;font-size:34px;line-height:1;cursor:pointer}
+.home-post-gallery-arrow:hover{background:#087c74}
+.home-post-gallery-arrow.is-prev{left:14px}
+.home-post-gallery-arrow.is-next{right:14px}
+.home-post-gallery-count{position:absolute;right:14px;bottom:12px;padding:4px 9px;border-radius:3px;background:#102d36c9;color:#fff;font-size:11px;font-weight:700}
 /* Sports desktop layout: the three left stories stretch to match the full center column. */
 .home-sports-layout{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.5fr) minmax(0,.98fr);gap:20px;align-items:stretch}
 .home-sports-left,.home-sports-center,.home-sports-right{display:flex;min-width:0;flex-direction:column}
@@ -3724,6 +3746,15 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .entertainment-slide strong{font-size:14px}
   .home-category-sections{gap:30px;padding:2px 0 32px}
   .home-world-layout,.home-health-layout{grid-template-columns:1fr;gap:14px}
+  .home-editorial-top{grid-template-columns:1fr;gap:14px}
+  .home-editorial-list{gap:0}
+  .home-editorial-list .home-world-small{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid #e8efec}
+  .home-editorial-list .home-category-copy strong{font-size:13px}
+  .home-post-gallery-slider{margin-top:14px}
+  .home-post-gallery-slide{aspect-ratio:16/9}
+  .home-post-gallery-arrow{width:30px;height:36px;font-size:25px}
+  .home-post-gallery-arrow.is-prev{left:8px}
+  .home-post-gallery-arrow.is-next{right:8px}
   .home-world-main .home-category-image{aspect-ratio:16/9}
   .home-world-list,.home-health-side{gap:0}
   .home-world-small,.home-health-small{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 0}
