@@ -4822,3 +4822,9 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .top-ad .ad-slot {
   border-radius: 0 !important;
 }
+
+/* Keep the homepage main lead-story card and its image frame square-cornered. */
+.home-featured,
+.home-featured .home-feature-image {
+  border-radius: 0 !important;
+}
