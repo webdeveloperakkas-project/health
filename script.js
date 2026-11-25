@@ -295,6 +295,7 @@
           const text = node.nodeValue || "";
           const parent = node.parentElement;
           if (!parent || !text.trim() || parent.closest(excluded)) return NodeFilter.FILTER_REJECT;
+          if (parent.closest("#languageSelect")) return NodeFilter.FILTER_REJECT;
           if (parent.closest("[data-no-translate]")) return NodeFilter.FILTER_REJECT;
           return NodeFilter.FILTER_ACCEPT;
         }
@@ -357,18 +358,13 @@
       console.warn("Full-page translation is not available yet:", error.message);
     } finally {
       pageTranslationBusy = false;
-      if (pageTranslationQueued) {
-        pageTranslationQueued = false;
-        window.clearTimeout(pageTranslationTimer);
-        pageTranslationTimer = window.setTimeout(() => translateRenderedPage(activeLanguage), 180);
-      }
     }
   }
 
   function watchRenderedPageForTranslation() {
     if (pageTranslationObserver || !document.body) return;
     pageTranslationObserver = new MutationObserver(() => {
-      if (activeLanguage === "en") return;
+      if (activeLanguage === "en" || pageTranslationBusy) return;
       window.clearTimeout(pageTranslationTimer);
       pageTranslationTimer = window.setTimeout(() => translateRenderedPage(activeLanguage), 220);
     });
@@ -1958,7 +1954,6 @@
       }
       render();
       watchRenderedPageForTranslation();
-      if (activeLanguage !== "en") await translateRenderedPage(activeLanguage);
       const currentArticleSlug = requestedArticleSlug();
       if (currentArticleSlug) {
         const requestedParts = requestedArticleRouteParts();
