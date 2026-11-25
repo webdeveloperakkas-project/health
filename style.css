@@ -4894,3 +4894,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .home-world-filter-label{font-size:12px}
   .home-world-subcategory{flex:1;min-width:0}
 }
+
+
+/* Empty state for a selected World News subcategory with no published posts. */
+.home-world-empty{grid-column:1/-1;padding:26px 18px;border:1px solid var(--line);background:#fafcfb;color:var(--muted);font-size:14px;text-align:center}
