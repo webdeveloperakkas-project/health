@@ -3638,10 +3638,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .entertainment-feature-main-open strong{color:var(--navy);font:800 clamp(19px,1.9vw,25px)/1.35 Manrope,"Hind Siliguri",sans-serif}
 .entertainment-feature-main-open:hover strong,.entertainment-feature-card:hover strong{color:var(--teal-dark)}
 .entertainment-feature-main-excerpt{display:block;margin:0;color:#596e72;font-size:14px;line-height:1.7}
-.entertainment-feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;min-width:0}
-.entertainment-feature-card{display:flex;min-width:0;flex-direction:column;align-items:stretch;gap:8px;padding:0;border:0;background:transparent;text-align:left;color:inherit;cursor:pointer}
-.entertainment-feature-card-image{display:block;width:100%;aspect-ratio:16/10;overflow:hidden;background:#eaf2ef}
-.entertainment-feature-card strong{display:-webkit-box;overflow:hidden;color:var(--navy);font:750 14px/1.45 Manrope,"Hind Siliguri",sans-serif;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.entertainment-feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;min-width:0;padding:12px;background:#e6f3f0;border:1px solid #c8e2dc;border-radius:0}
+.entertainment-feature-card{display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;padding:12px 10px;border:0;border-right:1px solid #b9d8d1;border-radius:0;background:transparent;text-align:center;color:inherit;cursor:pointer}
+.entertainment-feature-card:last-child{border-right:0}
+.entertainment-feature-card-image{display:block;width:88%;max-width:260px;aspect-ratio:16/10;overflow:hidden;background:#d3e8e2;border-radius:0}
+.entertainment-feature-card strong{display:-webkit-box;max-width:100%;overflow:hidden;color:var(--navy);font:750 14px/1.45 Manrope,"Hind Siliguri",sans-serif;text-align:center;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 .entertainment-feature-more{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin-top:0;padding:10px 15px;border:0;border-radius:4px;background:#e8b85b;color:#173b40;font:800 13px/1.4 Manrope,"Hind Siliguri",sans-serif;cursor:pointer}
 .entertainment-feature-more:hover{background:#f1cd7d}
 .entertainment-feature-rail{display:flex;min-width:0;flex-direction:column;gap:16px}
@@ -3667,7 +3668,9 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .entertainment-feature-main-open{grid-template-columns:130px minmax(0,1fr);gap:12px}
   .entertainment-feature-main-open strong{font-size:17px}
   .entertainment-feature-main-excerpt{font-size:12px;line-height:1.5}
-  .entertainment-feature-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .entertainment-feature-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:7px}
+  .entertainment-feature-card{padding:9px 5px;gap:7px}
+  .entertainment-feature-card-image{width:94%}
   .entertainment-feature-card strong{font-size:12px}
   .entertainment-feature-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .entertainment-feature-more{margin-top:0}
