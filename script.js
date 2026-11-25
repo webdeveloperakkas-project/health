@@ -585,7 +585,7 @@
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!panel) return;
     // Apply the compact image-and-title layout to both homepage Latest and Popular tabs.
-    panel.classList.toggle("is-home-compact", panel === homeListPanel);
+    panel.classList.toggle("is-home-compact", panel === homeListPanel || panel.id === "categoryHomeListPanel");
     if (!items.length) {
       panel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
     } else {
@@ -849,50 +849,20 @@
   });
 
 
-  function renderCategoryLatestPopularSections(matchesCategory) {
-    const limit = window.matchMedia("(min-width: 801px)").matches ? 4 : 10;
-    const scopedPosts = posts.filter(matchesCategory);
-    const latestItems = sortedByDate(scopedPosts.filter(post => {
-      const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
-      return placements.includes("latest");
-    })).slice(0, limit);
-    const popularItems = scopedPosts.filter(post => {
-      const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
-      return placements.includes("popular");
-    }).sort((a,b) =>
-      (Number(b.views)||0) - (Number(a.views)||0) ||
-      (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) -
-      (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)
-    ).slice(0, limit);
-
-    const renderSection = (title, items) => {
-      if (!items.length) return "";
-      return '<section class="category-below-section" aria-label="' + escapeHTML(title) + '">' +
-        '<div class="category-below-heading"><h2>' + escapeHTML(title) + '</h2></div>' +
-        '<div class="category-below-list">' +
-          items.map(post => {
-            const rawExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\s+/g," ").trim();
-            const excerpt = rawExcerpt.length > 210 ? rawExcerpt.slice(0,207).trimEnd() + "…" : rawExcerpt;
-            const stamp = Number(post.publishedTimestamp) || new Date(post.date).getTime();
-            const dateText = Number.isFinite(stamp) && stamp > 0
-              ? new Date(stamp).toLocaleDateString(activeLanguage === "bn" ? "bn-BD" : activeLanguage === "hi" ? "hi-IN" : "en-US",{day:"numeric",month:"short",year:"numeric"})
-              : String(post.date || "");
-            return '<button class="home-list-item category-below-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
-              (imageForPost(post) ? '<span class="home-list-thumb"><img src="' + escapeHTML(imageForPost(post)) + '" alt="" loading="lazy"></span>' : '') +
-              '<span class="home-list-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
-                (excerpt ? '<span class="category-below-excerpt">' + escapeHTML(excerpt) + '</span>' : '') +
-                '<time>' + escapeHTML(dateText) + '</time></span>' +
-            '</button>';
-          }).join("") +
-        '</div>' +
-      '</section>';
-    };
-
-    const labels = languageCopy[activeLanguage] || languageCopy.en;
-    return '<div class="category-below-lists">' +
-      renderSection(labels.types.latest, latestItems) +
-      renderSection(labels.types.popular, popularItems) +
-    '</div>';
+  /* Reuse the exact homepage Latest/Popular rail on category pages.
+     The shared renderer supplies the same global, automatically updated lists. */
+  function renderCategoryLatestPopularSections() {
+    const ui = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
+    return '<section class="category-home-rail article-below-lists" aria-label="Latest and Popular">' +
+      '<div class="home-rail-card">' +
+        '<div class="home-rail-heading"><div class="home-rail-tabs" role="tablist" aria-label="Latest and Popular">' +
+          '<button class="home-rail-tab category-home-rail-tab active" type="button" role="tab" aria-selected="true" data-home-list="latest">Latest</button>' +
+          '<button class="home-rail-tab category-home-rail-tab" type="button" role="tab" aria-selected="false" data-home-list="popular">Popular</button>' +
+        '</div></div>' +
+        '<div class="home-list-panel" id="categoryHomeListPanel" role="list" tabindex="0"></div>' +
+        '<button class="home-view-all" id="categoryHomeViewAll" type="button">' + escapeHTML(ui.more) + ' <span>→</span></button>' +
+      '</div>' +
+    '</section>';
   }
 
   function render() {
@@ -1018,7 +988,11 @@
           ? '<div class="category-mobile-list">' + visiblePosts.slice(1).map((post,index) => renderMobileCategoryPost(post,index + 1)).join("") + '</div>'
           : '') +
       '</div>' +
-      renderCategoryLatestPopularSections(categoryMatches);
+      renderCategoryLatestPopularSections();
+    const categoryHomePanel = $("#categoryHomeListPanel");
+    if (categoryHomePanel) {
+      renderHomeList(categoryHomePanel, Array.from(document.querySelectorAll(".category-home-rail-tab")));
+    }
     // All filtered category posts are shown together, so pagination is not needed here.
     const pagination = document.querySelector(".pagination");
     if (pagination) pagination.style.display = "none";
@@ -1028,12 +1002,25 @@
     homeListType = button.dataset.homeList;
     homeListIndex = 0;
     const articleList = button.classList.contains("article-home-rail-tab");
-    renderHomeList(
-      articleList ? $("#articleHomeListPanel") : homeListPanel,
-      articleList ? Array.from(document.querySelectorAll(".article-home-rail-tab")) : Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab)")),
-      articleList ? currentArticlePost : null
-    );
+    const categoryList = button.classList.contains("category-home-rail-tab");
+    const panel = articleList ? $("#articleHomeListPanel") : categoryList ? $("#categoryHomeListPanel") : homeListPanel;
+    const tabs = articleList
+      ? Array.from(document.querySelectorAll(".article-home-rail-tab"))
+      : categoryList
+        ? Array.from(document.querySelectorAll(".category-home-rail-tab"))
+        : Array.from(document.querySelectorAll(".home-rail-tab:not(.article-home-rail-tab):not(.category-home-rail-tab)"));
+    renderHomeList(panel, tabs, articleList ? currentArticlePost : null);
   }));
+  $("#categoryHomeViewAll")?.addEventListener("click", () => {
+    showFeaturedFeed = false;
+    activeCategory = "home";
+    activeSubcategory = "";
+    activePostType = homeListType === "popular" ? "popular" : "latest";
+    showHomeFeed = true;
+    currentPage = 1;
+    render();
+    $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+  });
   $("#homeViewAll").addEventListener("click", () => {
     showFeaturedFeed = false;
     activeCategory = "home";
