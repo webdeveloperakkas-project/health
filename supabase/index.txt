@@ -126,7 +126,6 @@ function articleHtml(post: Record<string, any>, siteUrl: string): string {
   const publishedAt = post.published_at || post.updated_at || post.created_at || "";
   const cover = String(post.cover_url || "");
   const body = safeArticleHtml(post.content_html || "");
-  const homeUrl = siteUrl + "/";
 
   return '<!doctype html>\n' +
     '<html lang="' + escapeHtml(language) + '">\n' +
@@ -150,9 +149,6 @@ function articleHtml(post: Record<string, any>, siteUrl: string): string {
     '  <link rel="stylesheet" href="' + escapeHtml(siteUrl + "/style.css?v=110") + '">\n' +
     '</head>\n' +
     '<body>\n' +
-    '  <header class="site-header"><div class="header-main container">' +
-    '<a class="brand" href="' + escapeHtml(homeUrl) + '"><span class="brand-name">Global <b>Scope 24</b></span></a>' +
-    '</div></header>\n' +
     '  <main class="single-article container">\n' +
     '    <article>\n' +
     '      <div class="single-article-heading">\n' +
@@ -165,7 +161,6 @@ function articleHtml(post: Record<string, any>, siteUrl: string): string {
     '      <div class="single-article-body">' + body + '</div>\n' +
     '    </article>\n' +
     '  </main>\n' +
-    '  <footer class="site-footer"><div class="footer-inner container"><a class="footer-brand" href="' + escapeHtml(homeUrl) + '">Global Scope 24</a><span>Explore the World. Understand More.</span></div></footer>\n' +
     '</body>\n</html>\n';
 }
 
