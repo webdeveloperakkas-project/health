@@ -289,7 +289,7 @@
     }
     pageTranslationBusy = true;
     try {
-      const excluded = "SCRIPT,STYLE,NOSCRIPT,TEXTAREA,INPUT,SELECT,OPTION,SVG,CODE";
+      const excluded = "SCRIPT,STYLE,NOSCRIPT,TEXTAREA,INPUT,SVG,CODE";
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
         acceptNode(node) {
           const text = node.nodeValue || "";
@@ -306,6 +306,14 @@
       const pageTitle = document.title || "";
       const descriptionTag = document.querySelector('meta[name="description"]');
       const metaDescription = descriptionTag?.getAttribute("content") || "";
+      const translatableAttributes = [];
+      document.querySelectorAll("[placeholder],[aria-label],[title],[alt]").forEach(element => {
+        if (element.closest("#languageSelect")) return;
+        ["placeholder","aria-label","title","alt"].forEach(attribute => {
+          const value = element.getAttribute(attribute);
+          if (value && value.trim()) translatableAttributes.push({ element, attribute, value });
+        });
+      });
       const pageKey = "page:" + location.pathname + location.search;
 
       // Keep requests below the Edge Function payload limit. Each chunk has
@@ -329,7 +337,14 @@
         const items = chunks[chunkIndex];
         const content = {
           texts: items.map(item => item.text),
-          ...(chunkIndex === 0 ? { pageTitle, metaDescription } : {})
+          ...(chunkIndex === 0 ? {
+            pageTitle,
+            metaDescription,
+            attributes: translatableAttributes.map(item => ({
+              attribute: item.attribute,
+              value: item.value
+            }))
+          } : {})
         };
         const translated = await requestCachedTranslation(
           pageKey + ":part:" + chunkIndex,
@@ -351,6 +366,15 @@
           if (descriptionTag && typeof translated.metaDescription === "string" &&
               descriptionTag.getAttribute("content") === metaDescription) {
             descriptionTag.setAttribute("content", translated.metaDescription);
+          }
+          if (Array.isArray(translated.attributes)) {
+            translatableAttributes.forEach((item, index) => {
+              const translatedValue = translated.attributes[index]?.value;
+              if (typeof translatedValue === "string" &&
+                  item.element.getAttribute(item.attribute) === item.value) {
+                item.element.setAttribute(item.attribute, translatedValue);
+              }
+            });
           }
         }
       }
