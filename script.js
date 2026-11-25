@@ -337,7 +337,7 @@
     window.requestAnimationFrame(syncLatestPostsSectionHeight);
   }
 
-  /* Science & Technology homepage section: 18 uniform image-and-summary list posts. */
+  /* Science & Technology homepage section: 12 uniform image-and-summary list posts. */
   function renderScienceTechSection() {
     const section = $("#scienceTechSection");
     const host = $("#scienceTechPosts");
@@ -347,7 +347,7 @@
     const items = sortedByDate(posts.filter(post =>
       post.category === "technology" &&
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
-    )).slice(0,16);
+    )).slice(0,12);
 
     section.hidden = items.length === 0;
     if (!items.length) {
@@ -382,9 +382,9 @@
       '</button>';
     };
 
-    const leftPosts = items.slice(0,8);
+    const leftPosts = items.slice(0,6);
     
-    const rightPosts = items.slice(8,16);
+    const rightPosts = items.slice(6,12);
 
     host.innerHTML =
       '<div class="science-tech-list-column science-tech-left">' +
