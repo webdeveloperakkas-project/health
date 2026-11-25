@@ -848,6 +848,53 @@
     render();
   });
 
+
+  function renderCategoryLatestPopularSections(matchesCategory) {
+    const limit = window.matchMedia("(min-width: 801px)").matches ? 4 : 10;
+    const scopedPosts = posts.filter(matchesCategory);
+    const latestItems = sortedByDate(scopedPosts.filter(post => {
+      const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
+      return placements.includes("latest");
+    })).slice(0, limit);
+    const popularItems = scopedPosts.filter(post => {
+      const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
+      return placements.includes("popular");
+    }).sort((a,b) =>
+      (Number(b.views)||0) - (Number(a.views)||0) ||
+      (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) -
+      (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0)
+    ).slice(0, limit);
+
+    const renderSection = (title, items) => {
+      if (!items.length) return "";
+      return '<section class="category-below-section" aria-label="' + escapeHTML(title) + '">' +
+        '<div class="category-below-heading"><h2>' + escapeHTML(title) + '</h2></div>' +
+        '<div class="category-below-list">' +
+          items.map(post => {
+            const rawExcerpt = String(post.excerpt || (post.contentHtml || (post.body || []).join(" ")).replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ")).replace(/\s+/g," ").trim();
+            const excerpt = rawExcerpt.length > 210 ? rawExcerpt.slice(0,207).trimEnd() + "…" : rawExcerpt;
+            const stamp = Number(post.publishedTimestamp) || new Date(post.date).getTime();
+            const dateText = Number.isFinite(stamp) && stamp > 0
+              ? new Date(stamp).toLocaleDateString(activeLanguage === "bn" ? "bn-BD" : activeLanguage === "hi" ? "hi-IN" : "en-US",{day:"numeric",month:"short",year:"numeric"})
+              : String(post.date || "");
+            return '<button class="home-list-item category-below-item" type="button" data-open-post="' + posts.indexOf(post) + '">' +
+              (imageForPost(post) ? '<span class="home-list-thumb"><img src="' + escapeHTML(imageForPost(post)) + '" alt="" loading="lazy"></span>' : '') +
+              '<span class="home-list-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
+                (excerpt ? '<span class="category-below-excerpt">' + escapeHTML(excerpt) + '</span>' : '') +
+                '<time>' + escapeHTML(dateText) + '</time></span>' +
+            '</button>';
+          }).join("") +
+        '</div>' +
+      '</section>';
+    };
+
+    const labels = languageCopy[activeLanguage] || languageCopy.en;
+    return '<div class="category-below-lists">' +
+      renderSection(labels.types.latest, latestItems) +
+      renderSection(labels.types.popular, popularItems) +
+    '</div>';
+  }
+
   function render() {
     const isHomeLanding = activeCategory === "home" && !searchTerm && !showHomeFeed;
     if (trendingSection) trendingSection.hidden = !isHomeLanding;
@@ -867,7 +914,7 @@
     if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding;
     if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
-      ((activeCategory !== "sports" && activeCategory !== "entertainment" && activeCategory !== "world" && activeCategory !== "lifestyle") || !activeSubcategory || post.subcategory === activeSubcategory);
+      (!activeSubcategory || post.subcategory === activeSubcategory);
     const placementMatches = post => {
       const placements = Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"];
       // Both homepage and category feeds respect the editor's explicit placement.
@@ -970,7 +1017,8 @@
         (visiblePosts.length > 1
           ? '<div class="category-mobile-list">' + visiblePosts.slice(1).map((post,index) => renderMobileCategoryPost(post,index + 1)).join("") + '</div>'
           : '') +
-      '</div>';
+      '</div>' +
+      renderCategoryLatestPopularSections(categoryMatches);
     // All filtered category posts are shown together, so pagination is not needed here.
     const pagination = document.querySelector(".pagination");
     if (pagination) pagination.style.display = "none";
