@@ -14,15 +14,33 @@
   const categoryPathSlugs = {technology:"technology"};
   const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
-  const languages = {en:"English",bn:"বাংলা",hi:"हिन्दी",de:"Deutsch",fr:"Français",es:"Español"};
+  const languages = {bn:"বাংলা",en:"English",hi:"हिन्दी"};
+  const editorialLanguages = ["bn","en","hi"];
+  const blankTranslation = () => ({title:"",content_html:""});
+  function emptyTranslations(){return {bn:blankTranslation(),en:blankTranslation(),hi:blankTranslation()};}
+  function normalizeTranslations(row){
+    const saved=row?.translations&&typeof row.translations==="object"&&!Array.isArray(row.translations)?row.translations:{};
+    const result=emptyTranslations();
+    editorialLanguages.forEach(language=>{
+      const item=saved[language]&&typeof saved[language]==="object"?saved[language]:{};
+      result[language]={title:String(item.title||""),content_html:String(item.content_html||""),excerpt:String(item.excerpt||"")};
+    });
+    const legacyLanguage=editorialLanguages.includes(row?.language)?row.language:"en";
+    if(!result[legacyLanguage].title)result[legacyLanguage].title=String(row?.title||"");
+    if(!result[legacyLanguage].content_html)result[legacyLanguage].content_html=String(row?.content_html||"");
+    if(!result[legacyLanguage].excerpt)result[legacyLanguage].excerpt=String(row?.excerpt||"");
+    return result;
+  }
   function makePostSlug(value){return String(value||"").normalize("NFC").toLowerCase().trim().replace(/[^\p{L}\p{M}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"")||"article";}
-  function updatePostUrlPreview(){const title=$("#postTitle")?.value||"",category=$("#postCategory")?.value||"",subcategory=$("#postSubcategory")?.value||"";const slug=makePostSlug(title);if($("#postSlugPreview"))$("#postSlugPreview").value=title.trim()?slug:"";const categoryPath=categoryPathSlugs[category]||makePostSlug(categories[category]||category);const parts=[categoryPath,subcategory?makePostSlug(subcategory):"",slug].filter(Boolean);if($("#postUrlPreview"))$("#postUrlPreview").textContent=title.trim()?"/health/"+parts.join("/")+"/":"URL preview will appear after you enter a title.";}
+  function updatePostUrlPreview(){const selected=[...document.querySelectorAll('input[name="postLanguage"]:checked')].map(input=>input.value);const titleByLanguage={bn:$("#postTitle")?.value||"",en:$("#postTitleEn")?.value||"",hi:$("#postTitleHi")?.value||""};const title=(selected.map(language=>titleByLanguage[language]).find(value=>value.trim())||titleByLanguage.bn||titleByLanguage.en||titleByLanguage.hi),category=$("#postCategory")?.value||"",subcategory=$("#postSubcategory")?.value||"";const slug=makePostSlug(title);if($("#postSlugPreview"))$("#postSlugPreview").value=title.trim()?slug:"";const categoryPath=categoryPathSlugs[category]||makePostSlug(categories[category]||category);const parts=[categoryPath,subcategory?makePostSlug(subcategory):"",slug].filter(Boolean);if($("#postUrlPreview"))$("#postUrlPreview").textContent=title.trim()?"/health/"+parts.join("/")+"/":"URL preview will appear after you enter a title.";}
 
   let posts = [];
   let editingId = null;
   let coverData = "";
   let coverProvider = "";
   let currentKeywords = [];
+  let translationDrafts = emptyTranslations();
+  let activeEditorLanguage = "bn";
   let cloudReady = false;
   let cloudLoading = false;
 
@@ -31,7 +49,7 @@
     catch(error){ return []; }
   }
   function fromDatabase(row){
-    return {id:row.id,title:row.title,content:row.content_html||"",category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
+    return {id:row.id,title:row.title,content:row.content_html||"",translations:normalizeTranslations(row),postLanguages:Array.isArray(row.post_languages)&&row.post_languages.length?row.post_languages:[row.language||"en"],category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
       subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
       status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
@@ -79,16 +97,28 @@
     return data.publicUrl;
   }
   async function preparePostMedia(post){
-    let content=post.content||"";
-    const dataUrls=[...new Set(content.match(/data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,[A-Za-z0-9+/=]+/gi)||[])];
-    for(const dataUrl of dataUrls) content=content.split(dataUrl).join(await uploadDataImage(dataUrl,post.id));
+    const uploaded=new Map();
+    async function replaceEmbeddedImages(html){
+      let content=String(html||"");
+      const dataUrls=[...new Set(content.match(/data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,[A-Za-z0-9+/=]+/gi)||[])];
+      for(const dataUrl of dataUrls){
+        if(!uploaded.has(dataUrl))uploaded.set(dataUrl,await uploadDataImage(dataUrl,post.id));
+        content=content.split(dataUrl).join(uploaded.get(dataUrl));
+      }
+      return content;
+    }
+    const translations={...(post.translations||{})};
+    for(const language of editorialLanguages){
+      if(translations[language])translations[language]={...translations[language],content_html:await replaceEmbeddedImages(translations[language].content_html)};
+    }
+    const content=await replaceEmbeddedImages(post.content||"");
     const cover=post.cover?await uploadDataImage(post.cover,post.id,post.coverProvider||""):"";
-    return {...post,content,cover};
+    return {...post,content,translations,cover};
   }
   async function savePostToCloud(post){
     const prepared=await preparePostMedia(post);
     const row={id:prepared.id,title:prepared.title,content_html:prepared.content,category:prepared.category,
-      subcategory:prepared.subcategory||"",language:prepared.language||"en",post_types:prepared.postTypes||["latest"],
+      subcategory:prepared.subcategory||"",language:prepared.language||"bn",translations:prepared.translations||{},post_languages:prepared.postLanguages||[prepared.language||"bn"],post_types:prepared.postTypes||["latest"],
       featured_stories:!!prepared.featuredStories,status:prepared.status,scheduled_at:prepared.scheduledAt||null,excerpt:prepared.excerpt||"",
       meta_title:prepared.metaTitle||"",meta_description:prepared.metaDescription||"",focus_keyword:prepared.focusKeyword||"",related_keywords:prepared.keywords||[],
       keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",
@@ -188,8 +218,9 @@
       const autoMain = mainSliderIds.has(post.id) ? ' · <span class="main-slider-badge">Main Home Page</span>' : '';
       const placementText = placementsFor(post).map(value=>placementLabels[value]).join(", ") || "—";
       const selector=options.selectable?'<td><input type="checkbox" class="draft-row-select" data-draft-select="'+safe(post.id)+'" aria-label="Select '+safe(post.title||"post")+'"></td>':'';
+      const languageText=(post.postLanguages||[post.language||"en"]).map(code=>languages[code]||code).join(" + ");
       const menu='<details class="row-menu"><summary aria-label="More actions">•••</summary><div class="row-menu-pop"><button type="button" data-edit="'+safe(post.id)+'">Edit</button><button type="button" class="delete" data-delete="'+safe(post.id)+'">Delete</button></div></details>';
-      return '<tr>'+selector+'<td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languages[post.language]||"English")+'</small></td><td>'+safe(categories[post.category]||post.category)+(post.subcategory?' · '+safe(post.subcategory):'')+'</td><td>'+safe(placementText)+((post.featuredStories ?? post.featured)?" · Featured Stories":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions">'+menu+'</div></td></tr>';
+      return '<tr>'+selector+'<td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languageText)+'</small></td><td>'+safe(categories[post.category]||post.category)+(post.subcategory?' · '+safe(post.subcategory):'')+'</td><td>'+safe(placementText)+((post.featuredStories ?? post.featured)?" · Featured Stories":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions">'+menu+'</div></td></tr>';
     }).join("")+'</tbody></table>';
   }
   function renderLists(){
@@ -375,6 +406,31 @@
   }
   $("#visualModeBtn").addEventListener("click",()=>setEditorMode("visual"));
   $("#htmlModeBtn").addEventListener("click",()=>setEditorMode("html"));
+  function captureActiveTranslation(){
+    if(!translationDrafts[activeEditorLanguage])translationDrafts[activeEditorLanguage]=blankTranslation();
+    translationDrafts[activeEditorLanguage].content_html=cleanArticleHTML();
+  }
+  function activateArticleLanguage(language){
+    if(!editorialLanguages.includes(language)||language===activeEditorLanguage)return;
+    captureActiveTranslation();
+    activeEditorLanguage=language;
+    const next=translationDrafts[language]||blankTranslation();
+    $("#articleEditor").innerHTML=next.content_html||"<p></p>";
+    $("#articleHtmlEditor").value=next.content_html||"";
+    selectedInlineFigure=null;
+    $("#inlineImagePanel").classList.remove("is-visible");
+    document.querySelectorAll("[data-article-language]").forEach(button=>{
+      const active=button.dataset.articleLanguage===language;
+      button.classList.toggle("active",active);
+      button.setAttribute("aria-selected",String(active));
+    });
+    setEditorMode("visual");
+    updateArticleTextSize();
+    $("#articleEditor").setAttribute("data-placeholder",language==="bn"?"বাংলা আর্টিকেল এখানে লিখুন...":language==="en"?"Write the English article here...":"यहाँ हिंदी लेख लिखें...");
+  }
+  document.querySelectorAll("[data-article-language]").forEach(button=>{
+    button.addEventListener("click",()=>activateArticleLanguage(button.dataset.articleLanguage));
+  });
   $("#formatHtmlBtn").addEventListener("click",()=>{$("#articleHtmlEditor").value=formatHTMLSource($("#articleHtmlEditor").value);showToast("HTML code formatted.");});
 
   /* Live estimate of article text only (UTF-8); media files and HTML markup are excluded. */
@@ -563,9 +619,10 @@
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   $("#postCategory").addEventListener("change",updatePostUrlPreview);
   $("#postSubcategory").addEventListener("change",updatePostUrlPreview);
-  $("#postTitle").addEventListener("input",updatePostUrlPreview);
+  ["#postTitle","#postTitleEn","#postTitleHi"].forEach(selector=>$(selector).addEventListener("input",updatePostUrlPreview));
+  document.querySelectorAll('input[name="postLanguage"]').forEach(input=>input.addEventListener("change",updatePostUrlPreview));
   function resetForm(){
-    $("#postForm").reset(); $("#postStatus").disabled=false; syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); $("#postStatus").disabled=false; translationDrafts=emptyTranslations(); activeEditorLanguage="bn"; document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage==="bn";button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));}); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; $("#articleEditor").setAttribute("data-placeholder","বাংলা আর্টিকেল এখানে লিখুন..."); setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; coverProvider=""; $("#coverUpload").value=""; document.querySelector('input[name="coverStorageProvider"][value="supabase"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -576,8 +633,20 @@
   function editPost(postId){
     const post=posts.find(item=>item.id===postId); if(!post) return;
     editingId=postId; resetForm();
-    $("#postTitle").value=post.title||""; updatePostUrlPreview(); $("#articleEditor").innerHTML=post.content||"<p></p>"; $("#articleHtmlEditor").value=post.content||""; setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
-    $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#postLanguage").value=post.language||"en"; updatePostUrlPreview();
+    translationDrafts=emptyTranslations();
+    const savedTranslations=post.translations||emptyTranslations();
+    editorialLanguages.forEach(language=>{translationDrafts[language]={...blankTranslation(),...(savedTranslations[language]||{})};});
+    if(!translationDrafts[post.language]?.title&&post.title)translationDrafts[post.language==="bn"||post.language==="hi"?"bn":"en"].title=post.title;
+    if(!translationDrafts[post.language]?.content_html&&post.content)translationDrafts[post.language==="bn"||post.language==="hi"?"bn":"en"].content_html=post.content;
+    $("#postTitle").value=translationDrafts.bn.title||"";
+    $("#postTitleEn").value=translationDrafts.en.title||"";
+    $("#postTitleHi").value=translationDrafts.hi.title||"";
+    const storedLanguages=Array.isArray(post.postLanguages)&&post.postLanguages.length?post.postLanguages:[post.language||"en"];
+    document.querySelectorAll('input[name="postLanguage"]').forEach(input=>{input.checked=storedLanguages.includes(input.value);});
+    activeEditorLanguage="bn";
+    document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage==="bn";button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));});
+    $("#articleEditor").innerHTML=translationDrafts.bn.content_html||"<p></p>"; $("#articleHtmlEditor").value=translationDrafts.bn.content_html||""; setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; updatePostUrlPreview();
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
@@ -605,9 +674,22 @@
 
   $("#postForm").addEventListener("submit",async event=>{
     event.preventDefault();
-    const title=$("#postTitle").value.trim(); const content=cleanArticleHTML(); updatePostUrlPreview();
-    if(!title) return showToast("Please add an article title.");
-    if(!plainText(content)) return showToast("Please write the article content.");
+    captureActiveTranslation();
+    const selectedLanguages=[...document.querySelectorAll('input[name="postLanguage"]:checked')].map(input=>input.value);
+    if(!selectedLanguages.length)return showToast("Select at least one post language.");
+    const titleFields={bn:$("#postTitle").value.trim(),en:$("#postTitleEn").value.trim(),hi:$("#postTitleHi").value.trim()};
+    const translations={};
+    for(const language of selectedLanguages){
+      const title=titleFields[language]||"";
+      const content=translationDrafts[language]?.content_html||"";
+      if(!title)return showToast("Add the "+languages[language]+" post title before saving.");
+      if(!plainText(content))return showToast("Write the full "+languages[language]+" article before saving.");
+      translations[language]={title,content_html:content};
+    }
+    const primaryLanguage=selectedLanguages.includes("bn")?"bn":selectedLanguages[0];
+    const title=translations[primaryLanguage].title;
+    const content=translations[primaryLanguage].content_html;
+    updatePostUrlPreview();
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
     if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular, Trending or Favorites.");
@@ -623,7 +705,7 @@
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
-      id:editingId||id(),title,content,excerpt:$("#cardSummary").value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:$("#postLanguage").value,
+      id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary").value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"supabase",views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null,
@@ -655,15 +737,17 @@
 
   /* Article preview */
   function previewHTML(){
-    const title=safe($("#postTitle").value||"Untitled article");
+    captureActiveTranslation();
+    const titleField={bn:"#postTitle",en:"#postTitleEn",hi:"#postTitleHi"}[activeEditorLanguage];
+    const title=safe($(titleField).value||"Untitled article");
     const category=safe(categories[$("#postCategory").value]);
     const subcategory=["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
-    const body=cleanArticleHTML();
+    const body=translationDrafts[activeEditorLanguage]?.content_html||cleanArticleHTML();
     const cover=coverData?'<img src="'+coverData+'" alt="Article cover">':"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
     const video=$("#videoUrl").value.trim();
     const videoLink=video?'<p><a href="'+safe(video)+'" target="_blank" rel="noopener">Watch featured video ↗</a></p>':"";
-    return cover+'<div class="meta">'+category+(subcategory?' · '+subcategory:'')+' · '+safe(languages[$("#postLanguage").value])+'</div><h1>'+title+'</h1>'+body+videoLink+keywords;
+    return cover+'<div class="meta">'+category+(subcategory?' · '+subcategory:'')+' · '+safe(languages[activeEditorLanguage])+'</div><h1>'+title+'</h1>'+body+videoLink+keywords;
   }
   $("#previewBtn").addEventListener("click",()=>{$("#previewContent").innerHTML=previewHTML();$("#previewDialog").showModal();});
   $("#closePreview").addEventListener("click",()=>$("#previewDialog").close());
