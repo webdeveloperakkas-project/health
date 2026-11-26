@@ -5131,3 +5131,66 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .single-article-biography-meta{display:flex;flex-wrap:wrap;gap:7px 16px;margin:12px 0 4px;color:#52676a;font-size:12px;line-height:1.6}
 .single-article-biography-meta span{display:inline-flex;align-items:baseline;gap:5px}
 .single-article-biography-meta strong{color:#087c75;font-weight:800}
+
+
+/* Biography only: replace the right-hand list with four image-and-title cards. */
+.home-editorial-list.home-biography-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+.home-biography-cards .home-biography-card {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+.home-biography-cards .home-category-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #f1f4f3;
+}
+.home-biography-cards .home-category-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-biography-cards .home-category-copy {
+  display: block;
+  width: 100%;
+  padding: 0;
+}
+.home-biography-cards .home-category-copy strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #183943;
+  font-size: clamp(13px, 1.15vw, 16px);
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: left;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+@media (max-width: 800px) {
+  .home-editorial-list.home-biography-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+    gap: 10px;
+  }
+  .home-biography-cards .home-category-copy strong {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+}
