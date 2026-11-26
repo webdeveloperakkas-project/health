@@ -4509,14 +4509,14 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 /* Desktop Latest Posts columns now follow the exact Hero column widths. */
 @media (min-width:801px) {
   .latest-posts-section {
-    grid-template-columns:minmax(320px,1.15fr) minmax(0,1.65fr) minmax(235px,.9fr);
+    grid-template-columns:minmax(320px,1.1fr) minmax(0,1.65fr) minmax(235px,.95fr);
     gap:20px;
   }
 }
 
 @media (min-width:1240px) {
   .latest-posts-section {
-    grid-template-columns:minmax(320px,1.15fr) 600px minmax(235px,.9fr);
+    grid-template-columns:minmax(320px,1.1fr) 600px minmax(235px,.95fr);
   }
 }
 
