@@ -5196,3 +5196,32 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     line-height: 1.35;
   }
 }
+
+
+/* Keep all four Biography card positions visible, even before four posts are available. */
+.home-biography-cards .home-biography-card-placeholder {
+  display: flex;
+  min-height: 150px;
+  padding: 8px;
+  border: 1px solid #e5ece9;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 2px 8px #102d3610;
+}
+.home-biography-cards .home-biography-card-placeholder .home-category-image-empty {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  flex: 0 0 auto;
+  background: #f4f7f6;
+  border: 1px solid #edf1ef;
+  border-radius: 3px;
+}
+.home-biography-placeholder-title {
+  display: block;
+  width: 78%;
+  height: 9px;
+  margin-top: 9px;
+  border-radius: 5px;
+  background: #f1f4f3;
+}
