@@ -445,9 +445,8 @@
       '</button>';
     }).join("");
 
-    // Add a dedicated action card beneath the four middle-column updates.
-    // It deliberately triggers the same control as the Hero's "More Details"
-    // button so both locations open the identical homepage Latest feed.
+    // Keep the original desktop action button in its existing position.
+    // A separate mobile-only copy sits after the final two Latest cards.
     let latestMoreButton = $("#latestPostsViewAll");
     if (!latestMoreButton) {
       updateHost.insertAdjacentHTML("afterend",
@@ -457,6 +456,16 @@
     }
     if (latestMoreButton) {
       latestMoreButton.innerHTML = escapeHTML((extendedUiCopy[activeLanguage] || extendedUiCopy.en).more) + ' <span aria-hidden="true">→</span>';
+    }
+    let latestMobileMoreButton = $("#latestPostsViewAllMobile");
+    if (!latestMobileMoreButton) {
+      headlineHost.insertAdjacentHTML("beforeend",
+        '<button class="latest-posts-more-card latest-posts-mobile-more-button" id="latestPostsViewAllMobile" type="button"></button>'
+      );
+      latestMobileMoreButton = $("#latestPostsViewAllMobile");
+    }
+    if (latestMobileMoreButton) {
+      latestMobileMoreButton.innerHTML = escapeHTML((extendedUiCopy[activeLanguage] || extendedUiCopy.en).more) + ' <span aria-hidden="true">→</span>';
     }
 
     // Wait for the current Hero and Latest Posts cards to finish layout, then copy the Hero height.
@@ -675,6 +684,15 @@
     return sectionLabels[activeLanguage] || sectionLabels.en;
   }
 
+  /* Localized label for the Lifestyle homepage action button. */
+  function lifestyleMoreLabel() {
+    const labels = {
+      bn:"আরও বিস্তারিত পড়ুন", en:"Read More", hi:"और विस्तार से पढ़ें",
+      de:"Mehr erfahren", fr:"En savoir plus", es:"Leer más"
+    };
+    return labels[activeLanguage] || labels.en;
+  }
+
   function renderHomeEditorialSection(items, host, sectionKey) {
     if (!host) return;
     host.classList.add("home-editorial-host");
@@ -685,7 +703,7 @@
       host.innerHTML =
         '<div class="home-editorial-top"><div class="home-editorial-lead"><div class="home-editorial-empty-main" aria-hidden="true"></div></div><div class="home-editorial-list"></div></div>' +
         '<div class="home-post-gallery-slider is-empty" data-home-gallery="' + sectionKey + '" aria-label="Article image slider"></div>' +
-        (sectionKey === "world" || sectionKey === "sports"
+        (["world","sports","lifestyle"].includes(sectionKey)
           ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' + escapeHTML(homepageMoreNewsLabel(sectionKey)) + ' <span aria-hidden="true">→</span></button>'
           : '');
       return;
@@ -747,8 +765,8 @@
     host.innerHTML =
       '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="' + sidePanelClass + '"' + sidePanelStyle + '>' + sideList + '</div></div>' +
       gallery +
-      (sectionKey === "world" || sectionKey === "sports"
-        ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' + escapeHTML(homepageMoreNewsLabel(sectionKey)) + ' <span aria-hidden="true">→</span></button>'
+      (["world","sports","lifestyle"].includes(sectionKey)
+        ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' + escapeHTML(sectionKey === "lifestyle" ? lifestyleMoreLabel() : homepageMoreNewsLabel(sectionKey)) + ' <span aria-hidden="true">→</span></button>'
         : '');
 
     const slider = host.querySelector(".home-post-gallery-slider");
@@ -1528,7 +1546,7 @@
     }
   });
   document.addEventListener("click", event => {
-    if (event.target.closest("#latestPostsViewAll")) {
+    if (event.target.closest("#latestPostsViewAll, #latestPostsViewAllMobile")) {
       const heroViewAll = $("#homeViewAll");
       if (heroViewAll) heroViewAll.click();
     }
@@ -1574,7 +1592,7 @@
         ? document.querySelector('.sidebar-submenu button[data-sidebar-category="' + category + '"][data-sidebar-subcategory="' + subcategory + '"]')
         : document.querySelector('.sidebar-category[data-category="' + category + '"]');
       if (target) target.click();
-      if (category === "world" || category === "entertainment" || category === "sports") {
+      if (category === "world" || category === "entertainment" || category === "sports" || category === "lifestyle") {
         const categoryFeed = $("#articleFeed");
         if (categoryFeed) categoryFeed.scrollIntoView({behavior:"smooth",block:"start"});
       }
