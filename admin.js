@@ -90,7 +90,7 @@
       biographyPersonType:row.biography_person_type||"",biographyPersonName:row.biography_person_name||"",biographyCountry:row.biography_country||"",language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
       status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
-      cover:row.cover_url||"",views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at,sitemapSubmitted:!!row.sitemap_submitted,sitemapSubmittedAt:row.sitemap_submitted_at||null};
+      cover:row.cover_url||"",coverCaptionEnabled:!!row.cover_caption_enabled,views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at,sitemapSubmitted:!!row.sitemap_submitted,sitemapSubmittedAt:row.sitemap_submitted_at||null};
   }
   function cloudinarySettings(){
     const defaults={cloudName:"r2lo6mql",uploadPreset:"global_scope24_upload"};
@@ -158,7 +158,7 @@
       subcategory:prepared.subcategory||"",biography_person_type:prepared.biographyPersonType||null,biography_person_name:prepared.biographyPersonName||null,biography_country:prepared.biographyCountry||null,language:prepared.language||"bn",translations:prepared.translations||{},post_languages:prepared.postLanguages||[prepared.language||"bn"],post_types:prepared.postTypes||["latest"],
       featured_stories:!!prepared.featuredStories,status:prepared.status,scheduled_at:prepared.scheduledAt||null,excerpt:prepared.excerpt||"",
       meta_title:prepared.metaTitle||"",meta_description:prepared.metaDescription||"",focus_keyword:prepared.focusKeyword||"",related_keywords:prepared.keywords||[],
-      keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",
+      keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",cover_caption_enabled:!!prepared.coverCaptionEnabled,
       views:Number(prepared.views)||0,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null,
       sitemap_submitted:!!prepared.sitemapSubmitted,sitemap_submitted_at:prepared.sitemapSubmittedAt||null};
     const {error}=await db().from("posts").upsert(row,{onConflict:"id"});
@@ -595,9 +595,10 @@
     const host=$("#coverImagePreview");
     if(!host) return;
     host.innerHTML=coverData
-      ? '<img src="'+coverData+'" alt="Selected cover image"><button type="button" class="cover-remove-btn" id="removeCoverImage">Remove</button>'
+      ? '<img src="'+coverData+'" alt="Selected cover image">'+($("#coverCaptionEnabled").checked?'<span class="cover-caption-preview">AI-generated illustration</span>':"")+'<button type="button" class="cover-remove-btn" id="removeCoverImage">Remove</button>'
       : '<span class="cover-empty">No cover image selected</span>';
   }
+  $("#coverCaptionEnabled").addEventListener("change",renderCoverPreview);
   $("#coverUpload").addEventListener("change",event=>{
     const file=event.target.files[0]; if(!file) return;
     readImage(file,data=>{coverData=data;coverProvider=document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"cloudinary";renderCoverPreview();showToast("Cover image selected. It will upload to "+(coverProvider==="cloudinary"?"Cloudinary":"Supabase Storage")+" when you save the post.");});
@@ -674,7 +675,7 @@
   function resetForm(){
     $("#postForm").reset(); $("#postStatus").disabled=false; translationDrafts=emptyTranslations(); activeEditorLanguage="bn"; document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage==="bn";button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));}); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); syncSaveButtonLabel(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; $("#articleEditor").setAttribute("data-placeholder","বাংলা আর্টিকেল এখানে লিখুন..."); setEditorMode("visual"); $("#cardSummaryBn").value=""; $("#cardSummaryEn").value=""; $("#cardSummaryHi").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
-    coverData=""; coverProvider=""; $("#coverUpload").value=""; document.querySelector('input[name="coverStorageProvider"][value="cloudinary"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
+    coverData=""; coverProvider=""; $("#coverUpload").value=""; $("#coverCaptionEnabled").checked=false; document.querySelector('input[name="coverStorageProvider"][value="cloudinary"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
   }
   function newPost(){
@@ -701,7 +702,7 @@
     $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#biographyPersonNameBn").value=post.translations?.bn?.person_name||((post.language||"bn")==="bn"?post.biographyPersonName||"":""); $("#biographyPersonNameEn").value=post.translations?.en?.person_name||((post.language||"bn")==="en"?post.biographyPersonName||"":""); $("#biographyPersonNameHi").value=post.translations?.hi?.person_name||((post.language||"bn")==="hi"?post.biographyPersonName||"":""); syncBiographyNameTransliterations(true); $("#biographyPersonType").value=post.biographyPersonType||""; $("#biographyCountry").value=post.biographyCountry||""; updatePostUrlPreview();
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); syncSaveButtonLabel(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
-    $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
+    $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; $("#coverCaptionEnabled").checked=!!post.coverCaptionEnabled; coverProvider=""; renderCoverPreview();
     
     $("#deleteCurrentBtn").hidden=false;
     $("#editorStatusText").textContent=post.status==="published"?"Published":post.status==="scheduled"?"Scheduled":"Draft";
@@ -764,7 +765,7 @@
     const post={
       id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary"+primaryLanguage.charAt(0).toUpperCase()+primaryLanguage.slice(1)).value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,biographyPersonName:biographyNames[primaryLanguage],biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
-      videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"cloudinary",views:existing?Number(existing.views)||0:0,
+      videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverCaptionEnabled:$("#coverCaptionEnabled").checked,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"cloudinary",views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null,
       sitemapSubmitted:existing?!!existing.sitemapSubmitted:false,sitemapSubmittedAt:existing?.sitemapSubmittedAt||null
     };
@@ -800,7 +801,7 @@
     const category=safe(categories[$("#postCategory").value]);
     const subcategory=["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
     const body=translationDrafts[activeEditorLanguage]?.content_html||cleanArticleHTML();
-    const cover=coverData?'<img src="'+coverData+'" alt="Article cover">':"";
+    const cover=coverData?'<figure class="preview-cover-figure"><img src="'+coverData+'" alt="Article cover">'+($("#coverCaptionEnabled").checked?'<figcaption class="cover-caption-preview">AI-generated illustration</figcaption>':"")+"</figure>":"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
     const video=$("#videoUrl").value.trim();
     const videoLink=video?'<p><a href="'+safe(video)+'" target="_blank" rel="noopener">Watch featured video ↗</a></p>':"";
