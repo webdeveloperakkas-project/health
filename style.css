@@ -5421,15 +5421,27 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   border-radius:6px;
   background:#159d92;
 }
+.language-wrap::before {
+  content:"";
+  position:absolute;
+  right:1px;
+  top:50%;
+  width:15px;
+  height:17px;
+  border-radius:4px;
+  background:#fff0bd;
+  transform:translateY(-50%);
+  pointer-events:none;
+}
 .language-wrap::after {
   content:"";
   position:absolute;
-  right:2px;
+  right:6px;
   top:50%;
-  width:6px;
-  height:6px;
-  border-right:2px solid #e8b85b;
-  border-bottom:2px solid #e8b85b;
+  width:5px;
+  height:5px;
+  border-right:2px solid #171717;
+  border-bottom:2px solid #171717;
   transform:translateY(-68%) rotate(45deg);
   pointer-events:none;
 }
@@ -5438,7 +5450,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   width:auto;
   min-width:0;
   height:100%;
-  padding:0 12px 0 3px;
+  padding:0 20px 0 3px;
   border:0;
   background:transparent;
   color:#fff;
