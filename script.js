@@ -1586,8 +1586,7 @@
      * the existing single-page view.
      */
     if (category === "home") {
-      const freshHomeUrl = siteBasePath() + "?_gs24_refresh=" + Date.now();
-      window.location.replace(freshHomeUrl);
+      window.location.replace(siteBasePath());
       return;
     }
 
