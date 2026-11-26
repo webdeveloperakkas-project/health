@@ -704,6 +704,7 @@
       if(!plainText(content))return showToast("Write the full "+languages[language]+" article before saving.");
       translations[language]={title,content_html:content,excerpt:$("#cardSummary"+language.toUpperCase()).value.trim()};
     }
+    const biographyNames={bn:$("#biographyPersonNameBn").value.trim(),en:$("#biographyPersonNameEn").value.trim(),hi:$("#biographyPersonNameHi").value.trim()};
     const primaryLanguage=selectedLanguages.includes("bn")?"bn":selectedLanguages[0];
     const title=translations[primaryLanguage].title;
     const content=translations[primaryLanguage].content_html;
@@ -718,7 +719,6 @@
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
-    const biographyNames={bn:$("#biographyPersonNameBn").value.trim(),en:$("#biographyPersonNameEn").value.trim(),hi:$("#biographyPersonNameHi").value.trim()};
      if($("#postCategory").value==="biography"&&(!biographyNames[primaryLanguage]||!$("#biographyPersonType").value||!$("#biographyCountry").value))return showToast("For Biography posts, enter the Person Name in the primary language, Person Type and Country of Origin.");
     const now=new Date().toISOString();
     const selectedStatus=$("#postStatus").value;
