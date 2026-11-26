@@ -5648,3 +5648,20 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   font-family:"Noto Sans Devanagari",sans-serif;
   font-size:16px !important;
 }
+
+
+/* Keep the currently opened homepage category dropdown above every
+   neighboring main-category label. Inactive category wrappers stay behind. */
+.category-tabs > .world-category-menu,
+.category-tabs > .sports-category-menu,
+.category-tabs > .entertainment-category-menu,
+.category-tabs > .lifestyle-category-menu {
+  position:relative;
+  z-index:1;
+}
+.category-tabs > .world-category-menu:has(> .world-category-trigger[aria-expanded="true"]),
+.category-tabs > .sports-category-menu:has(> .sports-category-trigger[aria-expanded="true"]),
+.category-tabs > .entertainment-category-menu:has(> .entertainment-category-trigger[aria-expanded="true"]),
+.category-tabs > .lifestyle-category-menu:has(> .lifestyle-category-trigger[aria-expanded="true"]) {
+  z-index:1301 !important;
+}
