@@ -120,7 +120,7 @@
     languageSelect.replaceChildren(...supportedLanguages.map(language => {
       const option = document.createElement("option");
       option.value = language.code;
-      option.textContent = language.label + " (" + language.code.toUpperCase() + ")";
+      option.textContent = language.label;
       return option;
     }));
     // Slightly widen the existing selector on desktop, without enlarging it on mobile.
