@@ -847,11 +847,18 @@
     return String(value || "").normalize("NFC").toLowerCase().trim()
       .replace(/[^\p{L}\p{M}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
   }
-  /* Article URLs are generated exclusively from the article title. */
-  function articleSlug(post) { return routeSlug(post && (post.canonicalTitle || post.title)); }
+  /* The visible URL slug follows the currently selected language's article title. */
+  function articleSlug(post) { return routeSlug(post && (post.title || post.canonicalTitle)); }
+  /* Accept every saved language title when resolving an incoming URL, so shared
+     English/Hindi/Bengali links still open even if the visitor uses another language. */
+  function articleSlugMatches(post, slug) {
+    if (!post || !slug) return false;
+    const translations = post.translations && typeof post.translations === "object" ? post.translations : {};
+    const candidates = [post.canonicalTitle, post.title, ...Object.values(translations).map(item => item && item.title)];
+    return candidates.some(title => routeSlug(title) === slug);
+  }
 
-  /* Render the saved Bengali, English or Hindi version selected by the visitor.
-     Keep canonicalTitle stable so switching languages never changes article URLs. */
+  /* Render the saved Bengali, English or Hindi version selected by the visitor. */
   function applyLocalizedPostContent() {
     posts.forEach(post => {
       const translations = post.translations && typeof post.translations === "object" ? post.translations : {};
@@ -1167,7 +1174,7 @@
   window.addEventListener("popstate", event => {
     if (event.state && event.state.globalScopeArticle) {
       const slug = requestedArticleSlug();
-      const post = posts.find(item => articleSlug(item) === slug);
+      const post = posts.find(item => articleSlugMatches(item, slug));
       if (post) openArticleDetail(post);
       return;
     }
@@ -1792,7 +1799,11 @@
     render();
     if (currentArticlePost) {
       const refreshedPost = posts.find(post => post.cmsId === currentArticlePost.cmsId);
-      if (refreshedPost) openArticleDetail(refreshedPost);
+      if (refreshedPost) {
+        openArticleDetail(refreshedPost);
+        /* Keep the same article open, but replace its URL with this language's title slug. */
+        history.replaceState({globalScopeArticle:true}, "", articleRoute(refreshedPost));
+      }
     }
   });
   try {
@@ -1938,9 +1949,9 @@
           const subcategoryMatches = requestedParts.length >= 3
             ? routeSlug(post.subcategory) === requestedSubcategory
             : !post.subcategory;
-          return categoryMatches && subcategoryMatches && articleSlug(post) === currentArticleSlug;
+          return categoryMatches && subcategoryMatches && articleSlugMatches(post, currentArticleSlug);
         }) ||
-        posts.find(post => articleSlug(post) === currentArticleSlug);
+        posts.find(post => articleSlugMatches(post, currentArticleSlug));
         if (cloudArticle) openArticleDetail(cloudArticle);
         else {
           document.title = "Article Not Found | Global Scope 24";
