@@ -5268,3 +5268,30 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   background: #f1f4f3 !important;
   border: 1px solid #edf1ef !important;
 }
+
+
+/* Homepage Latest: action card directly below the four middle-column updates. */
+.latest-posts-more-card {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  align-self:flex-end;
+  gap:9px;
+  margin-top:16px;
+  padding:11px 18px;
+  border:0;
+  border-radius:4px;
+  background:#e8b85b;
+  color:#173b40;
+  font:800 14px/1.4 "DM Sans","Hind Siliguri",sans-serif;
+  cursor:pointer;
+  transition:background .18s ease,transform .18s ease;
+}
+.latest-posts-more-card:hover {
+  background:#f1cd7d;
+  transform:translateY(-1px);
+}
+.latest-posts-more-card span {font-size:18px;line-height:1}
+@media(max-width:800px) {
+  .latest-posts-more-card {align-self:flex-start;margin-top:12px}
+}
