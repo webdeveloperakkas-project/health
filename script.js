@@ -408,6 +408,20 @@
       '</button>';
     }).join("");
 
+    // Add a dedicated action card beneath the four middle-column updates.
+    // It deliberately triggers the same control as the Hero's "More Details"
+    // button so both locations open the identical homepage Latest feed.
+    let latestMoreButton = $("#latestPostsViewAll");
+    if (!latestMoreButton) {
+      updateHost.insertAdjacentHTML("afterend",
+        '<button class="latest-posts-more-card" id="latestPostsViewAll" type="button"></button>'
+      );
+      latestMoreButton = $("#latestPostsViewAll");
+    }
+    if (latestMoreButton) {
+      latestMoreButton.innerHTML = escapeHTML((extendedUiCopy[activeLanguage] || extendedUiCopy.en).more) + ' <span aria-hidden="true">→</span>';
+    }
+
     // Wait for the current Hero and Latest Posts cards to finish layout, then copy the Hero height.
     window.requestAnimationFrame(syncLatestPostsSectionHeight);
   }
@@ -1436,6 +1450,12 @@
       currentPage = 1;
       render();
       $("#articleFeed").scrollIntoView({behavior:"smooth",block:"start"});
+    }
+  });
+  document.addEventListener("click", event => {
+    if (event.target.closest("#latestPostsViewAll")) {
+      const heroViewAll = $("#homeViewAll");
+      if (heroViewAll) heroViewAll.click();
     }
   });
   $("#homeViewAll").addEventListener("click", () => {
