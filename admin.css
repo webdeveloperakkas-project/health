@@ -539,3 +539,8 @@
 /* A single safe entry point for opening a post from the posts list. */
 .view-details-btn{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid #cfe3dd;border-radius:7px;background:#f2faf7;color:#087c75;padding:7px 12px;font-size:11px;font-weight:800;line-height:1.2;cursor:pointer;transition:background .15s ease,border-color .15s ease}
 .view-details-btn:hover{background:#e3f4ee;border-color:#a9d3c6}
+
+
+/* Make the All Posts View Details action bright yellow with white text. */
+.view-details-btn{background:#f2c900;color:#fff;border:1px solid #e2bb00}
+.view-details-btn:hover{background:#e6bd00;color:#fff;border-color:#d7af00}
