@@ -544,3 +544,10 @@
 /* Make the All Posts View Details action bright yellow with white text. */
 .view-details-btn{background:#f2c900;color:#202820;border:1px solid #e2bb00}
 .view-details-btn:hover{background:#e6bd00;color:#202820;border-color:#d7af00}
+
+/* Biography-specific editorial metadata */
+.biography-admin-fields{margin:14px 0;padding:15px;border:1px solid #d9e7e5;border-radius:8px;background:#f5f9f8}
+.biography-admin-fields[hidden]{display:none}
+.biography-admin-note{margin-bottom:10px}
+.biography-admin-fields .field-label{display:block;margin-top:10px}
+.biography-admin-fields .text-input{width:100%}
