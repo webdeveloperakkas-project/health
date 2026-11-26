@@ -249,6 +249,14 @@
   }
   function refreshBiographyNameOptions(){
     if(!biographyNameFilter)return;
+    if(biographyCountryFilter){
+      const selectedCountry=biographyCountryFilter.value||"all";
+      const knownCountries=Array.from(biographyCountryFilter.options).map(option=>option.value).filter(value=>value&&value!=="all");
+      const storedCountries=biographyPostsBase().map(post=>post.biographyCountry).filter(Boolean);
+      const countries=[...new Set([...knownCountries,...storedCountries])].sort((a,b)=>a.localeCompare(b));
+      biographyCountryFilter.innerHTML='<option value="all">All Countries</option>'+countries.map(country=>'<option value="'+escapeHTML(country)+'">'+escapeHTML(country)+'</option>').join("");
+      biographyCountryFilter.value=countries.includes(selectedCountry)?selectedCountry:"all";
+    }
     const country=biographyCountryFilter?.value||"all";
     const type=biographyTypeFilter?.value||"";
     const names=[...new Set(biographyPostsBase().filter(post=>(country==="all"||!country||post.biographyCountry===country)&&(!type||post.biographyPersonType===type)).map(post=>post.biographyPersonName||post.title).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
