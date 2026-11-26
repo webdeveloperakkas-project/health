@@ -542,5 +542,5 @@
 
 
 /* Make the All Posts View Details action bright yellow with white text. */
-.view-details-btn{background:#f2c900;color:#fff;border:1px solid #e2bb00}
-.view-details-btn:hover{background:#e6bd00;color:#fff;border-color:#d7af00}
+.view-details-btn{background:#f2c900;color:#202820;border:1px solid #e2bb00}
+.view-details-btn:hover{background:#e6bd00;color:#202820;border-color:#d7af00}
