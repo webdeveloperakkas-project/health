@@ -626,7 +626,16 @@
         '<span class="home-category-copy"><strong>' + escapeHTML(mainPost.title) + '</strong>' +
         (excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
 
-    const sideList = sidePosts.map(post => {
+    const sideList = (sectionKey === "biography"
+      ? Array.from({ length: 4 }, (_, index) => sidePosts[index] || null)
+      : sidePosts
+    ).map(post => {
+      if (sectionKey === "biography" && !post) {
+        return '<div class="home-biography-card home-biography-card-placeholder" aria-hidden="true">' +
+          '<span class="home-category-image home-category-image-empty"></span>' +
+          '<span class="home-biography-placeholder-title"></span>' +
+          '</div>';
+      }
       const index = posts.indexOf(post);
       const image = imageForPost(post);
       const sideCardClass = sectionKey === "biography" ? "home-category-card home-biography-card" : "home-category-card home-world-small";
