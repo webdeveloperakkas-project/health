@@ -1038,7 +1038,7 @@
     // Biography uses the exact same article template as every other category.
     // Only its optional person metadata is added inside the shared heading.
     const biographyTypeLabel = post.biographyPersonType
-      ? post.biographyPersonType.replace(/-/g," ").replace(/\\b\\w/g,letter=>letter.toUpperCase())
+      ? post.biographyPersonType.replace(/-/g," ").replace(/\b\w/g,letter=>letter.toUpperCase())
       : "";
     const biographyMetadata = post.category === "biography"
       ? '<div class="single-article-biography-meta">' +
