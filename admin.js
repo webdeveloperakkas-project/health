@@ -229,7 +229,7 @@
       const placementText = placementsFor(post).map(value=>placementLabels[value]).join(", ") || "—";
       const selector=options.selectable?'<td><input type="checkbox" class="draft-row-select" data-draft-select="'+safe(post.id)+'" aria-label="Select '+safe(post.title||"post")+'"></td>':'';
       const languageText=(post.postLanguages||[post.language||"en"]).map(code=>languages[code]||code).join(" + ");
-      const menu='<details class="row-menu"><summary aria-label="More actions">•••</summary><div class="row-menu-pop"><button type="button" data-edit="'+safe(post.id)+'">Edit</button><button type="button" class="delete" data-delete="'+safe(post.id)+'">Delete</button></div></details>';
+      const menu='<button type="button" class="view-details-btn" data-view-details="'+safe(post.id)+'">View Details</button>';
       return '<tr>'+selector+'<td class="table-title"><strong>'+safe(post.title||"Untitled")+'</strong><small>'+safe(date)+' · '+safe(languageText)+'</small></td><td>'+safe(categories[post.category]||post.category)+(post.subcategory?' · '+safe(post.subcategory):'')+'</td><td>'+safe(placementText)+((post.featuredStories ?? post.featured)?" · Featured Stories":"")+autoMain+'</td><td><span class="status-badge '+safe(post.status)+'">'+safe(post.status)+'</span></td><td>'+Number(post.views||0).toLocaleString()+'</td><td><div class="row-actions">'+menu+'</div></td></tr>';
     }).join("")+'</tbody></table>';
   }
@@ -679,7 +679,9 @@
       catch(error){showToast("Could not delete post: "+(error.message||"Database error."));await initializeCloud();}})();
   }
   document.addEventListener("click",event=>{
+    const details=event.target.closest("[data-view-details]");
     const edit=event.target.closest("[data-edit]"); const del=event.target.closest("[data-delete]");
+    if(details) editPost(details.dataset.viewDetails);
     if(edit) editPost(edit.dataset.edit);
     if(del) deletePost(del.dataset.delete);
   });
