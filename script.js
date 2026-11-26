@@ -459,13 +459,13 @@
     }
     let latestMobileMoreButton = $("#latestPostsViewAllMobile");
     if (!latestMobileMoreButton) {
-      headlineHost.insertAdjacentHTML("beforeend",
+      latestPostsSection.insertAdjacentHTML("beforeend",
         '<button class="latest-posts-more-card latest-posts-mobile-more-button" id="latestPostsViewAllMobile" type="button"></button>'
       );
       latestMobileMoreButton = $("#latestPostsViewAllMobile");
     }
     if (latestMobileMoreButton) {
-      latestMobileMoreButton.innerHTML = escapeHTML((extendedUiCopy[activeLanguage] || extendedUiCopy.en).more) + ' <span aria-hidden="true">→</span>';
+      latestMobileMoreButton.innerHTML = escapeHTML(moreDetailsButtonLabel()) + ' <span aria-hidden="true">→</span>';
     }
 
     // Wait for the current Hero and Latest Posts cards to finish layout, then copy the Hero height.
@@ -684,6 +684,15 @@
     return sectionLabels[activeLanguage] || sectionLabels.en;
   }
 
+  /* Localized mobile action label used below the Latest and Lifestyle sections. */
+  function moreDetailsButtonLabel() {
+    const labels = {
+      bn:"আরও বিস্তারিত বলুন", en:"More Details", hi:"और विस्तार से जानें",
+      de:"Mehr erfahren", fr:"En savoir plus", es:"Más información"
+    };
+    return labels[activeLanguage] || labels.en;
+  }
+
   /* Localized label for the Lifestyle homepage action button. */
   function lifestyleMoreLabel() {
     const labels = {
@@ -704,7 +713,11 @@
         '<div class="home-editorial-top"><div class="home-editorial-lead"><div class="home-editorial-empty-main" aria-hidden="true"></div></div><div class="home-editorial-list"></div></div>' +
         '<div class="home-post-gallery-slider is-empty" data-home-gallery="' + sectionKey + '" aria-label="Article image slider"></div>' +
         (["world","sports","lifestyle"].includes(sectionKey)
-          ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' + escapeHTML(homepageMoreNewsLabel(sectionKey)) + ' <span aria-hidden="true">→</span></button>'
+          ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' +
+            (sectionKey === "lifestyle"
+              ? '<span class="homepage-more-label-desktop">' + escapeHTML(lifestyleMoreLabel()) + '</span><span class="homepage-more-label-mobile">' + escapeHTML(moreDetailsButtonLabel()) + '</span>'
+              : escapeHTML(homepageMoreNewsLabel(sectionKey))) +
+            ' <span aria-hidden="true">→</span></button>'
           : '');
       return;
     }
@@ -766,7 +779,11 @@
       '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="' + sidePanelClass + '"' + sidePanelStyle + '>' + sideList + '</div></div>' +
       gallery +
       (["world","sports","lifestyle"].includes(sectionKey)
-        ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' + escapeHTML(sectionKey === "lifestyle" ? lifestyleMoreLabel() : homepageMoreNewsLabel(sectionKey)) + ' <span aria-hidden="true">→</span></button>'
+        ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' +
+          (sectionKey === "lifestyle"
+            ? '<span class="homepage-more-label-desktop">' + escapeHTML(lifestyleMoreLabel()) + '</span><span class="homepage-more-label-mobile">' + escapeHTML(moreDetailsButtonLabel()) + '</span>'
+            : escapeHTML(homepageMoreNewsLabel(sectionKey))) +
+          ' <span aria-hidden="true">→</span></button>'
         : '');
 
     const slider = host.querySelector(".home-post-gallery-slider");
