@@ -288,3 +288,12 @@
   .nav-item{color:#65448b;border:1px solid transparent;transition:background .18s ease,color .18s ease,border-color .18s ease}
   .nav-item:hover,.nav-item.active{background:linear-gradient(100deg,#ffe9a9,#eadcff);color:#51277f;border-color:#dfc7f7}
 }
+
+
+/* Cloudinary settings now sit inside Article Details, below its content columns. */
+.article-details-grid>.cloudinary-card{grid-column:1/-1;min-width:0;margin:0;padding:14px;background:#fbfdfc;border:1px solid #dce9e5;border-radius:9px}
+.article-details-grid>.cloudinary-card h2{margin-bottom:7px}
+.article-details-grid>.cloudinary-card .field-label{margin-top:10px}
+.article-details-grid>.cloudinary-card .text-input{width:100%;min-width:0}
+.article-details-grid>.cloudinary-card .full-btn{max-width:260px}
+@media(max-width:760px){.article-details-grid>.cloudinary-card{grid-column:1/-1}}
