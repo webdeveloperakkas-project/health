@@ -5403,3 +5403,74 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     -webkit-line-clamp:4;
   }
 }
+
+
+/* Header language selector: full language names with the site's teal palette. */
+.language-wrap {
+  position:relative;
+  box-sizing:border-box;
+  min-width:158px;
+  justify-content:center;
+  padding:0 25px 0 12px;
+  border:1px solid #087c75;
+  border-radius:8px;
+  background:#159d92;
+}
+.language-wrap::after {
+  content:"";
+  position:absolute;
+  right:10px;
+  top:50%;
+  width:7px;
+  height:7px;
+  border-right:2px solid #e8b85b;
+  border-bottom:2px solid #e8b85b;
+  transform:translateY(-68%) rotate(45deg);
+  pointer-events:none;
+}
+.language-wrap select {
+  width:100%;
+  min-width:0;
+  max-width:none;
+  padding:0;
+  appearance:none;
+  -webkit-appearance:none;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+.language-wrap select option {
+  background:#fff;
+  color:#153943;
+}
+@media (max-width:600px) {
+  .language-wrap {
+    min-width:112px;
+    width:112px;
+    height:33px;
+    padding:0 24px 0 9px;
+    margin-right:4px;
+  }
+  .language-wrap::after { right:9px; }
+  .language-wrap select {
+    width:100%;
+    max-width:none;
+    font-size:11px;
+  }
+}
+@media (pointer:coarse) and (max-device-width:600px) {
+  .language-wrap {
+    min-width:112px;
+    width:112px;
+    height:33px;
+    padding:0 24px 0 9px;
+  }
+  .language-wrap select {
+    max-width:none;
+    font-size:11px;
+  }
+}
