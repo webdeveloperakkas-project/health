@@ -116,6 +116,7 @@
     {code:"hi",label:"हिन्दी",locale:"hi-IN"}
   ];
   const languageSelect = $("#languageSelect");
+  let syncLanguageButton = () => {};
   if (languageSelect) {
     languageSelect.replaceChildren(...supportedLanguages.map(language => {
       const option = document.createElement("option");
@@ -127,7 +128,7 @@
     // as the single source of truth for the existing language preference logic.
     const languageButton = $("#languageButton");
     const languageMenu = $("#languageMenu");
-    const syncLanguageButton = () => {
+    syncLanguageButton = () => {
       const selected = supportedLanguages.find(language => language.code === languageSelect.value) || supportedLanguages[0];
       if (languageButton) languageButton.textContent = selected.label;
       if (languageMenu) {
