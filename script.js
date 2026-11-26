@@ -1288,33 +1288,46 @@
         '</span>' +
       '</button>';
     };
-    articleList.innerHTML =
-      '<div class="category-editorial-grid">' +
-        '<div class="category-editorial-side category-editorial-left">' +
-          leftPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
-        '</div>' +
-        '<div class="category-editorial-center">' +
-          renderCategoryCard(leadPost,"category-editorial-lead-card") +
-          '<div class="category-editorial-bottom">' +
-            centerBottomPosts.map(post => renderCategoryCard(post,"category-editorial-bottom-card")).join("") +
+    if (activeCategory === "biography") {
+      // Biography reuses the homepage World News editorial layout:
+      // one lead story on the left, the remaining biographies on the right,
+      // and the shared image carousel underneath. Header and filters stay unchanged.
+      articleList.innerHTML =
+        '<div class="biography-home-editorial" id="biographyHomeEditorial"></div>' +
+        renderCategoryLatestPopularSections();
+      const biographyEditorialHost = $("#biographyHomeEditorial");
+      if (biographyEditorialHost) {
+        renderHomeEditorialSection(visiblePosts, biographyEditorialHost, "biography");
+      }
+    } else {
+      articleList.innerHTML =
+        '<div class="category-editorial-grid">' +
+          '<div class="category-editorial-side category-editorial-left">' +
+            leftPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
+          '</div>' +
+          '<div class="category-editorial-center">' +
+            renderCategoryCard(leadPost,"category-editorial-lead-card") +
+            '<div class="category-editorial-bottom">' +
+              centerBottomPosts.map(post => renderCategoryCard(post,"category-editorial-bottom-card")).join("") +
+            '</div>' +
+          '</div>' +
+          '<div class="category-editorial-side category-editorial-right">' +
+            rightPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
           '</div>' +
         '</div>' +
-        '<div class="category-editorial-side category-editorial-right">' +
-          rightPosts.map(post => renderCategoryCard(post,"category-editorial-side-card")).join("") +
-        '</div>' +
-      '</div>' +
-      (remainingPosts.length
-        ? '<div class="category-more-grid">' +
-            remainingPosts.map(post => renderCategoryCard(post,"category-more-card")).join("") +
-          '</div>'
-        : '') +
-      '<div class="category-mobile-layout">' +
-        (visiblePosts.length ? renderMobileCategoryPost(visiblePosts[0],0,true) : '') +
-        (visiblePosts.length > 1
-          ? '<div class="category-mobile-list">' + visiblePosts.slice(1).map((post,index) => renderMobileCategoryPost(post,index + 1)).join("") + '</div>'
+        (remainingPosts.length
+          ? '<div class="category-more-grid">' +
+              remainingPosts.map(post => renderCategoryCard(post,"category-more-card")).join("") +
+            '</div>'
           : '') +
-      '</div>' +
-      renderCategoryLatestPopularSections();
+        '<div class="category-mobile-layout">' +
+          (visiblePosts.length ? renderMobileCategoryPost(visiblePosts[0],0,true) : '') +
+          (visiblePosts.length > 1
+            ? '<div class="category-mobile-list">' + visiblePosts.slice(1).map((post,index) => renderMobileCategoryPost(post,index + 1)).join("") + '</div>'
+            : '') +
+        '</div>' +
+        renderCategoryLatestPopularSections();
+    }
     const categoryHomePanel = $("#categoryHomeListPanel");
     if (categoryHomePanel) {
       renderHomeList(categoryHomePanel, Array.from(document.querySelectorAll(".category-home-rail-tab")));
