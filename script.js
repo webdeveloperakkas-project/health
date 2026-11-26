@@ -1035,11 +1035,24 @@
     const sourceHtml = window.DOMPurify ? DOMPurify.sanitize(rawSourceHtml,{USE_PROFILES:{html:true},ADD_ATTR:["target","style","width","height","loading"]}) : rawSourceHtml;
     const categoryLabel = categoryNames[post.category] || post.category || "Global Scope 24";
     const subcategoryLabel = post.subcategory ? post.subcategory.replace(/-/g," ") : "";
+    // Biography uses the exact same article template as every other category.
+    // Only its optional person metadata is added inside the shared heading.
+    const biographyTypeLabel = post.biographyPersonType
+      ? post.biographyPersonType.replace(/-/g," ").replace(/\\b\\w/g,letter=>letter.toUpperCase())
+      : "";
+    const biographyMetadata = post.category === "biography"
+      ? '<div class="single-article-biography-meta">' +
+          (post.biographyPersonName ? '<span><strong>Person</strong> ' + escapeHTML(post.biographyPersonName) + '</span>' : '') +
+          (biographyTypeLabel ? '<span><strong>Profession</strong> ' + escapeHTML(biographyTypeLabel) + '</span>' : '') +
+          (post.biographyCountry ? '<span><strong>Country</strong> ' + escapeHTML(post.biographyCountry) + '</span>' : '') +
+        '</div>'
+      : "";
     const paragraphs = sourceHtml;
     singleArticleView.innerHTML =
       '<article class="single-article container">' +
         '<div class="single-article-heading">' +
           '<div class="single-article-category">' + escapeHTML(categoryLabel) + (subcategoryLabel ? ' <span>›</span> ' + escapeHTML(subcategoryLabel) : '') + '</div>' +
+          biographyMetadata +
           '<h1>' + escapeHTML(post.title) + '</h1>' +
           '<div class="single-article-meta"><time>' + escapeHTML(post.date || "") + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</time></div>' +
         '</div>' +
