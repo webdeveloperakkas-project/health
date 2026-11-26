@@ -5405,72 +5405,102 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Header language selector: full language names with the site's teal palette. */
+/* Compact custom header language selector with a small anchored menu. */
 .language-wrap {
   position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  flex:0 0 auto;
+  width:max-content;
+  min-width:0;
+  height:32px;
   box-sizing:border-box;
-  min-width:158px;
-  justify-content:center;
-  padding:0 25px 0 12px;
+  padding:0;
   border:1px solid #087c75;
-  border-radius:8px;
+  border-radius:6px;
   background:#159d92;
 }
 .language-wrap::after {
   content:"";
   position:absolute;
-  right:10px;
+  right:5px;
   top:50%;
-  width:7px;
-  height:7px;
+  width:6px;
+  height:6px;
   border-right:2px solid #e8b85b;
   border-bottom:2px solid #e8b85b;
   transform:translateY(-68%) rotate(45deg);
   pointer-events:none;
 }
-.language-wrap select {
-  width:100%;
+.language-trigger {
+  display:block;
+  width:auto;
   min-width:0;
-  max-width:none;
-  padding:0;
-  appearance:none;
-  -webkit-appearance:none;
+  height:100%;
+  padding:0 15px 0 2px;
   border:0;
-  outline:0;
   background:transparent;
   color:#fff;
-  font-size:12px;
-  font-weight:800;
+  font:800 12px/1 "DM Sans","Hind Siliguri",sans-serif;
+  white-space:nowrap;
   cursor:pointer;
 }
-.language-wrap select option {
+.language-trigger:focus-visible,
+.language-menu button:focus-visible {
+  outline:2px solid #e8b85b;
+  outline-offset:2px;
+}
+.language-menu {
+  position:absolute;
+  z-index:1000;
+  top:calc(100% + 5px);
+  right:0;
+  min-width:100%;
+  width:max-content;
+  padding:4px;
+  border:1px solid #d5e4e1;
+  border-radius:6px;
+  background:#fff;
+  box-shadow:0 7px 18px rgba(21,57,67,.18);
+}
+.language-menu[hidden] {display:none}
+.language-menu button {
+  display:block;
+  width:100%;
+  padding:7px 9px;
+  border:0;
+  border-radius:3px;
   background:#fff;
   color:#153943;
+  font:700 12px/1.3 "DM Sans","Hind Siliguri",sans-serif;
+  text-align:left;
+  white-space:nowrap;
+  cursor:pointer;
 }
-@media (max-width:600px) {
-  .language-wrap {
-    min-width:112px;
-    width:112px;
-    height:33px;
-    padding:0 24px 0 9px;
-    margin-right:4px;
-  }
-  .language-wrap::after { right:9px; }
-  .language-wrap select {
-    width:100%;
-    max-width:none;
-    font-size:11px;
-  }
+.language-menu button:hover,
+.language-menu button[aria-selected="true"] {
+  background:#e8f5f2;
+  color:#087c75;
 }
-@media (pointer:coarse) and (max-device-width:600px) {
-  .language-wrap {
-    min-width:112px;
-    width:112px;
-    height:33px;
-    padding:0 24px 0 9px;
-  }
-  .language-wrap select {
-    max-width:none;
-    font-size:11px;
-  }
+.language-native-select {
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+@media(max-width:600px) {
+  .language-wrap {height:31px}
+  .language-trigger {font-size:11px}
+}
+@media(pointer:coarse) and (max-device-width:600px) {
+  .language-wrap {height:31px}
+  .language-trigger {font-size:11px}
 }
