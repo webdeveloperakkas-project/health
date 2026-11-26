@@ -31,6 +31,41 @@
     if(!result[legacyLanguage].excerpt)result[legacyLanguage].excerpt=String(row?.excerpt||"");
     return result;
   }
+
+  // Bengali name transliteration: phonetic suggestions only; both generated fields remain editable.
+  function transliterateBengaliName(value, target) {
+    const vowels = {"অ":["o","अ"],"আ":["a","आ"],"ই":["i","इ"],"ঈ":["i","ई"],"উ":["u","उ"],"ঊ":["u","ऊ"],"ঋ":["ri","ऋ"],"এ":["e","ए"],"ঐ":["oi","ऐ"],"ও":["o","ओ"],"ঔ":["ou","औ"]};
+    const consonants = {"ক":["k","क"],"খ":["kh","ख"],"গ":["g","ग"],"ঘ":["gh","घ"],"ঙ":["ng","ङ"],"চ":["ch","च"],"ছ":["chh","छ"],"জ":["j","ज"],"ঝ":["jh","झ"],"ঞ":["ny","ञ"],"ট":["ṭ","ट"],"ঠ":["ṭh","ठ"],"ড":["ḍ","ड"],"ঢ":["ḍh","ढ"],"ণ":["ṇ","ण"],"ত":["t","त"],"থ":["th","थ"],"দ":["d","द"],"ধ":["dh","ध"],"ন":["n","न"],"প":["p","प"],"ফ":["ph","फ"],"ব":["b","ब"],"ভ":["bh","भ"],"ম":["m","म"],"য":["j","य"],"য়":["y","य"],"র":["r","र"],"ল":["l","ल"],"শ":["sh","श"],"ষ":["ṣ","ष"],"স":["s","स"],"হ":["h","ह"],"ড়":["ṛ","ड़"],"ঢ়":["ṛh","ढ़"],"ৎ":["t","त"],"ং":["ng","ं"],"ঃ":["h","ः"],"ঁ":["n","ँ"]};
+    const signs = {"া":["a","ा"],"ি":["i","ि"],"ী":["i","ी"],"ু":["u","ु"],"ূ":["u","ू"],"ৃ":["ri","ृ"],"ে":["e","े"],"ৈ":["oi","ै"],"ো":["o","ो"],"ৌ":["ou","ौ"]};
+    const idx = target === "hi" ? 1 : 0;
+    const chars = Array.from(String(value || "").normalize("NFC"));
+    let result = "";
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i], next = chars[i + 1];
+      if (vowels[ch]) { result += vowels[ch][idx]; continue; }
+      if (consonants[ch]) {
+        result += consonants[ch][idx];
+        if (ch === "ং" || ch === "ঃ" || ch === "ঁ") continue;
+        if (signs[next]) { result += signs[next][idx]; i++; }
+        else if (next === "্") { if (target === "hi") result += "्"; i++; }
+        else result += target === "hi" ? "अ" : "o";
+        continue;
+      }
+      if (signs[ch]) { result += signs[ch][idx]; continue; }
+      if (ch === "্") { if (target === "hi") result += "्"; continue; }
+      if (ch === "়" || ch === "ৗ" || ch === "\u200c" || ch === "\u200d") continue;
+      result += ch === "।" && target === "en" ? "." : ch;
+    }
+    return result.replace(/\s+/g, " ").trim();
+  }
+  function syncBiographyNameTransliterations(fillOnly) {
+    const bn = $("#biographyPersonNameBn"), en = $("#biographyPersonNameEn"), hi = $("#biographyPersonNameHi");
+    if (!bn || !en || !hi || !bn.value.trim()) return;
+    if (!fillOnly || !en.value.trim()) en.value = transliterateBengaliName(bn.value, "en");
+    if (!fillOnly || !hi.value.trim()) hi.value = transliterateBengaliName(bn.value, "hi");
+  }
+  $("#biographyPersonNameBn")?.addEventListener("input", () => syncBiographyNameTransliterations(false));
+
   function makePostSlug(value){return String(value||"").normalize("NFC").toLowerCase().trim().replace(/[^\p{L}\p{M}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"")||"article";}
   function updatePostUrlPreview(){const selected=[...document.querySelectorAll('input[name="postLanguage"]:checked')].map(input=>input.value);const titleByLanguage={bn:$("#postTitle")?.value||"",en:$("#postTitleEn")?.value||"",hi:$("#postTitleHi")?.value||""};const title=(selected.map(language=>titleByLanguage[language]).find(value=>value.trim())||titleByLanguage.bn||titleByLanguage.en||titleByLanguage.hi),category=$("#postCategory")?.value||"",subcategory=$("#postSubcategory")?.value||"";const slug=makePostSlug(title);if($("#postSlugPreview"))$("#postSlugPreview").value=title.trim()?slug:"";const categoryPath=categoryPathSlugs[category]||makePostSlug(categories[category]||category);const parts=[categoryPath,subcategory?makePostSlug(subcategory):"",slug].filter(Boolean);if($("#postUrlPreview"))$("#postUrlPreview").textContent=title.trim()?"/health/"+parts.join("/")+"/":"URL preview will appear after you enter a title.";}
 
@@ -662,7 +697,7 @@
     document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage===activeEditorLanguage;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));});
     const initialContent=translationDrafts[activeEditorLanguage].content_html||"";
     $("#articleEditor").innerHTML=initialContent||"<p></p>"; $("#articleHtmlEditor").value=initialContent; $("#articleEditor").setAttribute("data-placeholder",activeEditorLanguage==="bn"?"বাংলা আর্টিকেল এখানে লিখুন...":activeEditorLanguage==="en"?"Write the English article here...":"यहाँ हिंदी लेख लिखें..."); setEditorMode("visual"); $("#cardSummaryBn").value=post.translations?.bn?.excerpt||((post.language||"bn")==="bn"?post.excerpt||"":""); $("#cardSummaryEn").value=post.translations?.en?.excerpt||((post.language||"bn")==="en"?post.excerpt||"":""); $("#cardSummaryHi").value=post.translations?.hi?.excerpt||((post.language||"bn")==="hi"?post.excerpt||"":""); $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
-    $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#biographyPersonNameBn").value=post.translations?.bn?.person_name||((post.language||"bn")==="bn"?post.biographyPersonName||"":""); $("#biographyPersonNameEn").value=post.translations?.en?.person_name||((post.language||"bn")==="en"?post.biographyPersonName||"":""); $("#biographyPersonNameHi").value=post.translations?.hi?.person_name||((post.language||"bn")==="hi"?post.biographyPersonName||"":""); $("#biographyPersonType").value=post.biographyPersonType||""; $("#biographyCountry").value=post.biographyCountry||""; updatePostUrlPreview();
+    $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#biographyPersonNameBn").value=post.translations?.bn?.person_name||((post.language||"bn")==="bn"?post.biographyPersonName||"":""); $("#biographyPersonNameEn").value=post.translations?.en?.person_name||((post.language||"bn")==="en"?post.biographyPersonName||"":""); $("#biographyPersonNameHi").value=post.translations?.hi?.person_name||((post.language||"bn")==="hi"?post.biographyPersonName||"":""); syncBiographyNameTransliterations(true); $("#biographyPersonType").value=post.biographyPersonType||""; $("#biographyCountry").value=post.biographyCountry||""; updatePostUrlPreview();
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); syncSaveButtonLabel(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
