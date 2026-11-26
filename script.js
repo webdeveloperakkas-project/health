@@ -858,6 +858,29 @@
     return candidates.some(title => routeSlug(title) === slug);
   }
 
+  /* Country names are stored canonically in English for reliable filters,
+     then displayed in the visitor's selected language. */
+  function localizedBiographyCountry(country, language) {
+    const names = {
+      "bangladesh":["বাংলাদেশ","बांग्लादेश"],"india":["ভারত","भारत"],"pakistan":["পাকিস্তান","पाकिस्तान"],
+      "united states":["যুক্তরাষ্ট্র","संयुक्त राज्य अमेरिका"],"united kingdom":["যুক্তরাজ্য","यूनाइटेड किंगडम"],
+      "canada":["কানাডা","कनाडा"],"australia":["অস্ট্রেলিয়া","ऑस्ट्रेलिया"],"china":["চীন","चीन"],
+      "japan":["জাপান","जापान"],"south korea":["দক্ষিণ কোরিয়া","दक्षिण कोरिया"],"germany":["জার্মানি","जर्मनी"],
+      "france":["ফ্রান্স","फ्रांस"],"italy":["ইতালি","इटली"],"spain":["স্পেন","स्पेन"],"russia":["রাশিয়া","रूस"],
+      "brazil":["ব্রাজিল","ब्राज़ील"],"south africa":["দক্ষিণ আফ্রিকা","दक्षिण अफ्रीका"],"nigeria":["নাইজেরিয়া","नाइजीरिया"],
+      "egypt":["মিশর","मिस्र"],"saudi arabia":["সৌদি আরব","सऊदी अरब"],"united arab emirates":["সংযুক্ত আরব আমিরাত","संयुक्त अरब अमीरात"],
+      "turkey":["তুরস্ক","तुर्की"],"indonesia":["ইন্দোনেশিয়া","इंडोनेशिया"],"malaysia":["মালয়েশিয়া","मलेशिया"],
+      "singapore":["সিঙ্গাপুর","सिंगापुर"],"nepal":["নেপাল","नेपाल"],"sri lanka":["শ্রীলঙ্কা","श्रीलंका"],
+      "afghanistan":["আফগানিস্তান","अफ़ग़ानिस्तान"],"iran":["ইরান","ईरान"],"iraq":["ইরাক","इराक"],
+      "new zealand":["নিউজিল্যান্ড","न्यूज़ीलैंड"],"mexico":["মেক্সিকো","मेक्सिको"],"argentina":["আর্জেন্টিনা","अर्जेंटीना"],
+      "sweden":["সুইডেন","स्वीडन"],"norway":["নরওয়ে","नॉर्वे"],"netherlands":["নেদারল্যান্ডস","नीदरलैंड"],
+      "switzerland":["সুইজারল্যান্ড","स्विट्ज़रलैंड"],"ireland":["আয়ারল্যান্ড","आयरलैंड"],
+      "thailand":["থাইল্যান্ড","थाईलैंड"],"vietnam":["ভিয়েতনাম","वियतनाम"]
+    };
+    const translated=names[String(country||"").trim().toLowerCase()];
+    return language==="bn"&&translated?translated[0]:language==="hi"&&translated?translated[1]:String(country||"");
+  }
+
   /* Render the saved Bengali, English or Hindi version selected by the visitor. */
   function applyLocalizedPostContent() {
     posts.forEach(post => {
@@ -866,10 +889,11 @@
       const fallback = translations[post.language] || {};
       const title = String(selected.title || fallback.title || post.canonicalTitle || post.title || "");
       const html = String(selected.content_html || fallback.content_html || post.canonicalContentHtml || post.contentHtml || "");
-      const excerpt = String(selected.excerpt || fallback.excerpt || post.canonicalExcerpt || post.excerpt || "");
+      const excerpt = String(selected.excerpt || (activeLanguage === post.language ? fallback.excerpt || post.canonicalExcerpt || post.excerpt || "" : ""));
       post.title = title;
       post.contentHtml = html;
-      post.biographyPersonName = String(selected.person_name || fallback.person_name || post.canonicalBiographyPersonName || post.biographyPersonName || "");
+      post.biographyPersonName = String(selected.person_name || (activeLanguage === post.language ? post.canonicalBiographyPersonName || post.biographyPersonName || "" : ""));
+      post.biographyCountryDisplay = localizedBiographyCountry(post.biographyCountry, activeLanguage);
       const textNode = document.createElement("div");
       textNode.innerHTML = html;
       const plain = (textNode.textContent || "").replace(/\\s+/g," ").trim();
@@ -1093,7 +1117,7 @@
       ? '<div class="single-article-biography-meta">' +
           (post.biographyPersonName ? '<span><strong>' + biographyCopy.person + '</strong> ' + escapeHTML(post.biographyPersonName) + '</span>' : '') +
           (biographyTypeLabel ? '<span><strong>' + biographyCopy.profession + '</strong> ' + escapeHTML(biographyTypeLabel) + '</span>' : '') +
-          (post.biographyCountry ? '<span><strong>' + biographyCopy.country + '</strong> ' + escapeHTML(post.biographyCountry) + '</span>' : '') +
+          (post.biographyCountry ? '<span><strong>' + biographyCopy.country + '</strong> ' + escapeHTML(post.biographyCountryDisplay || post.biographyCountry) + '</span>' : '') +
         '</div>'
       : "";
     const paragraphs = sourceHtml;
