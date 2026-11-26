@@ -5366,3 +5366,28 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     display:none;
   }
 }
+
+/* Mobile editorial refinement:
+   - World News, Sports and Lifestyle gallery images use a balanced 4:3 frame.
+   - The three supporting stories below the main lead use a 40% image / 60% text split.
+   Desktop sizing and layout remain unchanged. */
+@media (max-width:800px) {
+  .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide img,
+  .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide img,
+  .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide img {
+    width:100%;
+    height:auto;
+    aspect-ratio:4 / 3;
+    object-fit:cover;
+  }
+
+  .home-editorial-list .home-world-small {
+    grid-template-columns:40% minmax(0,1fr);
+    gap:10px;
+  }
+
+  .home-editorial-list .home-category-image {
+    width:100%;
+    aspect-ratio:4 / 3;
+  }
+}
