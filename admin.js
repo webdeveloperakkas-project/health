@@ -10,7 +10,7 @@
   const MEDIA_BUCKET = "everyday-atlas-media";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_I_vdOiwMc4XowqUG8HLP8w_h-GnwbvY";
   const db = () => window.EA_SUPABASE;
-  const categories = {world:"World News",tips:"Daily Tips",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",hospitals:"Hospitals (legacy)"};
+  const categories = {world:"World News",tips:"Daily Tips",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",biography:"Biography",hospitals:"Hospitals (legacy)"};
   const categoryPathSlugs = {technology:"technology"};
   const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending",myChoice:"Favorites"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
@@ -205,7 +205,7 @@
     // Compact category totals: count every saved post, regardless of status.
     const categoryGrid=$("#categoryStatsGrid");
     if(categoryGrid){
-      const dashboardCategories=["world","technology","sports","entertainment","lifestyle","travel","finance"];
+      const dashboardCategories=["world","technology","biography","sports","entertainment","lifestyle","travel","finance"];
       categoryGrid.innerHTML=dashboardCategories.map(key=>{
         const count=posts.filter(post=>post.category===key).length;
         return '<article class="category-stat-card"><span>'+categories[key]+'</span><strong>'+count.toLocaleString()+'</strong></article>';
