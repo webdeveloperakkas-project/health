@@ -413,3 +413,27 @@
     flex:1 1 auto;
   }
 }
+
+
+/* Refine Publish actions spacing and emphasize the article review action. */
+.publish-featured-group .publish-actions{
+  margin-top:17px;
+  margin-left:8px;
+  width:calc(100% - 8px);
+}
+.publish-featured-group .publish-actions #previewBtn{
+  background:#d9363e;
+  color:#fff;
+  border:1px solid #fff;
+  box-shadow:0 3px 9px rgba(217,54,62,.2);
+}
+.publish-featured-group .publish-actions #previewBtn:hover{
+  background:#bd2730;
+  color:#fff;
+}
+@media(max-width:420px){
+  .publish-featured-group .publish-actions{
+    margin-left:0;
+    width:100%;
+  }
+}
