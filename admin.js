@@ -48,7 +48,7 @@
         if (ch === "ং" || ch === "ঃ" || ch === "ঁ") continue;
         if (signs[next]) { result += signs[next][idx]; i++; }
         else if (next === "্") { if (target === "hi") result += "्"; i++; }
-        else result += target === "hi" ? "अ" : "o";
+        else if (next && !/[\s,.;:!?।]/u.test(next)) result += target === "hi" ? "अ" : "o";
         continue;
       }
       if (signs[ch]) { result += signs[ch][idx]; continue; }
@@ -56,7 +56,8 @@
       if (ch === "়" || ch === "ৗ" || ch === "\u200c" || ch === "\u200d") continue;
       result += ch === "।" && target === "en" ? "." : ch;
     }
-    return result.replace(/\s+/g, " ").trim();
+    const cleaned = result.replace(/\s+/g, " ").trim();
+    return target === "en" ? cleaned.replace(/(^|\s)([^\s])/gu, (match, gap, first) => gap + first.toLocaleUpperCase()) : cleaned;
   }
   function syncBiographyNameTransliterations(fillOnly) {
     const bn = $("#biographyPersonNameBn"), en = $("#biographyPersonNameEn"), hi = $("#biographyPersonNameHi");
