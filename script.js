@@ -49,7 +49,7 @@
   const languageCopy = {
     en:{
       latest:"LATEST",categories:{
-        home:"Home",world:"World News",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
+        home:"Home",world:"World News",technology:"Science & Technology",biography:"Biography",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
       },stories:"LATEST STORIES",types:{
         latest:"Latest",popular:"Popular",mostViewed:"Most Viewed"
       },description:"Latest articles and useful information.",search:"Search articles...",sort:"NEWEST FIRST ↓",page:"Page",of:"of",articles:"Articles",empty:"No articles are published in this category yet.",about:"About",contact:"Contact",privacy:"Privacy",aboutTitle:"Clear information for a world of everyday questions.",aboutText:"Our articles are for general information and do not replace professional advice."
