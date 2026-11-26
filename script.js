@@ -869,6 +869,7 @@
       const excerpt = String(selected.excerpt || fallback.excerpt || post.canonicalExcerpt || post.excerpt || "");
       post.title = title;
       post.contentHtml = html;
+      post.biographyPersonName = String(selected.person_name || fallback.person_name || post.canonicalBiographyPersonName || post.biographyPersonName || "");
       const textNode = document.createElement("div");
       textNode.innerHTML = html;
       const plain = (textNode.textContent || "").replace(/\\s+/g," ").trim();
@@ -1079,14 +1080,20 @@
     const subcategoryLabel = post.subcategory ? post.subcategory.replace(/-/g," ") : "";
     // Biography uses the exact same article template as every other category.
     // Only its optional person metadata is added inside the shared heading.
+    const biographyLabels = {
+      en:{person:"Person",profession:"Profession",country:"Country",types:{scientist:"Scientist",actor:"Actor",athlete:"Athlete",writer:"Writer",entrepreneur:"Entrepreneur",leader:"Leader",artist:"Artist",inventor:"Inventor",activist:"Activist",other:"Other"}},
+      bn:{person:"ব্যক্তি",profession:"পেশা",country:"দেশ",types:{scientist:"বিজ্ঞানী",actor:"অভিনেতা",athlete:"ক্রীড়াবিদ",writer:"লেখক",entrepreneur:"উদ্যোক্তা",leader:"নেতা",artist:"শিল্পী",inventor:"উদ্ভাবক",activist:"কর্মী",other:"অন্যান্য"}},
+      hi:{person:"व्यक्ति",profession:"पेशा",country:"देश",types:{scientist:"वैज्ञानिक",actor:"अभिनेता",athlete:"खिलाड़ी",writer:"लेखक",entrepreneur:"उद्यमी",leader:"नेता",artist:"कलाकार",inventor:"आविष्कारक",activist:"कार्यकर्ता",other:"अन्य"}}
+    };
+    const biographyCopy = biographyLabels[activeLanguage] || biographyLabels.en;
     const biographyTypeLabel = post.biographyPersonType
-      ? post.biographyPersonType.replace(/-/g," ").replace(/\b\w/g,letter=>letter.toUpperCase())
+      ? (biographyCopy.types[post.biographyPersonType] || post.biographyPersonType.replace(/-/g," ").replace(/\b\w/g,letter=>letter.toUpperCase()))
       : "";
     const biographyMetadata = post.category === "biography"
       ? '<div class="single-article-biography-meta">' +
-          (post.biographyPersonName ? '<span><strong>Person</strong> ' + escapeHTML(post.biographyPersonName) + '</span>' : '') +
-          (biographyTypeLabel ? '<span><strong>Profession</strong> ' + escapeHTML(biographyTypeLabel) + '</span>' : '') +
-          (post.biographyCountry ? '<span><strong>Country</strong> ' + escapeHTML(post.biographyCountry) + '</span>' : '') +
+          (post.biographyPersonName ? '<span><strong>' + biographyCopy.person + '</strong> ' + escapeHTML(post.biographyPersonName) + '</span>' : '') +
+          (biographyTypeLabel ? '<span><strong>' + biographyCopy.profession + '</strong> ' + escapeHTML(biographyTypeLabel) + '</span>' : '') +
+          (post.biographyCountry ? '<span><strong>' + biographyCopy.country + '</strong> ' + escapeHTML(post.biographyCountry) + '</span>' : '') +
         '</div>'
       : "";
     const paragraphs = sourceHtml;
@@ -1917,7 +1924,7 @@
         const publishedDate = new Date(stamp);
         return {
           cmsId:row.id,category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
-          biographyPersonType:row.biography_person_type||"",biographyPersonName:row.biography_person_name||"",biographyCountry:row.biography_country||"",
+          biographyPersonType:row.biography_person_type||"",biographyPersonName:row.biography_person_name||"",canonicalBiographyPersonName:row.biography_person_name||"",biographyCountry:row.biography_country||"",
            subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",canonicalTitle:row.title||"",language:row.language||"bn",translations,
           postType:(row.post_types||["latest"])[0]||"latest",
           postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
