@@ -207,7 +207,7 @@
       const dashboardCategories=["world","technology","sports","entertainment","lifestyle","travel","finance"];
       categoryGrid.innerHTML=dashboardCategories.map(key=>{
         const count=posts.filter(post=>post.category===key).length;
-        return '<article class="category-stat-card"><span>'+categories[key]+'</span><strong>'+count.toLocaleString()+'</strong><small>Posts</small></article>';
+        return '<article class="category-stat-card"><span>'+categories[key]+'</span><strong>'+count.toLocaleString()+'</strong></article>';
       }).join("");
     }
   }
