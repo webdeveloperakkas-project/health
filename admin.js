@@ -348,7 +348,29 @@
     $("#pageTitle").textContent={dashboard:"Dashboard",posts:"All Posts",drafts:"My Drafts",scheduled:"Scheduled Posts",seo:"SEO & Marketing",editor:editingId?"Edit Post":"Write a Post",headlines:"All Headlines",headlineEditor:editingHeadlineId?"Edit Headline":"Write a Headline"}[view]||"Dashboard";
     if(view!=="editor") renderLists();
   }
-  document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.view)));
+
+  /* Mobile hamburger navigation */
+  const mobileMenuToggle = $("#mobileMenuToggle");
+  const adminSidebar = $("#adminSidebar");
+  function closeMobileMenu(){
+    if(!mobileMenuToggle || !adminSidebar) return;
+    adminSidebar.classList.remove("menu-open");
+    mobileMenuToggle.setAttribute("aria-expanded","false");
+    mobileMenuToggle.setAttribute("aria-label","Open navigation menu");
+  }
+  if(mobileMenuToggle && adminSidebar){
+    mobileMenuToggle.addEventListener("click",()=>{
+      const isOpen=adminSidebar.classList.toggle("menu-open");
+      mobileMenuToggle.setAttribute("aria-expanded",String(isOpen));
+      mobileMenuToggle.setAttribute("aria-label",isOpen?"Close navigation menu":"Open navigation menu");
+    });
+    document.addEventListener("keydown",event=>{if(event.key==="Escape") closeMobileMenu();});
+    document.addEventListener("click",event=>{
+      if(!adminSidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) closeMobileMenu();
+    });
+  }
+
+  document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>{openView(button.dataset.view);closeMobileMenu();}));
   document.querySelectorAll("[data-open]").forEach(button=>button.addEventListener("click",()=>openView(button.dataset.open)));
   $("#newPostBtn").addEventListener("click",()=>newPost());
   $("#postSearch").addEventListener("input",renderLists);
