@@ -612,7 +612,7 @@
     }
 
     const mainPost = items[0];
-    const sidePosts = items.slice(1);
+    const sidePosts = sectionKey === "biography" ? items.slice(1, 5) : items.slice(1);
     const mainIndex = posts.indexOf(mainPost);
     const mainImage = imageForPost(mainPost);
     const excerpt = String(mainPost.excerpt || "").trim();
@@ -629,7 +629,8 @@
     const sideList = sidePosts.map(post => {
       const index = posts.indexOf(post);
       const image = imageForPost(post);
-      return '<button class="home-category-card home-world-small" type="button" data-open-post="' + index + '">' +
+      const sideCardClass = sectionKey === "biography" ? "home-category-card home-biography-card" : "home-category-card home-world-small";
+      return '<button class="' + sideCardClass + '" type="button" data-open-post="' + index + '">' +
         (image ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-category-image home-category-image-empty"></span>') +
         '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong></span></button>';
     }).join("");
@@ -649,7 +650,8 @@
       (galleryImages.length > 1 ? '<button class="home-post-gallery-arrow is-prev" type="button" data-gallery-step="-1" aria-label="Previous images">‹</button><button class="home-post-gallery-arrow is-next" type="button" data-gallery-step="1" aria-label="Next images">›</button>' : '') +
       '</div>';
 
-    host.innerHTML = '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="home-editorial-list">' + sideList + '</div></div>' + gallery;
+    const sidePanelClass = sectionKey === "biography" ? "home-editorial-list home-biography-cards" : "home-editorial-list";
+    host.innerHTML = '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="' + sidePanelClass + '">' + sideList + '</div></div>' + gallery;
 
     const slider = host.querySelector(".home-post-gallery-slider");
     if (!slider || galleryImages.length < 2) return;
