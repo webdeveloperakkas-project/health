@@ -892,7 +892,7 @@
       const excerpt = String(selected.excerpt || (activeLanguage === post.language ? fallback.excerpt || post.canonicalExcerpt || post.excerpt || "" : ""));
       post.title = title;
       post.contentHtml = html;
-      post.biographyPersonName = String(selected.person_name || (activeLanguage === post.language ? post.canonicalBiographyPersonName || post.biographyPersonName || "" : ""));
+      post.biographyPersonName = String(selected.person_name || selected.personName || (activeLanguage === post.language ? post.canonicalBiographyPersonName || post.biographyPersonName || "" : ""));
       post.biographyCountryDisplay = localizedBiographyCountry(post.biographyCountry, activeLanguage);
       const textNode = document.createElement("div");
       textNode.innerHTML = html;
@@ -1938,8 +1938,16 @@
       if (headlinesError) throw headlinesError;
       const cloudPosts = (rows || []).map(row => {
         const translations = row.translations && typeof row.translations === "object" && !Array.isArray(row.translations)
-          ? row.translations
+          ? { ...row.translations }
           : {};
+        /* Keep the legacy primary-language name visible for older Biography posts. */
+        const primaryBiographyLanguage = ["bn","en","hi"].includes(row.language) ? row.language : "en";
+        const primaryBiographyTranslation = translations[primaryBiographyLanguage] && typeof translations[primaryBiographyLanguage] === "object"
+          ? translations[primaryBiographyLanguage]
+          : {};
+        if (!primaryBiographyTranslation.person_name && row.biography_person_name) {
+          translations[primaryBiographyLanguage] = { ...primaryBiographyTranslation, person_name: row.biography_person_name };
+        }
         const contentHtml = row.content_html || "";
         const textNode = document.createElement("div");
         textNode.innerHTML = contentHtml;
