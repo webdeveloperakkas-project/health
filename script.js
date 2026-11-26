@@ -123,12 +123,48 @@
       option.textContent = language.label;
       return option;
     }));
-    // Slightly widen the existing selector on desktop, without enlarging it on mobile.
-    const sizeLanguageControl = () => {
-      languageSelect.style.minWidth = window.matchMedia("(min-width: 801px)").matches ? "158px" : "auto";
+    // The visible control is a compact custom menu; keep the native select hidden
+    // as the single source of truth for the existing language preference logic.
+    const languageButton = $("#languageButton");
+    const languageMenu = $("#languageMenu");
+    const syncLanguageButton = () => {
+      const selected = supportedLanguages.find(language => language.code === languageSelect.value) || supportedLanguages[0];
+      if (languageButton) languageButton.textContent = selected.label;
+      if (languageMenu) {
+        languageMenu.querySelectorAll("[data-language]").forEach(option => {
+          const isSelected = option.dataset.language === selected.code;
+          option.setAttribute("aria-selected", String(isSelected));
+        });
+      }
     };
-    sizeLanguageControl();
-    window.addEventListener("resize", sizeLanguageControl, {passive:true});
+    if (languageButton && languageMenu) {
+      languageButton.addEventListener("click", () => {
+        const willOpen = languageMenu.hidden;
+        languageMenu.hidden = !willOpen;
+        languageButton.setAttribute("aria-expanded", String(willOpen));
+      });
+      languageMenu.addEventListener("click", event => {
+        const option = event.target.closest("[data-language]");
+        if (!option) return;
+        languageSelect.value = option.dataset.language;
+        languageSelect.dispatchEvent(new Event("change", {bubbles:true}));
+        languageMenu.hidden = true;
+        languageButton.setAttribute("aria-expanded", "false");
+      });
+      document.addEventListener("click", event => {
+        if (!event.target.closest(".language-wrap")) {
+          languageMenu.hidden = true;
+          languageButton.setAttribute("aria-expanded", "false");
+        }
+      });
+      languageButton.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          languageMenu.hidden = true;
+          languageButton.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+    syncLanguageButton();
   }
 
   let activeLanguage = "en";
@@ -1895,6 +1931,7 @@
   ========================================================= */
   $("#languageSelect").addEventListener("change", event => {
     try { localStorage.setItem("ea-language", event.target.value); } catch (_) {}
+    if (typeof syncLanguageButton === "function") syncLanguageButton();
     applyLanguage(event.target.value);
     applyLocalizedPostContent();
     render();
@@ -1911,6 +1948,7 @@
     const savedLanguage = localStorage.getItem("ea-language");
     if (savedLanguage && $("#languageSelect").querySelector('option[value="' + savedLanguage + '"]')) $("#languageSelect").value = savedLanguage;
   } catch (_) {}
+  if (typeof syncLanguageButton === "function") syncLanguageButton();
 
   /* =========================================================
      15. PAGE INITIALIZATION
