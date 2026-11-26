@@ -765,3 +765,47 @@
   .article-details-grid>.post-languages-fieldset{grid-column:1}
   .publish-featured-group .publish-actions{margin-top:10px;width:100%;margin-left:0}
 }
+
+
+/* Keep the populated Posts by Category grid anchored to the panel on mobile. */
+@media(max-width:760px){
+  .category-stats-panel{
+    display:block;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin-left:0;
+    margin-right:0;
+    overflow:hidden;
+  }
+  #categoryStatsGrid.category-stats-grid{
+    display:grid;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin:0;
+    padding:0;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    justify-content:stretch;
+    justify-items:stretch;
+    align-items:stretch;
+    gap:7px;
+    box-sizing:border-box;
+  }
+  #categoryStatsGrid .category-stat-card{
+    display:block;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin:0;
+    justify-self:stretch;
+    box-sizing:border-box;
+    text-align:center;
+  }
+  #categoryStatsGrid .category-stat-card span,
+  #categoryStatsGrid .category-stat-card strong{
+    width:100%;
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+}
