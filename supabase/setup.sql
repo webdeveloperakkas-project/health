@@ -45,6 +45,7 @@ create table if not exists public.posts (
   keywords text[] not null default '{}'::text[],
   video_url text not null default '',
   cover_url text not null default '',
+  cover_caption_enabled boolean not null default false,
   views bigint not null default 0 check (views >= 0),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -60,6 +61,7 @@ alter table public.posts add column if not exists focus_keyword text not null de
 alter table public.posts add column if not exists related_keywords text[] not null default '{}'::text[];
 alter table public.posts add column if not exists sitemap_submitted boolean not null default false;
 alter table public.posts add column if not exists sitemap_submitted_at timestamptz;
+alter table public.posts add column if not exists cover_caption_enabled boolean not null default false;
 alter table public.posts drop constraint if exists posts_status_check;
 alter table public.posts add constraint posts_status_check check (status in ('draft', 'scheduled', 'published'));
 
