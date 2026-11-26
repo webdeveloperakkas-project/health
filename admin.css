@@ -497,10 +497,10 @@
 }
 
 
-/* Dashboard category totals: seven compact cards across on desktop. */
+/* Dashboard category totals: eight compact cards across on desktop. */
 .category-stats-grid{
   display:grid;
-  grid-template-columns:repeat(7,minmax(0,1fr));
+  grid-template-columns:repeat(8,minmax(0,1fr));
   gap:10px;
 }
 .category-stat-card{
@@ -525,10 +525,6 @@
   margin:5px 0 1px;
   color:var(--teal-dark);
   font:800 22px/1.2 Manrope,sans-serif;
-}
-.category-stat-card small{
-  color:#91a19e;
-  font-size:9px;
 }
 @media(max-width:1100px){
   .category-stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
