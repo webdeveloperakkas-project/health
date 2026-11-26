@@ -661,7 +661,7 @@
     const excerpt = String(mainPost.excerpt || "").trim();
     // Collect available images from the posts in this homepage section.
     // Five image slots are always shown; additional images move through the slider one at a time.
-    const galleryImages = items.flatMap(post => imagesForHomeGallery(post).map(src => ({ src, title: post.title || "Article image" }))).filter((image, index, all) => all.findIndex(item => item.src === image.src) === index);
+    const galleryImages = items.flatMap(post => imagesForHomeGallery(post).map(src => ({ src, title: post.title || "Article image", postIndex: posts.indexOf(post) }))).filter((image, index, all) => all.findIndex(item => item.src === image.src) === index);
 
     const mainCard =
       '<button class="home-category-card home-world-main" type="button" data-open-post="' + mainIndex + '">' +
@@ -694,7 +694,8 @@
       Array.from({ length: visibleGallerySlots }, (_, slot) => {
         const imageIndex = galleryImages.length ? (galleryCenterIndex + slot - 2 + galleryImages.length * 10) % galleryImages.length : -1;
         const image = imageIndex >= 0 ? galleryImages[imageIndex] : null;
-        return '<figure class="home-post-gallery-slide' + (slot === 2 ? ' is-center' : '') + (image ? '' : ' is-empty') + '" data-gallery-slot="' + slot + '">' +
+        return '<figure class="home-post-gallery-slide' + (slot === 2 ? ' is-center' : '') + (image ? '' : ' is-empty') + '" data-gallery-slot="' + slot + '"' +
+          (image ? ' data-open-post="' + image.postIndex + '" role="button" tabindex="0" aria-label="' + escapeHTML(image.title) + '"' : '') + '>' +
           (image ? '<img src="' + escapeHTML(image.src) + '" alt="' + escapeHTML(image.title) + '" loading="lazy"><figcaption>' + escapeHTML(image.title) + '</figcaption>' : '') +
           '</figure>';
       }).join("") +
@@ -723,6 +724,10 @@
       const image = galleryImages[(imageIndex + galleryImages.length) % galleryImages.length];
       slide.classList.remove("is-empty", "is-center");
       slide.dataset.imageIndex = String((imageIndex + galleryImages.length) % galleryImages.length);
+      slide.dataset.openPost = String(image.postIndex);
+      slide.setAttribute("role", "button");
+      slide.setAttribute("tabindex", "0");
+      slide.setAttribute("aria-label", image.title);
       slide.innerHTML = '<img src="' + escapeHTML(image.src) + '" alt="' + escapeHTML(image.title) + '" loading="lazy"><figcaption>' + escapeHTML(image.title) + '</figcaption>';
     };
     const markCenterSlide = () => {
