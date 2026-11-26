@@ -7,7 +7,7 @@
   <title>Global Scope 24 | Content Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=30">
+  <link rel="stylesheet" href="admin.css?v=31">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <script src="admin-auth.js?v=2" defer></script>
@@ -158,8 +158,8 @@
 <div class="panel-card cloudinary-card"><h2>Cloudinary image storage</h2><p>Cloudinary is preconfigured for this Admin Panel. Cover images use the storage option you select below the Cover Image uploader. Cloudinary is available as an option when configured. Existing image URLs remain available.</p><label class="field-label" for="cloudinaryCloudName">Cloud name</label><input class="text-input" id="cloudinaryCloudName" autocomplete="off" placeholder="Your Cloudinary cloud name"><label class="field-label" for="cloudinaryUploadPreset">Unsigned upload preset</label><input class="text-input" id="cloudinaryUploadPreset" autocomplete="off" placeholder="Your unsigned upload preset"><button type="button" class="secondary-btn full-btn" id="saveCloudinarySettings">Save Cloudinary settings</button><div class="field-help">Preset: Unsigned. Supported uploads: JPG, PNG, WebP, GIF and sanitised SVG cover icons. Never enter your API secret here.</div><div id="cloudinaryStatus" class="cloudinary-status">Cloudinary settings are loading…</div></div>
 </div></div>
             
-          </aside>
-          <div class="panel-card publish-card"><h2>Publish</h2>
+          
+            <div class="panel-card publish-card"><h2>Publish</h2>
               <div class="publish-layout">
                 <section class="publish-status-group"><div class="status-line"><span id="editorStatusDot"></span><span id="editorStatusText">Draft</span></div><label class="field-label" for="postStatus">Save status</label><div class="field-help">Choose whether to save this article as a draft, publish it immediately, or schedule it for a future time. Editing an already published article updates its live HTML page without changing Sitemap approval.</div><select id="postStatus" class="text-input"><option value="draft">Save as draft</option><option value="published">Publish immediately</option><option value="scheduled">Schedule publishing</option></select>
             <div id="scheduledPublishFields" class="scheduled-publish-fields" hidden><label class="field-label" for="scheduledPublishDate">Publish date</label><input class="text-input schedule-date-input" id="scheduledPublishDate" type="date"><label class="field-label schedule-time-label" for="scheduledPublishTime">Publish time</label><input class="text-input schedule-time-input" id="scheduledPublishTime" type="time"><div class="field-help">Choose a future date and time. Time zone: Bangladesh (Asia/Dhaka). The scheduler checks for due posts every 15 minutes.</div></div></section>
@@ -169,7 +169,8 @@
                 <div class="publish-actions"><button class="primary-btn full-btn" type="submit" id="savePostBtn">Save post</button><button class="secondary-btn full-btn" type="button" id="previewBtn">Preview article</button><button class="danger-text full-btn" type="button" id="deleteCurrentBtn" hidden>Delete this post</button></div>
               </div>
             </div>
-        </form>
+          </aside>
+          </form>
       </section>
     </main>
   </div>
