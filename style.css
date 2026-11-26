@@ -5397,7 +5397,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide figcaption,
   .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide figcaption,
   .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide figcaption {
-    font-size:18px;
+    font-size:15px;
     line-height:1.45;
   }
 }
