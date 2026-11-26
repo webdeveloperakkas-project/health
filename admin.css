@@ -810,3 +810,47 @@
     overflow-wrap:anywhere;
   }
 }
+
+
+/* Prevent dashboard content tables from widening the mobile grid after data loads. */
+@media(max-width:760px){
+  .admin-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow-x:clip;
+  }
+  .main-area,
+  .view-panel,
+  .view-panel.active,
+  .view-panel>.panel-card,
+  .main-area>.view-panel>.panel-card,
+  .main-area>.view-panel>.stats-grid,
+  .main-area>.view-panel>.panel-card,
+  .panel-card,
+  .table-wrap{
+    min-width:0;
+    max-width:100%;
+    box-sizing:border-box;
+  }
+  .main-area{
+    width:100%;
+    margin-left:0;
+    margin-right:0;
+    overflow-x:clip;
+  }
+  #recentPosts,
+  #allPosts,
+  #recentPosts table,
+  #allPosts table{
+    max-width:100%;
+  }
+  #recentPosts,
+  #allPosts{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+}
