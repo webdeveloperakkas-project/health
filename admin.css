@@ -854,3 +854,44 @@
     -webkit-overflow-scrolling:touch;
   }
 }
+
+
+/* Refined mobile navigation: animated 70% dropdown with a three-tone palette. */
+@media(max-width:760px){
+  .sidebar{
+    display:flex;position:absolute;top:0;left:10px;right:auto;width:70vw;max-width:360px;
+    max-height:0;padding:0 13px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+    visibility:hidden;opacity:0;transform:translateY(-10px);transform-origin:top left;
+    pointer-events:none;border:1px solid transparent;border-radius:0 0 15px 15px;
+    background:linear-gradient(145deg,#153943 0%,#087c75 52%,#49356f 100%);
+    box-shadow:0 14px 32px rgba(14,35,43,.24);
+    transition:max-height .34s ease,opacity .24s ease,transform .34s cubic-bezier(.2,.75,.25,1),
+      padding .34s ease,border-color .24s ease,visibility 0s linear .34s;z-index:35;
+  }
+  .sidebar.menu-open{
+    display:flex;flex-direction:column;align-items:stretch;max-height:min(68vh,520px);
+    padding:13px 13px 15px;visibility:visible;opacity:1;transform:translateY(0);
+    pointer-events:auto;border-color:rgba(232,184,91,.75);
+    transition:max-height .38s ease,opacity .24s ease .04s,transform .34s cubic-bezier(.2,.75,.25,1),
+      padding .34s ease,border-color .24s ease,visibility 0s;
+  }
+  .sidebar .side-label{display:block;color:#fff;padding:9px 10px 6px;margin:0;font-size:9px;letter-spacing:1.25px;opacity:.88}
+  .sidebar .side-label.side-spaced{margin-top:9px;padding-top:13px;border-top:1px solid #e8b85b}
+  .sidebar .nav-item{
+    display:flex;width:100%;min-height:42px;margin:1px 0;padding:9px 11px;justify-content:flex-start;
+    white-space:normal;border:0;border-radius:8px;background:rgba(255,255,255,.08);color:#fff;
+    transition:background .2s ease,transform .2s ease;
+  }
+  .sidebar .nav-item:hover,.sidebar .nav-item.active{
+    background:rgba(255,255,255,.19);color:#fff;box-shadow:inset 3px 0 0 #e8b85b;transform:translateX(2px);
+  }
+  .sidebar .nav-item>span{color:#fff;font-size:12px;line-height:1.35}
+  .sidebar .side-note{display:block;color:rgba(255,255,255,.82);padding:9px 10px;font-size:10px}
+  .sidebar .sidebar-footer{display:block;position:static;padding:11px 10px 2px;margin-top:8px;border-top:1px solid #e8b85b;color:#fff}
+  .sidebar .sidebar-footer span{color:rgba(255,255,255,.76)}
+  .mobile-menu-toggle{position:relative}
+  .mobile-menu-toggle span{transition:transform .22s ease,opacity .18s ease}
+  .mobile-menu-toggle.is-open span:first-child{transform:translateY(6px) rotate(45deg)}
+  .mobile-menu-toggle.is-open span:nth-child(2){opacity:0}
+  .mobile-menu-toggle.is-open span:last-child{transform:translateY(-6px) rotate(-45deg)}
+}
