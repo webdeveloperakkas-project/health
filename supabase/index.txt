@@ -17,7 +17,7 @@
  *   POST { "action": "update_sitemap", "postIds": ["post-id-1"], "include": true }
  *
  * Only authenticated admins in public.admin_users can use this function.
- * Publishing updates Supabase status and removes legacy standalone article files.
+ * Publishing updates Supabase status and maintains robots.txt through the GitHub Contents API.
  * Article routes are served by the main site through the repository's 404.html fallback.
  * Sitemap approval can add or remove selected already-published URLs.
  */
