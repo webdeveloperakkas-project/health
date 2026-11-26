@@ -355,12 +355,14 @@
   function closeMobileMenu(){
     if(!mobileMenuToggle || !adminSidebar) return;
     adminSidebar.classList.remove("menu-open");
+    mobileMenuToggle.classList.remove("is-open");
     mobileMenuToggle.setAttribute("aria-expanded","false");
     mobileMenuToggle.setAttribute("aria-label","Open navigation menu");
   }
   if(mobileMenuToggle && adminSidebar){
     mobileMenuToggle.addEventListener("click",()=>{
       const isOpen=adminSidebar.classList.toggle("menu-open");
+      mobileMenuToggle.classList.toggle("is-open",isOpen);
       mobileMenuToggle.setAttribute("aria-expanded",String(isOpen));
       mobileMenuToggle.setAttribute("aria-label",isOpen?"Close navigation menu":"Open navigation menu");
     });
