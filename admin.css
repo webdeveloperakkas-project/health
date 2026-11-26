@@ -417,9 +417,9 @@
 
 /* Refine Publish actions spacing and emphasize the article review action. */
 .publish-featured-group .publish-actions{
-  margin-top:27px;
+  margin-top:37px;
   margin-left:13px;
-  width:calc(100% - 13px);
+  width:calc(100% + 190px);
 }
 .publish-featured-group .publish-actions #previewBtn{
   background:#f5d76e;
