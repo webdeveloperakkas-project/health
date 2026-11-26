@@ -297,3 +297,14 @@
 .article-details-grid>.cloudinary-card .text-input{width:100%;min-width:0}
 .article-details-grid>.cloudinary-card .full-btn{max-width:260px}
 @media(max-width:760px){.article-details-grid>.cloudinary-card{grid-column:1/-1}}
+
+
+/* Compact horizontal language selector at the top of Article Details. */
+.article-details-grid>.post-languages-fieldset{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 2px;padding:10px 12px;background:#f8fbfa;border:1px solid #dce9e5;border-radius:9px;min-width:0}
+.article-details-grid>.post-languages-fieldset legend{float:left;width:100%;padding:0 4px;margin-bottom:1px}
+.article-details-grid>.post-languages-fieldset legend small{display:inline;margin-left:7px;font-size:9px}
+.article-details-grid>.post-languages-fieldset .post-language-option{flex:0 1 auto;min-width:94px;justify-content:center;padding:7px 10px;gap:7px}
+.article-details-grid>.post-languages-fieldset .post-language-option span{display:block}
+.article-details-grid>.post-languages-fieldset .post-language-option small{display:none}
+.article-details-grid>.post-languages-fieldset .field-help{flex-basis:100%;margin:0;font-size:9px}
+@media(max-width:760px){.article-details-grid>.post-languages-fieldset{grid-column:1/-1;gap:6px}.article-details-grid>.post-languages-fieldset .post-language-option{min-width:0;flex:1 1 82px}}
