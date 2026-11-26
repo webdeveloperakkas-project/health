@@ -5591,3 +5591,60 @@ html[lang="en"] .main-nav .sidebar-submenu button {
     display:none !important;
   }
 }
+
+
+/* Homepage category dropdowns: mirror the hamburger category submenu cards.
+   These rules are scoped only to the visible homepage category navigation;
+   the hamburger menu and its existing submenu remain unchanged. */
+.category-tabs .sports-submenu,
+.category-tabs .entertainment-submenu,
+.category-tabs .world-submenu,
+.category-tabs .lifestyle-submenu {
+  background:#e8b85b !important;
+  border:1px solid #e8b85b !important;
+  border-top:0 !important;
+  border-radius:0 !important;
+  padding:7px !important;
+  gap:5px !important;
+  box-shadow:0 10px 24px rgba(18,48,52,.18);
+}
+.category-tabs .sports-submenu button,
+.category-tabs .entertainment-submenu button,
+.category-tabs .world-submenu button,
+.category-tabs .lifestyle-submenu button {
+  min-height:38px;
+  padding:8px 10px !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+  border-radius:0 !important;
+  background:#ffffff !important;
+  color:#171717 !important;
+  font-size:16px !important;
+  font-weight:700;
+  line-height:1.35;
+}
+.category-tabs .sports-submenu button:hover,
+.category-tabs .sports-submenu button.active,
+.category-tabs .entertainment-submenu button:hover,
+.category-tabs .entertainment-submenu button.active,
+.category-tabs .world-submenu button:hover,
+.category-tabs .world-submenu button.active,
+.category-tabs .lifestyle-submenu button:hover,
+.category-tabs .lifestyle-submenu button.active {
+  background:#f5cf78 !important;
+  border-color:#ffffff !important;
+  color:#111111 !important;
+}
+html[lang="bn"] .category-tabs .sports-submenu button,
+html[lang="bn"] .category-tabs .entertainment-submenu button,
+html[lang="bn"] .category-tabs .world-submenu button,
+html[lang="bn"] .category-tabs .lifestyle-submenu button {
+  font-family:"Hind Siliguri","Noto Sans Bengali",sans-serif;
+  font-size:17px !important;
+}
+html[lang="hi"] .category-tabs .sports-submenu button,
+html[lang="hi"] .category-tabs .entertainment-submenu button,
+html[lang="hi"] .category-tabs .world-submenu button,
+html[lang="hi"] .category-tabs .lifestyle-submenu button {
+  font-family:"Noto Sans Devanagari",sans-serif;
+  font-size:16px !important;
+}
