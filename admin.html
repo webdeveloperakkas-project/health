@@ -7,7 +7,7 @@
   <title>Global Scope 24 | Content Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=35">
+  <link rel="stylesheet" href="admin.css?v=36">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <script src="admin-auth.js?v=2" defer></script>
@@ -165,8 +165,9 @@
             <div id="scheduledPublishFields" class="scheduled-publish-fields" hidden><label class="field-label" for="scheduledPublishDate">Publish date</label><input class="text-input schedule-date-input" id="scheduledPublishDate" type="date"><label class="field-label schedule-time-label" for="scheduledPublishTime">Publish time</label><input class="text-input schedule-time-input" id="scheduledPublishTime" type="time"><div class="field-help">Choose a future date and time. Time zone: Bangladesh (Asia/Dhaka). The scheduler checks for due posts every 15 minutes.</div></div></section>
                 <section class="publish-placement-group"><fieldset class="placement-fieldset"><legend class="field-label">Post placement <small>Select any combination</small></legend><label class="placement-option"><input type="checkbox" name="postPlacement" value="latest" checked><span><strong>Latest</strong><small>Show in the Latest feed.</small></span></label><label class="placement-option"><input type="checkbox" name="postPlacement" value="popular"><span><strong>Popular</strong><small>Show in the Popular feed.</small></span></label>
               <label class="placement-option"><input type="checkbox" name="postPlacement" value="trending"><span><strong>Trending</strong><small>Show only in the manually selected homepage Trending section.</small></span></label><label class="placement-option my-choice-placement"><input type="checkbox" name="postPlacement" value="myChoice"><span><strong>Favorites</strong><small>Show in the homepage Favorites section (maximum 4 items).</small></span></label><p class="field-help">This post will appear in its selected category and placement.</p></fieldset></section>
-                <section class="publish-featured-group"><label class="featured-check-row"><input id="postFeaturedStories" type="checkbox"><span><strong>Featured Stories / Editor’s Choice</strong><small>Select this to add the post to the homepage Featured Stories / Editor’s Choice section (maximum 20 posts).</small></span></label></section>
-                <div class="publish-actions"><button class="primary-btn full-btn" type="submit" id="savePostBtn">Save post</button><button class="secondary-btn full-btn" type="button" id="previewBtn">Preview article</button><button class="danger-text full-btn" type="button" id="deleteCurrentBtn" hidden>Delete this post</button></div>
+                <section class="publish-featured-group"><label class="featured-check-row"><input id="postFeaturedStories" type="checkbox"><span><strong>Featured Stories / Editor’s Choice</strong><small>Select this to add the post to the homepage Featured Stories / Editor’s Choice section (maximum 20 posts).</small></span></label>
+                  <div class="publish-actions"><button class="secondary-btn full-btn" type="button" id="previewBtn">Review Article</button><button class="primary-btn full-btn" type="submit" id="savePostBtn">Save Post</button><button class="danger-text full-btn" type="button" id="deleteCurrentBtn" hidden>Delete this post</button></div>
+                </section>
               </div>
             </div>
           </aside>
