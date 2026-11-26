@@ -2740,7 +2740,7 @@ button.featured-story-item{width:100%;border:0;border-bottom:1px solid #edf1f0;b
 
 /* Trending: editorial title-only ranking card, powered by the rolling 7-day view count. */
 .trending-section{padding:0 0 54px}
-.trending-stories-card{overflow:hidden;padding:25px 28px 23px;border:1px solid #dcebe6;border-radius:16px;background:linear-gradient(135deg,#f1f8f5 0%,#f7f9fc 55%,#fff8eb 100%);box-shadow:0 10px 30px rgba(21,57,67,.055)}
+.trending-stories-card{overflow:hidden;padding:25px 28px 23px;border:1px solid #dcebe6;border-radius:0;background:linear-gradient(135deg,#f1f8f5 0%,#f7f9fc 55%,#fff8eb 100%);box-shadow:0 10px 30px rgba(21,57,67,.055)}
 .trending-stories-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 16px;padding-bottom:15px;border-bottom:1px solid rgba(21,57,67,.11)}
 .trending-eyebrow{color:#0b897d;font-size:10px;font-weight:900;letter-spacing:.16em}
 .trending-stories-heading h2{margin:4px 0 5px;color:#153943;font:850 clamp(23px,2.2vw,30px)/1.15 Manrope,sans-serif}
