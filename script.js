@@ -659,7 +659,10 @@
       '</div>';
 
     const sidePanelClass = sectionKey === "biography" ? "home-editorial-list home-biography-cards" : "home-editorial-list";
-    host.innerHTML = '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="' + sidePanelClass + '">' + sideList + '</div></div>' + gallery;
+    const sidePanelStyle = sectionKey === "biography"
+      ? ' style="display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(150px,1fr));gap:12px;align-content:start;align-items:stretch;min-height:312px;width:100%;padding:8px;background:#fff;border:1px solid #e5ece9;border-radius:5px;box-shadow:0 2px 8px #102d3610;box-sizing:border-box"'
+      : '';
+    host.innerHTML = '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="' + sidePanelClass + '"' + sidePanelStyle + '>' + sideList + '</div></div>' + gallery;
 
     const slider = host.querySelector(".home-post-gallery-slider");
     if (!slider || galleryImages.length < 2) return;
