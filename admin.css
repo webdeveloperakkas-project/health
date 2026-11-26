@@ -622,3 +622,40 @@
   .sidebar .side-note,
   .sidebar .sidebar-footer{display:none}
 }
+
+
+/* Mobile admin menu: compact hamburger with a vertically scrollable navigation panel. */
+.mobile-menu-toggle{display:none}
+@media(max-width:760px){
+  .admin-header{justify-content:flex-start;gap:12px;position:sticky}
+  .mobile-menu-toggle{
+    display:flex;flex:0 0 38px;width:38px;height:38px;padding:9px;
+    flex-direction:column;justify-content:center;gap:5px;
+    border:1px solid #e4d8f2;border-radius:10px;
+    background:linear-gradient(135deg,#fff8e6,#f2eaff);
+    box-shadow:0 2px 7px rgba(70,45,100,.08)
+  }
+  .mobile-menu-toggle span{display:block;width:18px;height:2px;border-radius:2px;background:#68438d}
+  .admin-brand{min-width:0}
+  .admin-layout{position:relative;display:block}
+  .sidebar{
+    display:none;position:absolute;top:0;left:10px;right:10px;z-index:35;
+    max-height:min(68vh,520px);overflow-y:auto;overscroll-behavior:contain;
+    padding:16px 14px 18px;border:1px solid #e7d9f4;border-radius:14px;
+    background:linear-gradient(160deg,#fffdf6,#f7f0ff);
+    box-shadow:0 14px 35px rgba(35,30,55,.20);
+    grid-template-columns:1fr;gap:4px
+  }
+  .sidebar.menu-open{display:flex;flex-direction:column;align-items:stretch}
+  .sidebar .side-label{display:block;padding:8px 10px 5px;margin:0;color:#9274ae}
+  .sidebar .side-label.side-spaced{margin-top:8px;padding-top:12px;border-top:1px solid #eadff3}
+  .sidebar .nav-item{
+    display:flex;width:100%;min-height:44px;margin:0;padding:10px 12px;
+    justify-content:flex-start;white-space:normal;border-radius:9px;
+    background:rgba(255,255,255,.78);color:#60427f
+  }
+  .sidebar .nav-item>span{font-size:12px;line-height:1.35}
+  .sidebar .side-note{display:block;padding:8px 10px;font-size:10px}
+  .sidebar .sidebar-footer{display:block;position:static;padding:10px;border-top:1px solid #eadff3}
+  .main-area{padding-top:20px}
+}
