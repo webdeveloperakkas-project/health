@@ -5424,7 +5424,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .language-wrap::after {
   content:"";
   position:absolute;
-  right:5px;
+  right:2px;
   top:50%;
   width:6px;
   height:6px;
@@ -5438,7 +5438,7 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   width:auto;
   min-width:0;
   height:100%;
-  padding:0 15px 0 2px;
+  padding:0 10px 0 2px;
   border:0;
   background:transparent;
   color:#fff;
