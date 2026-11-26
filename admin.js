@@ -200,6 +200,16 @@
     $("#statPublished").textContent=posts.filter(post=>post.status==="published").length;
     $("#statDrafts").textContent=posts.filter(post=>post.status==="draft").length; const scheduledStat=$("#statScheduled"); if(scheduledStat) scheduledStat.textContent=posts.filter(post=>post.status==="scheduled").length;
     $("#statViews").textContent=posts.reduce((sum,post)=>sum+(Number(post.views)||0),0).toLocaleString();
+
+    // Compact category totals: count every saved post, regardless of status.
+    const categoryGrid=$("#categoryStatsGrid");
+    if(categoryGrid){
+      const dashboardCategories=["world","technology","sports","entertainment","lifestyle","travel","finance"];
+      categoryGrid.innerHTML=dashboardCategories.map(key=>{
+        const count=posts.filter(post=>post.category===key).length;
+        return '<article class="category-stat-card"><span>'+categories[key]+'</span><strong>'+count.toLocaleString()+'</strong><small>Posts</small></article>';
+      }).join("");
+    }
   }
   function latestPublishedByCategory(){
     const latest = new Map();
