@@ -5749,3 +5749,13 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   #homeLifestylePosts .homepage-more-label-desktop {display:inline}
   #homeLifestylePosts .homepage-more-label-mobile {display:none}
 }
+
+/* Mobile only: align supporting-story titles with the exact top edge of their images
+   in World News, Sports and Lifestyle. Desktop spacing remains unchanged. */
+@media (max-width:800px) {
+  #homeWorldPosts .home-editorial-list .home-category-copy,
+  #homeSportsPosts .home-editorial-list .home-category-copy,
+  #homeLifestylePosts .home-editorial-list .home-category-copy {
+    padding-top:0 !important;
+  }
+}
