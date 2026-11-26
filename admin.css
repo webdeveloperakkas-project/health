@@ -437,3 +437,61 @@
     width:100%;
   }
 }
+
+
+/* Centered colored page heading shared by every Admin Panel navigation view. */
+.page-top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:16px;
+  padding:20px 22px;
+  margin-bottom:22px;
+  background:#087c75;
+  border:1px solid #066b65;
+  border-radius:12px;
+  box-shadow:0 5px 16px rgba(8,124,117,.12);
+}
+.page-top-copy{
+  grid-column:2;
+  grid-row:1;
+  min-width:0;
+  text-align:center;
+}
+.page-top-copy h1{
+  margin:0;
+  color:#fff;
+  font:800 25px/1.25 Manrope,sans-serif;
+  letter-spacing:.2px;
+}
+.page-top-copy p{
+  margin:6px 0 0;
+  color:#e5fffb;
+  font-size:12px;
+  line-height:1.5;
+}
+.page-top #newPostBtn{
+  grid-column:3;
+  grid-row:1;
+  justify-self:end;
+  white-space:nowrap;
+  background:#fff;
+  color:#087c75;
+  box-shadow:none;
+}
+.page-top #newPostBtn:hover{background:#e9f8f5;color:#066b65}
+@media(max-width:760px){
+  .page-top{
+    grid-template-columns:minmax(0,1fr);
+    gap:12px;
+    padding:17px 14px;
+  }
+  .page-top-copy{grid-column:1;grid-row:1}
+  .page-top-copy h1{font-size:21px}
+  .page-top-copy p{font-size:11px}
+  .page-top #newPostBtn{
+    grid-column:1;
+    grid-row:2;
+    justify-self:center;
+  }
+}
