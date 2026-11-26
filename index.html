@@ -9,11 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=195">
+<link rel="stylesheet" href="style.css?v=196">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=147" defer></script>
+<script src="script.js?v=148" defer></script>
 </head>
 
 
@@ -61,12 +61,18 @@
 <input id="siteSearch" type="search" placeholder="Search articles..." aria-label="Search articles">
 <button class="search-submit" id="searchSubmit" type="submit" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button>
 </form>
-<label class="language-wrap">
-<span class="sr-only">Choose language</span>
-<select id="languageSelect" aria-label="Choose language">
+<div class="language-wrap">
+<span class="sr-only" id="languageControlLabel">Choose language</span>
+<button class="language-trigger" id="languageButton" type="button" aria-labelledby="languageControlLabel" aria-haspopup="listbox" aria-expanded="false">বাংলা</button>
+<div class="language-menu" id="languageMenu" role="listbox" aria-label="Choose language" hidden>
+<button type="button" role="option" data-language="bn" aria-selected="true">বাংলা</button>
+<button type="button" role="option" data-language="en" aria-selected="false">English</button>
+<button type="button" role="option" data-language="hi" aria-selected="false">हिन्दी</button>
+</div>
+<select id="languageSelect" class="language-native-select" aria-label="Choose language" tabindex="-1" aria-hidden="true">
 <option value="bn">বাংলা</option><option value="en">English</option><option value="hi">हिन्दी</option>
 </select>
-</label>
+</div>
 </div>
 </div>
 </header>
