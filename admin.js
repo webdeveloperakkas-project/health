@@ -707,7 +707,7 @@
     const primaryLanguage=selectedLanguages.includes("bn")?"bn":selectedLanguages[0];
     const title=translations[primaryLanguage].title;
     const content=translations[primaryLanguage].content_html;
-     editorialLanguages.forEach(language=>{translations[language].person_name=biographyNames[language]||"";});
+     editorialLanguages.forEach(language=>{translations[language]={...(translations[language]||blankTranslation()),person_name:biographyNames[language]||""};});
     updatePostUrlPreview();
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
