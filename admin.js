@@ -701,7 +701,7 @@
       const content=translationDrafts[language]?.content_html||"";
       if(!title)return showToast("Add the "+languages[language]+" post title before saving.");
       if(!plainText(content))return showToast("Write the full "+languages[language]+" article before saving.");
-      translations[language]={title,content_html:content,excerpt:$("#cardSummary"+language.toUpperCase()).value.trim()};
+      translations[language]={title,content_html:content,excerpt:$("#cardSummary"+language.charAt(0).toUpperCase()+language.slice(1)).value.trim()};
     }
     const biographyNames={bn:$("#biographyPersonNameBn").value.trim(),en:$("#biographyPersonNameEn").value.trim(),hi:$("#biographyPersonNameHi").value.trim()};
     const primaryLanguage=selectedLanguages.includes("bn")?"bn":selectedLanguages[0];
@@ -725,7 +725,7 @@
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
-      id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary"+primaryLanguage.toUpperCase()).value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,biographyPersonName:biographyNames[primaryLanguage],biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
+      id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary"+primaryLanguage.charAt(0).toUpperCase()+primaryLanguage.slice(1)).value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,biographyPersonName:biographyNames[primaryLanguage],biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"cloudinary",views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null,
