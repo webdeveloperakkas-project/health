@@ -1181,7 +1181,7 @@
       return activePostType === "mostViewed" || placements.includes(activePostType);
     };
     const categoryPosts = posts
-      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : categoryMatches(post) && placementMatches(post))
+      .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : categoryMatches(post) && (activeCategory === "biography" || placementMatches(post)))
       .filter(post => activeCategory !== "biography" || biographyPostMatches(post))
       .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "") + " " + (post.keywords || []).join(" ")).toLowerCase().includes(searchTerm))
       .sort((a,b) => {
@@ -1196,6 +1196,8 @@
     const activeCategoryLabel = activeSubcategoryButton?.textContent.trim() || activeSubcategory.replace(/-/g," ") || t.categories[activeCategory] || "Home";
     const biographyPanel=$("#biographyFilterPanel");
     if(biographyPanel) biographyPanel.hidden=activeCategory!=="biography";
+    const postTypeSwitcher=$("#articleFeed .post-type-switcher");
+    if(postTypeSwitcher) postTypeSwitcher.hidden=activeCategory==="biography";
     if(activeCategory==="biography") refreshBiographyNameOptions();
     const feedEyebrow = $("#articleFeed .eyebrow");
     if (feedEyebrow) {
