@@ -216,7 +216,7 @@ Deno.serve(async (request: Request) => {
       // This removes the failing Git Trees operation and legacy HTML deletion.
       await githubPutFile(
         owner, repo, "robots.txt", githubToken, branch,
-        "User-agent: *\\nAllow: /\\nSitemap: " + siteUrl + "/sitemap.xml\\n",
+        "User-agent: *\nAllow: /\nSitemap: " + siteUrl + "/sitemap.xml\n",
         "Update Global Scope 24 robots.txt",
       );
 
@@ -235,7 +235,7 @@ Deno.serve(async (request: Request) => {
         action: "publish",
         publishedCount: selectedPosts.length,
         published: selectedPosts.map((post: Record<string, any>) => ({
-          id: post.id, title: post.title, path: postPath(post) + "/index.html",
+          id: post.id, title: post.title, path: postPath(post) + "/",
           url: siteUrl + "/" + postPath(post) + "/",
         })),
         message: "Posts published to Supabase. Article URLs use the shared site route handler; robots.txt was updated through the GitHub Contents API.",
@@ -271,7 +271,7 @@ Deno.serve(async (request: Request) => {
         );
         await githubPutFile(
           owner, repo, "robots.txt", githubToken, branch,
-          "User-agent: *\\nAllow: /\\nSitemap: " + siteUrl + "/sitemap.xml\\n",
+          "User-agent: *\nAllow: /\nSitemap: " + siteUrl + "/sitemap.xml\n",
           "Update Global Scope 24 robots.txt",
         );
         return jsonResponse(200, {
