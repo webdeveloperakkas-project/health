@@ -7,14 +7,15 @@
   <title>Global Scope 24 | Content Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=53">
+  <link rel="stylesheet" href="admin.css?v=54">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <script src="admin-auth.js?v=2" defer></script>
-  <script src="admin.js?v=49" defer></script>
+  <script src="admin.js?v=50" defer></script>
 </head>
 <body>
   <header class="admin-header">
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-expanded="false" aria-controls="adminSidebar" aria-label="Open navigation menu"><span></span><span></span><span></span></button>
     <a class="admin-brand" href="index.html"><span class="brand-mark">gs</span><span>Global <b>Scope 24</b><small>CONTENT MANAGEMENT</small></span></a>
     <div class="header-actions"><span class="mode-pill" id="adminMode">ADMIN LOGIN REQUIRED</span><button class="small-btn" id="adminLogout" type="button" hidden>Log out</button><a href="index.html" class="view-site">View website ↗</a></div>
   </header>
@@ -34,7 +35,7 @@
     </form>
   </main>
   <div class="admin-layout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="adminSidebar">
       <div class="side-label">WORKSPACE</div>
       <button class="nav-item active" data-view="dashboard">▦ <span>Dashboard</span></button>
       <button class="nav-item" data-view="posts">▤ <span>All Posts</span></button>
