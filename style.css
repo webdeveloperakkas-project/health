@@ -5701,6 +5701,24 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   #latestPostsSection #latestPostsViewAll {
     display:none !important;
   }
+  /* Place the mobile Latest action after every column, not inside the final card grid. */
+  #latestPostsSection > #latestPostsViewAllMobile {
+    display:flex !important;
+    grid-column:1 / -1;
+    justify-self:end;
+    align-self:flex-end;
+    width:max-content;
+    margin:14px 0 0 auto;
+  }
+  /* Lifestyle keeps its desktop label, while mobile uses the requested wording. */
+  #homeLifestylePosts .homepage-more-label-desktop {display:none}
+  #homeLifestylePosts .homepage-more-label-mobile {display:inline}
+  #homeLifestylePosts .homepage-section-more-button {
+    justify-self:end;
+    align-self:flex-end;
+    width:max-content;
+    margin:14px 0 0 auto;
+  }
   #latestPostsSection #latestPostsViewAllMobile {
     grid-column:1 / -1;
     justify-self:end;
@@ -5728,4 +5746,6 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   #latestPostsSection #latestPostsViewAllMobile {
     display:none !important;
   }
+  #homeLifestylePosts .homepage-more-label-desktop {display:inline}
+  #homeLifestylePosts .homepage-more-label-mobile {display:none}
 }
