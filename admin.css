@@ -567,3 +567,58 @@
 .cover-caption-toggle strong{font-size:10px;color:#28474b}
 .cover-caption-toggle small{font-size:9px;line-height:1.45;color:#82928f}
 .cover-caption-preview{display:block;width:100%;margin-top:6px;color:#879794;font-size:10px;line-height:1.4;text-align:center}
+
+
+/* Mobile admin navigation: show every main destination in a compact two-column menu. */
+@media(max-width:760px){
+  .sidebar{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:stretch;
+    gap:7px 8px;
+    padding:12px;
+    overflow:visible;
+  }
+  .sidebar .side-label{
+    display:block;
+    grid-column:1 / -1;
+    padding:3px 3px 0;
+    margin:0;
+    color:#8052a8;
+    font-size:9px;
+    letter-spacing:1.5px;
+  }
+  .sidebar .side-label.side-spaced{
+    margin-top:5px;
+    padding-top:8px;
+    border-top:1px solid #e6d8fb;
+  }
+  .sidebar .nav-item{
+    display:flex;
+    width:100%;
+    min-width:0;
+    min-height:43px;
+    margin:0;
+    padding:9px 10px;
+    gap:8px;
+    align-items:center;
+    justify-content:flex-start;
+    white-space:normal;
+    text-align:left;
+    border-radius:9px;
+    background:rgba(255,255,255,.72);
+  }
+  .sidebar .nav-item>span{
+    min-width:0;
+    font-size:11px;
+    line-height:1.25;
+    overflow-wrap:anywhere;
+  }
+  .sidebar .nav-item.active{
+    background:linear-gradient(100deg,#ffe9a9,#eadcff);
+    border-color:#dfc7f7;
+    box-shadow:inset 3px 0 0 #9b63d4;
+  }
+  .sidebar .side-note,
+  .sidebar .sidebar-footer{display:none}
+}
