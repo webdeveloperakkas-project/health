@@ -310,10 +310,10 @@
 @media(max-width:760px){.article-details-grid>.post-languages-fieldset{grid-column:1/-1;gap:6px}.article-details-grid>.post-languages-fieldset .post-language-option{min-width:0;flex:1 1 82px}}
 
 
-/* Full-width Publish panel below the writing and details columns. */
-#postForm>.publish-card{grid-column:1/-1;min-width:0;padding:16px 18px}
-#postForm>.publish-card>h2{margin-bottom:12px}
-.publish-layout{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.45fr) minmax(210px,1fr) minmax(150px,.7fr);gap:16px;align-items:start}
+/* Publish spans the full width of the 60% Article Details column only. */
+.editor-side>.publish-card{grid-column:1/-1;min-width:0;padding:16px 18px}
+.editor-side>.publish-card>h2{margin-bottom:12px}
+.publish-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr) minmax(130px,.7fr);gap:12px;align-items:start}
 .publish-status-group,.publish-placement-group,.publish-featured-group,.publish-actions{min-width:0}
 .publish-status-group .status-line{margin:0 0 8px}
 .publish-status-group .field-label{margin:8px 0 6px}
@@ -330,7 +330,7 @@
   .publish-actions{grid-template-columns:repeat(2,minmax(0,1fr));align-items:center}
 }
 @media(max-width:760px){
-  #postForm>.publish-card{grid-column:auto}
+  .editor-side>.publish-card{grid-column:auto}
   .publish-layout{grid-template-columns:minmax(0,1fr);gap:12px}
   .publish-actions{grid-template-columns:minmax(0,1fr)}
 }
