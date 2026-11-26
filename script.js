@@ -230,6 +230,7 @@
     });
     if (aboutHeading) aboutHeading.textContent = t.aboutTitle;
     const aboutParagraph = document.querySelector("#about p"); if (aboutParagraph) aboutParagraph.textContent = t.aboutText;
+    applyLocalizedPostContent();
     render();
   }
   /* =========================================================
@@ -847,7 +848,27 @@
       .replace(/[^\p{L}\p{M}\p{N}]+/gu,"-").replace(/^-+|-+$/g,"");
   }
   /* Article URLs are generated exclusively from the article title. */
-  function articleSlug(post) { return routeSlug(post && post.title); }
+  function articleSlug(post) { return routeSlug(post && (post.canonicalTitle || post.title)); }
+
+  /* Render the saved Bengali, English or Hindi version selected by the visitor.
+     Keep canonicalTitle stable so switching languages never changes article URLs. */
+  function applyLocalizedPostContent() {
+    posts.forEach(post => {
+      const translations = post.translations && typeof post.translations === "object" ? post.translations : {};
+      const selected = translations[activeLanguage] || {};
+      const fallback = translations[post.language] || {};
+      const title = String(selected.title || fallback.title || post.canonicalTitle || post.title || "");
+      const html = String(selected.content_html || fallback.content_html || post.canonicalContentHtml || post.contentHtml || "");
+      const excerpt = String(selected.excerpt || fallback.excerpt || post.canonicalExcerpt || post.excerpt || "");
+      post.title = title;
+      post.contentHtml = html;
+      const textNode = document.createElement("div");
+      textNode.innerHTML = html;
+      const plain = (textNode.textContent || "").replace(/\\s+/g," ").trim();
+      post.body = plain ? [plain] : [];
+      post.excerpt = excerpt || plain.slice(0,260);
+    });
+  }
   const categoryPathSlugs = {technology:"technology"};
   function categoryRouteSlug(post) { const key=post && post.category; return categoryPathSlugs[key] || routeSlug(categoryNames[key] || key || "articles"); }
   function siteBasePath() {
@@ -1767,7 +1788,12 @@
   $("#languageSelect").addEventListener("change", event => {
     try { localStorage.setItem("ea-language", event.target.value); } catch (_) {}
     applyLanguage(event.target.value);
-    if (currentArticlePost) openArticleDetail(currentArticlePost);
+    applyLocalizedPostContent();
+    render();
+    if (currentArticlePost) {
+      const refreshedPost = posts.find(post => post.cmsId === currentArticlePost.cmsId);
+      if (refreshedPost) openArticleDetail(refreshedPost);
+    }
   });
   try {
     const savedLanguage = localStorage.getItem("ea-language");
@@ -1869,6 +1895,9 @@
       if (postsError) throw postsError;
       if (headlinesError) throw headlinesError;
       const cloudPosts = (rows || []).map(row => {
+        const translations = row.translations && typeof row.translations === "object" && !Array.isArray(row.translations)
+          ? row.translations
+          : {};
         const contentHtml = row.content_html || "";
         const textNode = document.createElement("div");
         textNode.innerHTML = contentHtml;
@@ -1878,18 +1907,19 @@
         return {
           cmsId:row.id,category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
           biographyPersonType:row.biography_person_type||"",biographyPersonName:row.biography_person_name||"",biographyCountry:row.biography_country||"",
-           subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",language:row.language||"en",
+           subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",canonicalTitle:row.title||"",language:row.language||"bn",translations,
           postType:(row.post_types||["latest"])[0]||"latest",
           postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
           featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
           publishedTimestamp:publishedDate.getTime(),
           date:publishedDate.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),
-          read:"",excerpt:row.excerpt||plain.slice(0,260),metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",body:plain?[plain]:[],
-          contentHtml,cover:row.cover_url||"",videoUrl:row.video_url||"",
+          read:"",excerpt:row.excerpt||plain.slice(0,260),canonicalExcerpt:row.excerpt||plain.slice(0,260),metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",body:plain?[plain]:[],
+          contentHtml,canonicalContentHtml:contentHtml,cover:row.cover_url||"",videoUrl:row.video_url||"",
           keywords:Array.isArray(row.related_keywords)?row.related_keywords:(Array.isArray(row.keywords)?row.keywords:[]),views:Number(row.views)||0
         };
       });
       posts = cloudPosts;
+      applyLocalizedPostContent();
       await refreshTrendingStories();
       const track = $(".ticker-track");
       const headlines = (headlineRows || []).map(item => String(item.text||"").trim()).filter(Boolean);
