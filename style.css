@@ -5148,9 +5148,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   flex-direction: column;
   align-items: stretch;
   gap: 7px;
-  padding: 0;
-  border: 0;
-  background: transparent;
+  padding: 8px;
+  border: 1px solid #e5ece9;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 2px 8px #102d3610;
   text-align: left;
 }
 .home-biography-cards .home-category-image {
