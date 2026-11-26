@@ -612,17 +612,18 @@
     select.value=options.some(([value])=>value===previous)?previous:"";
   }
   function syncScheduleFields(){ const field=$("#scheduledPublishFields"); if(field) field.hidden=$("#postStatus").value!=="scheduled"; }
+  function syncSaveButtonLabel(){ const button=$("#savePostBtn"); if(!button)return; const labels={draft:"Save as Draft",published:"Publish Immediately",scheduled:"Schedule Publishing"}; button.textContent=labels[$("#postStatus").value]||"Save as Draft"; }
   function toLocalDateTime(value){ if(!value) return ""; const date=new Date(value); if(Number.isNaN(date.getTime())) return {date:"",time:""}; const local=new Date(date.getTime()-date.getTimezoneOffset()*60000).toISOString().slice(0,16); return {date:local.slice(0,10),time:local.slice(11,16)}; }
   function setScheduleInputs(value){ const parts=toLocalDateTime(value); $("#scheduledPublishDate").value=parts.date; $("#scheduledPublishTime").value=parts.time; }
   function getScheduleInputValue(){ const date=$("#scheduledPublishDate").value; const time=$("#scheduledPublishTime").value; return date&&time?date+"T"+time:""; }
-  $("#postStatus").addEventListener("change",syncScheduleFields);
+  $("#postStatus").addEventListener("change",()=>{syncScheduleFields();syncSaveButtonLabel();});
   $("#postCategory").addEventListener("change",syncCategorySubcategory);
   $("#postCategory").addEventListener("change",updatePostUrlPreview);
   $("#postSubcategory").addEventListener("change",updatePostUrlPreview);
   ["#postTitle","#postTitleEn","#postTitleHi"].forEach(selector=>$(selector).addEventListener("input",updatePostUrlPreview));
   document.querySelectorAll('input[name="postLanguage"]').forEach(input=>input.addEventListener("change",updatePostUrlPreview));
   function resetForm(){
-    $("#postForm").reset(); $("#postStatus").disabled=false; translationDrafts=emptyTranslations(); activeEditorLanguage="bn"; document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage==="bn";button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));}); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; $("#articleEditor").setAttribute("data-placeholder","বাংলা আর্টিকেল এখানে লিখুন..."); setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); $("#postStatus").disabled=false; translationDrafts=emptyTranslations(); activeEditorLanguage="bn"; document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage==="bn";button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));}); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); syncSaveButtonLabel(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; $("#articleEditor").setAttribute("data-placeholder","বাংলা আর্টিকেল এখানে লিখুন..."); setEditorMode("visual"); $("#cardSummary").value=""; $("#metaTitle").value=""; $("#metaDescription").value=""; $("#focusKeyword").value=""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; coverProvider=""; $("#coverUpload").value=""; document.querySelector('input[name="coverStorageProvider"][value="supabase"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -649,7 +650,7 @@
     const initialContent=translationDrafts[activeEditorLanguage].content_html||"";
     $("#articleEditor").innerHTML=initialContent||"<p></p>"; $("#articleHtmlEditor").value=initialContent; $("#articleEditor").setAttribute("data-placeholder",activeEditorLanguage==="bn"?"বাংলা আর্টিকেল এখানে লিখুন...":activeEditorLanguage==="en"?"Write the English article here...":"यहाँ हिंदी लेख लिखें..."); setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; updatePostUrlPreview();
-    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
+    const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); syncSaveButtonLabel(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
     
@@ -726,7 +727,7 @@
     }catch(error){
       showToast("Could not save post: "+(error.message||"Database or image upload error."));
       return;
-    }finally{saveButton.disabled=false;saveButton.textContent="Save post";}
+    }finally{saveButton.disabled=false;syncSaveButtonLabel();}
     editingId=post.id; $("#deleteCurrentBtn").hidden=false;
     $("#editorStatusText").textContent=post.status==="published"?"Published":"Draft";
     $("#editorStatusDot").parentElement.classList.toggle("live",post.status==="published");
