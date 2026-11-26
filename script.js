@@ -1253,7 +1253,7 @@
           '<h1>' + escapeHTML(post.title) + '</h1>' +
           '<div class="single-article-meta"><time>' + escapeHTML(post.date || "") + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</time></div>' +
         '</div>' +
-        (imageForPost(post) ? '<img class="single-article-cover" src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(post.title) + '">' : '') +
+        (imageForPost(post) ? '<figure class="single-article-cover-figure"><img class="single-article-cover" src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(post.title) + '">' + (post.coverCaptionEnabled ? '<figcaption class="single-article-cover-caption">AI-generated illustration</figcaption>' : '') + '</figure>' : '') +
         shareButtons(post) +
         '<div class="single-article-body" id="singleArticleBody">' + paragraphs + '</div>' +
       '</article>' +
@@ -2108,7 +2108,7 @@
           publishedTimestamp:publishedDate.getTime(),
           date:publishedDate.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),
           read:"",excerpt:row.excerpt||plain.slice(0,260),canonicalExcerpt:row.excerpt||plain.slice(0,260),metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",body:plain?[plain]:[],
-          contentHtml,canonicalContentHtml:contentHtml,cover:row.cover_url||"",videoUrl:row.video_url||"",
+          contentHtml,canonicalContentHtml:contentHtml,cover:row.cover_url||"",coverCaptionEnabled:!!row.cover_caption_enabled,videoUrl:row.video_url||"",
           keywords:Array.isArray(row.related_keywords)?row.related_keywords:(Array.isArray(row.keywords)?row.keywords:[]),views:Number(row.views)||0
         };
       });
