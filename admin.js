@@ -23,7 +23,7 @@
     const result=emptyTranslations();
     editorialLanguages.forEach(language=>{
       const item=saved[language]&&typeof saved[language]==="object"?saved[language]:{};
-      result[language]={title:String(item.title||""),content_html:String(item.content_html||""),excerpt:String(item.excerpt||""),person_name:String(item.person_name||"")};
+      result[language]={title:String(item.title||""),content_html:String(item.content_html||""),excerpt:String(item.excerpt||""),person_name:String(item.person_name||item.personName||(language===(editorialLanguages.includes(row?.language)?row.language:"en")?row?.biography_person_name:"")||"")};
     });
     const legacyLanguage=editorialLanguages.includes(row?.language)?row.language:"en";
     if(!result[legacyLanguage].title)result[legacyLanguage].title=String(row?.title||"");
