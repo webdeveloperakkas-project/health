@@ -5225,3 +5225,47 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   border-radius: 5px;
   background: #f1f4f3;
 }
+
+
+/* Strong, explicit Biography right-panel layout: mirror the white card surface used by the lead and slider. */
+.biography-home-editorial .home-editorial-top > .home-biography-cards {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  grid-template-rows: repeat(2, minmax(150px, 1fr)) !important;
+  gap: 12px !important;
+  align-content: start !important;
+  align-items: stretch !important;
+  min-height: 312px !important;
+  width: 100% !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+  background: #fff !important;
+  border: 1px solid #e5ece9 !important;
+  border-radius: 5px !important;
+  box-shadow: 0 2px 8px #102d3610 !important;
+}
+.biography-home-editorial .home-biography-cards > .home-biography-card,
+.biography-home-editorial .home-biography-cards > .home-biography-card-placeholder {
+  display: flex !important;
+  min-width: 0 !important;
+  min-height: 140px !important;
+  width: 100% !important;
+  height: 100% !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 7px !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+  background: #fff !important;
+  border: 1px solid #e5ece9 !important;
+  border-radius: 5px !important;
+  box-shadow: 0 1px 5px #102d360d !important;
+}
+.biography-home-editorial .home-biography-cards > .home-biography-card-placeholder .home-category-image-empty {
+  display: block !important;
+  width: 100% !important;
+  min-height: 80px !important;
+  aspect-ratio: 16 / 9 !important;
+  background: #f1f4f3 !important;
+  border: 1px solid #edf1ef !important;
+}
