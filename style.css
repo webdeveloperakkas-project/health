@@ -5337,29 +5337,32 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 }
 
 
-/* Mobile-only: show three gallery cards for World News, Sports and Lifestyle.
+/* Mobile-only: show two gallery cards for World News, Sports and Lifestyle.
    Keep the five-slot carousel logic intact so desktop and other sections are unchanged. */
 @media (max-width:800px) {
   .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-track,
   .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-track,
   .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-track {
-    --gallery-step:calc(33.333333% + 2.666667px);
+    --gallery-step:calc(50% + 4px);
     gap:8px;
   }
 
   .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide,
   .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide,
   .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide {
-    flex:0 0 calc((100% - 16px)/3);
-    width:calc((100% - 16px)/3);
+    flex:0 0 calc((100% - 8px)/2);
+    width:calc((100% - 8px)/2);
   }
 
-  .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide:first-child,
-  .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide:last-child,
-  .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide:first-child,
-  .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide:last-child,
-  .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide:first-child,
-  .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide:last-child {
+  .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide:nth-child(1),
+  .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide:nth-child(2),
+  .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-slide:nth-child(5),
+  .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide:nth-child(1),
+  .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide:nth-child(2),
+  .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-slide:nth-child(5),
+  .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide:nth-child(1),
+  .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide:nth-child(2),
+  .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-slide:nth-child(5) {
     display:none;
   }
 }
