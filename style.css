@@ -5666,3 +5666,63 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
 .category-tabs > .lifestyle-category-menu:has(> .lifestyle-category-trigger[aria-expanded="true"]) {
   z-index:1301 !important;
 }
+
+
+/* Homepage section action buttons: use Science & Technology as the
+   shared reference — compact gold button, aligned to the lower-right.
+   Keep each section's existing localized button text and click behavior. */
+#scienceTechSection .science-tech-more,
+#latestPostsSection .latest-posts-more-card,
+#homeWorldPosts .homepage-section-more-button,
+#homeSportsPosts .homepage-section-more-button,
+#entertainmentFeatureMore {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  align-self:flex-end;
+  width:auto;
+  min-width:0;
+  min-height:0;
+  margin:15px 0 0 auto;
+  padding:9px 15px;
+  gap:8px;
+  border:0;
+  border-radius:4px;
+  background:#e8b85b;
+  color:#173b40;
+  font:800 13px/1.4 Manrope,"Hind Siliguri",sans-serif;
+  text-align:center;
+  cursor:pointer;
+  box-sizing:border-box;
+  transition:background .18s ease,transform .18s ease;
+}
+#scienceTechSection .science-tech-more:hover,
+#latestPostsSection .latest-posts-more-card:hover,
+#homeWorldPosts .homepage-section-more-button:hover,
+#homeSportsPosts .homepage-section-more-button:hover,
+#entertainmentFeatureMore:hover {
+  background:#f1cd7d;
+  transform:translateY(-1px);
+}
+#scienceTechSection .science-tech-more span,
+#latestPostsSection .latest-posts-more-card span,
+#homeWorldPosts .homepage-section-more-button span,
+#homeSportsPosts .homepage-section-more-button span,
+#entertainmentFeatureMore span {
+  font-size:16px;
+  line-height:1;
+}
+@media(max-width:800px) {
+  #scienceTechSection .science-tech-more,
+  #latestPostsSection .latest-posts-more-card,
+  #homeWorldPosts .homepage-section-more-button,
+  #homeSportsPosts .homepage-section-more-button,
+  #entertainmentFeatureMore {
+    align-self:flex-end;
+    width:auto;
+    min-height:0;
+    margin:14px 0 0 auto;
+    padding:9px 14px;
+    font-size:13px;
+  }
+}
