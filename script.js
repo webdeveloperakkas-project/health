@@ -528,6 +528,11 @@
       return;
     }
 
+    const entertainmentMoreButton = $("#entertainmentFeatureMore");
+    if (entertainmentMoreButton) {
+      entertainmentMoreButton.innerHTML = escapeHTML(homepageMoreNewsLabel("entertainment")) + ' <span aria-hidden="true">→</span>';
+    }
+
     const lead = items[0];
     const leadIndex = posts.indexOf(lead);
     const leadImage = imageForPost(lead);
@@ -613,6 +618,26 @@
     return images;
   }
 
+  /* Localized homepage section buttons share one label source and one action pattern. */
+  function homepageMoreNewsLabel(sectionKey) {
+    const labels = {
+      world: {
+        bn:"বিশ্বের আরও খবর", en:"More World News", hi:"विश्व की और खबरें",
+        de:"Weitere Weltnachrichten", fr:"Plus d’actualités mondiales", es:"Más noticias del mundo"
+      },
+      sports: {
+        bn:"খেলার আরও খবর", en:"More Sports News", hi:"खेलों की और खबरें",
+        de:"Weitere Sportnachrichten", fr:"Plus d’actualités sportives", es:"Más noticias deportivas"
+      },
+      entertainment: {
+        bn:"বিনোদনের আরও খবর", en:"More Entertainment News", hi:"मनोरंजन की और खबरें",
+        de:"Weitere Unterhaltungsnachrichten", fr:"Plus d’actualités divertissantes", es:"Más noticias de entretenimiento"
+      }
+    };
+    const sectionLabels = labels[sectionKey] || labels.world;
+    return sectionLabels[activeLanguage] || sectionLabels.en;
+  }
+
   function renderHomeEditorialSection(items, host, sectionKey) {
     if (!host) return;
     host.classList.add("home-editorial-host");
@@ -622,7 +647,10 @@
     if (!items.length) {
       host.innerHTML =
         '<div class="home-editorial-top"><div class="home-editorial-lead"><div class="home-editorial-empty-main" aria-hidden="true"></div></div><div class="home-editorial-list"></div></div>' +
-        '<div class="home-post-gallery-slider is-empty" data-home-gallery="' + sectionKey + '" aria-label="Article image slider"></div>';
+        '<div class="home-post-gallery-slider is-empty" data-home-gallery="' + sectionKey + '" aria-label="Article image slider"></div>' +
+        (sectionKey === "world" || sectionKey === "sports"
+          ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' + escapeHTML(homepageMoreNewsLabel(sectionKey)) + ' <span aria-hidden="true">→</span></button>'
+          : '');
       return;
     }
 
@@ -678,7 +706,12 @@
     const sidePanelStyle = sectionKey === "biography"
       ? ' style="display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(150px,1fr));gap:12px;align-content:start;align-items:stretch;min-height:312px;width:100%;padding:8px;background:#fff;border:1px solid #e5ece9;border-radius:5px;box-shadow:0 2px 8px #102d3610;box-sizing:border-box"'
       : '';
-    host.innerHTML = '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="' + sidePanelClass + '"' + sidePanelStyle + '>' + sideList + '</div></div>' + gallery;
+    host.innerHTML =
+      '<div class="home-editorial-top"><div class="home-editorial-lead">' + mainCard + '</div><div class="' + sidePanelClass + '"' + sidePanelStyle + '>' + sideList + '</div></div>' +
+      gallery +
+      (sectionKey === "world" || sectionKey === "sports"
+        ? '<button class="latest-posts-more-card homepage-section-more-button" type="button" data-home-category-view="' + sectionKey + '">' + escapeHTML(homepageMoreNewsLabel(sectionKey)) + ' <span aria-hidden="true">→</span></button>'
+        : '');
 
     const slider = host.querySelector(".home-post-gallery-slider");
     if (!slider || galleryImages.length < 2) return;
@@ -1499,7 +1532,7 @@
         ? document.querySelector('.sidebar-submenu button[data-sidebar-category="' + category + '"][data-sidebar-subcategory="' + subcategory + '"]')
         : document.querySelector('.sidebar-category[data-category="' + category + '"]');
       if (target) target.click();
-      if (category === "entertainment" || category === "sports") {
+      if (category === "world" || category === "entertainment" || category === "sports") {
         const categoryFeed = $("#articleFeed");
         if (categoryFeed) categoryFeed.scrollIntoView({behavior:"smooth",block:"start"});
       }
