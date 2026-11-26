@@ -5516,3 +5516,12 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .language-wrap {height:31px}
   .language-trigger {font-size:11px}
 }
+
+
+/* Language selector: add 1px of teal space before the label and square the teal outer background on all devices. */
+.language-wrap {
+  border-radius:0 !important;
+}
+.language-trigger {
+  padding-left:4px !important;
+}
