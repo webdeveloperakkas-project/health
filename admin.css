@@ -422,14 +422,14 @@
   width:calc(100% - 13px);
 }
 .publish-featured-group .publish-actions #previewBtn{
-  background:#d9363e;
-  color:#fff;
-  border:1px solid #fff;
-  box-shadow:0 3px 9px rgba(217,54,62,.2);
+  background:#f5d76e;
+  color:#4b3b12;
+  border:1px solid #e7c34e;
+  box-shadow:0 3px 9px rgba(212,174,55,.2);
 }
 .publish-featured-group .publish-actions #previewBtn:hover{
-  background:#bd2730;
-  color:#fff;
+  background:#edca50;
+  color:#3e310e;
 }
 @media(max-width:420px){
   .publish-featured-group .publish-actions{
