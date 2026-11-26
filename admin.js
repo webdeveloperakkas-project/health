@@ -23,7 +23,7 @@
     const result=emptyTranslations();
     editorialLanguages.forEach(language=>{
       const item=saved[language]&&typeof saved[language]==="object"?saved[language]:{};
-      result[language]={title:String(item.title||""),content_html:String(item.content_html||""),excerpt:String(item.excerpt||"")};
+      result[language]={title:String(item.title||""),content_html:String(item.content_html||""),excerpt:String(item.excerpt||""),person_name:String(item.person_name||"")};
     });
     const legacyLanguage=editorialLanguages.includes(row?.language)?row.language:"en";
     if(!result[legacyLanguage].title)result[legacyLanguage].title=String(row?.title||"");
@@ -618,7 +618,7 @@
   function syncCategorySubcategory(){
     const category=$("#postCategory").value;
     const biographyFields=$("#biographyFields");if(biographyFields)biographyFields.hidden=category!=="biography";
-    ["#biographyPersonName","#biographyPersonType","#biographyCountry"].forEach(selector=>{const field=$(selector);if(field)field.required=category==="biography";});
+    ["#biographyPersonNameBn","#biographyPersonNameEn","#biographyPersonNameHi","#biographyPersonType","#biographyCountry"].forEach(selector=>{const field=$(selector);if(field)field.required=false;});
     const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["daily-tips","Daily Tips"],["health","Health"],["beauty-care","Beauty Care"]]:[];
     const select=$("#postSubcategory"),previous=select.value;$("#categorySubcategoryField").hidden=!options.length;select.required=!!options.length;
     select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
@@ -662,7 +662,7 @@
     document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage===activeEditorLanguage;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));});
     const initialContent=translationDrafts[activeEditorLanguage].content_html||"";
     $("#articleEditor").innerHTML=initialContent||"<p></p>"; $("#articleHtmlEditor").value=initialContent; $("#articleEditor").setAttribute("data-placeholder",activeEditorLanguage==="bn"?"বাংলা আর্টিকেল এখানে লিখুন...":activeEditorLanguage==="en"?"Write the English article here...":"यहाँ हिंदी लेख लिखें..."); setEditorMode("visual"); $("#cardSummary").value=post.excerpt||""; $("#metaTitle").value=post.metaTitle||""; $("#metaDescription").value=post.metaDescription||""; $("#focusKeyword").value=post.focusKeyword||""; updateMetaDescriptionCount(); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
-    $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#biographyPersonName").value=post.biographyPersonName||""; $("#biographyPersonType").value=post.biographyPersonType||""; $("#biographyCountry").value=post.biographyCountry||""; updatePostUrlPreview();
+    $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#biographyPersonNameBn").value=post.translations?.bn?.person_name||((post.language||"bn")==="bn"?post.biographyPersonName||"":""); $("#biographyPersonNameEn").value=post.translations?.en?.person_name||((post.language||"bn")==="en"?post.biographyPersonName||"":""); $("#biographyPersonNameHi").value=post.translations?.hi?.person_name||((post.language||"bn")==="hi"?post.biographyPersonName||"":""); $("#biographyPersonType").value=post.biographyPersonType||""; $("#biographyCountry").value=post.biographyCountry||""; updatePostUrlPreview();
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); syncSaveButtonLabel(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
     $("#videoUrl").value=post.videoUrl||""; coverData=post.cover||""; coverProvider=""; renderCoverPreview();
@@ -707,6 +707,7 @@
     const primaryLanguage=selectedLanguages.includes("bn")?"bn":selectedLanguages[0];
     const title=translations[primaryLanguage].title;
     const content=translations[primaryLanguage].content_html;
+     editorialLanguages.forEach(language=>{translations[language].person_name=biographyNames[language]||"";});
     updatePostUrlPreview();
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
@@ -717,14 +718,15 @@
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
-    if($("#postCategory").value==="biography"&&(!$("#biographyPersonName").value.trim()||!$("#biographyPersonType").value||!$("#biographyCountry").value))return showToast("For Biography posts, enter Person Name, Person Type and Country of Origin.");
+    const biographyNames={bn:$("#biographyPersonNameBn").value.trim(),en:$("#biographyPersonNameEn").value.trim(),hi:$("#biographyPersonNameHi").value.trim()};
+     if($("#postCategory").value==="biography"&&(!biographyNames[primaryLanguage]||!$("#biographyPersonType").value||!$("#biographyCountry").value))return showToast("For Biography posts, enter the Person Name in the primary language, Person Type and Country of Origin.");
     const now=new Date().toISOString();
     const selectedStatus=$("#postStatus").value;
     const scheduledValue=getScheduleInputValue();
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
-      id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary").value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,biographyPersonName:$("#biographyPersonName").value.trim(),biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
+      id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary").value.trim(),metaTitle:$("#metaTitle").value.trim(),metaDescription:$("#metaDescription").value.trim(),focusKeyword:$("#focusKeyword").value.trim(),category:$("#postCategory").value,biographyPersonName:biographyNames[primaryLanguage],biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"cloudinary",views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null,
