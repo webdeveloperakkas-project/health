@@ -1578,6 +1578,19 @@
    */
   function navigateToCategory(category, subcategory = "") {
     if (!category) return;
+
+    /*
+     * Home is the full-site refresh point: reload the document from the
+     * site's root so every visitor gets the latest page structure and
+     * freshly queried Supabase content, rather than only re-rendering
+     * the existing single-page view.
+     */
+    if (category === "home") {
+      const freshHomeUrl = siteBasePath() + "?_gs24_refresh=" + Date.now();
+      window.location.replace(freshHomeUrl);
+      return;
+    }
+
     closeArticleViewForCategoryNavigation();
     activeCategory = category;
     activeSubcategory = subcategory || "";
