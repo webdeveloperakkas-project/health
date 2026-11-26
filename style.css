@@ -5295,3 +5295,29 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 @media(max-width:800px) {
   .latest-posts-more-card {align-self:flex-start;margin-top:12px}
 }
+
+
+/* Center and enlarge the Homepage Latest action button within the middle column. */
+.latest-posts-more-card {
+  align-self:center;
+  width:min(86%,420px);
+  min-height:54px;
+  margin:18px auto 0;
+  padding:14px 28px;
+  font-size:17px;
+  line-height:1.45;
+  box-sizing:border-box;
+}
+.latest-posts-more-card span {
+  font-size:21px;
+}
+@media(max-width:800px) {
+  .latest-posts-more-card {
+    align-self:center;
+    width:min(90%,420px);
+    min-height:52px;
+    margin:14px auto 0;
+    padding:13px 24px;
+    font-size:16px;
+  }
+}
