@@ -5124,3 +5124,9 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .biography-filter-controls button{height:40px;padding:0 18px;border:0;border-radius:6px;background:#087c75;color:#fff;font-weight:700;cursor:pointer}
 .biography-filter-controls .biography-filter-reset{background:#e8eeee;color:#344f53}
 @media(max-width:760px){.biography-filter-panel{padding:14px}.biography-filter-heading{display:block}.biography-filter-heading span{display:block;margin-top:4px}.biography-filter-controls{grid-template-columns:1fr 1fr}.biography-filter-controls label:nth-child(3){grid-column:1/-1}.biography-filter-controls button{width:100%}}
+
+
+/* Biography metadata is an optional detail row inside the shared article heading. */
+.single-article-biography-meta{display:flex;flex-wrap:wrap;gap:7px 16px;margin:12px 0 4px;color:#52676a;font-size:12px;line-height:1.6}
+.single-article-biography-meta span{display:inline-flex;align-items:baseline;gap:5px}
+.single-article-biography-meta strong{color:#087c75;font-weight:800}
