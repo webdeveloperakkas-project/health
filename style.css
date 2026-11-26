@@ -5525,3 +5525,69 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .language-trigger {
   padding-left:4px !important;
 }
+
+
+/* Mobile-only square 3D menu control with three dot-and-line rows. */
+.menu-toggle {
+  display:none !important;
+}
+.menu-toggle-icon {
+  display:block;
+  width:29px;
+  height:29px;
+  overflow:visible;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.28));
+}
+.menu-icon-dots {
+  fill:#ffe08a;
+  filter:drop-shadow(0 1px 0 #815d1d);
+}
+.menu-icon-lines {
+  fill:none;
+  stroke:#fff;
+  stroke-width:2.8;
+  stroke-linecap:round;
+  filter:drop-shadow(0 1.2px 0 #075c56);
+}
+@media (max-width:800px) {
+  .menu-toggle {
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 46px;
+    width:46px;
+    height:46px;
+    padding:0;
+    border:1px solid #075f59;
+    border-radius:0 !important;
+    background:linear-gradient(145deg,#25b8aa 0%,#159d92 48%,#087c75 100%);
+    color:#fff;
+    box-shadow:
+      0 4px 0 #075f59,
+      0 6px 10px rgba(8,65,61,.24),
+      inset 0 1px 0 rgba(255,255,255,.42),
+      inset 0 -2px 0 rgba(0,0,0,.12);
+    cursor:pointer;
+    transition:transform .16s ease, box-shadow .16s ease;
+  }
+  .menu-toggle:active {
+    transform:translateY(2px);
+    box-shadow:
+      0 2px 0 #075f59,
+      0 4px 7px rgba(8,65,61,.2),
+      inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .menu-toggle:focus-visible {
+    outline:2px solid #e8b85b;
+    outline-offset:3px;
+  }
+  .menu-toggle-icon {
+    width:30px;
+    height:30px;
+  }
+}
+@media (min-width:801px) {
+  .menu-toggle {
+    display:none !important;
+  }
+}
