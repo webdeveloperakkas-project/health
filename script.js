@@ -39,7 +39,7 @@
      Section complete.
   ========================================================= */
   const categoryNames = {
-    home:"Home",world:"World News",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
+    home:"Home",world:"World News",technology:"Science & Technology",biography:"Biography",sports:"Sports",entertainment:"Entertainment",travel:"Travel",finance:"Finance",lifestyle:"Lifestyle"
   };
   /* =========================================================
      04. LANGUAGE CONTENT
@@ -56,14 +56,14 @@
     },
     bn:{
       latest:"সর্বশেষ",categories:{
-        home:"হোম",world:"বিশ্ব সংবাদ",tips:"দৈনন্দিন টিপস",technology:"বিজ্ঞান ও প্রযুক্তি",sports:"খেলাধুলা",entertainment:"বিনোদন",travel:"ভ্রমণ",finance:"অর্থনীতি",lifestyle:"জীবনযাপন"
+        home:"হোম",world:"বিশ্ব সংবাদ",tips:"দৈনন্দিন টিপস",technology:"বিজ্ঞান ও প্রযুক্তি",biography:"জীবনী",sports:"খেলাধুলা",entertainment:"বিনোদন",travel:"ভ্রমণ",finance:"অর্থনীতি",lifestyle:"জীবনযাপন"
       },stories:"সর্বশেষ লেখা",types:{
         latest:"সর্বশেষ",popular:"জনপ্রিয়",mostViewed:"সর্বাধিক দেখা"
       },description:"সাম্প্রতিক প্রবন্ধ ও দরকারি তথ্য।",search:"প্রবন্ধ খুঁজুন...",sort:"নতুন লেখা আগে ↓",page:"পৃষ্ঠা",of:"এর",articles:"প্রবন্ধ",empty:"এই বিভাগে এখনো কোনো প্রবন্ধ প্রকাশিত হয়নি।",about:"আমাদের সম্পর্কে",contact:"যোগাযোগ",privacy:"গোপনীয়তা",aboutTitle:"প্রতিদিনের নানা প্রশ্নের জন্য সহজ ও নির্ভরযোগ্য তথ্য।",aboutText:"আমাদের প্রবন্ধ সাধারণ তথ্যের জন্য; এগুলো পেশাদার পরামর্শের বিকল্প নয়।"
     },
     hi:{
       latest:"ताज़ा",categories:{
-        home:"होम",world:"विश्व समाचार",tips:"दैनिक सुझाव",technology:"विज्ञान और प्रौद्योगिकी",sports:"खेल",entertainment:"मनोरंजन",travel:"यात्रा",finance:"वित्त",lifestyle:"जीवनशैली"
+        home:"होम",world:"विश्व समाचार",tips:"दैनिक सुझाव",technology:"विज्ञान और प्रौद्योगिकी",biography:"जीवनी",sports:"खेल",entertainment:"मनोरंजन",travel:"यात्रा",finance:"वित्त",lifestyle:"जीवनशैली"
       },stories:"नवीनतम लेख",types:{
         latest:"नवीनतम",popular:"लोकप्रिय",mostViewed:"सबसे अधिक देखे गए"
       },description:"नए लेख और उपयोगी जानकारी।",search:"लेख खोजें...",sort:"नवीनतम पहले ↓",page:"पृष्ठ",of:"में से",articles:"लेख",empty:"इस श्रेणी में अभी कोई लेख प्रकाशित नहीं हुआ है।",about:"परिचय",contact:"संपर्क",privacy:"गोपनीयता",aboutTitle:"रोज़मर्रा के सवालों के लिए स्पष्ट और उपयोगी जानकारी।",aboutText:"हमारे लेख सामान्य जानकारी के लिए हैं और पेशेवर सलाह का विकल्प नहीं हैं।"
@@ -239,6 +239,42 @@
   ========================================================= */
   let activeCategory = "home";
   let activeSubcategory = "";
+  // Biography filters are optional; All Countries is the default and shows every biography.
+  let biographyFilters = {country:"all",personType:"",personName:""};
+  const biographyCountryFilter = $("#biographyCountryFilter");
+  const biographyTypeFilter = $("#biographyTypeFilter");
+  const biographyNameFilter = $("#biographyNameFilter");
+  function biographyPostsBase(){
+    return posts.filter(post=>post.category==="biography");
+  }
+  function refreshBiographyNameOptions(){
+    if(!biographyNameFilter)return;
+    const country=biographyCountryFilter?.value||"all";
+    const type=biographyTypeFilter?.value||"";
+    const names=[...new Set(biographyPostsBase().filter(post=>(country==="all"||!country||post.biographyCountry===country)&&(!type||post.biographyPersonType===type)).map(post=>post.biographyPersonName||post.title).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+    const previous=biographyNameFilter.value;
+    biographyNameFilter.innerHTML='<option value="">All People</option>'+names.map(name=>'<option value="'+escapeHTML(name)+'">'+escapeHTML(name)+'</option>').join("");
+    if(names.includes(previous))biographyNameFilter.value=previous;
+  }
+  function biographyPostMatches(post){
+    const country=biographyFilters.country||"all";
+    return (country==="all"||post.biographyCountry===country)&&
+      (!biographyFilters.personType||post.biographyPersonType===biographyFilters.personType)&&
+      (!biographyFilters.personName||(post.biographyPersonName||post.title)===biographyFilters.personName);
+  }
+  if(biographyCountryFilter&&biographyTypeFilter&&biographyNameFilter){
+    biographyCountryFilter.addEventListener("change",refreshBiographyNameOptions);
+    biographyTypeFilter.addEventListener("change",refreshBiographyNameOptions);
+    $("#biographyFilterApply")?.addEventListener("click",()=>{
+      biographyFilters={country:biographyCountryFilter.value||"all",personType:biographyTypeFilter.value||"",personName:biographyNameFilter.value||""};
+      currentPage=1;render();
+    });
+    $("#biographyFilterReset")?.addEventListener("click",()=>{
+      biographyCountryFilter.value="all";biographyTypeFilter.value="";biographyNameFilter.value="";
+      biographyFilters={country:"all",personType:"",personName:""};refreshBiographyNameOptions();currentPage=1;render();
+    });
+  }
+
   // Homepage World News filtering is independent of category-page navigation.
   let activeHomeWorldSubcategory = "";
   // Homepage Lifestyle filtering is independent of category-page navigation.
@@ -1146,6 +1182,7 @@
     };
     const categoryPosts = posts
       .filter(post => showFeaturedFeed ? !!(post.featuredStories ?? post.featured) : categoryMatches(post) && placementMatches(post))
+      .filter(post => activeCategory !== "biography" || biographyPostMatches(post))
       .filter(post => !searchTerm || (post.title + " " + (post.body || []).join(" ") + " " + (post.excerpt || "") + " " + (post.keywords || []).join(" ")).toLowerCase().includes(searchTerm))
       .sort((a,b) => {
         if (showFeaturedFeed) return (Number(b.publishedTimestamp)||new Date(b.date).getTime()||0) - (Number(a.publishedTimestamp)||new Date(a.date).getTime()||0);
@@ -1157,6 +1194,9 @@
     const t = languageCopy[activeLanguage];
     const activeSubcategoryButton = activeSubcategory ? Array.from(document.querySelectorAll("[data-sports-subcategory], [data-entertainment-subcategory], [data-world-subcategory], [data-lifestyle-subcategory]")).find(button => ["data-sports-subcategory","data-entertainment-subcategory","data-world-subcategory","data-lifestyle-subcategory"].some(attribute => button.getAttribute(attribute) === activeSubcategory)) : null;
     const activeCategoryLabel = activeSubcategoryButton?.textContent.trim() || activeSubcategory.replace(/-/g," ") || t.categories[activeCategory] || "Home";
+    const biographyPanel=$("#biographyFilterPanel");
+    if(biographyPanel) biographyPanel.hidden=activeCategory!=="biography";
+    if(activeCategory==="biography") refreshBiographyNameOptions();
     const feedEyebrow = $("#articleFeed .eyebrow");
     if (feedEyebrow) {
       const mainCategoryLabel = t.categories[activeCategory] || activeCategory;
@@ -1787,6 +1827,7 @@
         const publishedDate = new Date(stamp);
         return {
           cmsId:row.id,category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
+          biographyPersonType:row.biography_person_type||"",biographyPersonName:row.biography_person_name||"",biographyCountry:row.biography_country||"",
            subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",language:row.language||"en",
           postType:(row.post_types||["latest"])[0]||"latest",
           postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
