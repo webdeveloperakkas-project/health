@@ -222,9 +222,9 @@
       "daily-tips": { en: "Daily Tips", bn: "দৈনন্দিন টিপস", hi: "दैनिक सुझाव" },
       "health": { en: "Health", bn: "স্বাস্থ্য", hi: "स्वास्थ्य" },
       "beauty-care": { en: "Beauty Care", bn: "রূপচর্চা", hi: "सौंदर्य देखभाल" },
-      "insurance": { en: "Insurance", bn: "বিমা", hi: "बीमा" },
+      "insurance": { en: "Insurance & Savings", bn: "সঞ্চয় ও বীমা", hi: "बचत और बीमा" },
       "loans-credit-cards": { en: "Loans & Credit Cards", bn: "ঋণ ও ক্রেডিট কার্ড", hi: "ऋण और क्रेडिट कार्ड" },
-      "savings-investing-retirement": { en: "Savings, Investing & Retirement", bn: "সঞ্চয়, বিনিয়োগ ও অবসর", hi: "बचत, निवेश और सेवानिवृत्ति" }
+      "savings-investing-retirement": { en: "Insurance & Savings", bn: "সঞ্চয় ও বীমা", hi: "बचत और बीमा" }
     };
     document.querySelectorAll(".main-nav .sidebar-submenu button[data-sidebar-subcategory]").forEach(button => {
       const labels = drawerSubcategoryLabels[button.dataset.sidebarSubcategory];
@@ -2186,7 +2186,7 @@
         return {
           cmsId:row.id,category:["beauty","health","tips"].includes(row.category)?"lifestyle":row.category,
           biographyPersonType:row.biography_person_type||"",biographyPersonName:row.biography_person_name||"",canonicalBiographyPersonName:row.biography_person_name||"",biographyCountry:row.biography_country||"",
-           subcategory:row.subcategory||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":""),title:row.title||"",canonicalTitle:row.title||"",language:row.language||"bn",translations,
+           subcategory:(row.subcategory==="savings-investing-retirement"?"insurance":row.subcategory)||(row.category==="tips"?"daily-tips":row.category==="health"?"health":row.category==="beauty"?"beauty-care":"") ,title:row.title||"",canonicalTitle:row.title||"",language:row.language||"bn",translations,
           postType:(row.post_types||["latest"])[0]||"latest",
           postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
           featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
