@@ -5752,4 +5752,23 @@ body.footer-modal-open { overflow: hidden; }
   .footer-modal-content { padding: 28px 22px 18px; }
   .footer-modal-bottom { padding: 12px 22px 17px; }
 }
- 
+
+/* Homepage Hero title: use the correct script font for each active language.
+   Bengali and Hindi need natural letter spacing and a more open line height. */
+html[lang="bn"] .home-featured .home-feature-content h1 {
+  font-family: "Hind Siliguri", "Noto Sans Bengali", sans-serif !important;
+  font-size: clamp(24px, 2.15vw, 32px) !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+  overflow-wrap: anywhere;
+}
+
+html[lang="hi"] .home-featured .home-feature-content h1 {
+  font-family: "Noto Sans Devanagari", sans-serif !important;
+  font-size: clamp(24px, 2.15vw, 32px) !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+  overflow-wrap: anywhere;
+}
