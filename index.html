@@ -9,11 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=210">
+<link rel="stylesheet" href="style.css?v=211">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=152" defer></script>
+<script src="script.js?v=153" defer></script>
 </head>
 
 
@@ -309,20 +309,29 @@
 
 <footer class="site-footer" id="siteFooter" aria-label="Site footer">
   <div class="footer-inner container">
-    <div class="footer-actions" role="group" aria-label="Footer information">
-      <button class="footer-action" type="button" data-footer-open="about">
-        <span class="footer-action-icon" aria-hidden="true">◎</span>
-        <span>About Us</span>
-      </button>
-      <button class="footer-action" type="button" data-footer-open="policies">
-        <span class="footer-action-icon" aria-hidden="true">▤</span>
-        <span>Policies &amp; AI Disclosure</span>
-      </button>
-      <button class="footer-action" type="button" data-footer-open="contact">
-        <span class="footer-action-icon" aria-hidden="true">✉</span>
-        <span>Contact Us</span>
-      </button>
+    <div class="footer-grid">
+      <section class="footer-links" aria-labelledby="footerAboutHeading">
+        <h3 id="footerAboutHeading">About Global Scope 24</h3>
+        <button class="footer-link" type="button" data-footer-open="about"><span aria-hidden="true">🌐</span> About Us</button>
+        <button class="footer-link" type="button" data-footer-open="mission"><span aria-hidden="true">🎯</span> Our Mission</button>
+        <button class="footer-link" type="button" data-footer-open="editorial"><span aria-hidden="true">📰</span> Editorial Policy</button>
+        <button class="footer-link" type="button" data-footer-open="ai"><span aria-hidden="true">🤖</span> AI Image Disclosure</button>
+      </section>
+      <section class="footer-links" aria-labelledby="footerPoliciesHeading">
+        <h3 id="footerPoliciesHeading">Policies</h3>
+        <button class="footer-link" type="button" data-footer-open="privacy"><span aria-hidden="true">🔒</span> Privacy Policy</button>
+        <button class="footer-link" type="button" data-footer-open="terms"><span aria-hidden="true">📄</span> Terms of Use</button>
+        <button class="footer-link" type="button" data-footer-open="disclaimer"><span aria-hidden="true">⚖️</span> Disclaimer</button>
+        <button class="footer-link" type="button" data-footer-open="copyright"><span aria-hidden="true">©️</span> Copyright Policy</button>
+      </section>
+      <section class="footer-links" aria-labelledby="footerSupportHeading">
+        <h3 id="footerSupportHeading">Reader Support</h3>
+        <button class="footer-link" type="button" data-footer-open="contact"><span aria-hidden="true">✉️</span> Contact Us</button>
+        <button class="footer-link" type="button" data-footer-open="corrections"><span aria-hidden="true">📝</span> Corrections &amp; Feedback</button>
+        <button class="footer-link" type="button" data-footer-open="faq"><span aria-hidden="true">❓</span> Frequently Asked Questions</button>
+      </section>
     </div>
+    <div class="footer-bottom"><p>© <span id="footerCurrentYear">2026</span> Global Scope 24. All Rights Reserved.</p></div>
   </div>
 </footer>
 
