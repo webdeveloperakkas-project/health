@@ -5763,3 +5763,11 @@ body.footer-modal-open { overflow: hidden; }
   .footer-modal-content { padding: 28px 22px 18px; }
   .footer-modal-bottom { padding: 12px 22px 17px; }
 }
+
+/* Mobile homepage: Daily Tips already appears inside the main Lifestyle
+   section, so suppress the legacy standalone duplicate card group. */
+@media (max-width: 800px) {
+  #homeTipsSection {
+    display: none !important;
+  }
+}
