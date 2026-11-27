@@ -677,7 +677,7 @@
     const category=$("#postCategory").value;
     const biographyFields=$("#biographyFields");if(biographyFields)biographyFields.hidden=category!=="biography";
     ["#biographyPersonNameBn","#biographyPersonNameEn","#biographyPersonNameHi","#biographyPersonType","#biographyCountry"].forEach(selector=>{const field=$(selector);if(field)field.required=false;});
-    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["daily-tips","Daily Tips"],["health","Health"],["beauty-care","Beauty Care"]]:[];
+    const options=category==="sports"?[["cricket","Cricket"],["football","Football"],["tennis","Tennis"],["basketball","Basketball"],["other-sports","Other"]]:category==="entertainment"?[["cinema","Cinema"],["bollywood","Bollywood"],["south-cinema","South Indian Cinema"],["music","Music"],["hollywood","Hollywood"],["television","Television"],["serial","TV Serials"],["folk-art","Folk Culture"]]:category==="world"?[["bangladesh","Bangladesh"],["india","India"],["pakistan","Pakistan"],["asia","Asia"],["europe","Europe"],["middle-east","Middle East"]]:category==="lifestyle"?[["daily-tips","Daily Tips"],["health","Health"],["beauty-care","Beauty Care"]]:category==="finance"?[["insurance","Insurance"],["loans-credit-cards","Loans & Credit Cards"],["savings-investing-retirement","Savings, Investing & Retirement"]]:[];
     const select=$("#postSubcategory"),previous=select.value;$("#categorySubcategoryField").hidden=!options.length;select.required=!!options.length;
     select.innerHTML='<option value="">Select a subcategory</option>'+options.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join("");
     select.value=options.some(([value])=>value===previous)?previous:"";
@@ -784,7 +784,7 @@
     if(selectedStatus==="scheduled" && (!scheduledValue || new Date(scheduledValue).getTime()<=Date.now())) return showToast("Choose a future date and time for scheduled publishing.");
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
-      id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary"+primaryLanguage.charAt(0).toUpperCase()+primaryLanguage.slice(1)).value.trim(),category:$("#postCategory").value,biographyPersonName:biographyNames[primaryLanguage],biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
+      id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary"+primaryLanguage.charAt(0).toUpperCase()+primaryLanguage.slice(1)).value.trim(),category:$("#postCategory").value,biographyPersonName:biographyNames[primaryLanguage],biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle","finance"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverCaptionEnabled:$("#coverCaptionEnabled").checked,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"cloudinary",views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null,
@@ -820,7 +820,7 @@
     const titleField={bn:"#postTitle",en:"#postTitleEn",hi:"#postTitleHi"}[activeEditorLanguage];
     const title=safe($(titleField).value||"Untitled article");
     const category=safe(categories[$("#postCategory").value]);
-    const subcategory=["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
+    const subcategory=["sports","entertainment","world","lifestyle","finance"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
     const body=translationDrafts[activeEditorLanguage]?.content_html||cleanArticleHTML();
     const altField="#imageAltText"+activeEditorLanguage.charAt(0).toUpperCase()+activeEditorLanguage.slice(1);
      const previewAlt=safe($(altField).value.trim()||$(titleField).value||"");
