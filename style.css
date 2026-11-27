@@ -5897,3 +5897,22 @@ html[lang="en"] .home-featured .home-feature-content h1 {
 @media (min-width: 801px) {
   .category-tabs > .finance-category-menu { position: relative; overflow: visible; }
 }
+
+/* Mobile drawer: open only the Lifestyle submenu toward the left.
+   Its right edge stays aligned with the right edge of the Lifestyle category. */
+@media (max-width: 800px) {
+  .main-nav .sidebar-category-item:has(> .sidebar-category-row > #sidebarLifestyleSubmenu),
+  .main-nav .sidebar-category-item:has(> #sidebarLifestyleSubmenu) {
+    position: relative;
+  }
+
+  .main-nav #sidebarLifestyleSubmenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: auto;
+    width: calc(200% + 9px);
+    z-index: 25;
+  }
+}
+
