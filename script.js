@@ -2110,7 +2110,6 @@
       });
       posts = cloudPosts;
       applyLocalizedPostContent();
-      await refreshTrendingStories();
       const track = $(".ticker-track");
       const headlines = (headlineRows || []).map(item => String(item.text||"").trim()).filter(Boolean);
       if (track && headlines.length) {
@@ -2152,6 +2151,10 @@
           if (topAdSlot) topAdSlot.hidden = false;
         }
       }
+      // Most Read is supplementary: it must never delay or interrupt restoring a directly opened article URL.
+      refreshTrendingStories().catch(error => {
+        console.warn("Most Read data could not be refreshed:", error);
+      });
     } catch (error) {
       console.error("Could not load published Global Scope 24 content from Supabase:", error);
     }
