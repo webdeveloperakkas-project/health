@@ -164,9 +164,7 @@ button, input, select {
   font:800 20px Manrope;
   letter-spacing:-.8px;
   color:var(--navy)
-}
-
-.brand-name b, .footer-brand b {
+}.brand-name b {
   color:var(--teal)
 }
 
@@ -561,38 +559,6 @@ button, input, select {
   margin:0
 }
 
-.site-footer {
-  background:#102d36;
-  color:#c3d1d0;
-  padding:22px 0
-}
-
-.footer-inner {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:18px
-}
-
-.footer-brand {
-  font:800 16px Manrope;
-  color:white
-}
-
-.footer-links {
-  display:flex;
-  gap:18px
-}
-
-.footer-links a, .footer-inner>span {
-  font-size:9px;
-  color:#a9bcba
-}
-
-.footer-links a:hover {
-  color:white
-}
-
 @media(max-width:800px) {
   .desktop-sidebar {
   display:none
@@ -739,20 +705,6 @@ button, input, select {
 
 .about-inner h2 {
   font-size:21px
-}
-
-.footer-inner {
-  flex-wrap:wrap
-}
-
-.footer-links {
-  order:3;
-  width:100%;
-  justify-content:space-between
-}
-
-.footer-inner>span {
-  margin-left:auto
 }
 
 }
@@ -983,15 +935,9 @@ html[lang="hi"] .brand-name, html[lang="hi"] .feed-heading h1, html[lang="hi"] .
 .main-nav > a {
   padding: 9px 5px 0;
   font-size: 13px;
-}
-
-/* =========================================================
+}/* =========================================================
    16. FOOTER INFORMATION MODAL
-   Purpose: Present site policies in an accessible, scrollable panel.
-   Section complete.
-========================================================= */
-.footer-links { flex-wrap:wrap; justify-content:center; row-gap:8px; }
-.footer-links a { cursor:pointer; }
+   Purpose: Present site policies in an accessible { flex-wrap:wrap; justify-content:center; row-gap:8px; }
 .policy-overlay { position:fixed; inset:0; z-index:100; display:none; align-items:stretch; justify-content:center; padding:22px; background:rgba(8,29,35,.72); backdrop-filter:blur(5px); }
 .policy-overlay.open { display:flex; }
 .policy-modal { position:relative; display:flex; width:min(980px,100%); max-height:100%; overflow:hidden; background:#fff; border-radius:16px; box-shadow:0 24px 80px #071f2760; }
@@ -1006,8 +952,6 @@ html[lang="hi"] .brand-name, html[lang="hi"] .feed-heading h1, html[lang="hi"] .
 .policy-updated { padding-top:18px; border-top:1px solid var(--line); color:#899896; font-size:11px; }
 body.policy-open { overflow:hidden; }
 @media(max-width:600px) {
-  .footer-links { justify-content:flex-start; gap:9px 15px; }
-  .footer-links a { font-size:10px; }
   .policy-overlay { padding:0; }
   .policy-modal { width:100%; max-height:100%; border-radius:0; }
   .policy-close { flex-basis:54px; font-size:21px; }
@@ -1214,48 +1158,11 @@ body.policy-open { overflow:hidden; }
   .policy-close-icon {
     font-size:31px;
   }
-}
-
-
-/* =========================================================
+}/* =========================================================
    21. EXPANDED FOOTER LAYOUT AND LARGER CLOSE CROSS
    Purpose: Give the dark footer more breathing room, arrange
-   information links in three columns, and enlarge the close mark.
-   Section complete.
-========================================================= */
-.site-footer {
+   information links in three columns {
   padding:66px 0 58px;
-}
-.footer-inner {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:26px;
-}
-.footer-brand {
-  font-size:19px;
-}
-.footer-links {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(150px,1fr));
-  column-gap:54px;
-  row-gap:20px;
-  width:min(680px,100%);
-  justify-items:center;
-  align-items:center;
-}
-.footer-links a {
-  display:block;
-  padding:7px 10px;
-  font-size:12px;
-  line-height:1.4;
-  text-align:center;
-}
-.footer-inner>span {
-  margin:0;
-  font-size:11px;
-  text-align:center;
 }
 .policy-close {
   width:66px;
@@ -1267,36 +1174,8 @@ body.policy-open { overflow:hidden; }
   font-size:52px;
 }
 @media(max-width:800px) {
-  .site-footer {
-    padding:48px 0 42px;
-  }
-  .footer-inner {
-    gap:22px;
-  }
-  .footer-links {
-    width:min(520px,100%);
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    column-gap:12px;
-    row-gap:14px;
-  }
-  .footer-links a {
-    padding:7px 3px;
-    font-size:11px;
-  }
 }
 @media(max-width:600px) {
-  .site-footer {
-    padding:40px 0 34px;
-  }
-  .footer-links {
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    column-gap:6px;
-    row-gap:12px;
-  }
-  .footer-links a {
-    font-size:10px;
-    overflow-wrap:anywhere;
-  }
   .policy-close {
     width:50px;
     height:50px;
@@ -1306,48 +1185,11 @@ body.policy-open { overflow:hidden; }
   .policy-close-icon {
     font-size:40px;
   }
-}
-
-
-/* =========================================================
+}/* =========================================================
    21. EXPANDED FOOTER LAYOUT AND LARGER CLOSE CROSS
    Purpose: Give the dark footer more breathing room, arrange
-   information links in three columns, and enlarge the close mark.
-   Section complete.
-========================================================= */
-.site-footer {
+   information links in three columns {
   padding:66px 0 58px;
-}
-.footer-inner {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:26px;
-}
-.footer-brand {
-  font-size:19px;
-}
-.footer-links {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(150px,1fr));
-  column-gap:54px;
-  row-gap:20px;
-  width:min(680px,100%);
-  justify-items:center;
-  align-items:center;
-}
-.footer-links a {
-  display:block;
-  padding:7px 10px;
-  font-size:12px;
-  line-height:1.4;
-  text-align:center;
-}
-.footer-inner>span {
-  margin:0;
-  font-size:11px;
-  text-align:center;
 }
 .policy-close {
   width:66px;
@@ -1359,36 +1201,8 @@ body.policy-open { overflow:hidden; }
   font-size:52px;
 }
 @media(max-width:800px) {
-  .site-footer {
-    padding:48px 0 42px;
-  }
-  .footer-inner {
-    gap:22px;
-  }
-  .footer-links {
-    width:min(520px,100%);
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    column-gap:12px;
-    row-gap:14px;
-  }
-  .footer-links a {
-    padding:7px 3px;
-    font-size:11px;
-  }
 }
 @media(max-width:600px) {
-  .site-footer {
-    padding:40px 0 34px;
-  }
-  .footer-links {
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    column-gap:6px;
-    row-gap:12px;
-  }
-  .footer-links a {
-    font-size:10px;
-    overflow-wrap:anywhere;
-  }
   .policy-close {
     width:50px;
     height:50px;
@@ -1398,29 +1212,18 @@ body.policy-open { overflow:hidden; }
   .policy-close-icon {
     font-size:40px;
   }
-}
-
-/* =========================================================
+}/* =========================================================
    22. REFINE FOOTER HEIGHT AND ENLARGE CLOSE MARK
    Purpose: Reduce the dark footer's vertical space while
-   increasing only the × glyph, not its yellow button.
-   Section complete.
-========================================================= */
-.site-footer {
+   increasing only the × glyph {
   padding:40px 0 34px;
 }
 .policy-close-icon {
   font-size:60px;
 }
 @media(max-width:800px) {
-  .site-footer {
-    padding:34px 0 30px;
-  }
 }
 @media(max-width:600px) {
-  .site-footer {
-    padding:28px 0 24px;
-  }
   .policy-close-icon {
     font-size:48px;
   }
@@ -1784,25 +1587,6 @@ body.policy-open { overflow:hidden; }
   }
 }
 
-
-/* 26. Compact information links and improve phone desktop-mode layout */
-.site-footer {
-  padding:18px 0 16px;
-}
-.footer-inner {
-  gap:10px 14px;
-}
-.footer-links {
-  align-items:center;
-  flex-wrap:wrap;
-  column-gap:12px;
-  row-gap:4px;
-}
-.footer-links a,
-.footer-inner>span {
-  line-height:1.35;
-}
-
 /* Phones requesting Desktop site: use the physical device width for layout.
    This prevents the browser's wide desktop viewport from shrinking the page. */
 @media (pointer:coarse) and (max-device-width:600px) {
@@ -1934,34 +1718,6 @@ body.policy-open { overflow:hidden; }
   }
   .desktop-sidebar {
     display:none !important;
-  }
-  .site-footer {
-    padding:16px 0 14px;
-  }
-  .footer-inner {
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:7px 10px;
-  }
-  .footer-links {
-    order:3;
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    width:100%;
-    gap:4px 8px;
-    justify-content:initial;
-  }
-  .footer-links a {
-    display:block;
-    font-size:10px;
-    line-height:1.25;
-    padding:2px 0;
-    overflow-wrap:anywhere;
-  }
-  .footer-inner>span {
-    margin-left:auto;
-    font-size:9px;
   }
 }
 
@@ -5761,4 +5517,11 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   #homeLifestylePosts .home-editorial-list .home-category-copy {
     padding-top:0 !important;
   }
+}
+
+
+/* Fresh footer foundation — content will be added in planned stages. */
+.site-footer {
+  min-height: 24px;
+  background: #5e6a7d;
 }
