@@ -5940,3 +5940,67 @@ html[lang="en"] .home-featured .home-feature-content h1 {
   to { opacity: 1; clip-path: inset(0 0 0 0); }
 }
 
+
+
+/* Brand tagline — consistent identity across public pages */
+.brand {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  line-height: 1.15;
+}
+.brand-tagline {
+  display: block;
+  margin-top: 3px;
+  color: #718187;
+  font: 600 8px/1.2 "DM Sans", sans-serif;
+  letter-spacing: .025em;
+  white-space: nowrap;
+}
+.footer-tagline {
+  margin: -10px 0 8px;
+  color: #f3d27a;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.identity-tagline {
+  color: var(--teal-dark);
+  font-size: 1.05em;
+  letter-spacing: .01em;
+}
+.information-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+.information-tagline {
+  margin-top: 4px;
+  color: #718187;
+  font-size: 10px;
+  font-weight: 600;
+}
+.information-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.information-footer small {
+  color: #d5dce5;
+  font-size: 11px;
+}
+@media (max-width: 600px) {
+  .brand-tagline {
+    font-size: 6.5px;
+    margin-top: 2px;
+  }
+  .footer-tagline {
+    font-size: 11px;
+  }
+  .information-tagline {
+    font-size: 8px;
+  }
+}
