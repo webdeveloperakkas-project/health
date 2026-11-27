@@ -991,7 +991,7 @@
       const title = String(selected.title || fallback.title || post.canonicalTitle || post.title || "");
       const html = String(selected.content_html || fallback.content_html || post.canonicalContentHtml || post.contentHtml || "");
       const excerpt = String(selected.excerpt || (activeLanguage === post.language ? fallback.excerpt || post.canonicalExcerpt || post.excerpt || "" : ""));
-      post.coverAltText = String(selected.image_alt_text || fallback.image_alt_text || title);
+      post.coverAltText = String(selected.image_alt_text || (activeLanguage === post.language ? fallback.image_alt_text : "") || title);
       post.title = title;
       post.contentHtml = html;
       post.biographyPersonName = String(selected.person_name || selected.personName || (activeLanguage === post.language ? post.canonicalBiographyPersonName || post.biographyPersonName || "" : ""));
