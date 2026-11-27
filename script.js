@@ -315,11 +315,7 @@
       biographyFilters={country:biographyCountryFilter.value||"all",personType:biographyTypeFilter.value||"",personName:biographyNameFilter.value||""};
       currentPage=1;render();
     });
-    $("#biographyFilterReset")?.addEventListener("click",()=>{
-      biographyCountryFilter.value="all";biographyTypeFilter.value="";biographyNameFilter.value="";
-      biographyFilters={country:"all",personType:"",personName:""};refreshBiographyNameOptions();currentPage=1;render();
-    });
-  }
+}
 
   // Homepage World News filtering is independent of category-page navigation.
   let activeHomeWorldSubcategory = "";
