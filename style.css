@@ -5122,11 +5122,11 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .biography-filter-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
 .biography-filter-heading strong{font-size:18px;color:#153943}
 .biography-filter-heading span{font-size:12px;color:#617477}
-.biography-filter-controls{display:grid;grid-template-columns:1fr 1fr 1.2fr auto auto;gap:10px;align-items:end}
+.biography-filter-controls{display:grid;grid-template-columns:1fr 1fr 1.2fr auto;gap:10px;align-items:end}
 .biography-filter-controls label{display:grid;gap:6px;font-size:12px;font-weight:700;color:#344f53}
 .biography-filter-controls select{width:100%;min-width:0;height:40px;padding:0 10px;border:1px solid #ccd9d8;border-radius:6px;background:#fff;color:#243f43;font:inherit;font-weight:500}
 .biography-filter-controls button{height:40px;padding:0 18px;border:0;border-radius:6px;background:#087c75;color:#fff;font-weight:700;cursor:pointer}
-.biography-filter-controls .biography-filter-reset{background:#e8eeee;color:#344f53}
+
 @media(max-width:760px){.biography-filter-panel{padding:14px}.biography-filter-heading{display:block}.biography-filter-heading span{display:block;margin-top:4px}.biography-filter-controls{grid-template-columns:1fr 1fr}.biography-filter-controls label:nth-child(3){grid-column:1/-1}.biography-filter-controls button{width:100%}}
 
 
