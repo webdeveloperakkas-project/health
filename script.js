@@ -1244,11 +1244,9 @@
     // Keep the shared site frame and the surrounding homepage sections visible
     // while the selected article replaces only the central content area.
     const entertainmentSection = $("#entertainmentFeatureSection");
-    const homeCategorySections = $("#homeCategorySections");
     const worldNewsSection = $("#homeWorldSection");
     if (worldNewsSection) worldNewsSection.hidden = true;
     if (entertainmentSection) entertainmentSection.hidden = true;
-    if (homeCategorySections) homeCategorySections.hidden = true;
     if (featuredStoriesSection) featuredStoriesSection.hidden = false;
     if (trendingSection) trendingSection.hidden = false;
     if (manualTrendingSection) manualTrendingSection.hidden = false;
@@ -1360,13 +1358,11 @@
     const lifestyleHomeSection = $("#homeLifestyleSection");
     const sportsHomeSection = $("#homeSportsSection");
     if (worldNewsSection) worldNewsSection.hidden = !isHomeLanding;
-    // These two homepage sections sit outside #homeCategorySections,
-    // so hide them explicitly whenever a category or subcategory feed is open.
+    // Keep the homepage-only category sections hidden on category and subcategory feeds.
     if (lifestyleHomeSection) lifestyleHomeSection.hidden = !isHomeLanding;
     if (sportsHomeSection) sportsHomeSection.hidden = !isHomeLanding;
     if (scienceTechSection) scienceTechSection.hidden = !isHomeLanding;
     if (entertainmentSection) entertainmentSection.hidden = !isHomeLanding;
-    if (homeCategorySections) homeCategorySections.hidden = !isHomeLanding;
     const categoryMatches = post => (activeCategory === "home" || post.category === activeCategory) &&
       (!activeSubcategory || post.subcategory === activeSubcategory);
     const placementMatches = post => {
