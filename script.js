@@ -1980,6 +1980,80 @@
   if (typeof syncLanguageButton === "function") syncLanguageButton();
 
   /* =========================================================
+     FOOTER INFORMATION MODAL
+     Opens content in-place; it never changes the page URL.
+     ========================================================= */
+  const footerModal = $("#footerModal");
+  const footerModalTitle = $("#footerModalTitle");
+  const footerModalBody = $("#footerModalBody");
+  const footerModalDialog = footerModal ? footerModal.querySelector(".footer-modal-dialog") : null;
+  const footerPanels = {
+    about: {
+      title: "About Global Scope 24",
+      html: `
+        <p>Global Scope 24 is an information and editorial platform created to make useful knowledge, current affairs and everyday topics easier to explore and understand.</p>
+        <h3>Our purpose</h3>
+        <p>We aim to publish clear, accessible and helpful content across news, science and technology, biography, sports, entertainment, travel, finance and lifestyle.</p>
+        <h3>Our approach</h3>
+        <p>We value clarity, accuracy, responsible publishing and continuous improvement. Readers should use the information in context and consult qualified professionals where specialist advice is needed.</p>`
+    },
+    policies: {
+      title: "Policies & AI Disclosure",
+      html: `
+        <h3>Editorial principles</h3>
+        <p>We aim to present information clearly and responsibly. Content should be reviewed for clarity and factual accuracy before publication, and corrections should be made when an error is identified.</p>
+        <h3>AI-generated images and AI assistance</h3>
+        <p>Some illustrations or visual assets published with our articles may be created using AI tools. Such images are intended to illustrate a topic and should not automatically be understood as documentary photographs or proof that a depicted event occurred. Where relevant, AI-generated visuals should be identified clearly.</p>
+        <p>AI tools may assist parts of the editorial workflow. Published information should be reviewed by a human editor, and important factual claims should be checked against reliable sources.</p>
+        <h3>Privacy</h3>
+        <p>We aim to handle visitor information responsibly. This section will be expanded with the site's specific data collection, cookies, analytics and third-party service practices before a full Privacy Policy is published.</p>
+        <h3>Terms of use</h3>
+        <p>Content is provided for general information and educational purposes. Visitors should not treat it as a substitute for professional, legal, medical or financial advice. The site may update content and these terms as the service develops.</p>
+        <h3>Disclaimer</h3>
+        <p>We make reasonable efforts to provide useful information, but we cannot guarantee that every item is complete, current or suitable for every situation. Readers should independently verify important information before acting on it.</p>`
+    },
+    contact: {
+      title: "Contact Global Scope 24",
+      html: `
+        <p>We welcome reader feedback, questions and suggestions that can help improve Global Scope 24.</p>
+        <h3>What you can contact us about</h3>
+        <ul>
+          <li>General questions and feedback</li>
+          <li>Reporting an error or requesting a correction</li>
+          <li>Editorial suggestions and content ideas</li>
+          <li>Copyright or content-related concerns</li>
+          <li>Partnership and business enquiries</li>
+        </ul>
+        <p>Our official contact email and any additional contact channels will be added here once confirmed.</p>`
+    }
+  };
+  let footerLastFocus = null;
+  function closeFooterModal() {
+    if (!footerModal || footerModal.hidden) return;
+    footerModal.hidden = true;
+    document.body.classList.remove("footer-modal-open");
+    if (footerLastFocus) footerLastFocus.focus();
+  }
+  document.querySelectorAll("[data-footer-open]").forEach(button => {
+    button.addEventListener("click", () => {
+      const panel = footerPanels[button.dataset.footerOpen];
+      if (!panel || !footerModal) return;
+      footerLastFocus = button;
+      footerModalTitle.textContent = panel.title;
+      footerModalBody.innerHTML = panel.html;
+      footerModal.hidden = false;
+      document.body.classList.add("footer-modal-open");
+      footerModalDialog.focus();
+    });
+  });
+  if (footerModal) {
+    footerModal.querySelectorAll("[data-footer-close]").forEach(button => button.addEventListener("click", closeFooterModal));
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !footerModal.hidden) closeFooterModal();
+    });
+  }
+
+  /* =========================================================
      15. PAGE INITIALIZATION
      Section complete.
   ========================================================= */
