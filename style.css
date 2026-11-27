@@ -5772,3 +5772,9 @@ html[lang="hi"] .home-featured .home-feature-content h1 {
   letter-spacing: 0 !important;
   overflow-wrap: anywhere;
 }
+
+
+/* Homepage Hero English titles use the same clean Arial typeface as TaskBridge's section headings. */
+html[lang="en"] .home-featured .home-feature-content h1 {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
