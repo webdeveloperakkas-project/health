@@ -5532,6 +5532,14 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   color: #fff;
 }
 
+/* Match TaskBridge's footer container exactly without changing the
+   wider 1600px content container used by Global Scope 24 elsewhere. */
+.footer-inner.container {
+  width: min(100% - 40px, 1180px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Do not override .container width here. */
 .footer-grid {
   display: grid;
@@ -5716,9 +5724,11 @@ body.footer-modal-open { overflow: hidden; }
   .footer-about p { max-width: 320px; }
 }
 @media (max-width: 768px) {
+  .footer-inner.container { width: min(100% - 30px, 1180px); }
   .footer-grid { gap: 32px 22px; }
 }
 @media (max-width: 480px) {
+  .footer-inner.container { width: calc(100% - 28px); }
   .footer-grid { grid-template-columns: 1fr; gap: 30px; }
   .footer-about p { max-width: 100%; }
   .footer-modal { padding: 12px; }
