@@ -5915,3 +5915,27 @@ html[lang="en"] .home-featured .home-feature-content h1 {
   }
 }
 
+/* Corrected: anchor the mobile Lifestyle submenu to the right edge
+   and reveal it from right to left. No other submenu is affected. */
+@media (max-width: 800px) {
+  .main-nav .sidebar-category-item:has(#sidebarLifestyleSubmenu) {
+    position: relative;
+  }
+
+  .main-nav #sidebarLifestyleSubmenu {
+    position: relative;
+    top: auto;
+    right: 0;
+    left: auto;
+    width: 100%;
+    box-sizing: border-box;
+    transform-origin: right center;
+    animation: lifestyleSubmenuReveal .22s ease-out;
+  }
+}
+
+@keyframes lifestyleSubmenuReveal {
+  from { opacity: 0; clip-path: inset(0 0 0 100%); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+
