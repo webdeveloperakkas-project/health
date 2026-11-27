@@ -5846,7 +5846,7 @@ html[lang="en"] .home-featured .home-feature-content h1 {
   box-sizing: border-box;
   width: max-content;
   min-width: 210px;
-  max-width: 260px;
+  max-width: none;
   max-height: none;
   overflow: visible;
   padding: 8px;
@@ -5889,8 +5889,9 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     height: 6px;
   }
   .category-tabs .finance-submenu {
+    width: max-content;
     min-width: 180px;
-    max-width: min(220px, 80vw);
+    max-width: none;
   }
 }
 @media (min-width: 801px) {
