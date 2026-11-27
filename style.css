@@ -5604,25 +5604,6 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   cursor: pointer;
   transition: color .25s ease, transform .2s ease;
 }
-.footer-link .footer-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-  color: currentColor;
-}
-.footer-link .footer-icon svg {
-  display: block;
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
 .footer-link:hover,
 .footer-link:focus-visible {
   color: #fff;
