@@ -5525,3 +5525,138 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   min-height: 24px;
   background: #5e6a7d;
 }
+
+
+/* =========================================================
+   FOOTER — three information buttons and an in-page modal.
+   ========================================================= */
+.site-footer {
+  min-height: 0;
+  padding: 30px 0;
+  background: #5e6a7d;
+}
+.footer-inner { width: 100%; }
+.footer-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+.footer-action {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 12px;
+  background: rgba(255,255,255,.09);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.footer-action:hover, .footer-action:focus-visible {
+  background: rgba(255,255,255,.18);
+  border-color: rgba(255,255,255,.62);
+  transform: translateY(-2px);
+  outline: none;
+}
+.footer-action-icon { font-size: 22px; line-height: 1; opacity: .95; }
+.footer-modal[hidden] { display: none !important; }
+.footer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.footer-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,20,30,.72);
+  backdrop-filter: blur(5px);
+}
+.footer-modal-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(760px, 100%);
+  max-height: min(82vh, 820px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 18px;
+  background: #fff;
+  color: #263746;
+  box-shadow: 0 24px 80px rgba(0,0,0,.28);
+}
+.footer-modal-x {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #eef1f4;
+  color: #263746;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+.footer-modal-content {
+  min-height: 0;
+  padding: 34px 38px 22px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.footer-modal-eyebrow {
+  color: #5e6a7d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+.footer-modal-content h2 {
+  margin: 9px 48px 22px 0;
+  color: #183b49;
+  font-size: clamp(23px, 4vw, 31px);
+  line-height: 1.2;
+}
+.footer-modal-body { font-size: 15px; line-height: 1.75; }
+.footer-modal-body h3 { margin: 22px 0 7px; color: #183b49; font-size: 17px; }
+.footer-modal-body p { margin: 0 0 13px; }
+.footer-modal-body ul { margin: 7px 0 16px; padding-left: 22px; }
+.footer-modal-bottom {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-start;
+  padding: 13px 38px 20px;
+  border-top: 1px solid #e8edf0;
+  background: #fff;
+}
+.footer-modal-close {
+  min-width: 104px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #5e6a7d;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+body.footer-modal-open { overflow: hidden; }
+@media (max-width: 640px) {
+  .site-footer { padding: 22px 0; }
+  .footer-actions { grid-template-columns: 1fr; gap: 10px; }
+  .footer-action { min-height: 58px; justify-content: flex-start; padding: 13px 18px; }
+  .footer-modal { padding: 12px; }
+  .footer-modal-dialog { max-height: 88vh; border-radius: 14px; }
+  .footer-modal-content { padding: 28px 22px 18px; }
+  .footer-modal-bottom { padding: 12px 22px 17px; }
+}
