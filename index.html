@@ -9,11 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=209">
+<link rel="stylesheet" href="style.css?v=210">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="translations.js?v=2" defer></script>
-<script src="script.js?v=151" defer></script>
+<script src="script.js?v=152" defer></script>
 </head>
 
 
@@ -307,7 +307,39 @@
 </section>
 </main>
 
-<footer class="site-footer" id="siteFooter" aria-label="Site footer"></footer>
+<footer class="site-footer" id="siteFooter" aria-label="Site footer">
+  <div class="footer-inner container">
+    <div class="footer-actions" role="group" aria-label="Footer information">
+      <button class="footer-action" type="button" data-footer-open="about">
+        <span class="footer-action-icon" aria-hidden="true">◎</span>
+        <span>About Us</span>
+      </button>
+      <button class="footer-action" type="button" data-footer-open="policies">
+        <span class="footer-action-icon" aria-hidden="true">▤</span>
+        <span>Policies &amp; AI Disclosure</span>
+      </button>
+      <button class="footer-action" type="button" data-footer-open="contact">
+        <span class="footer-action-icon" aria-hidden="true">✉</span>
+        <span>Contact Us</span>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<div class="footer-modal" id="footerModal" hidden>
+  <div class="footer-modal-backdrop" data-footer-close></div>
+  <section class="footer-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="footerModalTitle" tabindex="-1">
+    <button class="footer-modal-x" type="button" data-footer-close aria-label="Close dialog">×</button>
+    <div class="footer-modal-content">
+      <span class="footer-modal-eyebrow">GLOBAL SCOPE 24</span>
+      <h2 id="footerModalTitle"></h2>
+      <div class="footer-modal-body" id="footerModalBody"></div>
+    </div>
+    <div class="footer-modal-bottom">
+      <button class="footer-modal-close" type="button" data-footer-close>Close</button>
+    </div>
+  </section>
+</div>
 
 
 </body>
