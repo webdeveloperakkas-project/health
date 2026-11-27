@@ -5558,7 +5558,7 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   display: inline-block;
   margin-bottom: 18px;
   color: #fff;
-  font-size: 25px;
+  font-size: 27px;
   font-weight: 800;
   letter-spacing: -0.7px;
   line-height: 1.25;
@@ -5571,7 +5571,7 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
 .footer-about p {
   max-width: 280px;
   color: #e0e5eb;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.9;
 }
 
@@ -5585,7 +5585,7 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
 .footer-links h3 {
   margin: 0 0 8px;
   color: #fff;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
 }
 
@@ -5598,17 +5598,30 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   background: transparent;
   color: #e0e5eb;
   font: inherit;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.6;
   text-align: left;
   cursor: pointer;
   transition: color .25s ease, transform .2s ease;
 }
-.footer-link span {
+.footer-link .footer-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 18px;
+  height: 18px;
   flex: 0 0 18px;
-  font-size: 14px;
-  text-align: center;
+  color: currentColor;
+}
+.footer-link .footer-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .footer-link:hover,
 .footer-link:focus-visible {
@@ -5627,7 +5640,7 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
 .footer-bottom p {
   margin: 0;
   color: #d5dce5;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 /* In-page article popup: content scrolls inside the dialog only. */
