@@ -238,9 +238,6 @@
     const feedEyebrow = document.querySelector("#articleFeed .feed-heading .eyebrow"); if (feedEyebrow) feedEyebrow.textContent = ui.stories;
     const prev = document.querySelector("#previousPage"); if (prev) prev.textContent = ui.previous;
     const next = document.querySelector("#nextPage"); if (next) next.textContent = ui.next;
-    const footerLabels = document.querySelectorAll(".footer-links a");
-    const footerText = [ui.categories,ui.about,ui.contact,ui.privacy,ui.editorial,ui.terms,ui.disclaimer,ui.cookies];
-    footerLabels.forEach((link,index) => { if (footerText[index]) link.textContent = footerText[index]; });
     const aboutHeading = document.querySelector("#about h2");
     Array.from(document.querySelectorAll(".category-tab, .sidebar-category")).forEach(button => {
       const label = t.categories[button.dataset.categoryLabel || button.dataset.category];
@@ -1984,10 +1981,8 @@
 
   /* =========================================================
      15. PAGE INITIALIZATION
-     Purpose: Set the footer year and render the initial language/feed.
      Section complete.
   ========================================================= */
-  $("#year").textContent = new Date().getFullYear();
   updateHeaderClock();
   window.setInterval(updateHeaderClock, 30000);
   applyLanguage($("#languageSelect").value || "en");
