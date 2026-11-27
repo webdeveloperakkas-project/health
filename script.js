@@ -2220,7 +2220,6 @@
           if (articleSection) articleSection.hidden = true;
           const entertainmentSection = $("#entertainmentFeatureSection");
                 if (entertainmentSection) entertainmentSection.hidden = true;
-          if (homeCategorySections) homeCategorySections.hidden = true;
           if (featuredStoriesSection) featuredStoriesSection.hidden = false;
           if (manualTrendingSection) manualTrendingSection.hidden = false;
           if (trendingSection) trendingSection.hidden = false;
