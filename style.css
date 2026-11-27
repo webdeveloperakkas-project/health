@@ -3437,7 +3437,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 /* =========================================================
    26. HOMEPAGE CATEGORY SECTIONS — DISTINCT EDITORIAL LAYOUTS
    ========================================================= */
-.home-category-sections{display:flex;flex-direction:column;gap:38px;padding:8px 0 46px}
 .home-category-widget{min-width:0}
 .home-category-heading{margin-bottom:16px}
 .home-world-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:22px;align-items:stretch}
@@ -3504,11 +3503,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
 .home-sports-right-card strong{font-size:14px;line-height:1.4}
 .home-sports-more{display:inline-flex;align-items:center;justify-content:center;gap:8px;align-self:flex-start;margin-top:auto;padding:10px 14px;border:0;border-radius:4px;background:#e8b85b;color:#173b40;font-size:12px;font-weight:800;cursor:pointer}
 .home-sports-more:hover{background:#f1cd7d}
-.home-tips-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
-.home-tips-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:14px;align-items:start;padding:12px;border:1px solid #e5eeea;background:#fff}
-.home-tips-card .home-category-image{aspect-ratio:4/3}
-.home-tips-card .home-category-copy{padding-top:2px}
-.home-tips-card strong{font-size:15px}
 .home-health-main .home-category-image{aspect-ratio:4/3}
 .home-health-main strong{font-size:clamp(17px,1.7vw,21px)}
 .home-health-small .home-category-image{aspect-ratio:16/10}
@@ -3524,7 +3518,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .entertainment-slider-track{gap:12px}
   .entertainment-slide{flex-basis:100%}
   .entertainment-slide strong{font-size:14px}
-  .home-category-sections{gap:30px;padding:2px 0 32px}
   .home-world-layout,.home-health-layout{grid-template-columns:1fr;gap:14px}
   .home-editorial-top{grid-template-columns:1fr;gap:14px}
   .home-post-gallery-slider{height:230px;margin-top:14px}
@@ -3551,10 +3544,6 @@ html[lang="en"] .main-nav .sidebar-submenu button {
   .home-sports-bottom{gap:12px}
   .home-sports-bottom-card strong{font-size:12px}
   .home-sports-more{margin-top:12px}
-  .home-tips-grid{grid-template-columns:1fr;gap:12px}
-  .home-tips-card{grid-template-columns:130px minmax(0,1fr);gap:12px;padding:0 0 12px;border:0;border-bottom:1px solid #e8efec}
-  .home-tips-card .home-category-image{aspect-ratio:16/10}
-  .home-tips-card strong{font-size:13px}
   .home-category-card small{font-size:11px}
 }
 
@@ -5763,11 +5752,4 @@ body.footer-modal-open { overflow: hidden; }
   .footer-modal-content { padding: 28px 22px 18px; }
   .footer-modal-bottom { padding: 12px 22px 17px; }
 }
-
-/* Mobile homepage: Daily Tips already appears inside the main Lifestyle
-   section, so suppress the legacy standalone duplicate card group. */
-@media (max-width: 800px) {
-  #homeTipsSection {
-    display: none !important;
-  }
-}
+ 
