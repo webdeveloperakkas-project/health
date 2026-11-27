@@ -1664,7 +1664,7 @@
       button.setAttribute("aria-pressed", String(selected));
     });
 
-    document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger")
+    document.querySelectorAll(".sports-category-trigger,.entertainment-category-trigger,.world-category-trigger,.lifestyle-category-trigger,.finance-category-trigger")
       .forEach(trigger => {
         const selected = trigger.dataset.category === activeCategory;
         trigger.classList.toggle("active", selected);
