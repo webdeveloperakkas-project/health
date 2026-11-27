@@ -1988,45 +1988,20 @@
   const footerModalBody = $("#footerModalBody");
   const footerModalDialog = footerModal ? footerModal.querySelector(".footer-modal-dialog") : null;
   const footerPanels = {
-    about: {
-      title: "About Global Scope 24",
-      html: `
-        <p>Global Scope 24 is an information and editorial platform created to make useful knowledge, current affairs and everyday topics easier to explore and understand.</p>
-        <h3>Our purpose</h3>
-        <p>We aim to publish clear, accessible and helpful content across news, science and technology, biography, sports, entertainment, travel, finance and lifestyle.</p>
-        <h3>Our approach</h3>
-        <p>We value clarity, accuracy, responsible publishing and continuous improvement. Readers should use the information in context and consult qualified professionals where specialist advice is needed.</p>`
-    },
-    policies: {
-      title: "Policies & AI Disclosure",
-      html: `
-        <h3>Editorial principles</h3>
-        <p>We aim to present information clearly and responsibly. Content should be reviewed for clarity and factual accuracy before publication, and corrections should be made when an error is identified.</p>
-        <h3>AI-generated images and AI assistance</h3>
-        <p>Some illustrations or visual assets published with our articles may be created using AI tools. Such images are intended to illustrate a topic and should not automatically be understood as documentary photographs or proof that a depicted event occurred. Where relevant, AI-generated visuals should be identified clearly.</p>
-        <p>AI tools may assist parts of the editorial workflow. Published information should be reviewed by a human editor, and important factual claims should be checked against reliable sources.</p>
-        <h3>Privacy</h3>
-        <p>We aim to handle visitor information responsibly. This section will be expanded with the site's specific data collection, cookies, analytics and third-party service practices before a full Privacy Policy is published.</p>
-        <h3>Terms of use</h3>
-        <p>Content is provided for general information and educational purposes. Visitors should not treat it as a substitute for professional, legal, medical or financial advice. The site may update content and these terms as the service develops.</p>
-        <h3>Disclaimer</h3>
-        <p>We make reasonable efforts to provide useful information, but we cannot guarantee that every item is complete, current or suitable for every situation. Readers should independently verify important information before acting on it.</p>`
-    },
-    contact: {
-      title: "Contact Global Scope 24",
-      html: `
-        <p>We welcome reader feedback, questions and suggestions that can help improve Global Scope 24.</p>
-        <h3>What you can contact us about</h3>
-        <ul>
-          <li>General questions and feedback</li>
-          <li>Reporting an error or requesting a correction</li>
-          <li>Editorial suggestions and content ideas</li>
-          <li>Copyright or content-related concerns</li>
-          <li>Partnership and business enquiries</li>
-        </ul>
-        <p>Our official contact email and any additional contact channels will be added here once confirmed.</p>`
-    }
+    about: { title: "About Global Scope 24", html: `<p>Global Scope 24 is an independent information and editorial platform designed to make useful knowledge, current affairs and everyday topics easier to explore.</p><h3>What we cover</h3><p>Our coverage may include world news, technology, sports, health, biography, travel, finance and lifestyle. We aim to make information accessible and understandable for a broad international audience.</p>` },
+    mission: { title: "Our Mission", html: `<p>Our mission is to help readers discover useful, understandable information and stay informed about topics that matter in everyday life.</p><p>We aim to value clarity, accuracy, accessibility and responsible publishing while continually improving our content and reader experience.</p>` },
+    editorial: { title: "Editorial Policy", html: `<p>We aim to prepare content with care, clear language and attention to factual accuracy. Articles should be reviewed before publication, and important claims should be supported by reliable sources where appropriate.</p><h3>Updates and corrections</h3><p>When a meaningful error is identified, we aim to review it and correct the content transparently. Readers can contact us to report possible errors.</p>` },
+    ai: { title: "AI Image Disclosure", html: `<p>Some illustrations and visual assets used with Global Scope 24 articles may be generated or assisted by artificial intelligence tools.</p><h3>How to understand these images</h3><p>AI-generated visuals may be illustrative. They should not automatically be understood as documentary photographs, exact depictions of real people or places, or proof that a specific event occurred. Where appropriate, we aim to identify AI-generated or illustrative images clearly.</p><p>AI tools may also assist parts of the editorial workflow. Human review remains important, and factual information should be checked before publication.</p>` },
+    privacy: { title: "Privacy Policy", html: `<p>We respect reader privacy and aim to handle visitor information responsibly.</p><h3>Site-specific details</h3><p>This policy needs to be completed after confirming the website's actual use of analytics, cookies, hosting logs, embedded content and any third-party services. We will not claim that specific data is or is not collected until those practices have been verified.</p>` },
+    terms: { title: "Terms of Use", html: `<p>By using Global Scope 24, visitors should use the website and its content lawfully and respectfully.</p><p>Content is provided for general information and educational purposes. We may update, correct or remove material as the website develops. These terms should be reviewed and expanded to reflect the site's final operating practices.</p>` },
+    disclaimer: { title: "Disclaimer", html: `<p>Content on Global Scope 24 is intended for general information and education. It is not a substitute for professional medical, legal, financial or other specialist advice.</p><p>We make reasonable efforts to provide useful information, but readers should independently verify important details and consider their own circumstances before taking action.</p>` },
+    copyright: { title: "Copyright Policy", html: `<p>Website text, design elements and original materials may be protected by applicable copyright and intellectual-property laws.</p><p>If you believe material on this website infringes your rights, please contact us with the relevant page details and an explanation of your concern so it can be reviewed.</p>` },
+    contact: { title: "Contact Global Scope 24", html: `<p>We welcome reader questions, suggestions and feedback that can help improve Global Scope 24.</p><h3>Contact us about</h3><ul><li>General questions and feedback</li><li>Editorial suggestions and content ideas</li><li>Partnership and business enquiries</li><li>Copyright or content-related concerns</li></ul><p>Our official contact email will be added here once confirmed.</p>` },
+    corrections: { title: "Corrections & Feedback", html: `<p>If you notice a factual error, outdated detail or unclear explanation, please let us know.</p><h3>What to include</h3><ul><li>The article title or page address</li><li>The specific passage that may need review</li><li>A correction suggestion and supporting source, if available</li></ul><p>We aim to review genuine correction requests and update content when appropriate.</p>` },
+    faq: { title: "Frequently Asked Questions", html: `<h3>Is Global Scope 24 a news and information website?</h3><p>Yes. The site is intended to publish news, explainers and useful information across a range of topics.</p><h3>Are all article images photographs?</h3><p>No. Some images may be illustrative or AI-generated. Please see our AI Image Disclosure for more information.</p><h3>How can I report an error?</h3><p>Use the Corrections & Feedback section to see what information to include when reporting a possible error.</p>` }
   };
+  const footerYear = $("#footerCurrentYear");
+  if (footerYear) footerYear.textContent = String(new Date().getFullYear());
   let footerLastFocus = null;
   function closeFooterModal() {
     if (!footerModal || footerModal.hidden) return;
