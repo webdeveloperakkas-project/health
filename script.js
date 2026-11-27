@@ -224,7 +224,7 @@
       "beauty-care": { en: "Beauty Care", bn: "রূপচর্চা", hi: "सौंदर्य देखभाल" },
       "insurance": { en: "Insurance & Savings", bn: "সঞ্চয় ও বীমা", hi: "बचत और बीमा" },
       "loans-credit-cards": { en: "Loans & Credit Cards", bn: "ঋণ ও ক্রেডিট কার্ড", hi: "ऋण और क्रेडिट कार्ड" },
-      "savings-investing-retirement": { en: "Insurance & Savings", bn: "সঞ্চয় ও বীমা", hi: "बचत और बीमा" }
+      "savings-investing-retirement": { en: "Investing & Retirement", bn: "বিনিয়োগ ও অবসর পরিকল্পনা", hi: "निवेश और सेवानिवृत्ति" }
     };
     document.querySelectorAll(".main-nav .sidebar-submenu button[data-sidebar-subcategory]").forEach(button => {
       const labels = drawerSubcategoryLabels[button.dataset.sidebarSubcategory];
