@@ -182,6 +182,7 @@
     activeLanguage = languageCopy[language] ? language : "en";
     const t = languageCopy[activeLanguage];
     const ui = extendedUiCopy[activeLanguage] || extendedUiCopy.en;
+    applyFooterLanguage(activeLanguage);
     const sportsLabels = window.EA_TRANSLATIONS?.sportsSubcategories?.[activeLanguage] || window.EA_TRANSLATIONS?.sportsSubcategories?.en || {};
     document.querySelectorAll("#sportsSubmenu [data-sports-subcategory]").forEach(button => { const key=button.dataset.sportsSubcategory; if(sportsLabels[key])button.textContent=sportsLabels[key]; });
     const entertainmentLabels={en:{cinema:"Cinema",bollywood:"Bollywood","south-cinema":"South Indian Cinema",music:"Music",hollywood:"Hollywood",television:"Television",serial:"TV Serials","folk-art":"Folk Culture"},bn:{cinema:"সিনেমা",bollywood:"বলিউড","south-cinema":"দক্ষিণের সিনেমা",music:"গান",hollywood:"হলিউড",television:"টেলিভিশন",serial:"সিরিয়াল","folk-art":"লোক-সংস্কৃতি"},hi:{cinema:"सिनेमा",bollywood:"बॉलीवुड","south-cinema":"दक्षिण भारतीय सिनेमा",music:"संगीत",hollywood:"हॉलीवुड",television:"टेलीविजन",serial:"धारावाहिक","folk-art":"लोक संस्कृति"},de:{cinema:"Kino",bollywood:"Bollywood","south-cinema":"Südkino",music:"Musik",hollywood:"Hollywood",television:"Fernsehen",serial:"Serien","folk-art":"Volkskultur"},fr:{cinema:"Cinéma",bollywood:"Bollywood","south-cinema":"Cinéma du Sud",music:"Musique",hollywood:"Hollywood",television:"Télévision",serial:"Séries","folk-art":"Culture populaire"},es:{cinema:"Cine",bollywood:"Bollywood","south-cinema":"Cine del sur",music:"Música",hollywood:"Hollywood",television:"Televisión",serial:"Series","folk-art":"Cultura popular"}}[activeLanguage]||{};
@@ -1987,9 +1988,62 @@
   const footerModalTitle = $("#footerModalTitle");
   const footerModalBody = $("#footerModalBody");
   const footerModalDialog = footerModal ? footerModal.querySelector(".footer-modal-dialog") : null;
+  /* Localized footer labels and editorial identity pages. */
+  const footerCopy = {
+    en: {
+      headings:["Company","Policies","Support"],
+      labels:{about:"About Us",mission:"Our Mission",privacy:"Privacy Policy",terms:"Terms of Use",disclaimer:"Disclaimer",copyright:"Copyright Policy",editorial:"Editorial Policy",ai:"AI Image Disclosure",contact:"Contact Us",corrections:"Corrections & Feedback",faq:"Frequently Asked Questions"},
+      description:"Global news, useful knowledge and trusted insights to help readers stay informed about the world around them.",
+      close:"Close",rights:"All Rights Reserved."
+    },
+    bn: {
+      headings:["কোম্পানি","নীতিমালা","সহায়তা"],
+      labels:{about:"আমাদের সম্পর্কে",mission:"আমাদের লক্ষ্য",privacy:"গোপনীয়তা নীতি",terms:"ব্যবহারের শর্তাবলি",disclaimer:"দায়মুক্তি",copyright:"কপিরাইট নীতি",editorial:"সম্পাদনা নীতি",ai:"এআই-তৈরি ছবির ঘোষণা",contact:"যোগাযোগ",corrections:"সংশোধন ও মতামত",faq:"সাধারণ জিজ্ঞাসা"},
+      description:"বিশ্বের খবর, দরকারি জ্ঞান ও নির্ভরযোগ্য তথ্যের মাধ্যমে পাঠকদের চারপাশের বিশ্ব সম্পর্কে সচেতন থাকতে সহায়তা করে Global Scope 24।",
+      close:"বন্ধ করুন",rights:"সর্বস্বত্ব সংরক্ষিত।"
+    },
+    hi: {
+      headings:["कंपनी","नीतियाँ","सहायता"],
+      labels:{about:"हमारे बारे में",mission:"हमारा मिशन",privacy:"गोपनीयता नीति",terms:"उपयोग की शर्तें",disclaimer:"अस्वीकरण",copyright:"कॉपीराइट नीति",editorial:"संपादकीय नीति",ai:"एआई-निर्मित छवियों की सूचना",contact:"संपर्क करें",corrections:"सुधार और प्रतिक्रिया",faq:"अक्सर पूछे जाने वाले प्रश्न"},
+      description:"विश्व समाचार, उपयोगी ज्ञान और भरोसेमंद जानकारी के माध्यम से पाठकों को दुनिया से अवगत रखने में Global Scope 24 मदद करता है।",
+      close:"बंद करें",rights:"सर्वाधिकार सुरक्षित।"
+    }
+  };
+  const identityArticles = {
+    en:{
+      about:{title:"About Global Scope 24",html:`<p>Global Scope 24 is a global information and knowledge platform created to help readers explore the world, understand important developments and find practical knowledge for everyday life.</p><p>Our coverage brings together world news, science and technology, biography, sports, entertainment, travel, finance and lifestyle. We aim to present useful information in a clear, accessible and reader-friendly way for people from different places and backgrounds.</p><h3>What readers can expect</h3><ul><li>News and explainers that help readers understand relevant events and issues.</li><li>Practical information and everyday guidance across a range of subjects.</li><li>Informative profiles, background stories and topic-based features.</li><li>Content presented with attention to clarity, context and usefulness.</li></ul><h3>Our editorial approach</h3><p>We value accuracy, transparency and responsible publishing. We seek to use credible sources where appropriate, distinguish factual reporting from explanation or opinion, and review content carefully. Readers can contact us about possible errors so they can be assessed and corrected when necessary.</p><p>Our articles provide general information and do not replace professional medical, legal, financial or other specialist advice.</p>`},
+      mission:{title:"Our Mission",html:`<p>Our mission is to make useful knowledge and relevant information easier to access, understand and apply—wherever our readers are in the world.</p><h3>What guides our work</h3><ul><li><strong>Inform with care:</strong> present information clearly, with attention to accuracy and context.</li><li><strong>Connect readers with the world:</strong> cover important developments, ideas and perspectives from different places.</li><li><strong>Make knowledge practical:</strong> share insights that support everyday learning and informed decisions.</li><li><strong>Keep information accessible:</strong> use reader-friendly language and clear presentation.</li><li><strong>Publish responsibly:</strong> value transparency, acknowledge limitations and review reported errors.</li></ul><h3>Our commitment</h3><p>We aim to continually improve the quality, usefulness and accessibility of Global Scope 24. Our goal is to become a trusted destination where readers can learn something valuable, understand the issues shaping our world and make better-informed decisions.</p><p><em>Knowledge without boundaries. Useful information for everyday life.</em></p>`}
+    },
+    bn:{
+      about:{title:"Global Scope 24 সম্পর্কে",html:`<p>Global Scope 24 একটি আন্তর্জাতিক তথ্য ও জ্ঞানভিত্তিক ডিজিটাল প্ল্যাটফর্ম। বিশ্বের নানা বিষয় সম্পর্কে জানা, গুরুত্বপূর্ণ ঘটনাপ্রবাহ বোঝা এবং দৈনন্দিন জীবনে কাজে লাগে এমন জ্ঞান খুঁজে পেতে পাঠকদের সহায়তা করাই আমাদের উদ্দেশ্য।</p><p>আমাদের প্রকাশনায় বিশ্ব সংবাদ, বিজ্ঞান ও প্রযুক্তি, জীবনী, খেলাধুলা, বিনোদন, ভ্রমণ, অর্থনীতি এবং জীবনযাপনসহ বিভিন্ন বিষয় স্থান পায়। পৃথিবীর বিভিন্ন দেশের ও ভিন্ন অভিজ্ঞতার পাঠকদের জন্য তথ্যকে সহজ, স্পষ্ট ও পাঠবান্ধবভাবে উপস্থাপন করার চেষ্টা করি।</p><h3>আমাদের কাছ থেকে পাঠকেরা যা আশা করতে পারেন</h3><ul><li>প্রাসঙ্গিক ঘটনা ও বিষয় বুঝতে সহায়ক সংবাদ এবং ব্যাখ্যামূলক লেখা।</li><li>দৈনন্দিন জীবনে কাজে লাগে এমন ব্যবহারিক তথ্য ও পরামর্শ।</li><li>পরিচিত ব্যক্তি, গুরুত্বপূর্ণ ঘটনা ও নানা বিষয়ের পটভূমি নিয়ে তথ্যবহুল লেখা।</li><li>স্পষ্টতা, প্রাসঙ্গিকতা ও পাঠকের প্রয়োজনকে গুরুত্ব দিয়ে সাজানো কনটেন্ট।</li></ul><h3>আমাদের সম্পাদকীয় দৃষ্টিভঙ্গি</h3><p>আমরা তথ্যের যথার্থতা, স্বচ্ছতা এবং দায়িত্বশীল প্রকাশনাকে গুরুত্ব দিই। প্রয়োজন অনুযায়ী বিশ্বাসযোগ্য সূত্র ব্যবহারের চেষ্টা করি এবং প্রকাশের আগে কনটেন্ট পর্যালোচনায় গুরুত্ব দিই। কোনো ভুলের বিষয় জানানো হলে তা যাচাই করে প্রয়োজন অনুযায়ী সংশোধনের জন্য আমরা পাঠকদের উৎসাহিত করি।</p><p>Global Scope 24 সাধারণ তথ্য ও শিক্ষামূলক পাঠের জন্য। আমাদের লেখা চিকিৎসা, আইন, অর্থনীতি বা অন্য কোনো বিশেষজ্ঞের পেশাগত পরামর্শের বিকল্প নয়।</p>`},
+      mission:{title:"আমাদের লক্ষ্য",html:`<p>পৃথিবীর যেকোনো প্রান্তের মানুষের কাছে প্রয়োজনীয় জ্ঞান ও প্রাসঙ্গিক তথ্য সহজলভ্য, বোধগম্য এবং ব্যবহারযোগ্য করে তোলাই আমাদের লক্ষ্য।</p><h3>যে আদর্শগুলো আমাদের পথ দেখায়</h3><ul><li><strong>যত্নসহকারে তথ্য দেওয়া:</strong> যথার্থতা ও প্রাসঙ্গিকতার প্রতি গুরুত্ব দিয়ে তথ্য স্পষ্টভাবে উপস্থাপন করা।</li><li><strong>বিশ্বের সঙ্গে পাঠকের সংযোগ:</strong> বিভিন্ন দেশ ও সমাজের গুরুত্বপূর্ণ ঘটনা, ধারণা এবং দৃষ্টিভঙ্গি তুলে ধরা।</li><li><strong>জ্ঞানকে ব্যবহারিক করা:</strong> দৈনন্দিন শেখা ও সচেতন সিদ্ধান্ত গ্রহণে সহায়ক তথ্য প্রকাশ করা।</li><li><strong>তথ্য সহজলভ্য রাখা:</strong> পাঠবান্ধব ভাষা ও সহজ উপস্থাপনার মাধ্যমে কনটেন্ট পৌঁছে দেওয়ার চেষ্টা করা।</li><li><strong>দায়িত্বশীলভাবে প্রকাশ করা:</strong> স্বচ্ছতা বজায় রাখা, সীমাবদ্ধতা স্বীকার করা এবং জানানো ভুল পর্যালোচনা করা।</li></ul><h3>আমাদের অঙ্গীকার</h3><p>Global Scope 24-এর মান, উপযোগিতা ও সহজলভ্যতা ধারাবাহিকভাবে উন্নত করার চেষ্টা আমাদের থাকবে। আমরা এমন একটি নির্ভরযোগ্য প্ল্যাটফর্ম গড়ে তুলতে চাই, যেখানে পাঠকেরা নতুন কিছু জানতে পারবেন, বিশ্বের গুরুত্বপূর্ণ বিষয়গুলো আরও ভালোভাবে বুঝতে পারবেন এবং তথ্যভিত্তিক সিদ্ধান্ত নিতে পারবেন।</p><p><em>জ্ঞান হোক সীমানাহীন, প্রয়োজনীয় তথ্য পৌঁছে যাক প্রতিদিনের জীবনে।</em></p>`}
+    },
+    hi:{
+      about:{title:"Global Scope 24 के बारे में",html:`<p>Global Scope 24 एक वैश्विक सूचना और ज्ञान-आधारित डिजिटल मंच है। हमारा उद्देश्य पाठकों को दुनिया को समझने, महत्वपूर्ण घटनाक्रमों के बारे में जानने और रोज़मर्रा के जीवन में उपयोगी जानकारी पाने में मदद करना है।</p><p>हम विश्व समाचार, विज्ञान और प्रौद्योगिकी, जीवनियाँ, खेल, मनोरंजन, यात्रा, वित्त और जीवनशैली सहित कई विषयों पर सामग्री प्रस्तुत करते हैं। हम अलग-अलग देशों और पृष्ठभूमियों के पाठकों के लिए जानकारी को स्पष्ट, सुलभ और पढ़ने में आसान बनाने का प्रयास करते हैं।</p><h3>पाठक हमसे क्या उम्मीद कर सकते हैं</h3><ul><li>प्रासंगिक घटनाओं और मुद्दों को समझने में मदद करने वाली खबरें और व्याख्यात्मक लेख।</li><li>रोज़मर्रा के जीवन में उपयोगी व्यावहारिक जानकारी और सुझाव।</li><li>व्यक्तित्वों, महत्वपूर्ण घटनाओं और विषयों की पृष्ठभूमि पर जानकारीपूर्ण लेख।</li><li>स्पष्टता, संदर्भ और उपयोगिता को ध्यान में रखकर तैयार सामग्री।</li></ul><h3>हमारा संपादकीय दृष्टिकोण</h3><p>हम सटीकता, पारदर्शिता और जिम्मेदार प्रकाशन को महत्व देते हैं। जहाँ उचित हो, विश्वसनीय स्रोतों का उपयोग करने और सामग्री की सावधानीपूर्वक समीक्षा करने का प्रयास करते हैं। किसी त्रुटि की सूचना मिलने पर हम उसकी जाँच और आवश्यकता के अनुसार सुधार के लिए पाठकों को हमसे संपर्क करने के लिए प्रोत्साहित करते हैं।</p><p>Global Scope 24 सामान्य जानकारी और शिक्षा के उद्देश्य से सामग्री प्रस्तुत करता है। हमारे लेख चिकित्सा, कानूनी, वित्तीय या किसी अन्य विशेषज्ञ की पेशेवर सलाह का विकल्प नहीं हैं।</p>`},
+      mission:{title:"हमारा मिशन",html:`<p>दुनिया में कहीं भी रहने वाले लोगों के लिए उपयोगी ज्ञान और प्रासंगिक जानकारी को आसानी से उपलब्ध, समझने योग्य और व्यवहार में उपयोगी बनाना हमारा मिशन है।</p><h3>हमारे काम के मार्गदर्शक सिद्धांत</h3><ul><li><strong>सावधानी से जानकारी देना:</strong> सटीकता और संदर्भ पर ध्यान देते हुए जानकारी स्पष्ट रूप से प्रस्तुत करना।</li><li><strong>पाठकों को दुनिया से जोड़ना:</strong> विभिन्न स्थानों के महत्वपूर्ण घटनाक्रम, विचार और दृष्टिकोण सामने लाना।</li><li><strong>ज्ञान को उपयोगी बनाना:</strong> रोज़मर्रा की सीख और सोच-समझकर निर्णय लेने में सहायक जानकारी साझा करना।</li><li><strong>जानकारी को सुलभ रखना:</strong> सरल भाषा और पाठक-अनुकूल प्रस्तुति के माध्यम से सामग्री तक पहुँच आसान बनाना।</li><li><strong>जिम्मेदारी से प्रकाशित करना:</strong> पारदर्शिता को महत्व देना, सीमाओं को स्वीकार करना और बताई गई त्रुटियों की समीक्षा करना।</li></ul><h3>हमारी प्रतिबद्धता</h3><p>हम Global Scope 24 की गुणवत्ता, उपयोगिता और पहुँच को लगातार बेहतर बनाने का प्रयास करेंगे। हमारा लक्ष्य ऐसा भरोसेमंद मंच बनाना है जहाँ पाठक उपयोगी ज्ञान प्राप्त करें, दुनिया को आकार देने वाले मुद्दों को बेहतर समझें और अधिक जानकारी के आधार पर निर्णय ले सकें।</p><p><em>ज्ञान की कोई सीमा नहीं। रोज़मर्रा के जीवन के लिए उपयोगी जानकारी।</em></p>`}
+    }
+  };
+  function applyFooterLanguage(language) {
+    const copy=footerCopy[language]||footerCopy.en;
+    document.querySelectorAll(".footer-links h3").forEach((el,i)=>{if(copy.headings[i])el.textContent=copy.headings[i];});
+    document.querySelectorAll("[data-footer-open]").forEach(button=>{
+      const label=copy.labels[button.dataset.footerOpen]; if(!label)return;
+      const node=Array.from(button.childNodes).find(n=>n.nodeType===Node.TEXT_NODE&&n.textContent.trim());
+      if(node)node.nodeValue=" "+label; else button.appendChild(document.createTextNode(" "+label));
+    });
+    const desc=document.querySelector(".footer-about p"); if(desc)desc.textContent=copy.description;
+    const year=document.querySelector("#footerCurrentYear")?.textContent||String(new Date().getFullYear());
+    const copyright=document.querySelector(".footer-bottom p"); if(copyright)copyright.textContent="© "+year+" Global Scope 24. "+copy.rights;
+    document.querySelectorAll(".footer-modal-close").forEach(button=>button.textContent=copy.close);
+    const closeX=document.querySelector(".footer-modal-x"); if(closeX)closeX.setAttribute("aria-label",copy.close);
+    const active=footerModal&&!footerModal.hidden?footerModal.dataset.activePanel:"";
+    const article=identityArticles[language]?.[active];
+    if(article){footerModalTitle.textContent=article.title;footerModalBody.innerHTML=article.html;}
+  }
+
   const footerPanels = {
-    about: { title: "About Global Scope 24", html: `<p>Global Scope 24 is an independent information and editorial platform designed to make useful knowledge, current affairs and everyday topics easier to explore.</p><h3>What we cover</h3><p>Our coverage may include world news, technology, sports, health, biography, travel, finance and lifestyle. We aim to make information accessible and understandable for a broad international audience.</p>` },
-    mission: { title: "Our Mission", html: `<p>Our mission is to help readers discover useful, understandable information and stay informed about topics that matter in everyday life.</p><p>We aim to value clarity, accuracy, accessibility and responsible publishing while continually improving our content and reader experience.</p>` },
+    about: { title: "About Global Scope 24", html: identityArticles.en.about.html },
+    mission: { title: "Our Mission", html: identityArticles.en.mission.html },
     editorial: { title: "Editorial Policy", html: `<p>We aim to prepare content with care, clear language and attention to factual accuracy. Articles should be reviewed before publication, and important claims should be supported by reliable sources where appropriate.</p><h3>Updates and corrections</h3><p>When a meaningful error is identified, we aim to review it and correct the content transparently. Readers can contact us to report possible errors.</p>` },
     ai: { title: "AI Image Disclosure", html: `<p>Some illustrations and visual assets used with Global Scope 24 articles may be generated or assisted by artificial intelligence tools.</p><h3>How to understand these images</h3><p>AI-generated visuals may be illustrative. They should not automatically be understood as documentary photographs, exact depictions of real people or places, or proof that a specific event occurred. Where appropriate, we aim to identify AI-generated or illustrative images clearly.</p><p>AI tools may also assist parts of the editorial workflow. Human review remains important, and factual information should be checked before publication.</p>` },
     privacy: { title: "Privacy Policy", html: `<p>We respect reader privacy and aim to handle visitor information responsibly.</p><h3>Site-specific details</h3><p>This policy needs to be completed after confirming the website's actual use of analytics, cookies, hosting logs, embedded content and any third-party services. We will not claim that specific data is or is not collected until those practices have been verified.</p>` },
@@ -2006,6 +2060,7 @@
   function closeFooterModal() {
     if (!footerModal || footerModal.hidden) return;
     footerModal.hidden = true;
+    delete footerModal.dataset.activePanel;
     document.body.classList.remove("footer-modal-open");
     if (footerLastFocus) footerLastFocus.focus();
   }
@@ -2014,8 +2069,10 @@
       const panel = footerPanels[button.dataset.footerOpen];
       if (!panel || !footerModal) return;
       footerLastFocus = button;
-      footerModalTitle.textContent = panel.title;
-      footerModalBody.innerHTML = panel.html;
+      footerModal.dataset.activePanel = button.dataset.footerOpen;
+      const localized = identityArticles[activeLanguage]?.[button.dataset.footerOpen];
+      footerModalTitle.textContent = localized?.title || panel.title;
+      footerModalBody.innerHTML = localized?.html || panel.html;
       footerModal.hidden = false;
       document.body.classList.add("footer-modal-open");
       footerModalDialog.focus();
