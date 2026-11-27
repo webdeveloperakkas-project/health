@@ -5535,9 +5535,36 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
 /* Do not override .container width here. */
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1.3fr 1fr;
+  grid-template-columns: 1.5fr 1fr 1.3fr 1fr;
   gap: 40px;
   padding-bottom: 45px;
+}
+
+.footer-about {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-brand-name {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.25;
+}
+
+.footer-brand-name span {
+  color: #f3d27a;
+}
+
+.footer-about p {
+  max-width: 280px;
+  color: #e0e5eb;
+  font-size: 13px;
+  line-height: 1.9;
 }
 
 .footer-links {
@@ -5686,12 +5713,14 @@ body.footer-modal-open { overflow: hidden; }
 /* Same responsive column transitions as TaskBridge. */
 @media (max-width: 1024px) {
   .footer-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .footer-about p { max-width: 320px; }
 }
 @media (max-width: 768px) {
   .footer-grid { gap: 32px 22px; }
 }
 @media (max-width: 480px) {
   .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  .footer-about p { max-width: 100%; }
   .footer-modal { padding: 12px; }
   .footer-modal-dialog { max-height: 88vh; border-radius: 14px; }
   .footer-modal-content { padding: 28px 22px 18px; }
