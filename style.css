@@ -5774,7 +5774,9 @@ html[lang="hi"] .home-featured .home-feature-content h1 {
 }
 
 
-/* Homepage Hero English titles use the same clean Arial typeface as TaskBridge's section headings. */
+/* Homepage Hero English titles use the same clean Arial typeface as TaskBridge's section headings,
+   with a slightly smaller size for a quick visual comparison. */
 html[lang="en"] .home-featured .home-feature-content h1 {
   font-family: Arial, Helvetica, sans-serif !important;
+  font-size: clamp(20px, calc(2vw - 2px), 29px) !important;
 }
