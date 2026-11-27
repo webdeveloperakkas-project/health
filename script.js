@@ -1353,7 +1353,6 @@
     articleSection.hidden = isHomeLanding;
     const scienceTechSection = $("#scienceTechSection");
     const entertainmentSection = $("#entertainmentFeatureSection");
-    const homeCategorySections = $("#homeCategorySections");
     const worldNewsSection = $("#homeWorldSection");
     const lifestyleHomeSection = $("#homeLifestyleSection");
     const sportsHomeSection = $("#homeSportsSection");
@@ -2220,8 +2219,7 @@
           if (latestPostsSection) latestPostsSection.hidden = true;
           if (articleSection) articleSection.hidden = true;
           const entertainmentSection = $("#entertainmentFeatureSection");
-          const homeCategorySections = $("#homeCategorySections");
-          if (entertainmentSection) entertainmentSection.hidden = true;
+                if (entertainmentSection) entertainmentSection.hidden = true;
           if (homeCategorySections) homeCategorySections.hidden = true;
           if (featuredStoriesSection) featuredStoriesSection.hidden = false;
           if (manualTrendingSection) manualTrendingSection.hidden = false;
