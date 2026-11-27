@@ -1254,8 +1254,7 @@
     if (categorySection) categorySection.hidden = false;
     if (topAdSlot) topAdSlot.hidden = false;
     document.title = post.title + " | Global Scope 24";
-    const description = String(post.metaDescription || post.excerpt || (post.contentHtml || "").replace(/<[^>]*>/g," ").replace(/\s+/g," ")).trim().slice(0,320);
-    if(post.metaTitle) document.title = post.metaTitle + " | Global Scope 24";
+    const description = String(post.excerpt || (post.contentHtml || "").replace(/<[^>]*>/g," ").replace(/\s+/g," ")).trim().slice(0,320);
     const descriptionTag = document.querySelector('meta[name="description"]');
     if (descriptionTag && description) descriptionTag.setAttribute("content",description);
     window.scrollTo(0,0);
@@ -2182,7 +2181,7 @@
           featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
           publishedTimestamp:publishedDate.getTime(),
           date:publishedDate.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),
-          read:"",excerpt:row.excerpt||plain.slice(0,260),canonicalExcerpt:row.excerpt||plain.slice(0,260),metaTitle:row.meta_title||"",metaDescription:row.meta_description||"",focusKeyword:row.focus_keyword||"",body:plain?[plain]:[],
+          read:"",excerpt:row.excerpt||plain.slice(0,260),canonicalExcerpt:row.excerpt||plain.slice(0,260),body:plain?[plain]:[],
           contentHtml,canonicalContentHtml:contentHtml,cover:row.cover_url||"",coverCaptionEnabled:!!row.cover_caption_enabled,videoUrl:row.video_url||"",
           keywords:Array.isArray(row.related_keywords)?row.related_keywords:(Array.isArray(row.keywords)?row.keywords:[]),views:Number(row.views)||0
         };
