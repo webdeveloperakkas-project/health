@@ -865,10 +865,6 @@
       post.category === "sports" &&
       (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
     )).slice(0,8);
-    const tips = sortedByDate(posts.filter(post =>
-      post.category === "lifestyle" && post.subcategory === "daily-tips" &&
-      (Array.isArray(post.postTypes) ? post.postTypes : [post.postType || "latest"]).includes("latest")
-    )).slice(0,8);
 
     const worldSection = $("#homeWorldSection"), worldHost = $("#homeWorldPosts");
     const worldTitle = $("#homeWorldTitle");
@@ -906,19 +902,6 @@
       renderHomeEditorialSection(sports, sportsHost, "sports");
     }
 
-    const tipsSection = $("#homeTipsSection"), tipsHost = $("#homeTipsPosts");
-    if (tipsSection && tipsHost) {
-      tipsSection.hidden = !tips.length;
-      tipsHost.innerHTML = tips.map(post => {
-        const index = posts.indexOf(post);
-        const image = imageForPost(post);
-        const excerpt = String(post.excerpt || "").trim();
-        return '<button class="home-category-card home-tips-card" type="button" data-open-post="' + index + '">' +
-          (image ? '<span class="home-category-image"><img src="' + escapeHTML(image) + '" alt="" loading="lazy"></span>' : '<span class="home-category-image home-category-image-empty"></span>') +
-          '<span class="home-category-copy"><strong>' + escapeHTML(post.title) + '</strong>' +
-          (excerpt ? '<small>' + escapeHTML(excerpt.slice(0,145)) + '</small>' : '') + '</span></button>';
-      }).join("");
-    }
   }
 
   /* Keep Most Read in its original full-width position.
