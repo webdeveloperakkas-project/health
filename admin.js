@@ -822,7 +822,8 @@
     const category=safe(categories[$("#postCategory").value]);
     const subcategory=["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
     const body=translationDrafts[activeEditorLanguage]?.content_html||cleanArticleHTML();
-    const previewAlt=safe(translationDrafts[activeEditorLanguage]?.image_alt_text||$(titleField).value||"");
+    const altField="#imageAltText"+activeEditorLanguage.charAt(0).toUpperCase()+activeEditorLanguage.slice(1);
+     const previewAlt=safe($(altField).value.trim()||$(titleField).value||"");
      const cover=coverData?'<figure class="preview-cover-figure"><img src="'+coverData+'" alt="'+previewAlt+'">'+($("#coverCaptionEnabled").checked?'<figcaption class="cover-caption-preview">AI-generated illustration</figcaption>':"")+"</figure>":"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
     const video=$("#videoUrl").value.trim();
