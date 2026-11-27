@@ -195,6 +195,8 @@
       "beauty-care":{en:"Beauty Care",bn:"রূপচর্চা",hi:"सौंदर्य देखभाल",de:"Schönheitspflege",fr:"Soins de beauté",es:"Cuidado de belleza"}
     };
     document.querySelectorAll("#lifestyleSubmenu [data-lifestyle-subcategory]").forEach(button=>{const labels=lifestyleLabels[button.dataset.lifestyleSubcategory];if(labels)button.textContent=labels[activeLanguage]||labels.en;});
+    const financeLabels=window.EA_TRANSLATIONS?.financeSubcategories?.[activeLanguage]||window.EA_TRANSLATIONS?.financeSubcategories?.en||{};
+    document.querySelectorAll("#financeSubmenu [data-finance-subcategory]").forEach(button=>{const label=financeLabels[button.dataset.financeSubcategory];if(label)button.textContent=label;});
     /* Localize only the hamburger header drawer subcategory cards.
        The visible homepage category navigation is intentionally untouched. */
     const drawerSubcategoryLabels = {
@@ -219,7 +221,10 @@
       "folk-art": { en: "Folk Culture", bn: "লোকসংস্কৃতি", hi: "लोक संस्कृति" },
       "daily-tips": { en: "Daily Tips", bn: "দৈনন্দিন টিপস", hi: "दैनिक सुझाव" },
       "health": { en: "Health", bn: "স্বাস্থ্য", hi: "स्वास्थ्य" },
-      "beauty-care": { en: "Beauty Care", bn: "রূপচর্চা", hi: "सौंदर्य देखभाल" }
+      "beauty-care": { en: "Beauty Care", bn: "রূপচর্চা", hi: "सौंदर्य देखभाल" },
+      "insurance": { en: "Insurance", bn: "বিমা", hi: "बीमा" },
+      "loans-credit-cards": { en: "Loans & Credit Cards", bn: "ঋণ ও ক্রেডিট কার্ড", hi: "ऋण और क्रेडिट कार्ड" },
+      "savings-investing-retirement": { en: "Savings, Investing & Retirement", bn: "সঞ্চয়, বিনিয়োগ ও অবসর", hi: "बचत, निवेश और सेवानिवृत्ति" }
     };
     document.querySelectorAll(".main-nav .sidebar-submenu button[data-sidebar-subcategory]").forEach(button => {
       const labels = drawerSubcategoryLabels[button.dataset.sidebarSubcategory];
@@ -1382,7 +1387,7 @@
     // Category landing pages show the nine fixed editorial slots plus every remaining post below.
     const visiblePosts = categoryPosts;
     const t = languageCopy[activeLanguage];
-    const activeSubcategoryButton = activeSubcategory ? Array.from(document.querySelectorAll("[data-sports-subcategory], [data-entertainment-subcategory], [data-world-subcategory], [data-lifestyle-subcategory]")).find(button => ["data-sports-subcategory","data-entertainment-subcategory","data-world-subcategory","data-lifestyle-subcategory"].some(attribute => button.getAttribute(attribute) === activeSubcategory)) : null;
+    const activeSubcategoryButton = activeSubcategory ? Array.from(document.querySelectorAll("[data-sports-subcategory], [data-entertainment-subcategory], [data-world-subcategory], [data-lifestyle-subcategory], [data-finance-subcategory]")).find(button => ["data-sports-subcategory","data-entertainment-subcategory","data-world-subcategory","data-lifestyle-subcategory","data-finance-subcategory"].some(attribute => button.getAttribute(attribute) === activeSubcategory)) : null;
     const activeCategoryLabel = activeSubcategoryButton?.textContent.trim() || activeSubcategory.replace(/-/g," ") || t.categories[activeCategory] || "Home";
     const biographyPanel=$("#biographyFilterPanel");
     if(biographyPanel) biographyPanel.hidden=activeCategory!=="biography";
@@ -1666,7 +1671,7 @@
         trigger.setAttribute("aria-expanded", "false");
       });
 
-    document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu")
+    document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu,.finance-submenu")
       .forEach(menu => {
         menu.classList.remove("is-open");
         menu.hidden = true;
@@ -1710,7 +1715,7 @@
 
     const setOpen = open => {
       if (open) {
-        document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu")
+        document.querySelectorAll(".sports-submenu,.entertainment-submenu,.world-submenu,.lifestyle-submenu,.finance-submenu")
           .forEach(menu => {
             if (menu === submenu) return;
             menu.classList.remove("is-open");
@@ -1763,6 +1768,7 @@
   setupSubcategoryMenu(".sports-category-trigger", "#sportsSubmenu", "sports", "[data-sports-subcategory]", "data-sports-subcategory");
   setupSubcategoryMenu(".entertainment-category-trigger", "#entertainmentSubmenu", "entertainment", "[data-entertainment-subcategory]", "data-entertainment-subcategory");
   setupSubcategoryMenu(".lifestyle-category-trigger", "#lifestyleSubmenu", "lifestyle", "[data-lifestyle-subcategory]", "data-lifestyle-subcategory");
+  setupSubcategoryMenu(".finance-category-trigger", "#financeSubmenu", "finance", "[data-finance-subcategory]", "data-finance-subcategory");
 
   // Homepage dropdowns filter only their own homepage sections.
   const homeWorldSelect = $("#homeWorldSubcategorySelect");
