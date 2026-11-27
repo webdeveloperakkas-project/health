@@ -1824,7 +1824,7 @@
 
   /* Main category tabs and sidebar category names use the same route. */
   document.querySelectorAll(
-    ".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger), .sidebar-category"
+    ".category-tab:not(.sports-category-trigger):not(.entertainment-category-trigger):not(.world-category-trigger):not(.lifestyle-category-trigger):not(.finance-category-trigger), .sidebar-category"
   ).forEach(button => {
     button.addEventListener("click", () => navigateToCategory(button.dataset.category, button.dataset.subcategory || ""));
   });
