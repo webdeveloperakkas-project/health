@@ -5743,8 +5743,12 @@ body.footer-modal-open { overflow: hidden; }
 }
 @media (max-width: 480px) {
   .footer-inner.container { width: calc(100% - 28px); }
-  .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  /* Keep the brand at the top, place Company and Policies side by side,
+     and leave Support on its own row underneath them. */
+  .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 22px; }
+  .footer-about { grid-column: 1 / -1; }
   .footer-about p { max-width: 100%; }
+  .footer-grid > .footer-links:last-child { grid-column: 1 / -1; }
   .footer-modal { padding: 12px; }
   .footer-modal-dialog { max-height: 88vh; border-radius: 14px; }
   .footer-modal-content { padding: 28px 22px 18px; }
