@@ -259,7 +259,7 @@
     $("#siteSearch").placeholder = t.search;
     const tickerLabel = $(".ticker-label");
     if (tickerLabel) {
-      const labelText = activeLanguage === "bn" ? "শিরোনাম" : t.latest;
+      const labelText = activeLanguage === "bn" ? "শিরোনাম" : activeLanguage === "hi" ? "सुर्खियाँ" : "Headlines";
       const dot = tickerLabel.querySelector(".ticker-dot");
       tickerLabel.textContent = labelText;
       if (dot) tickerLabel.prepend(dot);
