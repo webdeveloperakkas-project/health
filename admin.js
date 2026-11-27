@@ -16,14 +16,14 @@
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {bn:"বাংলা",en:"English",hi:"हिन्दी"};
   const editorialLanguages = ["bn","en","hi"];
-  const blankTranslation = () => ({title:"",content_html:""});
+  const blankTranslation = () => ({title:"",content_html:"",image_alt_text:""});
   function emptyTranslations(){return {bn:blankTranslation(),en:blankTranslation(),hi:blankTranslation()};}
   function normalizeTranslations(row){
     const saved=row?.translations&&typeof row.translations==="object"&&!Array.isArray(row.translations)?row.translations:{};
     const result=emptyTranslations();
     editorialLanguages.forEach(language=>{
       const item=saved[language]&&typeof saved[language]==="object"?saved[language]:{};
-      result[language]={title:String(item.title||""),content_html:String(item.content_html||""),excerpt:String(item.excerpt||""),person_name:String(item.person_name||item.personName||(language===(editorialLanguages.includes(row?.language)?row.language:"en")?row?.biography_person_name:"")||"")};
+      result[language]={title:String(item.title||""),content_html:String(item.content_html||""),excerpt:String(item.excerpt||""),image_alt_text:String(item.image_alt_text||""),person_name:String(item.person_name||item.personName||(language===(editorialLanguages.includes(row?.language)?row.language:"en")?row?.biography_person_name:"")||"")};
     });
     const legacyLanguage=editorialLanguages.includes(row?.language)?row.language:"en";
     if(!result[legacyLanguage].title)result[legacyLanguage].title=String(row?.title||"");
@@ -713,7 +713,7 @@
     if(!translationDrafts[legacyLanguage].content_html&&post.content)translationDrafts[legacyLanguage].content_html=post.content;
     $("#postTitle").value=translationDrafts.bn.title||"";
     $("#postTitleEn").value=translationDrafts.en.title||"";
-    $("#postTitleHi").value=translationDrafts.hi.title||"";
+    $("#postTitleHi").value=translationDrafts.hi.title||""; $("#imageAltTextBn").value=translationDrafts.bn.image_alt_text||""; $("#imageAltTextEn").value=translationDrafts.en.image_alt_text||""; $("#imageAltTextHi").value=translationDrafts.hi.image_alt_text||"";
     const storedLanguages=Array.isArray(post.postLanguages)&&post.postLanguages.length?post.postLanguages:[legacyLanguage];
     document.querySelectorAll('input[name="postLanguage"]').forEach(input=>{input.checked=storedLanguages.includes(input.value);});
     activeEditorLanguage=storedLanguages.includes("bn")?"bn":(editorialLanguages.includes(storedLanguages[0])?storedLanguages[0]:"en");
@@ -766,7 +766,7 @@
     const primaryLanguage=selectedLanguages.includes("bn")?"bn":selectedLanguages[0];
     const title=translations[primaryLanguage].title;
     const content=translations[primaryLanguage].content_html;
-     editorialLanguages.forEach(language=>{translations[language]={...(translations[language]||blankTranslation()),person_name:biographyNames[language]||"",excerpt:translations[language]?.excerpt||""};});
+     editorialLanguages.forEach(language=>{const suffix=language.charAt(0).toUpperCase()+language.slice(1);translations[language]={...(translations[language]||blankTranslation()),person_name:biographyNames[language]||"",excerpt:translations[language]?.excerpt||"",image_alt_text:$("#imageAltText"+suffix).value.trim()};});
     updatePostUrlPreview();
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
@@ -822,7 +822,8 @@
     const category=safe(categories[$("#postCategory").value]);
     const subcategory=["sports","entertainment","world","lifestyle"].includes($("#postCategory").value)?safe($("#postSubcategory").selectedOptions[0]?.textContent||""):"";
     const body=translationDrafts[activeEditorLanguage]?.content_html||cleanArticleHTML();
-    const cover=coverData?'<figure class="preview-cover-figure"><img src="'+coverData+'" alt="Article cover">'+($("#coverCaptionEnabled").checked?'<figcaption class="cover-caption-preview">AI-generated illustration</figcaption>':"")+"</figure>":"";
+    const previewAlt=safe(translationDrafts[activeEditorLanguage]?.image_alt_text||$(titleField).value||"");
+     const cover=coverData?'<figure class="preview-cover-figure"><img src="'+coverData+'" alt="'+previewAlt+'">'+($("#coverCaptionEnabled").checked?'<figcaption class="cover-caption-preview">AI-generated illustration</figcaption>':"")+"</figure>":"";
     const keywords=currentKeywords.length?'<div class="article-keywords">'+currentKeywords.map(word=>'<span>#'+safe(word.replace(/\s+/g,""))+'</span>').join("")+'</div>':"";
     const video=$("#videoUrl").value.trim();
     const videoLink=video?'<p><a href="'+safe(video)+'" target="_blank" rel="noopener">Watch featured video ↗</a></p>':"";
