@@ -5527,7 +5527,7 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
    ========================================================= */
 .site-footer {
   min-height: 0;
-  padding: 65px 0 0;
+  padding: 52px 0 0;
   background: #5e6a7d;
   color: #fff;
 }
@@ -5545,7 +5545,7 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1.3fr 1fr;
   gap: 40px;
-  padding-bottom: 45px;
+  padding-bottom: 38px;
 }
 
 .footer-about {
@@ -5634,7 +5634,7 @@ html[lang="hi"] .category-tabs .lifestyle-submenu button {
 }
 
 .footer-bottom {
-  padding: 22px 0;
+  padding: 18px 0;
   text-align: center;
   border-top: 1px solid rgba(255,255,255,.18);
 }
