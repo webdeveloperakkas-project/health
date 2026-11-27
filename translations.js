@@ -4,12 +4,12 @@
 */
 window.EA_TRANSLATIONS = {
   financeSubcategories: {
-    en: { insurance:"Insurance & Savings", "loans-credit-cards":"Loans & Credit Cards", "savings-investing-retirement":"Insurance & Savings" },
-    bn: { insurance:"সঞ্চয় ও বীমা", "loans-credit-cards":"ঋণ ও ক্রেডিট কার্ড", "savings-investing-retirement":"সঞ্চয় ও বীমা" },
-    hi: { insurance:"बचत और बीमा", "loans-credit-cards":"ऋण और क्रेडिट कार्ड", "savings-investing-retirement":"बचत और बीमा" },
-    de: { insurance:"Sparen & Versicherung", "loans-credit-cards":"Kredite & Kreditkarten", "savings-investing-retirement":"Sparen & Versicherung" },
-    fr: { insurance:"Épargne & assurance", "loans-credit-cards":"Prêts & cartes de crédit", "savings-investing-retirement":"Épargne & assurance" },
-    es: { insurance:"Ahorro y seguros", "loans-credit-cards":"Préstamos y tarjetas de crédito", "savings-investing-retirement":"Ahorro y seguros" }
+    en: { insurance:"Insurance & Savings", "loans-credit-cards":"Loans & Credit Cards", "savings-investing-retirement":"Investing & Retirement" },
+    bn: { insurance:"সঞ্চয় ও বীমা", "loans-credit-cards":"ঋণ ও ক্রেডিট কার্ড", "savings-investing-retirement":"বিনিয়োগ ও অবসর পরিকল্পনা" },
+    hi: { insurance:"बचत और बीमा", "loans-credit-cards":"ऋण और क्रेडिट कार्ड", "savings-investing-retirement":"निवेश और सेवानिवृत्ति" },
+    de: { insurance:"Sparen & Versicherung", "loans-credit-cards":"Kredite & Kreditkarten", "savings-investing-retirement":"Investieren & Ruhestand" },
+    fr: { insurance:"Épargne & assurance", "loans-credit-cards":"Prêts & cartes de crédit", "savings-investing-retirement":"Investissement & retraite" },
+    es: { insurance:"Ahorro y seguros", "loans-credit-cards":"Préstamos y tarjetas de crédito", "savings-investing-retirement":"Inversión y jubilación" }
   },
   sportsSubcategories: {
     en: { cricket:"Cricket", football:"Football", tennis:"Tennis", basketball:"Basketball", "other-sports":"Other" },
