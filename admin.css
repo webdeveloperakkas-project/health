@@ -902,10 +902,13 @@
 .author-assignment-heading small,.author-assignment-card .field-help{color:#687b7c;font-size:12px;line-height:1.5}
 .author-select-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
 .author-select-row .secondary-btn{white-space:nowrap;min-height:42px}
-.author-profile-preview{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px;background:#fff;border:1px solid #e0e9e8;border-radius:9px}
+.author-profile-preview{position:relative;display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 42px 10px 10px;background:#fff;border:1px solid #e0e9e8;border-radius:9px}
 .author-profile-preview img,.author-photo-preview img{width:48px;height:48px;object-fit:cover;border-radius:50%;border:1px solid #dce5e4}
 .author-profile-preview span{display:grid;gap:3px}
 .author-profile-preview small{font-size:11px;color:#718080}
+.author-profile-preview .author-remove-btn{position:absolute;top:7px;right:7px;display:grid;place-items:center;width:28px;height:28px;padding:0;border:1px solid #e2e8e7;border-radius:50%;background:#fff;color:#8a5555;font-size:21px;line-height:1;cursor:pointer}
+.author-profile-preview .author-remove-btn:hover{background:#fff1f1;border-color:#e6bcbc;color:#b42318}
+.author-profile-preview .author-remove-btn:disabled{opacity:.55;cursor:wait}
 .new-author-panel{margin-top:14px;padding:14px;border:1px dashed #9ebbb8;border-radius:10px;background:#fff}
 .author-photo-upload{display:flex;flex-direction:column;gap:4px;padding:13px;border:1px dashed #9ebbb8;border-radius:9px;cursor:pointer;color:#087c75;font-weight:700}
 .author-photo-upload small{color:#718080;font-weight:400;font-size:11px}
