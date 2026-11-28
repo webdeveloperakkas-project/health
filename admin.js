@@ -71,6 +71,8 @@
   function updatePostUrlPreview(){const selected=[...document.querySelectorAll('input[name="postLanguage"]:checked')].map(input=>input.value);const titleByLanguage={bn:$("#postTitle")?.value||"",en:$("#postTitleEn")?.value||"",hi:$("#postTitleHi")?.value||""};const title=(selected.map(language=>titleByLanguage[language]).find(value=>value.trim())||titleByLanguage.bn||titleByLanguage.en||titleByLanguage.hi),category=$("#postCategory")?.value||"",subcategory=$("#postSubcategory")?.value||"";const slug=makePostSlug(title);if($("#postSlugPreview"))$("#postSlugPreview").value=title.trim()?slug:"";const categoryPath=categoryPathSlugs[category]||makePostSlug(categories[category]||category);const parts=[categoryPath,subcategory?makePostSlug(subcategory):"",slug].filter(Boolean);if($("#postUrlPreview"))$("#postUrlPreview").textContent=title.trim()?"/health/"+parts.join("/")+"/":"URL preview will appear after you enter a title.";}
 
   let posts = [];
+  let authors = [];
+  let authorPhotoData = "";
   let editingId = null;
   let coverData = "";
   let coverProvider = "";
@@ -90,7 +92,7 @@
       biographyPersonType:row.biography_person_type||"",biographyPersonName:row.biography_person_name||"",biographyCountry:row.biography_country||"",language:row.language||"en",postTypes:Array.isArray(row.post_types)?row.post_types:["latest"],
       postType:(row.post_types||["latest"])[0],featuredStories:!!row.featured_stories,featured:!!row.featured_stories,
       status:row.status||"draft",scheduledAt:row.scheduled_at||"",excerpt:row.excerpt||"",keywords:row.related_keywords||row.keywords||[],videoUrl:row.video_url||"",
-      cover:row.cover_url||"",coverCaptionEnabled:!!row.cover_caption_enabled,views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at,sitemapSubmitted:!!row.sitemap_submitted,sitemapSubmittedAt:row.sitemap_submitted_at||null};
+      cover:row.cover_url||"",coverCaptionEnabled:!!row.cover_caption_enabled,views:Number(row.views)||0,createdAt:row.created_at,updatedAt:row.updated_at,publishedAt:row.published_at,authorId:row.author_id||"",authorName:row.author_name||"",authorPhotoUrl:row.author_photo_url||"",sitemapSubmitted:!!row.sitemap_submitted,sitemapSubmittedAt:row.sitemap_submitted_at||null};
   }
   function cloudinarySettings(){
     const defaults={cloudName:"r2lo6mql",uploadPreset:"global_scope24_upload"};
@@ -159,7 +161,7 @@
       featured_stories:!!prepared.featuredStories,status:prepared.status,scheduled_at:prepared.scheduledAt||null,excerpt:prepared.excerpt||"",
       related_keywords:prepared.keywords||[],
       keywords:prepared.keywords||[],video_url:prepared.videoUrl||"",cover_url:prepared.cover||"",cover_caption_enabled:!!prepared.coverCaptionEnabled,
-      views:Number(prepared.views)||0,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null,
+      views:Number(prepared.views)||0,author_id:prepared.authorId||null,author_name:prepared.authorName||null,author_photo_url:prepared.authorPhotoUrl||null,created_at:prepared.createdAt,updated_at:prepared.updatedAt,published_at:prepared.publishedAt||null,
       sitemap_submitted:!!prepared.sitemapSubmitted,sitemap_submitted_at:prepared.sitemapSubmittedAt||null};
     const {error}=await db().from("posts").upsert(row,{onConflict:"id"});
     if(error) throw error;
@@ -212,6 +214,10 @@
       if(finalPostError) throw finalPostError;
       const {data:finalHeadlines,error:finalHeadlineError}=await db().from("headlines").select("*").order("sort_order",{ascending:true});
       if(finalHeadlineError) throw finalHeadlineError;
+      const {data:authorRows,error:authorError}=await db().from("authors").select("*").order("name",{ascending:true});
+      if(authorError) throw authorError;
+      authors=(authorRows||[]).map(row=>({id:row.id,name:row.name,photoUrl:row.photo_url||""}));
+      renderAuthorSelect();
       posts=(finalPosts||[]).map(fromDatabase);
       headlines=(finalHeadlines||[]).map(row=>({id:row.id,text:row.text}));
       cloudReady=true;
@@ -429,6 +435,58 @@
     }
     reader.onerror=()=>showToast("Could not read this image.");
   }
+  function renderAuthorSelect(selectedId=""){
+    const select=$("#postAuthorSelect");
+    if(!select)return;
+    const current=selectedId||select.value;
+    select.innerHTML='<option value="">Select an author</option>'+authors.map(author=>'<option value="'+safe(author.id)+'">'+safe(author.name)+'</option>').join("");
+    select.value=authors.some(author=>String(author.id)===String(current))?current:"";
+    updateAuthorPreview();
+  }
+  function updateAuthorPreview(){
+    const author=authors.find(item=>String(item.id)===$("#postAuthorSelect")?.value);
+    const preview=$("#postAuthorPreview");
+    if(!preview)return;
+    preview.hidden=!author;
+    preview.innerHTML=author?'<img src="'+safe(author.photoUrl)+'" alt=""><span><strong>'+safe(author.name)+'</strong><small>Selected author</small></span>':"";
+  }
+  $("#postAuthorSelect").addEventListener("change",updateAuthorPreview);
+  $("#toggleNewAuthorBtn").addEventListener("click",()=>{
+    const panel=$("#newAuthorPanel");
+    panel.hidden=!panel.hidden;
+    if(!panel.hidden)$("#newAuthorName").focus();
+  });
+  $("#cancelNewAuthorBtn").addEventListener("click",()=>{
+    $("#newAuthorPanel").hidden=true;$("#newAuthorName").value="";$("#newAuthorPhoto").value="";
+    authorPhotoData="";$("#newAuthorPhotoPreview").hidden=true;$("#newAuthorPhotoPreview").innerHTML="";
+  });
+  $("#newAuthorPhoto").addEventListener("change",event=>{
+    const file=event.target.files?.[0];
+    if(!file)return;
+    readImage(file,data=>{
+      authorPhotoData=data;
+      $("#newAuthorPhotoPreview").hidden=false;
+      $("#newAuthorPhotoPreview").innerHTML='<img src="'+data+'" alt="New author profile preview">';
+    });
+  });
+  $("#saveNewAuthorBtn").addEventListener("click",async()=>{
+    const name=$("#newAuthorName").value.trim();
+    if(!name)return showToast("Enter the author's name.");
+    if(!authorPhotoData)return showToast("Upload this author's profile photo first.");
+    const button=$("#saveNewAuthorBtn");button.disabled=true;button.textContent="Uploading and saving…";
+    try{
+      const photoUrl=await uploadDataImage(authorPhotoData,"authors","cloudinary");
+      const {data,error}=await db().from("authors").insert({name,photo_url:photoUrl}).select("id,name,photo_url").single();
+      if(error)throw error;
+      const author={id:data.id,name:data.name,photoUrl:data.photo_url||photoUrl};
+      authors.push(author);authors.sort((a,b)=>a.name.localeCompare(b.name));
+      renderAuthorSelect(author.id);
+      $("#newAuthorPanel").hidden=true;$("#newAuthorName").value="";$("#newAuthorPhoto").value="";
+      authorPhotoData="";$("#newAuthorPhotoPreview").hidden=true;$("#newAuthorPhotoPreview").innerHTML="";
+      showToast("Author profile saved. You can now select this author for posts.");
+    }catch(error){showToast("Could not save author: "+(error.message||"Database error."));}
+    finally{button.disabled=false;button.textContent="Save Author";}
+  });
   $("#imageBtn").addEventListener("click",()=>$("#imageUpload").click());
   let selectedInlineFigure=null;
   let editorMode="visual";
@@ -694,7 +752,7 @@
   ["#postTitle","#postTitleEn","#postTitleHi"].forEach(selector=>$(selector).addEventListener("input",updatePostUrlPreview));
   document.querySelectorAll('input[name="postLanguage"]').forEach(input=>input.addEventListener("change",updatePostUrlPreview));
   function resetForm(){
-    $("#postForm").reset(); $("#postStatus").disabled=false; translationDrafts=emptyTranslations(); activeEditorLanguage="bn"; document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage==="bn";button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));}); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); syncSaveButtonLabel(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; $("#articleEditor").setAttribute("data-placeholder","বাংলা আর্টিকেল এখানে লিখুন..."); setEditorMode("visual"); $("#cardSummaryBn").value=""; $("#cardSummaryEn").value=""; $("#cardSummaryHi").value=""; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postForm").reset(); $("#postStatus").disabled=false; renderAuthorSelect(); $("#newAuthorPanel").hidden=true; $("#newAuthorName").value=""; $("#newAuthorPhoto").value=""; authorPhotoData=""; $("#newAuthorPhotoPreview").hidden=true; $("#newAuthorPhotoPreview").innerHTML=""; translationDrafts=emptyTranslations(); activeEditorLanguage="bn"; document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage==="bn";button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));}); syncCategorySubcategory(); updatePostUrlPreview(); syncScheduleFields(); syncSaveButtonLabel(); $("#articleEditor").innerHTML="<p></p>"; $("#articleHtmlEditor").value=""; $("#articleEditor").setAttribute("data-placeholder","বাংলা আর্টিকেল এখানে লিখুন..."); setEditorMode("visual"); $("#cardSummaryBn").value=""; $("#cardSummaryEn").value=""; $("#cardSummaryHi").value=""; selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
     currentKeywords=[]; renderKeywordChips();
     coverData=""; coverProvider=""; $("#coverUpload").value=""; $("#coverCaptionEnabled").checked=false; document.querySelector('input[name="coverStorageProvider"][value="cloudinary"]').checked=true; renderCoverPreview(); $("#deleteCurrentBtn").hidden=true;
     $("#editorStatusText").textContent="Draft"; $("#editorStatusDot").parentElement.classList.remove("live");
@@ -720,6 +778,7 @@
     document.querySelectorAll("[data-article-language]").forEach(button=>{const active=button.dataset.articleLanguage===activeEditorLanguage;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));});
     const initialContent=translationDrafts[activeEditorLanguage].content_html||"";
     $("#articleEditor").innerHTML=initialContent||"<p></p>"; $("#articleHtmlEditor").value=initialContent; $("#articleEditor").setAttribute("data-placeholder",activeEditorLanguage==="bn"?"বাংলা আর্টিকেল এখানে লিখুন...":activeEditorLanguage==="en"?"Write the English article here...":"यहाँ हिंदी लेख लिखें..."); setEditorMode("visual"); $("#cardSummaryBn").value=post.translations?.bn?.excerpt||((post.language||"bn")==="bn"?post.excerpt||"":""); $("#cardSummaryEn").value=post.translations?.en?.excerpt||((post.language||"bn")==="en"?post.excerpt||"":""); $("#cardSummaryHi").value=post.translations?.hi?.excerpt||((post.language||"bn")==="hi"?post.excerpt||"":""); selectedInlineFigure=null; $("#inlineImagePanel").classList.remove("is-visible");
+    $("#postAuthorSelect").value=post.authorId||""; updateAuthorPreview();
     $("#postCategory").value=post.category||"world"; syncCategorySubcategory(); $("#postSubcategory").value=post.subcategory||""; $("#biographyPersonNameBn").value=post.translations?.bn?.person_name||((post.language||"bn")==="bn"?post.biographyPersonName||"":""); $("#biographyPersonNameEn").value=post.translations?.en?.person_name||((post.language||"bn")==="en"?post.biographyPersonName||"":""); $("#biographyPersonNameHi").value=post.translations?.hi?.person_name||((post.language||"bn")==="hi"?post.biographyPersonName||"":""); syncBiographyNameTransliterations(true); $("#biographyPersonType").value=post.biographyPersonType||""; $("#biographyCountry").value=post.biographyCountry||""; updatePostUrlPreview();
     const selectedPlacements=placementsFor(post); document.querySelectorAll('input[name="postPlacement"]').forEach(input=>{input.checked=selectedPlacements.includes(input.value);}); if(!$("#postStatus").querySelector('option[value="published"]'))$("#postStatus").insertAdjacentHTML("beforeend",'<option value="published">Published</option>'); $("#postStatus").value=post.status==="scheduled"?"scheduled":post.status==="published"?"published":"draft"; $("#postStatus").disabled=false; setScheduleInputs(post.scheduledAt); syncScheduleFields(); syncSaveButtonLabel(); $("#postFeaturedStories").checked=!!(post.featuredStories ?? post.featured);
     currentKeywords=Array.isArray(post.keywords)?post.keywords.filter(value=>typeof value==="string").slice(0,12):[]; renderKeywordChips();
@@ -753,6 +812,8 @@
     captureActiveTranslation();
     const selectedLanguages=[...document.querySelectorAll('input[name="postLanguage"]:checked')].map(input=>input.value);
     if(!selectedLanguages.length)return showToast("Select at least one post language.");
+    const selectedAuthor=authors.find(author=>String(author.id)===$("#postAuthorSelect").value);
+    if(!selectedAuthor)return showToast("Select an author before saving this post.");
     const titleFields={bn:$("#postTitle").value.trim(),en:$("#postTitleEn").value.trim(),hi:$("#postTitleHi").value.trim()};
     const translations={};
     for(const language of selectedLanguages){
@@ -782,6 +843,7 @@
     const scheduledAt=selectedStatus==="scheduled"?new Date(scheduledValue).toISOString():null;
     const post={
       id:editingId||id(),title,content,translations,postLanguages:selectedLanguages,excerpt:$("#cardSummary"+primaryLanguage.charAt(0).toUpperCase()+primaryLanguage.slice(1)).value.trim(),category:$("#postCategory").value,biographyPersonName:biographyNames[primaryLanguage],biographyPersonType:$("#biographyPersonType").value,biographyCountry:$("#biographyCountry").value,subcategory:["sports","entertainment","world","lifestyle","finance"].includes($("#postCategory").value)?$("#postSubcategory").value:"",language:primaryLanguage,
+      authorId:selectedAuthor.id,authorName:selectedAuthor.name,authorPhotoUrl:selectedAuthor.photoUrl,
       postTypes:selectedPostTypes,postType:selectedPostTypes[0],featuredStories:selectingFeaturedStories,featured:selectingFeaturedStories,status:selectedStatus,scheduledAt,keywords:[...currentKeywords],
       videoUrl:$("#videoUrl").value.trim(),cover:coverData,coverCaptionEnabled:$("#coverCaptionEnabled").checked,coverProvider:coverProvider||document.querySelector('input[name="coverStorageProvider"]:checked')?.value||"cloudinary",views:existing?Number(existing.views)||0:0,
       createdAt:existing?existing.createdAt:now,updatedAt:now,publishedAt:selectedStatus==="published"?(existing&&existing.publishedAt||now):null,
