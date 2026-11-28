@@ -5983,3 +5983,12 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     box-sizing:border-box;
   }
 }
+
+
+/* Desktop header search field: increase the existing 178px width by 70%. */
+@media (min-width:801px) {
+  .header-tools .search-form {
+    width:303px !important;
+    box-sizing:border-box;
+  }
+}
