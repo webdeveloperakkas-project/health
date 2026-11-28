@@ -450,13 +450,22 @@
     preview.hidden=!author;
     preview.innerHTML=author?(author.photoUrl?'<img src="'+safe(author.photoUrl)+'" alt="">':"")+'<span><strong>'+safe(author.name)+'</strong><small>Selected author</small></span><button type="button" class="author-remove-btn" aria-label="Remove author profile" title="Remove author profile">×</button>':"";
   }
+  function confirmAuthorRemoval(){
+    const dialog=$("#authorDeleteDialog");
+    return new Promise(resolve=>{
+      dialog.addEventListener("close",()=>resolve(dialog.returnValue==="delete"),{once:true});
+      dialog.showModal();
+    });
+  }
+  $("#cancelAuthorDelete").addEventListener("click",()=>$("#authorDeleteDialog").close("cancel"));
+  $("#confirmAuthorDelete").addEventListener("click",()=>$("#authorDeleteDialog").close("delete"));
   $("#postAuthorSelect").addEventListener("change",updateAuthorPreview);
   $("#postAuthorPreview").addEventListener("click",async event=>{
     const removeButton=event.target.closest(".author-remove-btn");
     if(!removeButton)return;
     const author=authors.find(item=>String(item.id)===$("#postAuthorSelect").value);
     if(!author)return;
-    const confirmed=window.confirm('Remove the author profile "'+author.name+'"? It will no longer appear in the author list. Existing posts will keep their saved author name and photo.');
+    const confirmed=await confirmAuthorRemoval();
     if(!confirmed)return;
     removeButton.disabled=true;
     try{
