@@ -3,10 +3,11 @@
 create table if not exists public.authors (
   id uuid primary key default gen_random_uuid(),
   name text not null check (length(trim(name)) > 0),
-  photo_url text not null,
+  photo_url text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
-);
+ );
+alter table public.authors alter column photo_url drop not null;
 alter table public.authors enable row level security;
 drop policy if exists "Public can read author profiles" on public.authors;
 create policy "Public can read author profiles" on public.authors for select to anon, authenticated using (true);
