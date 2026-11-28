@@ -6146,3 +6146,73 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     font-size:17px !important;
   }
 }
+
+
+/* Article Details mobile Latest/Popular: exactly match the homepage Hero card
+   thumbnail sizes and 17px title typography, while keeping the full image visible. */
+@media (max-width:800px) {
+  .page-layout.article-page-active .article-below-lists .home-list-item {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:9px !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-heading {
+    display:flex !important;
+    width:100% !important;
+    margin:0 !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-heading strong {
+    font-size:17px !important;
+    line-height:1.4 !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-summary-row {
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:flex-start !important;
+    gap:12px !important;
+    width:100% !important;
+    margin:0 !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-thumb {
+    flex:0 0 130px !important;
+    width:130px !important;
+    min-width:130px !important;
+    max-width:130px !important;
+    height:80px !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-thumb img {
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+    object-position:center !important;
+    margin:0 !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-excerpt {
+    flex:1 1 0 !important;
+    min-width:0 !important;
+    height:80px !important;
+    max-height:80px !important;
+    margin:0 !important;
+  }
+}
+@media (max-width:380px) {
+  .page-layout.article-page-active .article-below-lists .home-list-thumb {
+    flex-basis:108px !important;
+    width:108px !important;
+    min-width:108px !important;
+    max-width:108px !important;
+    height:68px !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-summary-row {
+    gap:9px !important;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-excerpt {
+    height:68px !important;
+    max-height:68px !important;
+  }
+}
