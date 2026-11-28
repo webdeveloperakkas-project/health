@@ -6023,14 +6023,19 @@ html[lang="en"] .home-featured .home-feature-content h1 {
 .single-article-meta{margin:12px 0 18px;color:#687b7c;font-size:12px}
 
 
-/* Mobile article detail page: match the homepage's 14px side spacing. */
+/* Mobile article detail content: the page-layout container already supplies
+   the shared 14px outer gutters. Do not add a second nested 14px inset.
+   Scope this only to the article and its Latest/Popular rail. */
 @media (max-width: 800px) {
   .page-layout.article-page-active .single-article {
-    width: calc(100% - 28px) !important;
+    width: 100% !important;
     max-width: none;
+    box-sizing: border-box;
   }
 
-  .article-recommendations {
-    width: calc(100% - 28px) !important;
+  .page-layout.article-page-active .article-below-lists {
+    width: 100% !important;
+    max-width: none;
+    box-sizing: border-box;
   }
 }
