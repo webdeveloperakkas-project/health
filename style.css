@@ -5992,3 +5992,24 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     box-sizing:border-box;
   }
 }
+
+
+/* Keep World News, Sports and Lifestyle gallery arrows vertically centered
+   on the image area, rather than the full image-and-caption card. */
+.home-post-gallery-slider[data-home-gallery="world"],
+.home-post-gallery-slider[data-home-gallery="sports"],
+.home-post-gallery-slider[data-home-gallery="lifestyle"] {
+  container-type:inline-size;
+}
+.home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-arrow,
+.home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-arrow,
+.home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-arrow {
+  top:calc(8px + 5.6cqw);
+}
+@media (max-width:800px) {
+  .home-post-gallery-slider[data-home-gallery="world"] .home-post-gallery-arrow,
+  .home-post-gallery-slider[data-home-gallery="sports"] .home-post-gallery-arrow,
+  .home-post-gallery-slider[data-home-gallery="lifestyle"] .home-post-gallery-arrow {
+    top:18.75cqw;
+  }
+}
