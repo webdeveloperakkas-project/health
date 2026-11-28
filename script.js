@@ -1220,7 +1220,10 @@
           '<div class="single-article-category">' + escapeHTML(categoryLabel) + (subcategoryLabel ? ' <span>›</span> ' + escapeHTML(subcategoryLabel) : '') + '</div>' +
           biographyMetadata +
           '<h1>' + escapeHTML(post.title) + '</h1>' +
-          '<div class="single-article-meta"><time>' + escapeHTML(post.date || "") + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</time></div>' +
+          (post.authorName ? '<div class="single-article-byline">' +
+            (post.authorPhotoUrl ? '<img class="single-article-author-photo" src="' + escapeHTML(post.authorPhotoUrl) + '" alt="' + escapeHTML(post.authorName) + '">' : '') +
+            '<div class="single-article-author-copy"><strong>' + (activeLanguage==="bn"?"লেখক":activeLanguage==="hi"?"लेखक":"By") + ' ' + escapeHTML(post.authorName) + '</strong>' +
+            '<time>' + escapeHTML(post.date || "") + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</time></div></div>' : '<div class="single-article-meta"><time>' + escapeHTML(post.date || "") + (post.time ? ' · ' + escapeHTML(post.time) : '') + '</time></div>') +
         '</div>' +
         (imageForPost(post) ? '<figure class="single-article-cover-figure"><img class="single-article-cover" src="' + escapeHTML(imageForPost(post)) + '" alt="' + escapeHTML(post.coverAltText || post.title) + '">' + (post.coverCaptionEnabled ? '<figcaption class="single-article-cover-caption">AI-generated illustration</figcaption>' : '') + '</figure>' : '') +
         shareButtons(post) +
@@ -2179,6 +2182,7 @@
           date:publishedDate.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}),
           read:"",excerpt:row.excerpt||plain.slice(0,260),canonicalExcerpt:row.excerpt||plain.slice(0,260),body:plain?[plain]:[],
           contentHtml,canonicalContentHtml:contentHtml,cover:row.cover_url||"",coverCaptionEnabled:!!row.cover_caption_enabled,videoUrl:row.video_url||"",
+          authorId:row.author_id||"",authorName:row.author_name||"",authorPhotoUrl:row.author_photo_url||"",
           keywords:Array.isArray(row.related_keywords)?row.related_keywords:(Array.isArray(row.keywords)?row.keywords:[]),views:Number(row.views)||0
         };
       });
