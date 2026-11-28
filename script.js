@@ -1046,7 +1046,7 @@
     const items = homeListType === "popular" ? popularItems : latestItems;
     if (!panel) return;
     // Apply the compact image-and-title layout to both homepage Latest and Popular tabs.
-    panel.classList.toggle("is-home-compact", panel === homeListPanel || panel.id === "categoryHomeListPanel");
+    panel.classList.toggle("is-home-compact", panel === homeListPanel || panel.id === "categoryHomeListPanel" || panel.id === "articleHomeListPanel");
     if (!items.length) {
       panel.innerHTML = '<div class="home-list-empty">' + (extendedUiCopy[activeLanguage] || extendedUiCopy.en)[homeListType === "popular" ? "emptyPopular" : "emptyLatest"] + '</div>';
     } else {
