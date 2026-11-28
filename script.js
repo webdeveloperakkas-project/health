@@ -1130,20 +1130,6 @@
     }).join("");
   }
 
-  function renderMyChoice() {
-    const section = $("#myChoiceSection"), host = $("#myChoiceList");
-    if (!section || !host) return;
-    const items = sortedByDate(posts.filter(post => (post.postTypes || [post.postType || "latest"]).includes("myChoice"))).slice(0,4);
-    section.hidden = !items.length;
-    if (!items.length) {
-      host.innerHTML = "";
-      return;
-    }
-    host.innerHTML = items.map(post => {
-      const index = posts.indexOf(post), summary = post.excerpt || (post.body || []).join(" ").slice(0,120);
-      return '<article class="my-choice-item"><button class="my-choice-open" type="button" data-open-post="' + index + '">' + (imageForPost(post) ? '<span class="my-choice-thumb"><img src="' + imageForPost(post) + '" alt="" loading="lazy"></span>' : '') + '<span class="my-choice-copy"><strong>' + escapeHTML(post.title) + '</strong>' + (summary ? '<small>' + escapeHTML(summary.slice(0,120)) + '</small>' : '') + '</span></button></article>';
-    }).join("");
-  }
   function renderFeaturedStories() {
     const grid = $("#featuredStoriesGrid");
     const count = $("#featuredStoriesCount");
@@ -1419,7 +1405,6 @@
       renderFeaturedStories();
       renderTrendingStories();
       renderManualTrendingStories();
-      renderMyChoice();
       return;
     }
     /* Category and subcategory pages always render all nine editorial slots.
