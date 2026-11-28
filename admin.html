@@ -167,13 +167,13 @@
   <div id="newAuthorPanel" class="new-author-panel" hidden>
     <label class="field-label" for="newAuthorName">Author name</label>
     <input class="text-input" id="newAuthorName" maxlength="120" placeholder="Enter the author's public name">
-    <label class="field-label" for="newAuthorPhoto">Profile photo</label>
-    <label class="author-photo-upload" for="newAuthorPhoto"><span>＋ Upload profile photo</span><small>Upload once. This photo will be reused for every post by this author.</small></label>
+    <label class="field-label" for="newAuthorPhoto">Profile photo <span class="optional-field-label">(Optional)</span></label>
+    <label class="author-photo-upload" for="newAuthorPhoto"><span>＋ Upload profile photo (Optional)</span><small>You can save the author with only a name. If uploaded, this photo will be reused for every post by this author.</small></label>
     <input id="newAuthorPhoto" type="file" accept="image/jpeg,image/png,image/webp" hidden>
     <div id="newAuthorPhotoPreview" class="author-photo-preview" hidden></div>
     <div class="new-author-actions"><button type="button" class="primary-btn" id="saveNewAuthorBtn">Save Author</button><button type="button" class="secondary-btn" id="cancelNewAuthorBtn">Cancel</button></div>
   </div>
-  <div class="field-help">Add each author once. Their saved name and profile photo will be available whenever you create another post.</div>
+  <div class="field-help">Add each author once. Their saved name will always be available; profile photos are optional and reused when provided.</div>
 </div>
 <label class="field-label" for="postCategory">Category</label><select id="postCategory" class="text-input" required><option value="world">World News</option><option value="technology">Science &amp; Technology</option><option value="biography">Biography</option><option value="sports">Sports</option><option value="entertainment">Entertainment</option><option value="lifestyle">Lifestyle</option><option value="travel">Travel</option><option value="finance">Finance</option></select><div class="field-help">Your article URL will use this category path and an automatic title-based slug.</div><div class="slug-preview-field"><label class="field-label" for="postSlugPreview">Automatic URL Slug</label><input class="text-input" id="postSlugPreview" type="text" readonly aria-readonly="true"><div class="field-help" id="postUrlPreview">URL preview will appear after you enter a title.</div></div><div id="biographyFields" class="biography-admin-fields" hidden>
  <div class="field-help biography-admin-note">Biography details help readers find people by country and profession.</div>
