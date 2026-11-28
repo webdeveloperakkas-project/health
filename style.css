@@ -6057,3 +6057,30 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     max-height:68px;
   }
 }
+
+/* Homepage mobile Latest/Popular: extend the image and summary block downward
+   while keeping the date/time at its current vertical position. */
+@media (max-width:800px) {
+  .home-feature-grid .home-list-item {
+    row-gap:9px;
+  }
+  .home-feature-grid .home-list-thumb {
+    height:90px;
+  }
+  .home-feature-grid .home-list-excerpt {
+    height:90px !important;
+    max-height:90px !important;
+  }
+  .home-feature-grid .home-list-meta {
+    margin-top:-10px;
+  }
+}
+@media (max-width:380px) {
+  .home-feature-grid .home-list-thumb {
+    height:78px;
+  }
+  .home-feature-grid .home-list-excerpt {
+    height:78px !important;
+    max-height:78px !important;
+  }
+}
