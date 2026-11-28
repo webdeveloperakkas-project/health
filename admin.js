@@ -448,9 +448,29 @@
     const preview=$("#postAuthorPreview");
     if(!preview)return;
     preview.hidden=!author;
-    preview.innerHTML=author?(author.photoUrl?'<img src="'+safe(author.photoUrl)+'" alt="">':"")+'<span><strong>'+safe(author.name)+'</strong><small>Selected author</small></span>':"";
+    preview.innerHTML=author?(author.photoUrl?'<img src="'+safe(author.photoUrl)+'" alt="">':"")+'<span><strong>'+safe(author.name)+'</strong><small>Selected author</small></span><button type="button" class="author-remove-btn" aria-label="Remove author profile" title="Remove author profile">×</button>':"";
   }
   $("#postAuthorSelect").addEventListener("change",updateAuthorPreview);
+  $("#postAuthorPreview").addEventListener("click",async event=>{
+    const removeButton=event.target.closest(".author-remove-btn");
+    if(!removeButton)return;
+    const author=authors.find(item=>String(item.id)===$("#postAuthorSelect").value);
+    if(!author)return;
+    const confirmed=window.confirm('Remove the author profile "'+author.name+'"? It will no longer appear in the author list. Existing posts will keep their saved author name and photo.');
+    if(!confirmed)return;
+    removeButton.disabled=true;
+    try{
+      const {data,error}=await db().from("authors").delete().eq("id",author.id).select("id").maybeSingle();
+      if(error)throw error;
+      if(!data)throw new Error("The author profile could not be deleted. Please check administrator permissions.");
+      authors=authors.filter(item=>String(item.id)!==String(author.id));
+      renderAuthorSelect("");
+      showToast("Author profile removed. Existing post bylines are unchanged.");
+    }catch(error){
+      removeButton.disabled=false;
+      showToast("Could not remove author: "+(error.message||"Database error."));
+    }
+  });
   $("#toggleNewAuthorBtn").addEventListener("click",()=>{
     const panel=$("#newAuthorPanel");
     panel.hidden=!panel.hidden;
