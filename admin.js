@@ -770,7 +770,7 @@
     updatePostUrlPreview();
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
-    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular, Trending or Favorites.");
+    if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular or Trending.");
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
