@@ -12,7 +12,7 @@
   const db = () => window.EA_SUPABASE;
   const categories = {world:"World News",tips:"Daily Tips",technology:"Science & Technology",sports:"Sports",entertainment:"Entertainment",lifestyle:"Lifestyle",travel:"Travel",finance:"Finance",biography:"Biography",hospitals:"Hospitals (legacy)"};
   const categoryPathSlugs = {technology:"technology"};
-  const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending",myChoice:"Favorites"};
+  const placementLabels = {latest:"Latest",popular:"Popular",trending:"Trending"};
   function placementsFor(post){ const values=Array.isArray(post.postTypes)?post.postTypes:(post.postType?[post.postType]:["latest"]); return [...new Set(values.filter(value=>placementLabels[value]))]; }
   const languages = {bn:"বাংলা",en:"English",hi:"हिन्दी"};
   const editorialLanguages = ["bn","en","hi"];
@@ -771,9 +771,6 @@
     const existing=posts.find(item=>item.id===editingId);
     const selectedPostTypes=Array.from(document.querySelectorAll('input[name="postPlacement"]:checked')).map(input=>input.value);
     if(!selectedPostTypes.length) return showToast("Select at least one post placement: Latest, Popular, Trending or Favorites.");
-    const selectingMyChoice=selectedPostTypes.includes("myChoice");
-    const alreadyMyChoice=posts.filter(item=>item.id!==editingId && (Array.isArray(item.postTypes)?item.postTypes.includes("myChoice"):item.postType==="myChoice")).length;
-    if(selectingMyChoice && alreadyMyChoice>=4) return showToast("Favorites can contain up to 4 selected items.");
     const selectingFeaturedStories=$("#postFeaturedStories").checked;
     const alreadyFeaturedStories=posts.filter(item=>item.id!==editingId && (item.featuredStories ?? item.featured)).length;
     if(selectingFeaturedStories && alreadyFeaturedStories>=20) return showToast("Featured Stories can contain up to 20 selected posts.");
