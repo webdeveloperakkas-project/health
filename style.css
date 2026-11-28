@@ -6039,3 +6039,21 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     box-sizing: border-box;
   }
 }
+
+/* Article-page Latest/Popular: remove the unused space below the thumbnail
+   so the date sits closer to the image. Keep this isolated from the homepage. */
+@media (max-width:800px) {
+  .page-layout.article-page-active .article-below-lists .home-list-item {
+    gap:5px;
+  }
+  .page-layout.article-page-active .article-below-lists .home-list-excerpt {
+    height:80px;
+    max-height:80px;
+  }
+}
+@media (max-width:380px) {
+  .page-layout.article-page-active .article-below-lists .home-list-excerpt {
+    height:68px;
+    max-height:68px;
+  }
+}
