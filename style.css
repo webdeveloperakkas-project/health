@@ -6013,3 +6013,11 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     top:18.75cqw;
   }
 }
+
+/* Shared author byline beneath article titles */
+.single-article-byline{display:flex;align-items:center;gap:11px;margin:14px 0 20px;padding:0;color:#153943}
+.single-article-author-photo{width:46px;height:46px;flex:0 0 46px;object-fit:cover;border-radius:50%;border:1px solid rgba(21,57,67,.14)}
+.single-article-author-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.single-article-author-copy strong{font-size:14px;font-weight:700;line-height:1.35;color:#153943}
+.single-article-author-copy time{font-size:12px;line-height:1.4;color:#687b7c}
+.single-article-meta{margin:12px 0 18px;color:#687b7c;font-size:12px}
