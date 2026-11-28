@@ -448,7 +448,7 @@
     const preview=$("#postAuthorPreview");
     if(!preview)return;
     preview.hidden=!author;
-    preview.innerHTML=author?'<img src="'+safe(author.photoUrl)+'" alt=""><span><strong>'+safe(author.name)+'</strong><small>Selected author</small></span>':"";
+    preview.innerHTML=author?(author.photoUrl?'<img src="'+safe(author.photoUrl)+'" alt="">':"")+'<span><strong>'+safe(author.name)+'</strong><small>Selected author</small></span>':"";
   }
   $("#postAuthorSelect").addEventListener("change",updateAuthorPreview);
   $("#toggleNewAuthorBtn").addEventListener("click",()=>{
@@ -472,13 +472,12 @@
   $("#saveNewAuthorBtn").addEventListener("click",async()=>{
     const name=$("#newAuthorName").value.trim();
     if(!name)return showToast("Enter the author's name.");
-    if(!authorPhotoData)return showToast("Upload this author's profile photo first.");
-    const button=$("#saveNewAuthorBtn");button.disabled=true;button.textContent="Uploading and saving…";
+    const button=$("#saveNewAuthorBtn");button.disabled=true;button.textContent=authorPhotoData?"Uploading and saving…":"Saving…";
     try{
-      const photoUrl=await uploadDataImage(authorPhotoData,"authors","cloudinary");
+      const photoUrl=authorPhotoData?await uploadDataImage(authorPhotoData,"authors","cloudinary"):null;
       const {data,error}=await db().from("authors").insert({name,photo_url:photoUrl}).select("id,name,photo_url").single();
       if(error)throw error;
-      const author={id:data.id,name:data.name,photoUrl:data.photo_url||photoUrl};
+      const author={id:data.id,name:data.name,photoUrl:data.photo_url||photoUrl||""};
       authors.push(author);authors.sort((a,b)=>a.name.localeCompare(b.name));
       renderAuthorSelect(author.id);
       $("#newAuthorPanel").hidden=true;$("#newAuthorName").value="";$("#newAuthorPhoto").value="";
