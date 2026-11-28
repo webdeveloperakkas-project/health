@@ -6021,3 +6021,16 @@ html[lang="en"] .home-featured .home-feature-content h1 {
 .single-article-author-copy strong{font-size:14px;font-weight:700;line-height:1.35;color:#153943}
 .single-article-author-copy time{font-size:12px;line-height:1.4;color:#687b7c}
 .single-article-meta{margin:12px 0 18px;color:#687b7c;font-size:12px}
+
+
+/* Mobile article detail page: match the homepage's 14px side spacing. */
+@media (max-width: 800px) {
+  .page-layout.article-page-active .single-article {
+    width: calc(100% - 28px) !important;
+    max-width: none;
+  }
+
+  .article-recommendations {
+    width: calc(100% - 28px) !important;
+  }
+}
