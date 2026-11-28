@@ -5960,3 +5960,26 @@ html[lang="en"] .home-featured .home-feature-content h1 {
     font-size: 8px;
   }
 }
+
+
+/* World News homepage: keep the subcategory control beside the title on mobile. */
+@media(max-width:600px){
+  .home-category-world .home-world-heading{
+    flex-wrap:nowrap;
+    gap:8px;
+  }
+  .home-category-world .home-world-heading .science-tech-title-block{
+    flex:0 0 auto;
+  }
+  .home-category-world .home-world-heading .science-tech-heading-rule{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .home-category-world .home-world-subcategory{
+    flex:0 0 40%;
+    width:40%;
+    min-width:0;
+    max-width:40%;
+    box-sizing:border-box;
+  }
+}
