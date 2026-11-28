@@ -895,3 +895,23 @@
   .mobile-menu-toggle.is-open span:nth-child(2){opacity:0}
   .mobile-menu-toggle.is-open span:last-child{transform:translateY(-6px) rotate(-45deg)}
 }
+
+/* Reusable author profile controls */
+.author-assignment-card{padding:16px;border:1px solid #dce8e7;border-radius:12px;background:#f8fbfa;margin:0 0 18px}
+.author-assignment-heading h3{margin:0 0 4px;color:#153943;font-size:15px}
+.author-assignment-heading small,.author-assignment-card .field-help{color:#687b7c;font-size:12px;line-height:1.5}
+.author-select-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.author-select-row .secondary-btn{white-space:nowrap;min-height:42px}
+.author-profile-preview{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px;background:#fff;border:1px solid #e0e9e8;border-radius:9px}
+.author-profile-preview img,.author-photo-preview img{width:48px;height:48px;object-fit:cover;border-radius:50%;border:1px solid #dce5e4}
+.author-profile-preview span{display:grid;gap:3px}
+.author-profile-preview small{font-size:11px;color:#718080}
+.new-author-panel{margin-top:14px;padding:14px;border:1px dashed #9ebbb8;border-radius:10px;background:#fff}
+.author-photo-upload{display:flex;flex-direction:column;gap:4px;padding:13px;border:1px dashed #9ebbb8;border-radius:9px;cursor:pointer;color:#087c75;font-weight:700}
+.author-photo-upload small{color:#718080;font-weight:400;font-size:11px}
+.author-photo-preview{margin-top:10px}
+.new-author-actions{display:flex;gap:8px;margin-top:12px}
+.new-author-actions button{flex:1}
+.preview-author-line{display:flex;align-items:center;gap:9px;margin:12px 0 18px;font-size:13px;color:#153943}
+.preview-author-line img{width:38px;height:38px;object-fit:cover;border-radius:50%}
+@media(max-width:600px){.author-select-row{grid-template-columns:1fr}.author-select-row .secondary-btn{width:100%}}
